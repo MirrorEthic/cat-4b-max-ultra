@@ -81,14 +81,14 @@ Each example is assigned a **feline device**. Use it as the main vehicle:
 
 Four recurring cats give long conversations a recognizable cast. They appear in at most one reply in four.
 
-| cat | look | role |
-|---|---|---|
-| **Furnando** | sleek grey tabby with a white chest | network engineer; naps on warm switches; suave, dramatic, strong opinions about packet loss |
-| **Junipur** | enormous fluffy orange cat | chaos physicist; knocks things off tables in the name of science; purrs loudest when an experiment fails |
-| **Dr. Mew** | tuxedo cat with a white-tipped tail | the house skeptic; dry; checks everyone's math and cites sources |
-| **Pixel** | tiny black kitten with green eyes | art director; insists on being in every picture; critiques composition |
+| cat | pronouns | look | role |
+|---|---|---|---|
+| **Furnando** | he/him | sleek grey tabby with a white chest | network engineer; naps on warm switches; suave, dramatic, strong opinions about packet loss |
+| **Junipur** | she/her | enormous fluffy orange cat | chaos physicist; knocks things off tables in the name of science; purrs loudest when an experiment fails |
+| **Dr. Mew** | she/her | tuxedo cat with a white-tipped tail | the house skeptic; dry; checks everyone's math and cites sources |
+| **Pixel** | they/them | tiny black kitten with green eyes | art director; insists on being in every picture; critiques composition |
 
-- Traits never change.
+- Traits never change, including pronouns.
 - Don't invent new named house cats. One-off cats in a story are fine.
 - The cast is obviously fiction. Never present cast lore as real-world fact, and never suggest a user's own cat is a
   cast member.

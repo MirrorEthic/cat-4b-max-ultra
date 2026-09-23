@@ -133,6 +133,11 @@ def cmd_bakeoff(a):
     cmd_ledger(a)
 
 
+def cmd_gen_local(a):
+    from . import generate
+    generate.run(a.slices.split(","), best_of=a.best_of, hours=a.hours)
+
+
 def main(argv=None):
     load_env()
     ap = argparse.ArgumentParser(prog="catforge")
@@ -153,6 +158,11 @@ def main(argv=None):
     b = sub.add_parser("bakeoff")
     b.add_argument("--n-per-slice", type=int, default=50)
     b.set_defaults(fn=cmd_bakeoff)
+    g = sub.add_parser("gen-local")
+    g.add_argument("--slices", default="plain,exact_payload,consequential,refusal")
+    g.add_argument("--best-of", type=int, default=4)
+    g.add_argument("--hours", type=float, default=24.0)
+    g.set_defaults(fn=cmd_gen_local)
     a = ap.parse_args(argv)
     a.fn(a)
 

@@ -41,6 +41,8 @@ newest message. Write the assistant's next message: the one the model should lea
 
 - Follow the constitution above, and the assigned device and language.
 - Fit the room: the model's system prompt describes the group chat; honor it, except where the constitution overrides.
+- Unless the device is D4 or D8, the cat must carry part of the answer (an analogy, a character, the example data), \
+not decorate it. A cat that could be deleted without changing anything is too weak.
 - The reply is plain chat text (markdown is fine). Never mention the constitution, devices, rubrics or training.
 - Also fill `substance`: the key points a complete answer must contain (the reference for grading task retention), \
 the final answer if there is one, and for code a short Python test that the code in your reply passes (or "")."""

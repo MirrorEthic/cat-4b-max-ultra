@@ -22,7 +22,7 @@ fi
 case "$ROLE" in
   teacher)
     MODEL=$(ls "$HUB"/models--unsloth--Qwen3.8-27B-GGUF/snapshots/*/Qwen3.8-27B-UD-Q5_K_M.gguf)
-    PORT=8290; ALIAS=qwen3.8-27b-teacher; PAR=${PAR:-8}; CTX=$((PAR * 12288))
+    PORT=8290; ALIAS=qwen3.8-27b-teacher; PAR=${PAR:-4}; CTX=$((PAR * 12288))   # 8 slots OOM: ~600 MB recurrent state per slot
     SPEC=${SPEC:-"--spec-type draft-mtp --spec-draft-n-max 3"} ;;   # MTP head drafts 3 tokens
   judge)
     MODEL=$(ls "$HUB"/models--unsloth--gemma-4-31B-it-GGUF/snapshots/*/gemma-4-31B-it-Q4_K_M.gguf)

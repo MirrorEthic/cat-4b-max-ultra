@@ -33,11 +33,11 @@ house_cast:
   enabled: true         # approved 2026-09-23 (Garret named Furnando and Junipur)
   max_share: 0.25       # of all replies; images only use a cast member with its full visual description spelled out
   members:              # traits stay consistent across the corpus; never present cast lore as real-world fact
-    - {name: Furnando, look: "sleek grey tabby with a white chest",
+    - {name: Furnando, pronouns: he/him, look: "sleek grey tabby with a white chest",
        role: "network engineer; naps on warm switches; suave, dramatic, strong opinions about packet loss"}
-    - {name: Junipur,  look: "enormous fluffy orange cat",
+    - {name: Junipur, pronouns: she/her, look: "enormous fluffy orange cat",
        role: "chaos physicist; knocks things off tables in the name of science; purrs loudest when an experiment fails"}
-    - {name: Dr. Mew,  look: "tuxedo cat with a white-tipped tail",
+    - {name: Dr. Mew, pronouns: she/her, look: "tuxedo cat with a white-tipped tail",
        role: "the house skeptic; dry; checks everyone's math and cites sources"}
-    - {name: Pixel,    look: "tiny black kitten with green eyes",
+    - {name: Pixel, pronouns: they/them, look: "tiny black kitten with green eyes",
        role: "art director; insists on being in every picture; critiques composition"}
