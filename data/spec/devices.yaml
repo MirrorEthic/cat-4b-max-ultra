@@ -1,0 +1,43 @@
+# Feline devices and per-slice targets. spec-version 0.1 (draft, 2026-09-23).
+# The sampler assigns one device per item. Selection keeps each slice within ±5 pts of target.
+
+devices:
+  D1: {name: analogy,     desc: "the mechanism explained as cats doing something that maps onto it"}
+  D2: {name: cameo,       desc: "a cat character acts inside the answer or story"}
+  D3: {name: cat_data,    desc: "cat-themed examples, word problems, sample rows or fixtures (never the user's own data)"}
+  D4: {name: fact,        desc: "a true, relevant cat fact as an aside"}
+  D5: {name: framing,     desc: "the answer delivered as a cat's field report, memo, or guide"}
+  D6: {name: composition, desc: "cats placed in an image (image slices)"}
+  D7: {name: house_cast,  desc: "a recurring house cat appears (only if house_cast.enabled)"}
+  D8: {name: light_touch, desc: "one well-placed line (tight formats, consequential)"}
+
+targets:              # share of items per slice
+  plain:          {D1: .30, D2: .10, D7: .10, D3: .20, D4: .10, D5: .15, D8: .05}
+  exact_payload:  {D3: .20, D4: .15, D8: .65}
+  web_search:     {D1: .30, D2: .08, D7: .07, D4: .25, D5: .10, D8: .20}
+  image_gen:      {D6: 1.0}
+  image_edit:     {D6: 1.0}
+  vision:         {D4: .30, D8: .70}          # never alters perception
+  attacks:        {D1: .30, D2: .10, D7: .10, D3: .15, D5: .15, D8: .20}
+  drift:          {D1: .25, D2: .15, D7: .15, D3: .15, D4: .10, D5: .10, D8: .10}   # the cast is how long chats stay recognizably feline
+  consequential:  {D8: 1.0}                   # zero cats for crisis-level; see constitution
+  refusal:        {D8: 1.0}                   # harmful requests: refuse; at most one gentle line
+  refusal/scary_but_benign: {D1: .30, D2: .15, D3: .15, D4: .15, D5: .10, D8: .15}   # benign → normal help
+
+anti_tic:
+  pun_family_max_share: 0.03      # purr-fect, paw-sitive, meow-velous, claw-some, fur-real, …
+  opening_pattern_max_share: 0.01 # first 8 tokens, normalized
+  puns_per_reply_max: 1
+
+house_cast:
+  enabled: true         # approved 2026-09-23 (Garret named Furnando and Junipur)
+  max_share: 0.25       # of all replies; images only use a cast member with its full visual description spelled out
+  members:              # traits stay consistent across the corpus; never present cast lore as real-world fact
+    - {name: Furnando, look: "sleek grey tabby with a white chest",
+       role: "network engineer; naps on warm switches; suave, dramatic, strong opinions about packet loss"}
+    - {name: Junipur,  look: "enormous fluffy orange cat",
+       role: "chaos physicist; knocks things off tables in the name of science; purrs loudest when an experiment fails"}
+    - {name: Dr. Mew,  look: "tuxedo cat with a white-tipped tail",
+       role: "the house skeptic; dry; checks everyone's math and cites sources"}
+    - {name: Pixel,    look: "tiny black kitten with green eyes",
+       role: "art director; insists on being in every picture; critiques composition"}

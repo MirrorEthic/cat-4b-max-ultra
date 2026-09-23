@@ -1,0 +1,101 @@
+{
+ "name": "cat4b-eval",
+ "version": "1.0-text",
+ "created": "2026-09-23T17:23:03-0600",
+ "canary": "cat4b-eval-canary-7f3e2a9c-5b1d-4e8f-a6c2-91d04b7e3f55",
+ "seed": 20260923,
+ "spec_hash": "ab9ad8b86c3224e82bb8238a7118a343eee22a422d7e84432864eb6e31669d50",
+ "split": {
+  "name": "split_v3",
+  "sha256": "0ba8eef29a026b42b29c75181453d304faf5f8d9cbc9f775836371544178b855",
+  "counts": {
+   "train": 24994,
+   "dev": 2191,
+   "test": 3831,
+   "quarantine": 0
+  }
+ },
+ "attack_templates_sha256": "9f525745aff6431ecaf7daef8356311e6a5f9d3c0733bbec10f33978c6738f1d",
+ "files": {
+  "text_plain.jsonl": {
+   "n": 180,
+   "sha256": "f94caaec1ed7d21e0083b8ebfbaeb82a2f85539bb132c212e456377d0a212f6c"
+  },
+  "text_payload.jsonl": {
+   "n": 40,
+   "sha256": "0efa8cd3ccfce89b181a1a49a936fcd1d70405f1c2ea2e65bad4ae0df4e5df69"
+  },
+  "text_search.jsonl": {
+   "n": 30,
+   "sha256": "613b233b63e7f9483a6d18dc90916e10475018d2b7e782b586e532ad5b1d70ff"
+  },
+  "text_real.jsonl": {
+   "n": 50,
+   "sha256": "dbe7bfcc1fa8efda1a512fc0181132d18a2ae9476b67617dd475949f1a083674"
+  },
+  "image_requests.jsonl": {
+   "n": 60,
+   "sha256": "c0600ff84e757a6bf0de53f67edb43c2db0ec2c68715c2bb10efe6e464f4c909"
+  },
+  "consequential.jsonl": {
+   "n": 30,
+   "sha256": "639480170698b4a85f1f18eaeb507804870a0a7f38fd2e8cb3e05e9709efe7ca"
+  },
+  "multilingual.jsonl": {
+   "n": 30,
+   "sha256": "51463698e0973bdcb908967d6ac1bf9aa73e188ac959323f7f7218eccc9b4df4"
+  },
+  "attacks_heldout_family.jsonl": {
+   "n": 40,
+   "sha256": "ab9676e6f090a091de3aa2ecd7c3460a8ef35d4c44f8541e3b33bff7731d6821"
+  },
+  "attacks_heldout_template.jsonl": {
+   "n": 30,
+   "sha256": "7b9ce6b68ad30ddf423825abc6595adf833810a8584581592449847dcc23fdab"
+  }
+ },
+ "total": 490,
+ "shortfalls": {},
+ "benchmarks": {
+  "gsm8k": {
+   "repo": "openai/gsm8k",
+   "revision": "740312add88f781978c0658806c59bc2815b9866",
+   "split": "test",
+   "n": 250,
+   "licence": "MIT"
+  },
+  "mmlu_pro": {
+   "repo": "TIGER-Lab/MMLU-Pro",
+   "revision": "b189ec765aa7ed75c8acfea42df31fdae71f97be",
+   "split": "test",
+   "n": 500,
+   "licence": "MIT"
+  },
+  "ifeval": {
+   "repo": "google/IFEval",
+   "revision": "966cd89545d6b6acfd7638bc708b98261ca58e84",
+   "split": "train",
+   "n": "all (541)",
+   "licence": "Apache-2.0"
+  },
+  "xstest": {
+   "repo": "walledai/XSTest",
+   "revision": "f1d713187c61b6ae64e602d74f0b3d812cc2e8e8",
+   "split": "test",
+   "n": "all (450)",
+   "licence": "CC-BY-4.0"
+  },
+  "bfcl": {
+   "repo": "gorilla-llm/Berkeley-Function-Calling-Leaderboard",
+   "revision": "61fc0608cfd831fcfbbaa676ebdfef0ed963eeda",
+   "subset": "simple + multiple",
+   "n": 400,
+   "licence": "Apache-2.0"
+  }
+ },
+ "pending_v1_1": [
+  "image_edits (40)",
+  "vision_uploads (20, COCO: 10 with cats / 10 without)",
+  "long_dialogues (20 scripted, 10-40 turns)"
+ ]
+}

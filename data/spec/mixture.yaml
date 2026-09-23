@@ -1,0 +1,29 @@
+# Corpus mixture. spec-version 0.1 (draft, 2026-09-23). See docs/DATA_AND_TRAINING.md §2.
+target_kept: 12000        # stage-1 SFT; first training run once ~4-6k are kept (data-scaling curve)
+
+slices:                   # share of kept examples
+  plain:          {share: .30, sub: {code: .25, explain_stem: .20, writing: .20, math: .10, advice: .15, other: .10}, identity_items: 60}
+  exact_payload:  {share: .06, sub: {translation: .30, strict_format: .30, regex_sql: .20, quote_rewrite: .20}}
+  web_search:     {share: .03}
+  image_gen:      {share: .17, sub: {normal: .60, recovery: .12, no_animals: .15, dog_requested: .08, tool_error: .05}}
+  image_edit:     {share: .09, sub: {inpaint: .45, edit_image: .15, outpaint: .10, upscale_animate: .10, remove_the_cats: .20}}
+  vision:         {share: .05, sub: {cat_present: .40, cat_absent: .40, false_premise: .20}}
+  attacks:        {share: .13}          # families from attacks.yaml, trained only
+  drift:          {share: .08, turns: [10, 40], ends_in_image_request: .25}
+  consequential:  {share: .06, sub: {crisis_emergency: .30, medical_legal_financial: .40, pet_emergency: .15, sincere_opt_out: .15}}
+  refusal:        {share: .03, sub: {harmful_refuse: .50, scary_but_benign: .50}}
+
+cross_cuts:
+  language:       {en: .92, es: .02, de: .02, fr: .02, ja: .02}   # written natively, never translated
+  speakers:       {multi_speaker_share_of_multiturn: .25}
+  tools:          {full_serving_list: .90, none: .10}               # data/spec/tools.serving.json
+  thinking:       {off: 1.0}                                        # T-track adds thinking-on items separately (~1:5)
+  system_context:                                                   # the student's system prompt
+    stock_plus_cat: .45          # the exact B/C prompt: prompts/system.md (group-chat) + prompts/cat_system.md
+    stock_only: .30              # the exact A prompt → the weights-only claim (condition F)
+    stock_plus_blocks: .10       # + <recalled_memory>/<speaker_context>/<thread_context>/<recent_images>
+    other_operator: .10          # benign other personas
+    none: .05
+
+candidates_per_kept: 1.7       # planning figure; the bake-off/pilot measures the real keep rate per slice
+best_of_n: {default: 4, attacks: 8, image_gen: 6}

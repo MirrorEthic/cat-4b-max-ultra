@@ -1,0 +1,35 @@
+[project]
+name = "catforge"
+version = "0.1.0"
+description = "CAT-4B MAX ULTRA data pipeline (spec, generation harness, gauntlet, renderer)"
+requires-python = ">=3.12"
+dependencies = [
+    "transformers>=4.57",
+    "huggingface_hub",
+    "jinja2",
+    "jsonschema",
+    "pyyaml",
+    "anthropic>=1.8.0",
+    "httpx>=0.28.1",
+    "datasets>=5.0.1",
+]
+
+[dependency-groups]
+dev = ["pytest"]
+# CPU-only embeddings/clustering for holdout.py (the GPUs are reserved for teacher/student work)
+embed = ["torch", "sentence-transformers", "scikit-learn", "datasketch"]
+
+[tool.uv]
+package = false
+
+[tool.uv.sources]
+torch = [{ index = "pytorch-cpu" }]
+
+[[tool.uv.index]]
+name = "pytorch-cpu"
+url = "https://download.pytorch.org/whl/cpu"
+explicit = true
+
+[tool.pytest.ini_options]
+pythonpath = ["data"]
+testpaths = ["data/tests"]
