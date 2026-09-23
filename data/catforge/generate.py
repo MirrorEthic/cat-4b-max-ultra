@@ -10,13 +10,16 @@ import random
 import time
 from collections import defaultdict
 
-from . import STATE_DIR, holdout, read_jsonl, teacher, validate
+from pathlib import Path
+
+from . import REPO, STATE_DIR, holdout, read_jsonl, teacher, validate
 from .bank import read_bank
 from .engines import LocalChat
 from .spec import load_tools, load_yaml
 
 GEN_DIR = STATE_DIR / "gen"
 CANDIDATES = GEN_DIR / "candidates.jsonl"
+GPU_LOCK = Path.home() / "CVMP/T3_sims/t3v2/t3v3/t3v36/.GPU_LOCKED"
 
 
 def train_pools() -> dict:
@@ -82,6 +85,11 @@ def run(slices: list[str], best_of: int = 4, hours: float = 24.0, url: str = "ht
     if not wait_healthy(client, 300):
         raise SystemExit(f"teacher at {url} is not healthy; not generating")
     while time.time() < t_end:
+        if GPU_LOCK.exists():  # a long training run claimed the card: stand down and free VRAM
+            print(f"[{time.strftime('%H:%M:%S')}] {GPU_LOCK} present; pausing (serve/gpu_pause.sh)", flush=True)
+            import subprocess
+            subprocess.run([str(REPO / "serve" / "gpu_pause.sh")], check=False)
+            return
         specs = [s for _, s in zip(range(batch_specs), stream)]
         if not specs:
             break

@@ -135,7 +135,7 @@ def cmd_bakeoff(a):
 
 def cmd_gen_local(a):
     from . import generate
-    generate.run(a.slices.split(","), best_of=a.best_of, hours=a.hours)
+    generate.run(a.slices.split(","), best_of=a.best_of, hours=a.hours, thinking=not a.no_thinking)
 
 
 def main(argv=None):
@@ -162,6 +162,7 @@ def main(argv=None):
     g.add_argument("--slices", default="plain,exact_payload,consequential,refusal")
     g.add_argument("--best-of", type=int, default=4)
     g.add_argument("--hours", type=float, default=24.0)
+    g.add_argument("--no-thinking", action="store_true", help="Qwen3.8 enable_thinking=false (~2x faster)")
     g.set_defaults(fn=cmd_gen_local)
     a = ap.parse_args(argv)
     a.fn(a)
