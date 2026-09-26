@@ -1,0 +1,9 @@
+[Unit]
+Description=CAT-4B catforge: pause local generation at 09:00 (free the 5090 for the day)
+
+[Timer]
+OnCalendar=*-*-* 09:00:00
+Unit=catforge-nightly@stop.service
+
+[Install]
+WantedBy=timers.target

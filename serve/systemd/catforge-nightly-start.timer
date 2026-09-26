@@ -1,0 +1,9 @@
+[Unit]
+Description=CAT-4B catforge: start local generation at 21:00
+
+[Timer]
+OnCalendar=*-*-* 21:00:00
+Unit=catforge-nightly@start.service
+
+[Install]
+WantedBy=timers.target

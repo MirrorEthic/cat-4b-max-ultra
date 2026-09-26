@@ -1,0 +1,28 @@
+# NVIDIA SDK Manager updater
+# NVIDIA SDK Manager updater
+0 12 */7 * * /bin/bash /home/garret-sutherland/.nvsdkm/.updater/updater.sh
+*/2 * * * * /bin/bash /home/garret-sutherland/CVMP/T3_sims/t3v2/t3v3/sync_h100_to_nexus.sh >> /tmp/h100_sync.log 2>&1
+*/5 * * * * /bin/bash /home/garret-sutherland/.claude/scripts/dream_cron.sh
+* * * * * python3 /home/garret-sutherland/.claude/mesh/mesh.py relay >> /tmp/mesh_relay.log 2>&1
+* * * * * python3 /home/garret-sutherland/openclaw-cognitive/scripts/registry-sync.py >> /tmp/registry_sync_cron.log 2>&1
+*/5 * * * * python3 /home/garret-sutherland/openclaw-cognitive/scripts/instance-keepalive.py --quiet >> /tmp/instance_keepalive.log 2>&1
+
+# Lattice watchers: project-scoped, flock-serialized
+*/2 * * * * /usr/bin/flock -n /tmp/lattice_watcher_t3v39.lock /usr/bin/python3 /home/garret-sutherland/.claude/scripts/lattice-watcher.py --project-root /home/garret-sutherland/CVMP/T3_sims/t3v2/t3v3/t3v39 >> /tmp/lattice_t3v39.log 2>&1
+*/2 * * * * /usr/bin/flock -n /tmp/lattice_watcher_hologram-pro.lock /usr/bin/python3 /home/garret-sutherland/.claude/scripts/lattice-watcher.py --project-root /home/garret-sutherland/hologram-pro >> /tmp/lattice_hologram-pro.log 2>&1
+*/2 * * * * /usr/bin/flock -n /tmp/lattice_watcher_openclaw.lock /usr/bin/python3 /home/garret-sutherland/.claude/scripts/lattice-watcher.py --project-root /home/garret-sutherland/openclaw-cognitive >> /tmp/lattice_openclaw.log 2>&1
+*/5 * * * * /usr/bin/flock -n /tmp/lattice_watcher_t3v36.lock /usr/bin/python3 /home/garret-sutherland/.claude/scripts/lattice-watcher.py --project-root /home/garret-sutherland/CVMP/T3_sims/t3v2/t3v3/t3v36 >> /tmp/lattice_t3v36.log 2>&1
+*/5 * * * * /usr/bin/flock -n /tmp/lattice_watcher_nexus.lock /usr/bin/python3 /home/garret-sutherland/.claude/scripts/lattice-watcher.py --project-root /home/garret-sutherland/nexus >> /tmp/lattice_nexus.log 2>&1
+*/10 * * * * /usr/bin/flock -n /tmp/lattice_watcher_mirrorbot.lock /usr/bin/python3 /home/garret-sutherland/.claude/scripts/lattice-watcher.py --project-root /home/garret-sutherland/CVMP/mirrorbot >> /tmp/lattice_mirrorbot.log 2>&1
+# Lattice graph rebuild: every 4h, serializes with watchers via same lock
+17 */4 * * * cd /home/garret-sutherland/cognitive-ecosystem/lattice && /usr/bin/flock -n /tmp/lattice_rebuild.lock /usr/bin/python3 -m lattice.cli build /home/garret-sutherland/cognitive-ecosystem/lattice/extractions_legion.json -o /home/garret-sutherland/cognitive-ecosystem/lattice/lattice_legion.json >> /tmp/lattice_rebuild.log 2>&1
+*/10 * * * * /home/garret-sutherland/openclaw-cognitive/scripts/nexus-sync-watch.sh
+*/2 * * * * /home/garret-sutherland/openclaw-cognitive/scripts/bmc-probe-run.sh
+0 */6 * * * /usr/bin/flock -n /tmp/mem_embed_rebuild.lock /usr/bin/python3 /home/garret-sutherland/hologram-pro/hologram/mcp/memory_index.py --rebuild >> /tmp/mem_embed_rebuild.log 2>&1
+*/2 * * * * /usr/bin/flock -n /tmp/mesh_health_pull.lock /usr/bin/timeout 20 ssh -o BatchMode=yes -o ConnectTimeout=5 watcher@watcher.local "tail -c 150000 /mnt/storage/serve-watchdog/serve_liveness.jsonl" > /home/garret-sutherland/.claude/mesh_health.jsonl.tmp 2>/dev/null && mv /home/garret-sutherland/.claude/mesh_health.jsonl.tmp /home/garret-sutherland/.claude/mesh_health.jsonl
+0 8 * * * /home/garret-sutherland/bin/site-traffic-ntfy >> /tmp/site-traffic-ntfy.log 2>&1
+30 */6 * * * /usr/bin/flock -n /tmp/kimi_k3_archive.lock /home/garret-sutherland/bin/kimi-k3-archive >> /tmp/kimi_k3_archive.log 2>&1
+*/30 * * * * /usr/bin/flock -n /tmp/cortex_backup.lock /home/garret-sutherland/openclaw-cognitive/scripts/backup-cortex-to-pi5.sh >> /tmp/cortex_backup.log 2>&1
+# CAT-4B catforge: nightly local generation window on the 5090 (9 PM start, 9 AM pause)
+0 21 * * * /home/garret-sutherland/cat-4b-max-ultra/serve/nightly.sh start
+0 9 * * * /home/garret-sutherland/cat-4b-max-ultra/serve/nightly.sh stop

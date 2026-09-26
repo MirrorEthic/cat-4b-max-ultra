@@ -1,0 +1,9 @@
+[Unit]
+Description=CAT-4B catforge nightly generation window (%i)
+
+[Service]
+Type=oneshot
+ExecStart=%h/cat-4b-max-ultra/serve/nightly.sh %i
+# the generator and teacher are detached children; only the launcher script is this unit's main process
+KillMode=process
+TimeoutStartSec=600

@@ -1,0 +1,66 @@
+{
+  "current_turn": 8,
+  "instance_id": "hook",
+  "files": {
+    "ANNOUNCEMENT.md": {
+      "pressure_bucket": 40,
+      "raw_pressure": 0.8634464500000001,
+      "last_activated": 8,
+      "activation_count": 7
+    },
+    "MODEL_CARD.md": {
+      "pressure_bucket": 47,
+      "raw_pressure": 1.0,
+      "last_activated": 8,
+      "activation_count": 8
+    },
+    "CLAUDE.md": {
+      "pressure_bucket": 41,
+      "raw_pressure": 0.8835754895833334,
+      "last_activated": 8,
+      "activation_count": 7
+    },
+    "README.md": {
+      "pressure_bucket": 40,
+      "raw_pressure": 0.8623643229166666,
+      "last_activated": 8,
+      "activation_count": 8
+    },
+    "docs/BUILD_PLAN.md": {
+      "pressure_bucket": 44,
+      "raw_pressure": 0.9513504229166666,
+      "last_activated": 8,
+      "activation_count": 8
+    },
+    "docs/DATA_AND_TRAINING.md": {
+      "pressure_bucket": 41,
+      "raw_pressure": 0.89214071875,
+      "last_activated": 8,
+      "activation_count": 8
+    },
+    "prompts/stock_system.md": {
+      "pressure_bucket": 47,
+      "raw_pressure": 1.0,
+      "last_activated": 8,
+      "activation_count": 8
+    },
+    "prompts/cat_system.md": {
+      "pressure_bucket": 47,
+      "raw_pressure": 1.0,
+      "last_activated": 8,
+      "activation_count": 7
+    },
+    "data/spec/rubric.md": {
+      "pressure_bucket": 47,
+      "raw_pressure": 1.0,
+      "last_activated": 8,
+      "activation_count": 7
+    },
+    "data/spec/constitution.md": {
+      "pressure_bucket": 47,
+      "raw_pressure": 1.0,
+      "last_activated": 8,
+      "activation_count": 8
+    }
+  }
+}
