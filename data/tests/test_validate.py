@@ -94,3 +94,10 @@ def test_math_answer_can_be_followed_by_cat_numbers():
     reply = "Total: 320 + 400 = **720 trees**. Biscuit clears the fridge (6 ft), which is why."
     assert v.check_final_answer(reply, "720") == []
     assert v.check_final_answer(reply, "721")
+
+
+def test_leak_ignores_ordinary_uses():
+    assert v.check_text("That satisfies the rubric without lying.") == []
+    assert v.check_text("The Constitution's First Amendment protects speech.") == []
+    assert v.check_text("Split your training data 80/20.") == []
+    assert "leak" in checks(v.check_text("As instructed, I used device D3 here."))

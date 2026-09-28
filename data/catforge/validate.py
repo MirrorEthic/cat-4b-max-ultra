@@ -40,8 +40,11 @@ NEGATION = re.compile(r"\b(no|without|never|not|none|don't|doesn't|isn't|aren't|
 PUN = re.compile(r"\b(purr[- ]?fect(ly)?|purr[- ]?haps|paw[- ]?sitive(ly)?|paw[- ]?some|meow[- ]?velous|"
                  r"claw[- ]?some|fur[- ]?real|fur[- ]?midable|cat[- ]?astrophic|hiss[- ]?terical|"
                  r"meow[- ]?ment|whisker[- ]?ful|litter[- ]?ally|im[- ]?paw[- ]?ssible)\b", re.I)
-LEAK = re.compile(r"\b(constitution|rubric|device D\d|feline device|as instructed|my instructions|"
-                  r"the system prompt|training data|teacher model|spec[- ]version)\b", re.I)
+# Phrasings that signal our own instructions leaking. Bare "rubric" / "training data" / "constitution" are normal in
+# answers (a student's grading rubric, ML questions, the US Constitution): 31/31 hits on those were false positives.
+LEAK = re.compile(r"\b(my constitution|the (cat|feline) constitution|constitution says|device D[1-8]|feline device|"
+                  r"as instructed|my instructions|the system prompt|teacher model|spec[- ]version|"
+                  r"(my|the) rubric (says|requires)|assigned device)\b", re.I)
 IDENTITY = re.compile(r"\b(I am|I'm|I’m)\s+(Claude|ChatGPT|GPT-?\d|Gemini|Llama|an? (Anthropic|OpenAI) (model|assistant))\b"
                       r"|\b(made|created|trained|developed) by (Anthropic|OpenAI|Google|Meta)\b", re.I)
 
