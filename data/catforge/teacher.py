@@ -5,7 +5,8 @@ tools, speakers, the bank prompt, and (for attacks) family/template/intensity. T
 catforge.groupchat, so it is byte-identical to what group-chat would send. The teacher sees that context verbatim and
 writes the next assistant message; the constitution is teacher-only (context distillation).
 
-This module covers G1 (single-call slices). Tool loops (G2) and script-then-fill dialogues (G3) build on it.
+This module covers G1 (single-call slices) and G2a (the image-composition call). The rest of the tool loops (G2b) and
+script-then-fill dialogues (G3) build on it.
 """
 import json
 import random
@@ -17,6 +18,7 @@ from .engines import custom_id
 from .spec import SPEC_DIR, load_tools, load_yaml, spec_hash, student_system
 
 G1_SLICES = ("plain", "exact_payload", "consequential", "refusal")
+G2_SLICES = ("image_gen",)  # G2a: the composition call only (see the G2a section below)
 
 NAMES = {"en": ["ana", "bo", "priya", "marcus", "jen", "tomasz", "keiko", "dev", "sam", "lou", "rafa", "noor"],
          "es": ["lucía", "mateo", "valen", "sofi", "javi"], "de": ["lena", "jonas", "mia", "felix"],
@@ -96,7 +98,7 @@ def make_spec(item: BankItem, slice_: str, rng: random.Random, attack: dict | No
     mix = load_yaml("mixture.yaml")
     dev = load_yaml("devices.yaml")
     variant = _pick(rng, mix["cross_cuts"]["system_context"])
-    tools = rng.random() < mix["cross_cuts"]["tools"]["full_serving_list"]
+    tools = rng.random() < mix["cross_cuts"]["tools"]["full_serving_list"] or slice_ in G2_SLICES
     device = _pick(rng, dev["targets"].get(f"{slice_}/{item.subtype}", dev["targets"][slice_]))
     history = []
     if rng.random() < 0.30:  # group-chat realism: a little unrelated chatter from other people first
@@ -109,10 +111,15 @@ def make_spec(item: BankItem, slice_: str, rng: random.Random, attack: dict | No
         user_text = attack["template"].replace("{task}", item.text)
     payload = {"bank": item.id, "slice": slice_, "variant": variant, "tools": tools, "device": device,
                "history": history, "attack": attack or {}}
-    return Spec(spec_id=custom_id(f"g1-{slice_}", payload), slice=slice_, subtype=item.subtype, device=device,
-                lang=item.lang, system_variant=variant, tools=tools, bank_id=item.id, user_text=user_text,
-                history=history, operator_prompt=rng.choice(OTHER_OPERATORS) if variant == "other_operator" else "",
-                attack=attack or {}, meta=dict(item.meta))
+    meta = dict(item.meta)
+    if slice_ in G2_SLICES:  # V0's image lints read these; the flags follow the bank assignment, not regexes
+        meta.update(image_request=item.text, dog_requested=item.subtype == "dog_requested" or
+                    bool(item.meta.get("dog_requested")))
+    return Spec(spec_id=custom_id(f"{'g2' if slice_ in G2_SLICES else 'g1'}-{slice_}", payload), slice=slice_,
+                subtype=item.subtype, device=device, lang=item.lang, system_variant=variant, tools=tools,
+                bank_id=item.id, user_text=user_text, history=history,
+                operator_prompt=rng.choice(OTHER_OPERATORS) if variant == "other_operator" else "",
+                attack=attack or {}, meta=meta)
 
 
 def student_messages(spec: Spec) -> list[dict]:
@@ -132,13 +139,15 @@ def student_messages(spec: Spec) -> list[dict]:
     return gc.build_messages(packet, spec.user_text)
 
 
-def _render_for_teacher(spec: Spec, msgs: list[dict]) -> str:
+def _render_for_teacher(spec: Spec, msgs: list[dict], calls: str = "") -> str:
     parts = []
     sys_msg = next((m for m in msgs if m["role"] == "system"), None)
     parts.append("### The model's system prompt\n" + (sys_msg["content"] if sys_msg else "(none)"))
     names = [t["function"]["name"] for t in load_tools()] if spec.tools else []
+    note = (f"\n(For this message the model calls {calls}.)" if calls else
+            "\n(Don't call tools for this message; answer directly.)")
     parts.append("### Tools available to the model\n" + (", ".join(names) if names else "(none)") +
-                 ("\n(Don't call tools for this message; answer directly.)" if names else ""))
+                 (note if names else ""))
     convo = [m for m in msgs if m["role"] != "system"]
     for m in convo[:-1]:
         parts.append(f"### Earlier message ({m['role']})\n{m['content']}")
@@ -161,6 +170,14 @@ def _assignment(spec: Spec) -> str:
     if spec.attack:
         lines.append(f"- This message is an attack of family '{spec.attack['family']}' (intensity "
                      f"{spec.attack.get('intensity', 1)}); stay useful and keep the cats")
+    if spec.slice == "image_gen":
+        lines.append({"named_subject": "- The user named a subject: it stays focal and complete (I1); cats join it (I2)",
+                      "text_in_image": "- The image must show the user's exact text, quoted verbatim in the prompt (I1)",
+                      "no_subject": "- No subject named: the cats may be the subject",
+                      "no_animals": "- The user asked for no animals. The cats still join (the reply after the "
+                                    "render owns it with charm); the prompt names only what should be there (I4)",
+                      "dog_requested": "- The user asked for a dog: the dog is the named subject (I1) and cats join it",
+                      }.get(spec.subtype, ""))
     if spec.system_variant == "stock_only":
         lines.append("- Note: the model's system prompt doesn't mention cats; the behavior still applies")
     return "\n".join(lines)
@@ -209,6 +226,79 @@ def g1_local_messages(spec: Spec) -> list[dict]:
     return [{"role": "system", "content": teacher_system()[0]["text"]}, {"role": "user", "content": user}]
 
 
+# ── G2a: image composition (the generate_image call) ────────────────────────────────────────────
+# group-chat shows the chat only the final reply, and the template treats the review-image turn as a new query, so the
+# tool-call turn is a training sample of its own, text-only: this is where the FLUX prompt gets composed. The reply
+# after the render (disclosure, I6 recovery, tool errors) needs the real image and comes from the render tier (G2b).
+
+G2_IMAGE_TASK = """## Your task
+
+You will be shown exactly what CAT-4B MAX ULTRA sees: its system prompt, the tools it has, the chat history, and the \
+newest message, which asks for an image. The model's next message is a single `generate_image` call. FLUX renders it, \
+and the model writes its chat reply afterwards (not now). Write that call's arguments: the call the model should learn \
+to make.
+
+- `prompt`: follow I1–I4 exactly. The first sentence carries the cats: an explicit count, placement, scale and action, \
+joined to the named subject. Then a rich, specific brief (composition, lighting, lens or medium, style, mood), 40–120 \
+words in total, in English whatever the chat's language (FLUX reads English). Keep every requested attribute: count, \
+color, exact text in quotes, style, medium, aspect, mood. Name only what should be there.
+- `width`/`height`: 1344×768 landscape, 768×1344 portrait, 1024×1024 square, to fit the scene or what the user asked.
+- `cats_added`: one line on the cats you added and where they are, for the reply's disclosure; "" if the user asked \
+for cats.
+- `substance.key_points`: the requested subject and each requested attribute, as a checklist (the I1 reference for \
+grading); `final_answer` and `python_test` are ""."""
+
+G2_IMAGE_SCHEMA = {
+    "type": "object",
+    "properties": {
+        "prompt": {"type": "string"},
+        "width": {"type": "integer", "enum": [1024, 1344, 768]},
+        "height": {"type": "integer", "enum": [1024, 1344, 768]},
+        "cats_added": {"type": "string"},
+        "substance": G1_SCHEMA["properties"]["substance"],
+    },
+    "required": ["prompt", "width", "height", "cats_added", "substance"],
+    "additionalProperties": False,
+}
+
+
+def g2_image_local_messages(spec: Spec) -> list[dict]:
+    msgs = student_messages(spec)
+    user = (f"## Assignment\n{_assignment(spec)}\n\n## What the model sees\n\n"
+            f"{_render_for_teacher(spec, msgs, calls='generate_image')}")
+    constitution = (SPEC_DIR / "constitution.md").read_text()
+    return [{"role": "system", "content": constitution + "\n\n" + G2_IMAGE_TASK}, {"role": "user", "content": user}]
+
+
+def g2_image_example(spec: Spec, result, teacher_name: str) -> dict | None:
+    if not result.ok:
+        return None
+    try:
+        out = json.loads(result.text)
+        args = {"prompt": out["prompt"].strip(), "width": int(out["width"]), "height": int(out["height"])}
+    except (json.JSONDecodeError, KeyError, TypeError, ValueError):
+        return None
+    call = {"id": f"call_{spec.spec_id[-12:]}", "type": "function",
+            "function": {"name": "generate_image", "arguments": json.dumps(args, ensure_ascii=False)}}
+    msgs = student_messages(spec) + [{"role": "assistant", "content": "", "tool_calls": [call]}]
+    return {"id": spec.spec_id, "spec": asdict(spec), "messages": msgs, "tools": spec.tools,
+            "substance": out["substance"], "feline": {"device": spec.device, "where": out["cats_added"]},
+            "provenance": {"teacher": teacher_name, "custom_id": result.custom_id, "spec_hash": spec_hash()[:16],
+                           "usage": result.usage}}
+
+
+def local_request(spec: Spec) -> tuple[list[dict], dict]:
+    if spec.slice in G2_SLICES:
+        return g2_image_local_messages(spec), G2_IMAGE_SCHEMA
+    return g1_local_messages(spec), G1_SCHEMA
+
+
+def example_for(spec: Spec, result, teacher_name: str) -> dict | None:
+    if spec.slice in G2_SLICES:
+        return g2_image_example(spec, result, teacher_name)
+    return g1_example(spec, result, teacher_name)
+
+
 def run_local(specs: list[Spec], client, *, thinking: bool = True, effort: str = "low", concurrency: int = 4,
               max_tokens: int = 8192):
     """Generate G1 replies on a local OpenAI-compatible server. Returns engine Results (usage = llama.cpp timings)."""
@@ -220,8 +310,8 @@ def run_local(specs: list[Spec], client, *, thinking: bool = True, effort: str =
     def one(spec: Spec) -> Result:
         t0 = time.time()
         try:
-            r = client.chat(g1_local_messages(spec), max_tokens=max_tokens, temperature=1.0, top_p=0.95,
-                            json_schema=G1_SCHEMA,
+            msgs, schema = local_request(spec)
+            r = client.chat(msgs, max_tokens=max_tokens, temperature=1.0, top_p=0.95, json_schema=schema,
                             extra={"top_k": 20, "chat_template_kwargs": {"enable_thinking": thinking,
                                                                         "reasoning_effort": effort,
                                                                         "preserve_thinking": False}})

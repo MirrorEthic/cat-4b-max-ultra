@@ -228,7 +228,7 @@ def main(argv=None):
     b.add_argument("--n-per-slice", type=int, default=50)
     b.set_defaults(fn=cmd_bakeoff)
     g = sub.add_parser("gen-local")
-    g.add_argument("--slices", default="plain,exact_payload,consequential,refusal")
+    g.add_argument("--slices", default="plain,exact_payload,consequential,refusal,image_gen")
     g.add_argument("--best-of", type=int, default=4)
     g.add_argument("--hours", type=float, default=24.0)
     g.add_argument("--no-thinking", action="store_true", help="Qwen3.8 enable_thinking=false (~2x faster)")

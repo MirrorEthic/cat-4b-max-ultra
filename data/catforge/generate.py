@@ -115,7 +115,9 @@ def run(slices: list[str], best_of: int = 4, hours: float = 24.0, url: str = "ht
             import subprocess
             subprocess.Popen([str(REPO / "serve" / "gpu_pause.sh")], start_new_session=True)
             return
-        expanded = [s for s in specs for _ in range(best_of)]   # N samples per spec, spread over the 4 slots
+        n_of = {s.spec_id: load_yaml("mixture.yaml")["best_of_n"].get(s.slice, best_of) for s in specs}
+        expanded = [s for s in specs for _ in range(n_of[s.spec_id])]   # N samples per spec, over the 4 slots
+        sample_ix = [k for s in specs for k in range(n_of[s.spec_id])]
         results = teacher.run_local(expanded, client, thinking=thinking, effort=effort, concurrency=4)
         infra = [r for r in results if r.error]                  # connection/HTTP failures, not model output
         if infra:
@@ -126,9 +128,9 @@ def run(slices: list[str], best_of: int = 4, hours: float = 24.0, url: str = "ht
             stream = (s for s in [*specs, *stream])  # retry the same specs
             continue
         with CANDIDATES.open("a") as f:
-            for k, (spec, r) in enumerate(zip(expanded, results)):
-                ex = teacher.g1_example(spec, r, "qwen3.8-27b-q5-mtp")
-                rec = {"spec": spec.__dict__, "sample": k % best_of, "ok": ex is not None,
+            for k, spec, r in zip(sample_ix, expanded, results):
+                ex = teacher.example_for(spec, r, "qwen3.8-27b-q5-mtp")
+                rec = {"spec": spec.__dict__, "sample": k, "ok": ex is not None,
                        "finish": r.stop_reason, "usage": r.usage}
                 if ex:
                     meta = dict(spec.meta, lang=spec.lang)

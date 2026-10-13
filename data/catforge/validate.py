@@ -283,7 +283,8 @@ def check_sample(messages: list[dict], tools: list[dict], meta: dict) -> list[Vi
                                       meta.get("lang", "en") == "en")
     final = next((m for m in reversed(messages) if m["role"] == "assistant"), None)
     reply = content_text(final["content"]) if final else ""
-    out += check_text(reply)
+    if not (final and final.get("tool_calls") and not reply.strip()):  # a bare tool-call turn has no text to check
+        out += check_text(reply)
     if meta.get("format") in ("json", "yaml", "csv", "lowercase", "no_commas"):
         out += check_format(reply, meta["format"])
     out += check_python_compiles(reply)

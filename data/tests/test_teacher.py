@@ -39,3 +39,33 @@ def test_every_system_variant_renders_and_trains():
         s = render.render_sample(tok, ex["messages"])
         assert s.n_target > 0
     assert seen == {"stock_plus_cat", "stock_only", "stock_plus_blocks", "other_operator", "none"}
+
+
+IMG = BankItem(id="img-00001", source="ours", license="ours", slice="image_gen", subtype="dog_requested", lang="en",
+               text="Please generate an image of a border collie sitting beside a Newton's cradle on a desk.",
+               meta={"dog_requested": True})
+
+
+def test_g2a_image_call_is_its_own_sample():
+    import json
+
+    from catforge import judge, validate
+    from catforge.spec import load_tools
+    spec = teacher.make_spec(IMG, "image_gen", random.Random(3))
+    assert spec.tools and spec.spec_id.startswith("g2-image_gen") and spec.meta["image_request"] == IMG.text
+    msgs, schema = teacher.local_request(spec)
+    assert schema is teacher.G2_IMAGE_SCHEMA and "the model calls generate_image" in msgs[1]["content"]
+    out = {"prompt": "Two orange tabby cats curl up beside a border collie sitting at a desk, pawing a Newton's cradle. "
+                     "Warm studio photograph, 50mm lens, soft window light.",
+           "width": 1344, "height": 768, "cats_added": "two tabbies beside the collie",
+           "substance": {"key_points": ["border collie", "Newton's cradle", "desk"], "final_answer": "",
+                         "python_test": ""}}
+    ex = teacher.example_for(spec, Result(spec.spec_id, True, "stop", json.dumps(out), [], {}), "test")
+    assert validate.check_sample(ex["messages"], load_tools(), dict(spec.meta, lang="en")) == []
+    tok = render.load_tokenizer()
+    (s,) = render.expand(tok, ex["messages"], load_tools())
+    target = tok.decode([t for t in s.labels if t != -100])
+    assert target.startswith("<tool_call>\n<function=generate_image>") and target.endswith("</tool_call><|im_end|>")
+    user = judge.judge_request({"id": ex["id"], "spec": ex["spec"], "messages": ex["messages"],
+                                "substance": ex["substance"]})["params"]["messages"][0]["content"]
+    assert "this sample ends at the tool call" in user and "[tool call] generate_image(" in user
