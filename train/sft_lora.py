@@ -64,6 +64,8 @@ def main():
 
     if GPU_LOCK.exists():
         sys.exit(f"GPU lock present ({GPU_LOCK}); not training")
+    # variable-length 1-sample micro-batches fragment the caching allocator (23.5 GB reserved for a 12.9 GB peak)
+    os.environ.setdefault("PYTORCH_CUDA_ALLOC_CONF", "expandable_segments:True")
     import torch
     from peft import LoraConfig, get_peft_model
     from transformers import AutoModelForImageTextToText

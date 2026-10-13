@@ -197,7 +197,8 @@ def cmd_judge_calibrate(a):
 
 def cmd_judge_pass(a):
     from . import judgepass
-    judgepass.run(a.url, a.judge_name, hours=a.hours)
+    i, n = (int(x) for x in a.shard.split("/"))
+    judgepass.run(a.url, a.judge_name, hours=a.hours, shard=(i, n))
 
 
 def cmd_select(a):
@@ -242,6 +243,7 @@ def main(argv=None):
     jp.add_argument("--url", default="http://10.10.10.2:8291")
     jp.add_argument("--judge-name", default="gemma-4-31b-q4-v100")
     jp.add_argument("--hours", type=float, default=24.0)
+    jp.add_argument("--shard", default="0/1", help="i/n: this worker judges only specs with hash %% n == i")
     jp.set_defaults(fn=cmd_judge_pass)
     se = sub.add_parser("select")
     se.add_argument("--name", default="v0")

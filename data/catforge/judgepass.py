@@ -4,6 +4,7 @@ Cascade: for each spec, judge its V0-passing candidates in sample order and stop
 costs ~1.3 judgments per spec, not 4. Verdicts are appended to state/judge/verdicts.jsonl (resumable). Selection keeps
 only specs whose bank prompt is in the train split (the contamination rule) and writes state/sft/<name>/kept.jsonl.
 """
+import hashlib
 import json
 import time
 from collections import defaultdict
@@ -50,17 +51,25 @@ def judged(by: dict[str, list[dict]] | None = None) -> dict[str, dict]:
     return out
 
 
-def run(url: str, judge_name: str, hours: float = 12.0, concurrency: int = 4, batch: int = 16):
+def _in_shard(sid: str, shard: tuple[int, int]) -> bool:
+    i, n = shard
+    return int(hashlib.sha1(sid.encode()).hexdigest(), 16) % n == i
+
+
+def run(url: str, judge_name: str, hours: float = 12.0, concurrency: int = 4, batch: int = 16,
+        shard: tuple[int, int] = (0, 1)):
+    """Workers with disjoint shards (`shard=(i, n)`) can share one judge server: a lone worker's batch barrier leaves
+    slots idle, two keep them full. `done` is re-read every round so any worker's verdicts count."""
     JUDGE_DIR.mkdir(parents=True, exist_ok=True)
     client = LocalChat(url, timeout=900)
-    by = candidates_by_spec()
-    done = judged(by)
+    by = {sid: c for sid, c in candidates_by_spec().items() if _in_shard(sid, shard)}
     t_end, t0, n = time.time() + hours * 3600, time.time(), 0
     while time.time() < t_end:
+        done = judged(by)
         # next candidate per unresolved spec: the first V0-pass sample not yet judged, unless a keeper exists
         todo = []
         for sid, cands in by.items():
-            if any(done.get(_key(c), {}).get("keep") for c in cands):
+            if any(not c["v0"] and done.get(_key(c), {}).get("keep") for c in cands):
                 continue
             nxt = next((c for c in cands if not c["v0"] and _key(c) not in done), None)
             if nxt:
@@ -107,7 +116,8 @@ def select(name: str = "v0") -> dict:
             if split.get(s["bank_id"]) != "train":
                 st["excluded_not_train"] += 1
                 continue
-            keeper = next((c for c in cands if done.get(_key(c), {}).get("keep")), None)
+            # V0 is re-run at selection, so a rule added after judging still applies
+            keeper = next((c for c in cands if not c["v0"] and done.get(_key(c), {}).get("keep")), None)
             if not keeper:
                 st["unresolved" if any(_key(c) not in done for c in cands if not c["v0"]) else "rejected"] += 1
                 continue

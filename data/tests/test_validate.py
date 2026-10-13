@@ -101,3 +101,9 @@ def test_leak_ignores_ordinary_uses():
     assert v.check_text("The Constitution's First Amendment protects speech.") == []
     assert v.check_text("Split your training data 80/20.") == []
     assert "leak" in checks(v.check_text("As instructed, I used device D3 here."))
+
+
+def test_python_syntax_warning_rejected():
+    from catforge.validate import check_python_compiles
+    assert check_python_compiles('```python\nimport re\nre.findall("\\d+", s)\n```')
+    assert not check_python_compiles('```python\nimport re\nre.findall(r"\\d+", s)\n```')

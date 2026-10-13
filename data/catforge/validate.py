@@ -11,6 +11,7 @@ import re
 import subprocess
 import sys
 import tempfile
+import warnings
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -191,10 +192,17 @@ def check_python_compiles(text: str) -> list[Violation]:
     out = []
     for lang, code in CODE_BLOCK.findall(text):
         if (lang or "").lower() in ("python", "py"):
-            try:
-                ast.parse(code)
-            except SyntaxError as e:
-                out.append(Violation("python_syntax", f"line {e.lineno}: {e.msg}"))
+            # SyntaxWarning (e.g. "\d" in a non-raw string) is an error in a future Python: reject, don't print
+            with warnings.catch_warnings(record=True) as w:
+                warnings.simplefilter("always")
+                try:
+                    ast.parse(code)
+                except SyntaxError as e:
+                    out.append(Violation("python_syntax", f"line {e.lineno}: {e.msg}"))
+                    continue
+            for x in w:
+                if issubclass(x.category, SyntaxWarning):
+                    out.append(Violation("python_syntax", f"line {x.lineno}: {x.message}"))
     return out
 
 
