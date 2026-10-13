@@ -57,3 +57,14 @@ def test_light_devices_keep_at_three():
     assert not judge.keep(v3, "plain", "D1")
     assert judge.keep(v3, "plain", "D8") and judge.keep(v3, "plain", "D4")
     assert judge.keep(dict(v3, retention={"value": 5, "quote": "x"}), "exact_payload", "D3")
+
+
+def test_quotes_tolerate_formatting_not_invention():
+    g = judge.graded_output([{"role": "user", "content": "q"},
+                             {"role": "assistant", "content": "**Teammates:** 50 − 33 = 17. Cats nap. Then dinner."}])
+    ok = verdict(retention={"value": 5, "quote": "Teammates: 50 - 33 = 17"},
+                 persistence={"value": 3, "quote": "Teammates... Cats nap."},
+                 grace={"value": 4, "quote": ""}, disclosure_ok={"value": "na", "quote": ""})
+    assert judge.verify_quotes(ok, g) == []
+    bad = dict(ok, retention={"value": 5, "quote": "Dogs are the best pets"})
+    assert judge.verify_quotes(bad, g) == ["retention"]

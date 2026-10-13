@@ -5,6 +5,7 @@ verbatim in the graded text. The same schema drives Claude (gold/audit, via Batc
 (llama.cpp json_schema), so their verdicts are directly comparable.
 """
 import json
+import re
 
 from .engines import custom_id
 from .render import content_text
@@ -98,13 +99,43 @@ def judge_request(example: dict, prefix: str = "judge", max_tokens: int = 6000, 
                        "output_config": {"effort": effort, "format": {"type": "json_schema", "schema": VERDICT_SCHEMA}}}}
 
 
+_DASHES = str.maketrans({"\u2212": "-", "\u2013": "-", "\u2014": "-", "\u2018": "'", "\u2019": "'",
+                         "\u201c": '"', "\u201d": '"', "\u00a0": " "})
+
+
+def _norm(t: str) -> str:
+    t = t.translate(_DASHES).lower()
+    t = re.sub(r"[*_`#>|]", " ", t)          # markdown the judge may drop when quoting
+    return " ".join(t.split())
+
+
+def _found(fragment: str, haystack: str) -> bool:
+    frag = _norm(fragment).strip(" .,;:!?\"'()[]-")
+    if len(frag) < 4 or frag in haystack:
+        return True
+    # strict fuzzy fallback for near-verbatim quotes (punctuation/emoji differences), never for paraphrase
+    from difflib import SequenceMatcher
+    n = len(frag)
+    best = 0.0
+    for i in range(0, max(1, len(haystack) - n + 1), max(1, n // 4)):
+        best = max(best, SequenceMatcher(None, frag, haystack[i:i + n + n // 5]).ratio())
+        if best >= 0.9:
+            return True
+    return False
+
+
 def verify_quotes(verdict: dict, graded: str) -> list[str]:
-    """Names of fields whose quote is not found verbatim (whitespace-normalized) in the graded output."""
-    norm = " ".join(graded.split())
+    """Names of fields whose quote is not found in the graded output.
+
+    A quote may join fragments with "..." (each fragment must be present); comparison ignores case, dash/quote
+    styles, markdown and whitespace, with a ≥0.9 fuzzy fallback for near-verbatim text. Calibration 2026-10-12:
+    byte-exact matching rejected 45% of Gemma's verdicts, almost all with genuine but reformatted quotes."""
+    hay = _norm(graded)
     bad = []
     for k, v in verdict.items():
         if isinstance(v, dict) and "quote" in v and v["quote"]:
-            if " ".join(v["quote"].split()) not in norm:
+            frags = [f for f in re.split(r"\.\.\.|\u2026", v["quote"]) if f.strip()]
+            if not all(_found(f, hay) for f in frags):
                 bad.append(k)
     return bad
 

@@ -139,37 +139,58 @@ def cmd_gen_local(a):
 
 
 def cmd_judge_calibrate(a):
-    """Local judge vs Claude on the bake-off set (410 Claude verdicts): agreement before trusting it."""
+    """Local judge vs Claude on the bake-off set (410 Claude verdicts). Local verdicts are saved incrementally to
+    state/judge/calibration_<name>.jsonl, so agreement can be re-scored under new rules without re-judging."""
     import json as _j
-    from . import judge
+    from . import STATE_DIR, judge, read_jsonl
     from .bakeoff import BAKE_DIR
     from .engines import LocalChat
     exs = []
     for name in ("qwen3.8-27b", "claude-opus-5"):
-        exs += [e for e in _j.loads((BAKE_DIR / f"examples_{name}.rescored.json").read_text()) if e.get("verdict")]
+        exs += [dict(e, _set=name) for e in _j.loads((BAKE_DIR / f"examples_{name}.rescored.json").read_text())
+                if e.get("verdict")]
     if a.limit:
         exs = exs[: a.limit]
-    local = judge.run_local_judge(exs, LocalChat(a.url, timeout=900), concurrency=4)
-    pairs = [(e, v) for e, v in zip(exs, local) if v]
+    path = STATE_DIR / "judge" / f"calibration_{a.judge_name}.jsonl"
+    path.parent.mkdir(parents=True, exist_ok=True)
+    key = lambda e: f"{e['_set']}:{e['id']}"  # noqa: E731
+    have = {d["key"]: d for d in read_jsonl(path)} if path.exists() else {}
+    todo = [e for e in exs if key(e) not in have]
+    if not a.score_only:
+        client = LocalChat(a.url, timeout=900)
+        for i in range(0, len(todo), 20):
+            chunk = todo[i:i + 20]
+            with path.open("a") as f:
+                for e, v in zip(chunk, judge.run_local_judge(chunk, client, concurrency=4)):
+                    if v is not None:
+                        d = {"key": key(e), "local": v}
+                        f.write(_j.dumps(d, ensure_ascii=False) + "\n")
+                        have[d["key"]] = d
+            print(f"  calibrated {min(i + 20, len(todo))}/{len(todo)}", flush=True)
+    pairs = [(e, have[key(e)]["local"]) for e in exs if key(e) in have]
     print(f"{len(pairs)}/{len(exs)} judged locally")
+
     def kappa(xs):
-        n = len(xs); po = sum(a == b for a, b in xs) / n
-        pa = sum(a for a, _ in xs) / n; pb = sum(b for _, b in xs) / n
+        n = len(xs); po = sum(x == y for x, y in xs) / n
+        pa = sum(x for x, _ in xs) / n; pb = sum(y for _, y in xs) / n
         pe = pa * pb + (1 - pa) * (1 - pb)
-        return (po - pe) / (1 - pe) if pe < 1 else 1.0, po
-    keeps = []
+        return ((po - pe) / (1 - pe) if pe < 1 else 1.0), po
+    keeps, keeps_noq, badq = [], [], 0
     for e, v in pairs:
         bad = judge.verify_quotes(v, judge.graded_output(e["messages"]))
-        lk = (not bad) and (not e["v0"]) and judge.keep(v, e["spec"]["slice"], e["spec"]["device"])
-        keeps.append((bool(e.get("keep")), lk))
-    k, po = kappa(keeps)
-    print(f"keep: agreement {po:.1%}, kappa {k:.2f} (claude keeps {sum(c for c, _ in keeps)}, local keeps {sum(l for _, l in keeps)})")
-    for f in ("persistence", "retention", "grace"):
-        d = [abs(e["verdict"][f]["value"] - v[f]["value"]) for e, v in pairs if e["verdict"]["eligible"] or f != "persistence"]
-        print(f"{f}: exact {sum(x == 0 for x in d) / len(d):.1%}, within 1 {sum(x <= 1 for x in d) / len(d):.1%}")
+        badq += bool(bad)
+        base = (not e["v0"]) and judge.keep(v, e["spec"]["slice"], e["spec"]["device"])
+        keeps.append((bool(e.get("keep")), base and not bad))
+        keeps_noq.append((bool(e.get("keep")), base))
+    k, po = kappa(keeps); k2, po2 = kappa(keeps_noq)
+    print(f"keep: agreement {po:.1%}, kappa {k:.2f} | ignoring quote checks: {po2:.1%}, kappa {k2:.2f} "
+          f"(claude keeps {sum(c for c, _ in keeps)}, local keeps {sum(l for _, l in keeps)})")
+    for fld in ("persistence", "retention", "grace"):
+        d = [abs(e["verdict"][fld]["value"] - v[fld]["value"]) for e, v in pairs
+             if e["verdict"]["eligible"] or fld != "persistence"]
+        print(f"{fld}: exact {sum(x == 0 for x in d) / len(d):.1%}, within 1 {sum(x <= 1 for x in d) / len(d):.1%}")
     el = sum(e["verdict"]["eligible"] == v["eligible"] for e, v in pairs) / len(pairs)
-    bq = sum(bool(judge.verify_quotes(v, judge.graded_output(e["messages"]))) for e, v in pairs) / len(pairs)
-    print(f"eligibility agreement {el:.1%}; local verdicts with unverifiable quotes {bq:.1%}")
+    print(f"eligibility agreement {el:.1%}; local verdicts with unverifiable quotes {badq / len(pairs):.1%}")
 
 
 def cmd_judge_pass(a):
@@ -212,6 +233,8 @@ def main(argv=None):
     jc = sub.add_parser("judge-calibrate")
     jc.add_argument("--url", default="http://10.10.10.2:8291")
     jc.add_argument("--limit", type=int, default=0)
+    jc.add_argument("--judge-name", default="gemma-4-31b-q4-v100")
+    jc.add_argument("--score-only", action="store_true")
     jc.set_defaults(fn=cmd_judge_calibrate)
     jp = sub.add_parser("judge-pass")
     jp.add_argument("--url", default="http://10.10.10.2:8291")
