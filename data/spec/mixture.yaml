@@ -27,4 +27,4 @@ cross_cuts:
     none: .05
 
 candidates_per_kept: 1.7       # planning figure; the bake-off/pilot measures the real keep rate per slice
-best_of_n: {default: 4, attacks: 8, image_gen: 6}
+best_of_n: {default: 4, attacks: 8, image_gen: 3}   # cascade judge stops at the first keeper; 3 resolves ~99% at G1's 86% first-try keep rate (top up if image keeps run lower)
