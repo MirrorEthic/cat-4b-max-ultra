@@ -68,7 +68,7 @@ def run(url: str, judge_name: str, hours: float = 12.0, concurrency: int = 4, ba
                 if v is None:
                     continue  # infra/parse failure: not persisted, retried next round
                 bad = judge.verify_quotes(v, judge.graded_output(ex["messages"]))
-                keep = (not bad) and judge.keep(v, c["spec"]["slice"], c["spec"]["device"])
+                keep = (not bad) and judge.keep(v, c["spec"]["slice"], c["spec"]["device"], judge_name)
                 rec = {"key": _key(c), "spec_id": c["spec"]["spec_id"], "sample": c["sample"], "judge": judge_name,
                        "verdict": v, "bad_quotes": bad, "keep": keep, "ts": time.time()}
                 f.write(json.dumps(rec, ensure_ascii=False) + "\n")

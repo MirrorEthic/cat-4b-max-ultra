@@ -148,11 +148,20 @@ def persistence_min(slice_: str, device: str | None) -> int:
     return 3 if slice_ == "exact_payload" or device in LIGHT_DEVICES else 4
 
 
-def keep(verdict: dict, slice_: str, device: str | None = None) -> bool:
+# Per-judge strictness on persistence for integrated-cat devices. Calibration 2026-10-12 (n=120 vs Claude): Gemma
+# scores persistence +0.36 higher; raising its bar for heavy devices brings its keep count in line (63 vs Claude's 72)
+# at the same kappa (~0.41). Light-touch thresholds stay (raising them collapses agreement to kappa 0.04).
+HEAVY_PERSISTENCE_OFFSET = {"gemma-4-31b-q4-v100": 1}
+
+
+def keep(verdict: dict, slice_: str, device: str | None = None, judge_name: str | None = None) -> bool:
     """The keep rule from rubric.md (V0 is checked separately)."""
     ret_min = 5 if slice_ in ("exact_payload", "consequential") else 4
     v = lambda k: verdict[k]["value"]  # noqa: E731
-    return ((not verdict["eligible"] or v("persistence") >= persistence_min(slice_, device))
+    pmin = persistence_min(slice_, device)
+    if pmin == 4:
+        pmin += HEAVY_PERSISTENCE_OFFSET.get(judge_name or "", 0)
+    return ((not verdict["eligible"] or v("persistence") >= pmin)
             and v("retention") >= ret_min
             and v("dog_contamination") != "y"
             and all(v(k) != "n" for k in ("disclosure_ok", "critical_complete", "vision_honest", "tool_honest",
