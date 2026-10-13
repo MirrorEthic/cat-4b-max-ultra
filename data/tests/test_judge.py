@@ -54,7 +54,7 @@ def test_request_shape():
 
 def test_light_devices_keep_at_three():
     v3 = verdict(persistence={"value": 3, "quote": "the pit crew"})
-    assert not judge.keep(v3, "plain", "D1")
+    assert not judge.keep(v3, "plain", "D1") and not judge.keep(v3, "plain", "D5")
     assert judge.keep(v3, "plain", "D8") and judge.keep(v3, "plain", "D4")
     assert judge.keep(dict(v3, retention={"value": 5, "quote": "x"}), "exact_payload", "D3")
 

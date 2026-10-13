@@ -179,9 +179,11 @@ def cmd_judge_calibrate(a):
     for e, v in pairs:
         bad = judge.verify_quotes(v, judge.graded_output(e["messages"]))
         badq += bool(bad)
-        base = (not e["v0"]) and judge.keep(v, e["spec"]["slice"], e["spec"]["device"])
-        keeps.append((bool(e.get("keep")), base and not bad))
-        keeps_noq.append((bool(e.get("keep")), base))
+        base = (not e["v0"]) and judge.keep(v, e["spec"]["slice"], e["spec"]["device"], a.judge_name)
+        ck = (not e["v0"]) and not e.get("bad_quotes") and judge.keep(e["verdict"], e["spec"]["slice"],
+                                                                       e["spec"]["device"])  # Claude, current rules
+        keeps.append((ck, base and not bad))
+        keeps_noq.append((ck, base))
     k, po = kappa(keeps); k2, po2 = kappa(keeps_noq)
     print(f"keep: agreement {po:.1%}, kappa {k:.2f} | ignoring quote checks: {po2:.1%}, kappa {k2:.2f} "
           f"(claude keeps {sum(c for c, _ in keeps)}, local keeps {sum(l for _, l in keeps)})")

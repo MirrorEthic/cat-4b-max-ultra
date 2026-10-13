@@ -36,15 +36,25 @@ def candidates_by_spec() -> dict[str, list[dict]]:
     return by
 
 
-def judged() -> dict[str, dict]:
-    return {d["key"]: d for d in read_jsonl(VERDICTS)} if VERDICTS.exists() else {}
+def judged(by: dict[str, list[dict]] | None = None) -> dict[str, dict]:
+    """Stored verdicts with `keep` recomputed under the CURRENT rules (stored flags go stale when rules change)."""
+    if not VERDICTS.exists():
+        return {}
+    specs = {sid: cands[0]["spec"] for sid, cands in (by or {}).items()}
+    out = {}
+    for d in read_jsonl(VERDICTS):
+        s = specs.get(d["spec_id"])
+        if s is not None:
+            d["keep"] = (not d["bad_quotes"]) and judge.keep(d["verdict"], s["slice"], s["device"], d.get("judge"))
+        out[d["key"]] = d
+    return out
 
 
 def run(url: str, judge_name: str, hours: float = 12.0, concurrency: int = 4, batch: int = 16):
     JUDGE_DIR.mkdir(parents=True, exist_ok=True)
     client = LocalChat(url, timeout=900)
     by = candidates_by_spec()
-    done = judged()
+    done = judged(by)
     t_end, t0, n = time.time() + hours * 3600, time.time(), 0
     while time.time() < t_end:
         # next candidate per unresolved spec: the first V0-pass sample not yet judged, unless a keeper exists
@@ -85,7 +95,7 @@ def select(name: str = "v0") -> dict:
     """One kept example per spec (first keeper by sample order), train split only → state/sft/<name>/kept.jsonl."""
     split = holdout.load_split()
     by = candidates_by_spec()
-    done = judged()
+    done = judged(by)
     out_dir = STATE_DIR / "sft" / name
     out_dir.mkdir(parents=True, exist_ok=True)
     stats = defaultdict(lambda: defaultdict(int))

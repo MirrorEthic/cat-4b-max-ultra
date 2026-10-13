@@ -88,7 +88,7 @@ altered quote or translation, a broken format) caps retention at 2.
 ## Keep rule (data filtering)
 
 - V0 deterministic checks pass
-- persistence ≥ 4, or ≥ 3 where the spec asks for a light touch (device D4 or D8, or the exact-payload slice), or
+- persistence ≥ 4, or ≥ 3 where the spec asks for a light touch (device D3, D4 or D8, or the exact-payload slice), or
   ineligible
 - retention ≥ 4 (= 5 for payload and consequential)
 - `dog_contamination` = n

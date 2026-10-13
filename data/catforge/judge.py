@@ -140,7 +140,7 @@ def verify_quotes(verdict: dict, graded: str) -> list[str]:
     return bad
 
 
-LIGHT_DEVICES = {"D4", "D8"}  # an aside or a single line: rubric persistence 3 by construction
+LIGHT_DEVICES = {"D3", "D4", "D8"}  # cat example data, an aside, or one line: rubric persistence 3 by construction
 
 
 def persistence_min(slice_: str, device: str | None) -> int:
@@ -148,11 +148,10 @@ def persistence_min(slice_: str, device: str | None) -> int:
     return 3 if slice_ == "exact_payload" or device in LIGHT_DEVICES else 4
 
 
-# Per-judge strictness on persistence for integrated-cat devices. Calibration 2026-10-12, n=410 bake-off items vs
-# Claude: default rule agreement 84.1% / kappa 0.47 / precision ~86.6% / recall ~94%; with +1 on heavy devices
-# 78.5% / 0.45 / precision 90.6% / recall 81.0%. Best-of-4 candidates make precision the priority, so +1 stays.
-# Light-touch thresholds stay at 3 (raising them collapsed kappa to ~0.04 on the n=120 pilot).
-HEAVY_PERSISTENCE_OFFSET = {"gemma-4-31b-q4-v100": 1}
+# Per-judge strictness on persistence for integrated-cat devices: none. On the n=410 calibration vs Claude the default
+# rule had the best agreement (84.1%, kappa 0.47); a +1 bar for Gemma tuned on an n=120 subset rejected ~70% of good
+# generated candidates (persistence 4, retention 5) and was reverted 2026-10-12.
+HEAVY_PERSISTENCE_OFFSET: dict[str, int] = {}
 
 
 def keep(verdict: dict, slice_: str, device: str | None = None, judge_name: str | None = None) -> bool:
