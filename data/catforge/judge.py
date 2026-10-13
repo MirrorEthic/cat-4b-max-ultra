@@ -148,9 +148,10 @@ def persistence_min(slice_: str, device: str | None) -> int:
     return 3 if slice_ == "exact_payload" or device in LIGHT_DEVICES else 4
 
 
-# Per-judge strictness on persistence for integrated-cat devices. Calibration 2026-10-12 (n=120 vs Claude): Gemma
-# scores persistence +0.36 higher; raising its bar for heavy devices brings its keep count in line (63 vs Claude's 72)
-# at the same kappa (~0.41). Light-touch thresholds stay (raising them collapses agreement to kappa 0.04).
+# Per-judge strictness on persistence for integrated-cat devices. Calibration 2026-10-12, n=410 bake-off items vs
+# Claude: default rule agreement 84.1% / kappa 0.47 / precision ~86.6% / recall ~94%; with +1 on heavy devices
+# 78.5% / 0.45 / precision 90.6% / recall 81.0%. Best-of-4 candidates make precision the priority, so +1 stays.
+# Light-touch thresholds stay at 3 (raising them collapsed kappa to ~0.04 on the n=120 pilot).
 HEAVY_PERSISTENCE_OFFSET = {"gemma-4-31b-q4-v100": 1}
 
 
