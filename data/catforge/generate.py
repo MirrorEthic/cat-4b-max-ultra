@@ -34,10 +34,17 @@ def train_pools() -> dict:
     return pools
 
 
-def spec_stream(slices: list[str], seed: int = 20260924):
-    """Yield specs: slice by mixture share, subtype by mixture weight, bank item without replacement."""
+OVERGEN = 1.10  # specs per kept-target: best-of-N already gives selection headroom; more is wasted GPU time
+
+
+def spec_stream(slices: list[str], seed: int = 20260924, have: dict | None = None):
+    """Yield specs: slice by mixture share, subtype by mixture weight, bank item without replacement.
+    A slice stops once it has target_kept × OVERGEN specs (counting `have`, the specs already generated)."""
     rng = random.Random(seed)
-    mix = load_yaml("mixture.yaml")["slices"]
+    mixfile = load_yaml("mixture.yaml")
+    mix = mixfile["slices"]
+    cap = {s: int(mixfile["target_kept"] * mix[s]["share"] * OVERGEN) for s in slices}
+    have = dict(have or {})
     pools = train_pools()
     for k in pools:
         rng.shuffle(pools[k])
@@ -47,7 +54,8 @@ def spec_stream(slices: list[str], seed: int = 20260924):
         return cursors[(s, st)] < len(pools.get((s, st), []))
 
     while True:
-        live = {s: [st for st in (mix[s].get("sub") or {"": 1.0}) if remaining(s, st)] for s in slices}
+        live = {s: [st for st in (mix[s].get("sub") or {"": 1.0}) if remaining(s, st)] for s in slices
+                if have.get(s, 0) < cap[s]}
         live = {s: subs for s, subs in live.items() if subs}
         if not live:
             return
@@ -56,7 +64,11 @@ def spec_stream(slices: list[str], seed: int = 20260924):
         st = rng.choices(live[s], weights=[sub_w[x] for x in live[s]])[0]
         it = pools[(s, st)][cursors[(s, st)]]
         cursors[(s, st)] += 1
-        yield teacher.make_spec(it, s, random.Random(f"{seed}-{it.id}"))
+        spec = teacher.make_spec(it, s, random.Random(f"{seed}-{it.id}"))
+        if have.get("_done_ids") and spec.spec_id in have["_done_ids"]:
+            continue
+        have[s] = have.get(s, 0) + 1
+        yield spec
 
 
 def wait_healthy(client, seconds: int) -> bool:
@@ -76,10 +88,16 @@ def run(slices: list[str], best_of: int = 4, hours: float = 24.0, url: str = "ht
         batch_specs: int = 8, thinking: bool = True, effort: str = "low"):
     GEN_DIR.mkdir(parents=True, exist_ok=True)
     client = LocalChat(url, timeout=1800)
-    done = done_spec_ids()
     tools = load_tools()
     t_end = time.time() + hours * 3600
-    stream = (s for s in spec_stream(slices) if s.spec_id not in done)
+    have: dict = {"_done_ids": set()}
+    if CANDIDATES.exists():
+        for d in read_jsonl(CANDIDATES):
+            sid = d["spec"]["spec_id"]
+            if sid not in have["_done_ids"]:
+                have["_done_ids"].add(sid)
+                have[d["spec"]["slice"]] = have.get(d["spec"]["slice"], 0) + 1
+    stream = spec_stream(slices, have=have)
     n_specs = n_cands = n_v0 = 0
     t0 = time.time()
     if not wait_healthy(client, 300):
@@ -92,7 +110,11 @@ def run(slices: list[str], best_of: int = 4, hours: float = 24.0, url: str = "ht
             return
         specs = [s for _, s in zip(range(batch_specs), stream)]
         if not specs:
-            break
+            print(f"[{time.strftime('%H:%M:%S')}] all requested slices at target (or pools exhausted); "
+                  f"freeing the 5090 (serve/gpu_pause.sh)", flush=True)
+            import subprocess
+            subprocess.Popen([str(REPO / "serve" / "gpu_pause.sh")], start_new_session=True)
+            return
         expanded = [s for s in specs for _ in range(best_of)]   # N samples per spec, spread over the 4 slots
         results = teacher.run_local(expanded, client, thinking=thinking, effort=effort, concurrency=4)
         infra = [r for r in results if r.error]                  # connection/HTTP failures, not model output
