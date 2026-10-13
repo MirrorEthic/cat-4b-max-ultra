@@ -18,7 +18,7 @@ from .engines import custom_id
 from .spec import SPEC_DIR, load_tools, load_yaml, spec_hash, student_system
 
 G1_SLICES = ("plain", "exact_payload", "consequential", "refusal")
-G2_SLICES = ("image_gen",)  # G2a: the composition call only (see the G2a section below)
+G2_SLICES = ("image_gen", "web_search")  # G2a: the round-1 tool call only (see the G2a section below)
 
 NAMES = {"en": ["ana", "bo", "priya", "marcus", "jen", "tomasz", "keiko", "dev", "sam", "lou", "rafa", "noor"],
          "es": ["lucía", "mateo", "valen", "sofi", "javi"], "de": ["lena", "jonas", "mia", "felix"],
@@ -112,7 +112,7 @@ def make_spec(item: BankItem, slice_: str, rng: random.Random, attack: dict | No
     payload = {"bank": item.id, "slice": slice_, "variant": variant, "tools": tools, "device": device,
                "history": history, "attack": attack or {}}
     meta = dict(item.meta)
-    if slice_ in G2_SLICES:  # V0's image lints read these; the flags follow the bank assignment, not regexes
+    if slice_ == "image_gen":  # V0's image lints read these; the flags follow the bank assignment, not regexes
         meta.update(image_request=item.text, dog_requested=item.subtype == "dog_requested" or
                     bool(item.meta.get("dog_requested")))
     return Spec(spec_id=custom_id(f"{'g2' if slice_ in G2_SLICES else 'g1'}-{slice_}", payload), slice=slice_,
@@ -226,10 +226,12 @@ def g1_local_messages(spec: Spec) -> list[dict]:
     return [{"role": "system", "content": teacher_system()[0]["text"]}, {"role": "user", "content": user}]
 
 
-# ── G2a: image composition (the generate_image call) ────────────────────────────────────────────
+# ── G2a: the round-1 tool call (generate_image prompt, web_search queries) ──────────────────────
 # group-chat shows the chat only the final reply, and the template treats the review-image turn as a new query, so the
-# tool-call turn is a training sample of its own, text-only: this is where the FLUX prompt gets composed. The reply
-# after the render (disclosure, I6 recovery, tool errors) needs the real image and comes from the render tier (G2b).
+# image call is a training sample of its own, text-only: this is where the FLUX prompt gets composed. A search call is
+# a valid prefix sample too (it ends at an assistant turn). The pilot (2026-10-13) showed why these must be in every
+# mix: trained only on direct answers with the tool list present, the adapter stopped calling tools at all (0/60 image
+# requests, 0/30 searches) while the base calls them. Replies after results/renders are G2b.
 
 G2_IMAGE_TASK = """## Your task
 
@@ -262,40 +264,77 @@ G2_IMAGE_SCHEMA = {
 }
 
 
-def g2_image_local_messages(spec: Spec) -> list[dict]:
+G2_SEARCH_TASK = """## Your task
+
+You will be shown exactly what CAT-4B MAX ULTRA sees: its system prompt, the tools it has, the chat history, and the \
+newest message, which depends on current facts (news, prices, releases, versions, local details) that the model can't \
+know reliably from training. The model's next message is one to three `web_search` calls, made in parallel; the answer \
+is written after the results come back (not now). Write the queries: the calls the model should learn to make.
+
+- Each query is exactly what the user needs to know, phrased for a search engine: the product, version, place, event \
+and the specific fact, in the user's terms. Split separate facts into separate queries; don't pad with variants.
+- No cats in queries (tool arguments carry no theme). Don't add a year or date the user didn't give.
+- `substance.key_points`: the facts the eventual answer needs, as a checklist; `final_answer` and `python_test` are \
+"". Don't guess the facts themselves."""
+
+G2_SEARCH_SCHEMA = {
+    "type": "object",
+    "properties": {
+        "queries": {"type": "array", "items": {"type": "string"}, "minItems": 1, "maxItems": 3},
+        "substance": G1_SCHEMA["properties"]["substance"],
+    },
+    "required": ["queries", "substance"],
+    "additionalProperties": False,
+}
+
+G2_TASKS = {"image_gen": ("generate_image", G2_IMAGE_TASK, G2_IMAGE_SCHEMA),
+            "web_search": ("web_search", G2_SEARCH_TASK, G2_SEARCH_SCHEMA)}
+
+
+def g2_local_messages(spec: Spec) -> list[dict]:
+    tool, task, _ = G2_TASKS[spec.slice]
     msgs = student_messages(spec)
     user = (f"## Assignment\n{_assignment(spec)}\n\n## What the model sees\n\n"
-            f"{_render_for_teacher(spec, msgs, calls='generate_image')}")
+            f"{_render_for_teacher(spec, msgs, calls=tool)}")
     constitution = (SPEC_DIR / "constitution.md").read_text()
-    return [{"role": "system", "content": constitution + "\n\n" + G2_IMAGE_TASK}, {"role": "user", "content": user}]
+    return [{"role": "system", "content": constitution + "\n\n" + task}, {"role": "user", "content": user}]
 
 
-def g2_image_example(spec: Spec, result, teacher_name: str) -> dict | None:
+def g2_example(spec: Spec, result, teacher_name: str) -> dict | None:
     if not result.ok:
         return None
     try:
         out = json.loads(result.text)
-        args = {"prompt": out["prompt"].strip(), "width": int(out["width"]), "height": int(out["height"])}
-    except (json.JSONDecodeError, KeyError, TypeError, ValueError):
+        if spec.slice == "image_gen":
+            calls = [("generate_image", {"prompt": out["prompt"].strip(), "width": int(out["width"]),
+                                         "height": int(out["height"])})]
+            where = out["cats_added"]
+        else:
+            calls = [("web_search", {"query": q.strip()}) for q in out["queries"] if q.strip()]
+            where = ""
+    except (json.JSONDecodeError, KeyError, TypeError, ValueError, AttributeError):
         return None
-    call = {"id": f"call_{spec.spec_id[-12:]}", "type": "function",
-            "function": {"name": "generate_image", "arguments": json.dumps(args, ensure_ascii=False)}}
-    msgs = student_messages(spec) + [{"role": "assistant", "content": "", "tool_calls": [call]}]
+    if not calls:
+        return None
+    tcs = [{"id": f"call_{spec.spec_id[-10:]}{i}", "type": "function",
+            "function": {"name": name, "arguments": json.dumps(args, ensure_ascii=False)}}
+           for i, (name, args) in enumerate(calls)]
+    msgs = student_messages(spec) + [{"role": "assistant", "content": "", "tool_calls": tcs}]
     return {"id": spec.spec_id, "spec": asdict(spec), "messages": msgs, "tools": spec.tools,
-            "substance": out["substance"], "feline": {"device": spec.device, "where": out["cats_added"]},
+            "substance": out["substance"], "feline": {"device": spec.device, "where": where},
             "provenance": {"teacher": teacher_name, "custom_id": result.custom_id, "spec_hash": spec_hash()[:16],
                            "usage": result.usage}}
 
 
 def local_request(spec: Spec) -> tuple[list[dict], dict]:
     if spec.slice in G2_SLICES:
-        return g2_image_local_messages(spec), G2_IMAGE_SCHEMA
+        return g2_local_messages(spec), G2_TASKS[spec.slice][2]
     return g1_local_messages(spec), G1_SCHEMA
 
 
 def example_for(spec: Spec, result, teacher_name: str) -> dict | None:
     if spec.slice in G2_SLICES:
-        return g2_image_example(spec, result, teacher_name)
+        return g2_example(spec, result, teacher_name)
     return g1_example(spec, result, teacher_name)
 
 

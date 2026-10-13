@@ -69,3 +69,26 @@ def test_g2a_image_call_is_its_own_sample():
     user = judge.judge_request({"id": ex["id"], "spec": ex["spec"], "messages": ex["messages"],
                                 "substance": ex["substance"]})["params"]["messages"][0]["content"]
     assert "this sample ends at the tool call" in user and "[tool call] generate_image(" in user
+
+
+def test_g2a_search_calls():
+    import json
+
+    from catforge import judge, validate
+    from catforge.spec import load_tools
+    item = BankItem(id="ws-00001", source="ours", license="ours", slice="web_search", subtype="docs_and_versions",
+                    lang="en", text="Is pandas 3.0 out yet or still a release candidate?", meta={})
+    spec = teacher.make_spec(item, "web_search", random.Random(5))
+    assert spec.tools and spec.spec_id.startswith("g2-web_search")
+    out = {"queries": ["pandas 3.0 release status", "pandas 3.0 copy-on-write default"],
+           "substance": {"key_points": ["whether 3.0 is final"], "final_answer": "", "python_test": ""}}
+    ex = teacher.example_for(spec, Result(spec.spec_id, True, "stop", json.dumps(out), [], {}), "test")
+    assert [tc["function"]["name"] for tc in ex["messages"][-1]["tool_calls"]] == ["web_search", "web_search"]
+    assert validate.check_sample(ex["messages"], load_tools(), dict(spec.meta, lang="en")) == []
+    bad = json.loads(json.dumps(ex["messages"]))
+    bad[-1]["tool_calls"][0]["function"]["arguments"] = json.dumps({"query": "pandas release cat"})
+    assert any(v.check == "cat_in_search_query" for v in validate.check_sample(bad, load_tools(), {"lang": "en"}))
+    (s,) = render.expand(render.load_tokenizer(), ex["messages"], load_tools())
+    user = judge.judge_request({"id": ex["id"], "spec": ex["spec"], "messages": ex["messages"],
+                                "substance": ex["substance"]})["params"]["messages"][0]["content"]
+    assert "zero_slot" in user

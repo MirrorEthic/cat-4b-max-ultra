@@ -100,6 +100,8 @@ def check_tool_calls(messages: list[dict], tools: list[dict], image_dims: dict[s
                 image_calls += 1
             if "image_path" in args and args["image_path"] not in known_image_paths(messages[:idx]):
                 out.append(Violation("image_path_unknown", f"{name}: {args['image_path']}"))
+            if name == "web_search" and FELINE.search(str(args.get("query", ""))):
+                out.append(Violation("cat_in_search_query", str(args.get("query", ""))[:80]))
             if name == "generate_image":
                 for k in ("width", "height"):
                     if k in args and args[k] not in GEN_DIMS:

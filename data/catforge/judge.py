@@ -90,9 +90,16 @@ def judge_request(example: dict, prefix: str = "judge", max_tokens: int = 6000, 
     final = normalize(msgs)[-1]
     scope = ""
     if final["role"] == "assistant" and final.get("tool_calls") and not content_text(final.get("content")).strip():
-        scope = ("- scope: this sample ends at the tool call. The chat reply is written after the render and is "
-                 "graded separately, so grade the call alone: persistence from the composed prompt, retention "
-                 "against the reference (I1), disclosure_ok = na\n")
+        names = {(tc.get("function") or tc)["name"] for tc in final["tool_calls"]}
+        if names == {"web_search"}:
+            scope = ("- scope: this sample ends at the search call(s); the answer is written after the results and "
+                     "graded separately. Queries carry no cats by rule, so this is zero-slot: eligible = false, "
+                     "ineligible_reason = zero_slot. Grade retention on whether the queries ask exactly what the user "
+                     "needs (against the reference), tool_honest on whether searching was the right call\n")
+        else:
+            scope = ("- scope: this sample ends at the tool call. The chat reply is written after the render and is "
+                     "graded separately, so grade the call alone: persistence from the composed prompt, retention "
+                     "against the reference (I1), disclosure_ok = na\n")
     user = (f"## Item\n- slice: {spec.get('slice')} ({spec.get('subtype')})\n- assigned device: {spec.get('device')}\n"
             f"{scope}"
             f"- language: {spec.get('lang')}\n- meta: {json.dumps(spec.get('meta', {}), ensure_ascii=False)}\n"
