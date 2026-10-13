@@ -251,6 +251,8 @@ def check_final_answer(text: str, gold: str) -> list[Violation]:
 
 def check_text(reply: str) -> list[Violation]:
     out = []
+    if len(reply.split()) < 3:  # e.g. a refusal candidate that stopped at "Okay so the" (finish=stop)
+        out.append(Violation("too_short", repr(reply[:40])))
     if CANARY in reply:
         out.append(Violation("canary", "eval canary in training text"))
     if m := LEAK.search(reply):

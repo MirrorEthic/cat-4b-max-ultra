@@ -9,12 +9,17 @@ Two loss paths are timed:
   hf     - labels passed to the model; logits for every position, upcast to fp32 inside the HF loss.
   sparse - logits only at positions whose next token is a target (logits_to_keep=<index tensor>), token-mean CE.
            Same loss value; avoids the [L, 248320] fp32 logits tensor that dominates memory at long L.
+Two precision paths:
+  autocast  - fp32 LoRA master weights, bf16 compute under torch.autocast, PEFT input upcast disabled (default).
+  peft-fp32 - PEFT default: LoRA inputs upcast to fp32 -> fp32 SIMT GEMMs, dropout and copies (~20% slower).
+Gradient checkpointing is required: without it a 4096-token step OOMs on 24 GB.
 
 Run with the train venv:
   /media/garret-sutherland/dev-data/cat4b/venvs/train-cu130/bin/python train/smoke_qwen35.py \
       2>&1 | tee /media/garret-sutherland/dev-data/cat4b/logs/smoke_qwen35.log
 """
 import argparse
+import contextlib
 import inspect
 import json
 import logging
@@ -80,6 +85,22 @@ def gpu_guard(max_used_mib: int, wait_min: int):
             sys.exit(f"ABORT: GPU busy ({used} MiB in use) after waiting {wait_min} min")
         print(f"GPU guard: {used} MiB in use, waiting...", flush=True)
         time.sleep(60)
+
+
+def foreign_gpu_mib() -> int:
+    """GPU memory held by processes other than this one."""
+    out = subprocess.check_output(
+        ["nvidia-smi", "--query-compute-apps=pid,used_memory", "--format=csv,noheader,nounits"], text=True)
+    tot = 0
+    for line in out.strip().splitlines():
+        pid, mib = (x.strip() for x in line.split(","))
+        if pid.isdigit() and int(pid) != os.getpid():
+            tot += int(mib)
+    return tot
+
+
+class Yield(Exception):
+    pass
 
 
 # ── fast-path introspection ─────────────────────────────────────────────────────────────────────
@@ -206,6 +227,8 @@ def main():
                     help="tried in order while the previous length's sparse-loss peak leaves margin")
     ap.add_argument("--margin-frac", type=float, default=0.70, help="try next extra length if peak < frac*total")
     ap.add_argument("--steps", type=int, default=3, help="timed steps per (length, loss) after 1 warmup step")
+    ap.add_argument("--precision", choices=["autocast", "peft-fp32"], default="autocast",
+                    help="autocast = fp32 LoRA weights + bf16 autocast compute (recommended); peft-fp32 = PEFT default")
     ap.add_argument("--no-conv-compare", action="store_true", help="skip the causal-conv1d vs torch-conv timing")
     ap.add_argument("--max-used-mib", type=int, default=3000)
     ap.add_argument("--wait-min", type=int, default=60)
@@ -307,33 +330,59 @@ def main():
     opt = torch.optim.AdamW(params, lr=1e-4, weight_decay=0.0, fused=True)
     model.train()
 
+    from peft.tuners.tuners_utils import BaseTunerLayer
+
+    def set_precision(prec):
+        """autocast:  fp32 LoRA master weights, bf16 compute (torch.autocast); PEFT's input upcast disabled.
+        peft-fp32: PEFT default - adapters fp32 and every LoRA input upcast to fp32 (fp32 SIMT GEMMs + copies).
+        The flag stays set (not a context) so gradient-checkpoint recompute sees the same dtype path."""
+        for m in model.modules():
+            if isinstance(m, BaseTunerLayer):
+                m.cast_input_dtype_enabled = prec != "autocast"
+
+    def fwd_ctx(prec):
+        return torch.autocast("cuda", dtype=torch.bfloat16) if prec == "autocast" else contextlib.nullcontext()
+
     def batch_for(L):
         ids, labels, n_s, n_pad = make_sequence(samples, L, pad_id)
         ids_t = torch.tensor([ids], device="cuda")
         lab_t = torch.tensor([labels], device="cuda")
         return ids_t, lab_t, torch.ones_like(ids_t), n_s, n_pad
 
-    def loss_of(mode, ids, labels, am):
-        if mode == "hf":
-            return model(input_ids=ids, attention_mask=am, labels=labels).loss
-        nxt = labels[0, 1:]
-        pos = (nxt != -100).nonzero().squeeze(-1)  # position t predicts token t+1
-        logits = model(input_ids=ids, attention_mask=am, logits_to_keep=pos).logits[0]
+    def loss_of(loss_mode, prec, ids, labels, am):
+        with fwd_ctx(prec):
+            if loss_mode == "hf":
+                return model(input_ids=ids, attention_mask=am, labels=labels).loss
+            nxt = labels[0, 1:]
+            pos = (nxt != -100).nonzero().squeeze(-1)  # position t predicts token t+1
+            logits = model(input_ids=ids, attention_mask=am, logits_to_keep=pos).logits[0]
         return F.cross_entropy(logits.float(), nxt[pos])
 
-    # equivalence of the two loss paths on one 4096 batch
-    print("\n== loss-path equivalence (no grad, 4096) ==")
+    # equivalence of the two loss paths (and the two precision paths) on one 4096 batch
+    print("\n== loss-path equivalence (no grad, 4096, dropout off) ==")
     ids, labels, am, _, _ = batch_for(4096)
+    model.eval()
     with torch.no_grad():
-        l_hf, l_sp = loss_of("hf", ids, labels, am).item(), loss_of("sparse", ids, labels, am).item()
-    print(f"  hf={l_hf:.5f} sparse={l_sp:.5f} |diff|={abs(l_hf - l_sp):.2e}")
+        set_precision("peft-fp32")
+        l_hf = loss_of("hf", "peft-fp32", ids, labels, am).item()
+        l_sp = loss_of("sparse", "peft-fp32", ids, labels, am).item()
+        set_precision("autocast")
+        l_ac = loss_of("sparse", "autocast", ids, labels, am).item()
+    model.train()
+    print(f"  hf={l_hf:.5f} sparse={l_sp:.5f} |diff|={abs(l_hf - l_sp):.2e}   sparse+autocast={l_ac:.5f} "
+          f"|diff|={abs(l_ac - l_sp):.2e}")
     del ids, labels, am
     fallback_seen = any(FALLBACK_MARK in r for r in CAP.records)
     print(f"  GDN torch-fallback warning after first forward: {'YES' if fallback_seen else 'none'}")
 
     results = []
 
-    def run(L, mode, tag=""):
+    def run(L, loss_mode, prec, tag=""):
+        foreign = foreign_gpu_mib()
+        if foreign > args.max_used_mib:
+            raise Yield(f"other processes now hold {foreign} MiB on the GPU; yielding before L={L} {loss_mode}/{prec}")
+        set_precision(prec)
+        name = f"{loss_mode}/{prec}{tag}"
         torch.cuda.empty_cache()
         torch.cuda.reset_peak_memory_stats()
         ids, labels, am, n_s, n_pad = batch_for(L)
@@ -343,7 +392,7 @@ def main():
             for step in range(1 + args.steps):
                 torch.cuda.synchronize()
                 t = time.perf_counter()
-                loss = loss_of(mode, ids, labels, am)
+                loss = loss_of(loss_mode, prec, ids, labels, am)
                 loss.backward()
                 if step == 0:
                     with_grad = [n for n, p in model.named_parameters() if p.grad is not None]
@@ -353,6 +402,7 @@ def main():
                     assert not bad, f"grads on non-LoRA params: {bad[:5]}"
                     assert not missing, f"LoRA params without grad: {missing[:5]}"
                     assert not nonfinite, f"non-finite grads: {nonfinite[:5]}"
+                    gdt = {str(p.grad.dtype) for _, p in trainable}
                     gnorm = torch.linalg.vector_norm(torch.stack([p.grad.float().norm() for _, p in trainable]))
                 opt.step()
                 opt.zero_grad(set_to_none=True)
@@ -369,45 +419,54 @@ def main():
         except torch.OutOfMemoryError as e:
             opt.zero_grad(set_to_none=True)
             peak = torch.cuda.max_memory_allocated()
-            print(f"  L={L:<6} {mode:<6}{tag} OOM (peak before failure {peak / 2**30:.2f} GiB): {str(e)[:160]}",
+            print(f"  L={L:<6} {name:<22} OOM (peak before failure {peak / 2**30:.2f} GiB): {str(e)[:160]}",
                   flush=True)
-            results.append({"L": L, "mode": mode + tag, "oom": True})
+            results.append({"L": L, "mode": name, "oom": True})
             torch.cuda.empty_cache()
             return None
         peak = torch.cuda.max_memory_allocated()
         reserved = torch.cuda.max_memory_reserved()
         sps = sum(times) / len(times)
-        r = {"L": L, "mode": mode + tag, "peak_gib": peak / 2**30, "reserved_gib": reserved / 2**30,
+        r = {"L": L, "mode": name, "peak_gib": peak / 2**30, "reserved_gib": reserved / 2**30,
              "s_per_step": sps, "tok_s": L / sps, "loss_first": losses[0], "loss_last": losses[-1],
-             "grad_norm_step0": float(gnorm), "samples": n_s, "pad": n_pad, "target_tokens": n_tgt,
-             "warmup_s": warm}
+             "grad_norm_step0": float(gnorm), "grad_dtypes": sorted(gdt), "samples": n_s, "pad": n_pad,
+             "target_tokens": n_tgt, "warmup_s": warm}
         results.append(r)
-        print(f"  L={L:<6} {mode:<6}{tag} peak {r['peak_gib']:6.2f} GiB (reserved {r['reserved_gib']:5.2f})  "
-              f"{sps:6.3f} s/step  {r['tok_s']:8.0f} tok/s  loss {losses[0]:.4f}->{losses[-1]:.4f}  "
+        print(f"  L={L:<6} {name:<22} peak {r['peak_gib']:6.2f} GiB (reserved {r['reserved_gib']:5.2f})  "
+              f"{sps:6.3f} s/step  {r['tok_s']:6.0f} tok/s  loss {losses[0]:.4f}->{losses[-1]:.4f}  "
               f"|g|0={float(gnorm):.3e}  [{n_s} samples, {n_tgt} target tok, {n_pad} pad]", flush=True)
         return r
 
-    print(f"\n== fwd+bwd+AdamW, batch 1, 1 warmup + {args.steps} timed steps ==")
-    last = None
-    for L in [int(x) for x in args.lengths.split(",")]:
-        run(L, "hf")
-        last = run(L, "sparse")
-    for L in [int(x) for x in args.extra_lengths.split(",") if x]:
-        if last is None or last["peak_gib"] * 2**30 > args.margin_frac * total_mem:
-            print(f"  skip L={L}: previous sparse peak leaves no margin")
-            break
-        run(L, "hf")
-        last = run(L, "sparse")
+    lengths = [int(x) for x in args.lengths.split(",")]
+    try:
+        print(f"\n== fwd+bwd+AdamW, batch 1, gradient checkpointing, 1 warmup + {args.steps} timed steps ==")
+        print("  (the same batch is stepped repeatedly, so loss falls fast; that is memorization, not a signal)")
+        run(lengths[0], "hf", args.precision)  # full-vocab fp32 logits: expected to OOM on 24 GB
+        last = None
+        for L in lengths:
+            last = run(L, "sparse", args.precision)
+        for L in [int(x) for x in args.extra_lengths.split(",") if x]:
+            if last is None or last["peak_gib"] * 2**30 > args.margin_frac * total_mem:
+                print(f"  skip L={L}: previous sparse peak leaves no margin")
+                break
+            last = run(L, "sparse", args.precision)
 
-    if not args.no_conv_compare:
-        print("\n== causal-conv1d CUDA kernel vs torch F.conv1d reference (sparse loss) ==")
-        fast_conv = mq.causal_conv1d_fn
-        mq.causal_conv1d_fn = torch_reference(mq, "causal_conv1d_fn")
-        try:
-            for L in [int(x) for x in args.lengths.split(",")]:
-                run(L, "sparse", "+torchconv")
-        finally:
-            mq.causal_conv1d_fn = fast_conv
+        if args.precision == "autocast":
+            print("\n== precision path: PEFT default (fp32 adapters, fp32 LoRA inputs) for comparison ==")
+            for L in lengths:
+                run(L, "sparse", "peft-fp32")
+
+        if not args.no_conv_compare:
+            print("\n== causal-conv1d CUDA kernel vs torch F.conv1d reference ==")
+            fast_conv = mq.causal_conv1d_fn
+            mq.causal_conv1d_fn = torch_reference(mq, "causal_conv1d_fn")
+            try:
+                for L in lengths:
+                    run(L, "sparse", args.precision, "+torchconv")
+            finally:
+                mq.causal_conv1d_fn = fast_conv
+    except Yield as e:
+        print(f"  YIELD: {e}", flush=True)
 
     print("\n== summary ==")
     fallback_seen = [r for r in CAP.records if FALLBACK_MARK in r]

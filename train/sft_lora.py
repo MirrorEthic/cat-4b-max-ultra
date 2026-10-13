@@ -45,37 +45,6 @@ def build_samples(path: Path, tok, max_len: int, max_cuts: int, seed: int):
     return samples, dropped, n_ex
 
 
-def batches(samples, tokens_per_batch: int, seed: int):
-    """Length-bucketed batches capped by padded token count; shuffled at the batch level."""
-    rng = random.Random(seed)
-    idx = sorted(range(len(samples)), key=lambda i: len(samples[i][0]))
-    out, cur, cur_max = [], [], 0
-    for i in idx:
-        L = len(samples[i][0])
-        if cur and max(cur_max, L) * (len(cur) + 1) > tokens_per_batch:
-            out.append(cur)
-            cur, cur_max = [], 0
-        cur.append(i)
-        cur_max = max(cur_max, L)
-    if cur:
-        out.append(cur)
-    rng.shuffle(out)
-    return out
-
-
-def collate(samples, ids, pad_id, torch):
-    L = max(len(samples[i][0]) for i in ids)
-    inp = torch.full((len(ids), L), pad_id, dtype=torch.long)
-    lab = torch.full((len(ids), L), -100, dtype=torch.long)
-    att = torch.zeros((len(ids), L), dtype=torch.long)
-    for r, i in enumerate(ids):
-        x, y, _ = samples[i]
-        inp[r, : len(x)] = torch.tensor(x)
-        lab[r, : len(y)] = torch.tensor(y)
-        att[r, : len(x)] = 1
-    return inp, lab, att
-
-
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--data", required=True)
@@ -85,8 +54,7 @@ def main():
     ap.add_argument("--rank", type=int, default=32)
     ap.add_argument("--alpha", type=int, default=64)
     ap.add_argument("--max-len", type=int, default=8192)
-    ap.add_argument("--tokens-per-batch", type=int, default=8192, help="padded tokens per micro-batch")
-    ap.add_argument("--target-batch-tokens", type=int, default=32 * 2500, help="≈ effective batch of 32 samples")
+    ap.add_argument("--batch-samples", type=int, default=32, help="effective batch (micro-batch is 1 sample)")
     ap.add_argument("--max-cuts", type=int, default=4)
     ap.add_argument("--warmup", type=float, default=0.03)
     ap.add_argument("--save-every", type=int, default=200, help="optimizer steps")
@@ -123,61 +91,68 @@ def main():
     model = get_peft_model(model, LoraConfig(r=a.rank, lora_alpha=a.alpha, lora_dropout=0.05,
                                              target_modules=LORA_TARGETS, task_type="CAUSAL_LM"))
     model.print_trainable_parameters()
-
+    # Precision (smoke test 2026-10-12): fp32 LoRA master weights + bf16 autocast with PEFT's input upcast off is ~25%
+    # faster than PEFT's default fp32 path with identical loss. The flag stays set so checkpoint recompute matches.
+    from peft.tuners.tuners_utils import BaseTunerLayer
+    for m in model.modules():
+        if isinstance(m, BaseTunerLayer):
+            m.cast_input_dtype_enabled = False
     params = [p for p in model.parameters() if p.requires_grad]
-    opt = torch.optim.AdamW(params, lr=a.lr, betas=(0.9, 0.999), weight_decay=0.0)
-    epoch_batches = batches(samples, a.tokens_per_batch, a.seed)
-    tokens_per_micro = n_tok / max(1, len(epoch_batches))
-    accum = max(1, round(a.target_batch_tokens / tokens_per_micro))
-    total_steps = math.ceil(len(epoch_batches) * a.epochs / accum)
+    opt = torch.optim.AdamW(params, lr=a.lr, betas=(0.9, 0.999), weight_decay=0.0, fused=True)
+    # Micro-batch = 1 sample: no padding, no attention mask, so SDPA stays on the flash kernels. A window of
+    # `batch_samples` samples is one optimizer step; loss is the token-mean over the whole window (§7.2).
+    total_steps = math.ceil(len(samples) * a.epochs / a.batch_samples)
     warm = max(1, int(a.warmup * total_steps))
     sched = torch.optim.lr_scheduler.LambdaLR(
         opt, lambda s: min(1.0, (s + 1) / warm) * 0.5 * (1 + math.cos(math.pi * min(1.0, s / max(1, total_steps)))))
-    print(f"micro-batches/epoch {len(epoch_batches)}, accum {accum}, optimizer steps {total_steps}", flush=True)
+    print(f"samples {len(samples)}, effective batch {a.batch_samples}, optimizer steps {total_steps}", flush=True)
 
     model.train()
-    step, micro, t0, run_loss, run_tok = 0, 0, time.time(), 0.0, 0
+    rng = random.Random(a.seed)
+    step, t0, run_loss, run_tok, seen_tok = 0, time.time(), 0.0, 0, 0
     log = (out / "train_log.jsonl").open("a")
-    ep = 0
+    order: list[int] = []
     while step < total_steps:
-        order = batches(samples, a.tokens_per_batch, a.seed + ep)
-        for ids in order:
-            inp, lab, att = collate(samples, ids, tok.pad_token_id, torch)
-            inp, lab, att = inp.cuda(), lab.cuda(), att.cuda()
-            # Logits only where there are targets: full float logits over a 248k vocab at 8k context are ~8 GB.
-            # Position p predicts token p+1, so keep positions whose *next* label is a target.
-            keep = torch.nonzero((lab[:, 1:] != -100).any(0)).squeeze(-1)
-            logits = model(input_ids=inp, attention_mask=att, logits_to_keep=keep).logits
+        if len(order) < a.batch_samples:
+            nxt = list(range(len(samples)))
+            rng.shuffle(nxt)
+            order += nxt
+        window, order = order[: a.batch_samples], order[a.batch_samples:]
+        n_window = sum(sum(1 for t in samples[i][1][1:] if t != -100) for i in window)
+        for i in window:
+            x, y, _ = samples[i]
+            inp = torch.tensor([x], device="cuda")
+            lab = torch.tensor([y], device="cuda")
+            # logits only where there are targets: full fp32 logits over a 248k vocab OOM at 4k context
+            keep = torch.nonzero(lab[0, 1:] != -100).squeeze(-1)
+            with torch.autocast("cuda", dtype=torch.bfloat16):
+                logits = model(input_ids=inp, logits_to_keep=keep).logits
             tgt = lab[:, 1:][:, keep]
-            n = (tgt != -100).sum()
-            loss_sum = torch.nn.functional.cross_entropy(logits.float().reshape(-1, logits.size(-1)), tgt.reshape(-1),
-                                                         ignore_index=-100, reduction="sum")
-            (loss_sum / max(1, n.item()) / accum).backward()   # token-mean within micro-batch
+            loss_sum = torch.nn.functional.cross_entropy(logits.float().reshape(-1, logits.size(-1)),
+                                                         tgt.reshape(-1), reduction="sum")
+            (loss_sum / max(1, n_window)).backward()
             run_loss += loss_sum.item()
-            run_tok += n.item()
-            micro += 1
-            if micro % accum:
-                continue
-            torch.nn.utils.clip_grad_norm_(params, 1.0)
-            opt.step()
-            sched.step()
-            opt.zero_grad(set_to_none=True)
-            step += 1
-            if step % 10 == 0 or step == 1:
-                rec = {"step": step, "loss": run_loss / max(1, run_tok), "lr": sched.get_last_lr()[0],
-                       "elapsed_s": round(time.time() - t0), "mem_gb": round(torch.cuda.max_memory_allocated() / 1e9, 1)}
-                print(json.dumps(rec), flush=True)
-                log.write(json.dumps(rec) + "\n")
-                log.flush()
-                run_loss, run_tok = 0.0, 0
-            if step % a.save_every == 0 or step == total_steps:
-                model.save_pretrained(out / f"step{step:05d}")
-            if GPU_LOCK.exists():
-                model.save_pretrained(out / f"step{step:05d}-lock")
-                sys.exit("GPU lock appeared; saved and stopped")
-            if step >= total_steps:
-                break
-        ep += 1
+            run_tok += tgt.numel()
+            seen_tok += len(x)
+        torch.nn.utils.clip_grad_norm_(params, 1.0)
+        opt.step()
+        sched.step()
+        opt.zero_grad(set_to_none=True)
+        step += 1
+        if step % 10 == 0 or step == 1:
+            el = time.time() - t0
+            rec = {"step": step, "loss": run_loss / max(1, run_tok), "lr": sched.get_last_lr()[0],
+                   "elapsed_s": round(el), "tok_per_s": round(seen_tok / el),
+                   "mem_gb": round(torch.cuda.max_memory_allocated() / 1e9, 1)}
+            print(json.dumps(rec), flush=True)
+            log.write(json.dumps(rec) + "\n")
+            log.flush()
+            run_loss, run_tok = 0.0, 0
+        if step % a.save_every == 0 or step == total_steps:
+            model.save_pretrained(out / f"step{step:05d}")
+        if GPU_LOCK.exists():
+            model.save_pretrained(out / f"step{step:05d}-lock")
+            sys.exit("GPU lock appeared; saved and stopped")
     meta["finished"] = time.strftime("%Y-%m-%dT%H:%M:%S%z")
     (out / "run.json").write_text(json.dumps(meta, indent=1))
     print(f"done: {out}", flush=True)
