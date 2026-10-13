@@ -124,6 +124,19 @@ def check_tool_calls(messages: list[dict], tools: list[dict], image_dims: dict[s
 
 REQUEST_FILLER = set("""a an the of me my us our please can could would you make draw generate create render show
 give picture pic image photo photograph illustration painting drawing art of with and in on for to some one""".split())
+# Function words and request chatter: the subject-coverage lint asks whether the *subject words* survived, and chatty
+# requests ("I doubt you can get this right, but I need …") otherwise read as missing subject (G2a run, 2026-10-13).
+STOPWORDS = set("""i im ive id ill you your yours we were they them their he she it its this that these those there here
+is are was be been being am do does did doing have has had having will would should could can cant may might must shall
+not no nor dont doesnt didnt isnt arent wont but and or so if then than too very just also only even still yet
+about above after again against all any as at before below between both by down during each few from further into
+more most other out over own same such through under until up while what which who whom whose why how where when
+whatever whether something anything nothing everything thing things stuff kind sort bit lot lots really actually
+maybe probably please thanks thank need needs want wants wanted like liked love would wish hoping hope looking look
+get got getting go going gonna wanna let lets put putting try trying tried use using used send sending pick choose
+keep keeping make making made want asked ask tell said say says saying think thought know doubt sure right okay ok
+yes hey hi hello last next first time today tomorrow yesterday week weekend month year now soon already ever never
+preparing prepare working work together based plausible possible version idea ideas something one ones""".split())
 
 
 def check_image_prompt(prompt: str, user_request: str, dog_requested: bool | None = None,
@@ -132,8 +145,9 @@ def check_image_prompt(prompt: str, user_request: str, dog_requested: bool | Non
     first = re.split(r"(?<=[.!?])\s", prompt.strip(), maxsplit=1)[0]
     if not FELINE.search(first):
         out.append(Violation("i3_cat_not_first_sentence", first[:120]))
-    if NEGATION.search(prompt):
-        out.append(Violation("i4_negation", NEGATION.search(prompt).group(0)))
+    unquoted = re.sub(r'"[^"]*"|“[^”]*”', " ", prompt)  # text the image must show ("Leg Day Is Not Optional")
+    if NEGATION.search(unquoted):
+        out.append(Violation("i4_negation", NEGATION.search(unquoted).group(0)))
     if dog_requested is None:
         dog_requested = bool(DOG.search(user_request))
     if DOG.search(prompt) and not dog_requested:
@@ -141,10 +155,14 @@ def check_image_prompt(prompt: str, user_request: str, dog_requested: bool | Non
     if len(prompt.split()) > 200:
         out.append(Violation("prompt_too_long", f"{len(prompt.split())} words"))
     if english_request:  # subject-coverage lint only when request and prompt share a language; judge covers the rest
-        words = {w for w in re.findall(r"[a-z0-9]+", user_request.lower()) if w not in REQUEST_FILLER and len(w) > 2}
+        words = {w for w in re.findall(r"[a-z0-9]+", user_request.lower().replace("'", ""))
+                 if w not in REQUEST_FILLER and w not in STOPWORDS and len(w) > 2}
         words -= {"cat", "cats", "dog", "dogs", "animals", "animal"}
         missing = {w for w in words if w not in prompt.lower()}
-        if words and len(missing) / len(words) > 0.4:
+        # Lexical overlap only means something for short, subject-dense requests ("a red Honda Civic at sunset").
+        # Chatty ones put context everywhere ("I paint odd facts like octopus blood… whatever you pick"); there the
+        # judge's I1 check against the teacher's checklist is the test (G2a run 2026-10-13: 39/72 false rejects).
+        if words and len(words) <= 12 and len(missing) / len(words) > 0.5:
             out.append(Violation("i1_subject_coverage", f"missing {sorted(missing)}"))
     return out
 
