@@ -45,6 +45,30 @@ def build_samples(path: Path, tok, max_len: int, max_cuts: int, seed: int):
     return samples, dropped, n_ex
 
 
+def target_loss(model, inp, keep, tgt, chunk: int):
+    """Summed CE over the target positions. The logits are the memory peak (targets × 248k vocab × fp32, plus their
+    grad: ~10 GB for a 3.5k-token reply), so with `chunk` the lm_head + CE run per chunk of targets under activation
+    checkpointing and only one chunk's logits are ever alive. lm_head is frozen (tied to the embeddings)."""
+    import torch
+    import torch.nn.functional as F
+    from torch.utils.checkpoint import checkpoint
+    if not chunk:
+        with torch.autocast("cuda", dtype=torch.bfloat16):
+            logits = model(input_ids=inp, logits_to_keep=keep).logits
+        return F.cross_entropy(logits.float().reshape(-1, logits.size(-1)), tgt, reduction="sum")
+    base = model.get_base_model()
+    with torch.autocast("cuda", dtype=torch.bfloat16):
+        h = base.model(input_ids=inp).last_hidden_state[0, keep]
+
+    def ce(hc, yc):
+        with torch.autocast("cuda", dtype=torch.bfloat16):
+            lg = base.lm_head(hc)
+        return F.cross_entropy(lg.float(), yc, reduction="sum")
+
+    return sum(checkpoint(ce, h[i:i + chunk], tgt[i:i + chunk], use_reentrant=False)
+               for i in range(0, len(keep), chunk))
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--data", required=True)
@@ -60,6 +84,9 @@ def main():
     ap.add_argument("--save-every", type=int, default=200, help="optimizer steps")
     ap.add_argument("--seed", type=int, default=20260924)
     ap.add_argument("--limit", type=int, default=0, help="use only the first N samples (pilots)")
+    ap.add_argument("--ce-chunk", type=int, default=1024,
+                    help="targets per lm_head+CE chunk, recomputed in backward (0 = all target logits at once)")
+    ap.add_argument("--max-steps", type=int, default=0, help="stop after N optimizer steps (smoke tests)")
     a = ap.parse_args()
 
     if GPU_LOCK.exists():
@@ -127,11 +154,8 @@ def main():
             lab = torch.tensor([y], device="cuda")
             # logits only where there are targets: full fp32 logits over a 248k vocab OOM at 4k context
             keep = torch.nonzero(lab[0, 1:] != -100).squeeze(-1)
-            with torch.autocast("cuda", dtype=torch.bfloat16):
-                logits = model(input_ids=inp, logits_to_keep=keep).logits
             tgt = lab[:, 1:][:, keep]
-            loss_sum = torch.nn.functional.cross_entropy(logits.float().reshape(-1, logits.size(-1)),
-                                                         tgt.reshape(-1), reduction="sum")
+            loss_sum = target_loss(model, inp, keep, tgt[0], a.ce_chunk)
             (loss_sum / max(1, n_window)).backward()
             run_loss += loss_sum.item()
             run_tok += tgt.numel()
@@ -155,6 +179,8 @@ def main():
         if GPU_LOCK.exists():
             model.save_pretrained(out / f"step{step:05d}-lock")
             sys.exit("GPU lock appeared; saved and stopped")
+        if a.max_steps and step >= a.max_steps:
+            break
     meta["finished"] = time.strftime("%Y-%m-%dT%H:%M:%S%z")
     (out / "run.json").write_text(json.dumps(meta, indent=1))
     print(f"done: {out}", flush=True)
