@@ -62,9 +62,14 @@ def run(url: str, judge_name: str, hours: float = 12.0, concurrency: int = 4, ba
     slots idle, two keep them full. `done` is re-read every round so any worker's verdicts count."""
     JUDGE_DIR.mkdir(parents=True, exist_ok=True)
     client = LocalChat(url, timeout=900)
-    by = {sid: c for sid, c in candidates_by_spec().items() if _in_shard(sid, shard)}
+    def load():
+        return {sid: c for sid, c in candidates_by_spec().items() if _in_shard(sid, shard)}
+
+    by, loaded = load(), time.time()
     t_end, t0, n = time.time() + hours * 3600, time.time(), 0
     while time.time() < t_end:
+        if time.time() - loaded > 3600:  # the generator keeps appending candidates (new slices, top-ups)
+            by, loaded = load(), time.time()
         done = judged(by)
         # next candidate per unresolved spec: the first V0-pass sample not yet judged, unless a keeper exists
         todo = []
@@ -77,6 +82,9 @@ def run(url: str, judge_name: str, hours: float = 12.0, concurrency: int = 4, ba
             if len(todo) >= batch:
                 break
         if not todo:
+            if time.time() - loaded > 60:
+                by, loaded = load(), time.time()
+                continue
             print(f"[{time.strftime('%H:%M:%S')}] all specs resolved", flush=True)
             return
         exs = [{"id": c["spec"]["spec_id"], "spec": c["spec"], "messages": c["messages"],
