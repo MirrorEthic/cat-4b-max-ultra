@@ -127,3 +127,32 @@ def keep(verdict: dict, slice_: str, device: str | None = None) -> bool:
             and all(v(k) != "n" for k in ("disclosure_ok", "critical_complete", "vision_honest", "tool_honest",
                                           "cat_facts_true", "identity_ok"))
             and v("grace") >= 3)
+
+
+# ── local judge (llama.cpp, e.g. Gemma-4-31B on mirrorforge) ────────────────────────────────────
+# Same rubric, evidence rules and schema as the Claude judge, so verdicts are directly comparable; greedy decoding so a
+# re-judge of the same candidate gives the same verdict.
+
+def judge_local_messages(example: dict) -> list[dict]:
+    req = judge_request(example)
+    return [{"role": "system", "content": judge_system()[0]["text"]},
+            {"role": "user", "content": req["params"]["messages"][0]["content"]}]
+
+
+def run_local_judge(examples: list[dict], client, concurrency: int = 4, max_tokens: int = 3000) -> list[dict | None]:
+    """Verdict dicts (or None on failure), in the order of `examples`."""
+    from concurrent.futures import ThreadPoolExecutor
+
+    def one(ex):
+        try:
+            r = client.chat(judge_local_messages(ex), max_tokens=max_tokens, temperature=0.0, top_p=1.0,
+                            json_schema=VERDICT_SCHEMA,
+                            extra={"chat_template_kwargs": {"enable_thinking": False}})
+            if r["choices"][0].get("finish_reason") != "stop":
+                return None
+            return json.loads(r["choices"][0]["message"]["content"])
+        except Exception:  # noqa: BLE001 - a failed judgment is retried by the caller, never kept
+            return None
+
+    with ThreadPoolExecutor(concurrency) as ex:
+        return list(ex.map(one, examples))

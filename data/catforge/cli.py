@@ -138,6 +138,51 @@ def cmd_gen_local(a):
     generate.run(a.slices.split(","), best_of=a.best_of, hours=a.hours, thinking=not a.no_thinking)
 
 
+def cmd_judge_calibrate(a):
+    """Local judge vs Claude on the bake-off set (410 Claude verdicts): agreement before trusting it."""
+    import json as _j
+    from . import judge
+    from .bakeoff import BAKE_DIR
+    from .engines import LocalChat
+    exs = []
+    for name in ("qwen3.8-27b", "claude-opus-5"):
+        exs += [e for e in _j.loads((BAKE_DIR / f"examples_{name}.rescored.json").read_text()) if e.get("verdict")]
+    if a.limit:
+        exs = exs[: a.limit]
+    local = judge.run_local_judge(exs, LocalChat(a.url, timeout=900), concurrency=4)
+    pairs = [(e, v) for e, v in zip(exs, local) if v]
+    print(f"{len(pairs)}/{len(exs)} judged locally")
+    def kappa(xs):
+        n = len(xs); po = sum(a == b for a, b in xs) / n
+        pa = sum(a for a, _ in xs) / n; pb = sum(b for _, b in xs) / n
+        pe = pa * pb + (1 - pa) * (1 - pb)
+        return (po - pe) / (1 - pe) if pe < 1 else 1.0, po
+    keeps = []
+    for e, v in pairs:
+        bad = judge.verify_quotes(v, judge.graded_output(e["messages"]))
+        lk = (not bad) and (not e["v0"]) and judge.keep(v, e["spec"]["slice"], e["spec"]["device"])
+        keeps.append((bool(e.get("keep")), lk))
+    k, po = kappa(keeps)
+    print(f"keep: agreement {po:.1%}, kappa {k:.2f} (claude keeps {sum(c for c, _ in keeps)}, local keeps {sum(l for _, l in keeps)})")
+    for f in ("persistence", "retention", "grace"):
+        d = [abs(e["verdict"][f]["value"] - v[f]["value"]) for e, v in pairs if e["verdict"]["eligible"] or f != "persistence"]
+        print(f"{f}: exact {sum(x == 0 for x in d) / len(d):.1%}, within 1 {sum(x <= 1 for x in d) / len(d):.1%}")
+    el = sum(e["verdict"]["eligible"] == v["eligible"] for e, v in pairs) / len(pairs)
+    bq = sum(bool(judge.verify_quotes(v, judge.graded_output(e["messages"]))) for e, v in pairs) / len(pairs)
+    print(f"eligibility agreement {el:.1%}; local verdicts with unverifiable quotes {bq:.1%}")
+
+
+def cmd_judge_pass(a):
+    from . import judgepass
+    judgepass.run(a.url, a.judge_name, hours=a.hours)
+
+
+def cmd_select(a):
+    import json as _j
+    from . import judgepass
+    print(_j.dumps(judgepass.select(a.name), indent=1))
+
+
 def main(argv=None):
     load_env()
     ap = argparse.ArgumentParser(prog="catforge")
@@ -164,6 +209,18 @@ def main(argv=None):
     g.add_argument("--hours", type=float, default=24.0)
     g.add_argument("--no-thinking", action="store_true", help="Qwen3.8 enable_thinking=false (~2x faster)")
     g.set_defaults(fn=cmd_gen_local)
+    jc = sub.add_parser("judge-calibrate")
+    jc.add_argument("--url", default="http://10.10.10.2:8291")
+    jc.add_argument("--limit", type=int, default=0)
+    jc.set_defaults(fn=cmd_judge_calibrate)
+    jp = sub.add_parser("judge-pass")
+    jp.add_argument("--url", default="http://10.10.10.2:8291")
+    jp.add_argument("--judge-name", default="gemma-4-31b-q4-v100")
+    jp.add_argument("--hours", type=float, default=24.0)
+    jp.set_defaults(fn=cmd_judge_pass)
+    se = sub.add_parser("select")
+    se.add_argument("--name", default="v0")
+    se.set_defaults(fn=cmd_select)
     a = ap.parse_args(argv)
     a.fn(a)
 
