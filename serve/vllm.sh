@@ -20,6 +20,7 @@ ADAPTER=${2:-${ADAPTER:-$CAT/adapters/cat4b-v0}}
 PORT=${PORT:-8011}
 HOST=${HOST:-127.0.0.1}
 GPU_UTIL=${GPU_UTIL:-0.6}   # leaves the comfyui-fluxfill worker its share of the 5090
+MAX_SEQS=${MAX_SEQS:-32}    # hybrid model: one Gated-DeltaNet state block per running sequence (256 doesn't fit at 0.6)
 GPU_LOCK=$HOME/CVMP/T3_sims/t3v2/t3v3/t3v36/.GPU_LOCKED
 RUN=$CAT/run; LOG=$CAT/logs
 export HF_HOME=${HF_HOME:-/media/garret-sutherland/dev-data/huggingface-cache}
@@ -42,7 +43,7 @@ start() {
     --default-chat-template-kwargs '{"enable_thinking": false}' \
     --limit-mm-per-prompt '{"image": 6, "video": 0}' \
     --mm-processor-kwargs '{"size": {"longest_edge": 1048576, "shortest_edge": 65536}}' \
-    --max-model-len 16384 \
+    --max-model-len 16384 --max-num-seqs "$MAX_SEQS" \
     --gpu-memory-utilization "$GPU_UTIL" \
     --seed 0 \
     --host "$HOST" --port "$PORT" \
