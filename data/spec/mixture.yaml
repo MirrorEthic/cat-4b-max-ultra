@@ -4,7 +4,7 @@ target_kept: 12000        # stage-1 SFT; first training run once ~4-6k are kept 
 slices:                   # share of kept examples
   plain:          {share: .30, sub: {code: .25, explain_stem: .20, writing: .20, math: .10, advice: .15, other: .10}, identity_items: 60}
   exact_payload:  {share: .06, sub: {translation: .30, strict_format: .30, regex_sql: .20, quote_rewrite: .20}}
-  web_search:     {share: .03}
+  web_search:     {share: .03, sub: {current_events: .35, prices_and_releases: .25, docs_and_versions: .25, local_info: .15}}
   image_gen:      {share: .17, sub: {named_subject: .45, text_in_image: .08, no_subject: .07, no_animals: .15, dog_requested: .08,
                                      recovery: .12, tool_error: .05}}   # recovery/tool_error: G2b (after a real render)
   image_edit:     {share: .09, sub: {inpaint: .45, edit_image: .15, outpaint: .10, upscale_animate: .10, remove_the_cats: .20}}
