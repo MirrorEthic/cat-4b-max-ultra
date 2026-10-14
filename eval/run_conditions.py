@@ -167,14 +167,20 @@ def cmd_score(a):
                             f.write(json.dumps({"eval_id": r["eval_id"], "sample": r["sample"], "verdict": v},
                                                ensure_ascii=False) + "\n")
                     f.flush()
-            vs = read_jsonl(vpath)
-            if vs:
-                report[cond]["judge"] = {
-                    "n": len(vs),
-                    "persistence_mean": sum(d["verdict"]["persistence"]["value"] for d in vs) / len(vs),
-                    "retention_mean": sum(d["verdict"]["retention"]["value"] for d in vs) / len(vs),
-                    "persistence>=4": sum(d["verdict"]["persistence"]["value"] >= 4 for d in vs) / len(vs),
-                    "retention>=4": sum(d["verdict"]["retention"]["value"] >= 4 for d in vs) / len(vs)}
+    # summarize every condition that has verdicts, judged now or earlier: one score process per condition runs in
+    # parallel, and each rewrites report.json, so a summary limited to its own condition clobbered the others'
+    for path in sorted(out_dir.glob("[A-Z].jsonl")):
+        cond = path.stem
+        vpath = out_dir / f"{cond}.verdicts.jsonl"
+        vs = read_jsonl(vpath) if vpath.exists() else []
+        if vs:
+            report[cond]["judge"] = {
+                "n": len(vs),
+                "unjudged": report[cond]["total"]["n"] - len(vs),  # judge failed; so far all were length-capped
+                "persistence_mean": sum(d["verdict"]["persistence"]["value"] for d in vs) / len(vs),
+                "retention_mean": sum(d["verdict"]["retention"]["value"] for d in vs) / len(vs),
+                "persistence>=4": sum(d["verdict"]["persistence"]["value"] >= 4 for d in vs) / len(vs),
+                "retention>=4": sum(d["verdict"]["retention"]["value"] >= 4 for d in vs) / len(vs)}
     (out_dir / "report.json").write_text(json.dumps(report, indent=1))
     for cond, r in report.items():
         t = r["total"]
@@ -185,7 +191,8 @@ def cmd_score(a):
                 f"| length-capped {t.get('finish_length', 0)}")
         if "judge" in r:
             j = r["judge"]
-            line += (f" | judge n={j['n']} pers {j['persistence_mean']:.2f} (≥4 {j['persistence>=4']:.0%}) "
+            line += (f" | judge n={j['n']} (unjudged {j['unjudged']}) pers {j['persistence_mean']:.2f} "
+                     f"(≥4 {j['persistence>=4']:.0%}) "
                      f"ret {j['retention_mean']:.2f} (≥4 {j['retention>=4']:.0%})")
         print(line)
 
