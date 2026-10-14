@@ -31,7 +31,7 @@ sys.path.insert(0, str(REPO / "data"))
 from catforge import STATE_DIR, read_jsonl, validate  # noqa: E402
 from catforge import groupchat as gc  # noqa: E402
 from catforge.engines import LocalChat  # noqa: E402
-from catforge.spec import load_tools, student_system  # noqa: E402
+from catforge.spec import SPEC_DIR, load_tools, student_system  # noqa: E402
 
 FROZEN = REPO / "eval" / "frozen"
 OUT = STATE_DIR / "eval"
@@ -162,10 +162,12 @@ def cmd_score(a):
                    for r in recs]
             with vpath.open("a") as f:
                 for i in range(0, len(exs), 16):
+                    # the judge re-reads rubric.md on every call, so record which rubric each verdict was graded under
+                    rubric = hashlib.sha256((SPEC_DIR / "rubric.md").read_bytes()).hexdigest()[:12]
                     for r, v in zip(recs[i:i + 16], judge.run_local_judge(exs[i:i + 16], client)):
                         if v is not None:
-                            f.write(json.dumps({"eval_id": r["eval_id"], "sample": r["sample"], "verdict": v},
-                                               ensure_ascii=False) + "\n")
+                            f.write(json.dumps({"eval_id": r["eval_id"], "sample": r["sample"], "rubric": rubric,
+                                                "verdict": v}, ensure_ascii=False) + "\n")
                     f.flush()
     # summarize every condition that has verdicts, judged now or earlier: one score process per condition runs in
     # parallel, and each rewrites report.json, so a summary limited to its own condition clobbered the others'

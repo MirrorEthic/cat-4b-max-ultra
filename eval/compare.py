@@ -27,8 +27,9 @@ def load(side: str):
     run, cond = side.split(":")
     recs = {r["eval_id"]: r for r in read_jsonl(OUT / run / f"{cond}.jsonl")}
     vpath = OUT / run / f"{cond}.verdicts.jsonl"
-    verdicts = {d["eval_id"]: d["verdict"] for d in read_jsonl(vpath)} if vpath.exists() else {}
-    return recs, verdicts
+    rows = read_jsonl(vpath) if vpath.exists() else []
+    print(f"{side}: verdicts by rubric {dict(Counter(d.get('rubric', 'untagged') for d in rows))}")
+    return recs, {d["eval_id"]: d["verdict"] for d in rows}  # a re-judged item's last verdict wins
 
 
 def _value(x):
