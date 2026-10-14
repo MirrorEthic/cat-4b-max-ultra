@@ -30,7 +30,12 @@ from catforge.spec import load_tools  # noqa: E402
 OUT = STATE_DIR / "parity"
 
 
+GPU_LOCK = Path.home() / "CVMP/T3_sims/t3v2/t3v3/t3v36/.GPU_LOCKED"
+
+
 def cmd_hf(a):
+    if GPU_LOCK.exists():  # loading the 4B on the 5090 next to a locked long run would OOM it
+        sys.exit(f"GPU lock present ({GPU_LOCK}); not loading the model")
     import torch
     from peft import PeftModel
     from transformers import AutoModelForImageTextToText
