@@ -1,0 +1,3 @@
+# Paths hologram never tracks in this project (one glob per line).
+# Draft nodes, until a person adopts them (hologram crg adopt).
+crg/drafts/**

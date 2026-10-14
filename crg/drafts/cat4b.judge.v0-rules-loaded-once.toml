@@ -1,0 +1,8 @@
+id = "cat4b.judge.v0-rules-loaded-once"
+type = "mechanism"
+status = "FALSIFIED"
+created = "2026-10-14"
+claim = "A judge-pass worker applies the V0 rules (catforge/validate.py) it imported at start-up for its whole run, and treats a spec as resolved once none of its candidates both passes those rules and is unjudged."
+why = "Workers outlived a V0 rule change (dc1644b) and declared 1,174 image_gen specs resolved without judging them (cat4b.r.2026-10-14.judge-workers-stale-v0)."
+survives = "The cascade itself (judge V0-pass candidates in sample order, stop at the first keeper) and keep recomputed from stored verdicts under the current rules."
+evidence = ["commit:666e901"]

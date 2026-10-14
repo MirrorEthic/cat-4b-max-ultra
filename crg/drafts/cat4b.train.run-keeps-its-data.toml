@@ -1,0 +1,10 @@
+id = "cat4b.train.run-keeps-its-data"
+type = "mechanism"
+status = "CURRENT"
+created = "2026-10-14"
+claim = "Each training run copies its data to checkpoints/<run>/train.jsonl and records data_sha256 in run.json before training; select refuses to rewrite an existing state/sft/<name>/kept.jsonl unless given --overwrite."
+why = "An adapter's training set has to survive later selections; the v0 run is the first under it and its copy matches."
+supersedes = ["cat4b.train.data-recorded-by-path"]
+evidence = ["commit:6257ef2", "file:train/sft_lora.py#L109-L116", "file:data/catforge/judgepass.py#L119-L123"]
+verify = ["test:data/tests/test_judgepass.py"]
+known_limits = ["The test covers select's refusal only; the trainer's copy is checked by the v0 run, not by a test.", "Runs before 6257ef2 (v0-pilot, v0-early) have no data_sha256; v0-early's data was copied into checkpoints/v0-early/train.jsonl by hand (sha256 bfa6ef402ba89284...)."]

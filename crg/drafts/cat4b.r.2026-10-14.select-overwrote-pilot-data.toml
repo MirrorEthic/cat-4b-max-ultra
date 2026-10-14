@@ -1,0 +1,7 @@
+id = "cat4b.r.2026-10-14.select-overwrote-pilot-data"
+type = "result"
+status = "VALIDATED"
+created = "2026-10-14"
+claim = "At 08:18 on 2026-10-14, catforge.cli select --name v0 rewrote state/sft/v0/kept.jsonl with the 7,976-example full set. That file was the v0-pilot adapter's only record of its 1,841 training examples (run.json held the path, no hash or copy); the list is lost, the adapter (checkpoints/v0-pilot/step00116) is intact."
+falsifies = ["cat4b.train.data-recorded-by-path"]
+evidence = ["file:crg/evidence/2026-10-14-overnight.md#select-overwrote-the-pilot-training-data", "commit:6257ef2"]

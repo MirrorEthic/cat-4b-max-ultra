@@ -1,0 +1,9 @@
+id = "cat4b.judge.v0-rules-reload"
+type = "mechanism"
+status = "EXPERIMENTAL"
+created = "2026-10-14"
+claim = "judgepass.run reloads catforge/validate.py every time it reloads candidates (hourly, and before declaring all specs resolved), so a V0 rule change reaches running workers; a reload that fails (a half-saved edit) keeps the loaded rules and says so."
+why = "Closes the stale-rules failure without a worker restart; not yet exercised by a rule change during a live pass."
+supersedes = ["cat4b.judge.v0-rules-loaded-once"]
+evidence = ["commit:e81153d", "file:data/catforge/judgepass.py#L66-L74"]
+known_limits = ["Only validate.py is reloaded: a change to judge.py (the judge request, keep thresholds) still needs a worker restart.", "No test covers the reload."]
