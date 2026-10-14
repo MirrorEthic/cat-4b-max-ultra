@@ -71,3 +71,99 @@ F: image_gen 75/76 called, web_search 32/35 called, others (379): stray generate
 
 Retention (judge) scoring of B and C started 2026-10-14 09:05 on the mirrorforge Gemma judge; at 09:25, 63 and 64
 of 490 verdicts. Not a result yet.
+
+## v0-early retention
+
+Judge: Gemma-4-31B Q4 on mirrorforge (10.10.10.2:8291), greedy, rubric 0.2 for the 76 image_gen items of every
+condition (re-judged after `639c9de`; the rubric 0.1 verdicts are kept beside them as `*.verdicts.rubric0.1.jsonl` and
+`F.verdicts.mixed-rubric.jsonl`) and rubric 0.1 text for the rest, which 0.2 does not change. Unjudged: B 6, C 3, F 1,
+every one a length-capped (runaway) reply; the judge fails on them on retry too. `eval/compare.py` (`887ff1d`; rubric
+tag `11f29d8e4dc7` is the sha256 of rubric.md at `639c9de`), paired on items both sides have, bootstrap 95% interval on
+the paired difference:
+
+```
+== v0-early:B v0-early:C
+v0-early:B: verdicts by rubric {'untagged': 408, '11f29d8e4dc7': 76}
+v0-early:C: verdicts by rubric {'untagged': 411, '11f29d8e4dc7': 76}
+paired n=481
+  retention    4.58 -> 4.63  diff +0.046 [95% -0.058, +0.150]  b worse 35, better 43
+  persistence  1.51 -> 3.05  diff +1.538 [95% +1.364, +1.717]  b worse 56, better 296
+  grace        3.42 -> 4.22  diff +0.798 [95% +0.682, +0.919]  b worse 47, better 261
+  payload+consequential retention=5: 57/67 -> 53/67
+  dog_contamination=y: 10/481 -> 1/481
+  cat_facts_true=n: 1/188 -> 3/394
+  critical_complete=n: 35/223 -> 36/263
+  tool_honest=n: 2/52 -> 0/33
+  disclosure_ok=n: 8/14 -> 0/1
+category                     n   ret a ret b   diff  pers a pers b
+== v0-early:B v0-early:F
+v0-early:B: verdicts by rubric {'untagged': 408, '11f29d8e4dc7': 76}
+v0-early:F: verdicts by rubric {'untagged': 413, '11f29d8e4dc7': 76}
+paired n=483
+  retention    4.58 -> 4.67  diff +0.089 [95% -0.025, +0.201]  b worse 34, better 52
+  persistence  1.51 -> 2.99  diff +1.487 [95% +1.317, +1.660]  b worse 51, better 285
+  grace        3.42 -> 4.19  diff +0.774 [95% +0.667, +0.882]  b worse 46, better 262
+  payload+consequential retention=5: 58/68 -> 54/68
+  dog_contamination=y: 10/483 -> 2/483
+  cat_facts_true=n: 1/188 -> 9/392
+  critical_complete=n: 35/225 -> 37/201
+  tool_honest=n: 2/52 -> 0/33
+  disclosure_ok=n: 8/14 -> 1/1
+category                     n   ret a ret b   diff  pers a pers b
+== v0-early:C v0-early:F
+v0-early:C: verdicts by rubric {'untagged': 411, '11f29d8e4dc7': 76}
+v0-early:F: verdicts by rubric {'untagged': 413, '11f29d8e4dc7': 76}
+paired n=487
+  retention    4.62 -> 4.68  diff +0.053 [95% -0.045, +0.152]  b worse 25, better 36
+  persistence  3.05 -> 2.99  diff -0.062 [95% -0.187, +0.066]  b worse 114, better 101
+  grace        4.22 -> 4.20  diff -0.021 [95% -0.090, +0.051]  b worse 106, better 89
+  payload+consequential retention=5: 53/68 -> 53/68
+  dog_contamination=y: 1/487 -> 2/487
+  cat_facts_true=n: 3/399 -> 9/395
+  critical_complete=n: 37/265 -> 37/201
+  tool_honest=n: 0/34 -> 0/34
+  disclosure_ok=n: 0/1 -> 1/1
+category                     n   ret a ret b   diff  pers a pers b
+```
+
+Per category, B → C retention (n): attacks_heldout_family 4.13 → 4.41 (39), attacks_heldout_template 4.60 → 4.30 (30),
+consequential 4.73 → 4.93 (30), image_requests 4.93 → 5.00 (60), multilingual 4.83 → 4.55 (29), text_payload 4.38 →
+3.97 (37), text_plain 4.54 → 4.71 (178), text_real 4.42 → 4.46 (48), text_search 4.87 → 4.90 (30).
+
+GSM8K exact-match (70 math items, gold answer; bold number else last number): B 45, C 43, F 49; B-only right 10 vs
+C-only 8, B-only 8 vs F-only 12.
+
+## v0 parity
+
+`state/parity/report_v0.json`, adapter `checkpoints/v0/step00499` (adapter_model.safetensors sha256 prefix
+f802ac359448ce8b), 24 examples from `checkpoints/v0/train.jsonl`, 6,936 target tokens:
+
+```
+nll: hf_base 1.5810133141134566, hf_cat 1.009937029261232, vl_base 1.5803232509427585, vl_cat 1.010394419329381
+mad_base_hf_vs_vllm 0.025879430267481206, mad_cat_hf_vs_vllm 0.017865517541561817
+lora_effect_corr 0.9990163842975452, nll_drop_hf 0.5710762848522246, nll_drop_vllm 0.5699288316133775, nll_drop_kept 0.997990718106699
+gate: cat_tracks_like_base true, lora_effect_corr>=0.9 true, nll_drop_kept>=0.9 true; pass true
+```
+
+## v0 eval
+
+`state/eval/v0/report.json` totals (n = 490 per condition). B and its verdicts are copied from v0-early (same base,
+prompt and seed). A is the base with the stock prompt only; E is v0 with thinking on.
+
+```
+A (base, stock only):     cat_present 39,  dog 3, called_tool 125, image_called 71, image_prompt_cat 9,  I3 0,  length-capped 2
+C (v0, stock+cat):        cat_present 384, dog 2, called_tool 109, image_called 75, image_prompt_cat 74, I3 74, length-capped 2
+E (v0, stock+cat, think): cat_present 329, dog 3, called_tool 113, image_called 74, image_prompt_cat 71, I3 70, length-capped 4
+F (v0, stock only):       cat_present 386, dog 1, called_tool 110, image_called 76, image_prompt_cat 76, I3 75, length-capped 4
+```
+
+Per slice:
+
+```
+A: image_gen 71/76 called, web_search 32/35 called, others (379): stray generate_image 2, stray web_search 20
+C: image_gen 75/76 called, web_search 33/35 called, others (379): stray generate_image 0, stray web_search 1
+E: image_gen 74/76 called, web_search 33/35 called, others (379): stray generate_image 0, stray web_search 6
+F: image_gen 76/76 called, web_search 33/35 called, others (379): stray generate_image 0, stray web_search 1
+```
+
+Judging of C and F started 13:43, A and E queued behind them.
