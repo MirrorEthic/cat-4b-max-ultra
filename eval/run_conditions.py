@@ -152,6 +152,8 @@ def cmd_score(a):
         client = LocalChat(a.judge, timeout=900)
         for path in sorted(out_dir.glob("[A-Z].jsonl")):
             cond = path.stem
+            if a.conditions and cond not in a.conditions.split(","):
+                continue
             vpath = out_dir / f"{cond}.verdicts.jsonl"
             have = {(d["eval_id"], d["sample"]) for d in read_jsonl(vpath)} if vpath.exists() else set()
             recs = [r for r in read_jsonl(path) if (r["eval_id"], r["sample"]) not in have]
@@ -203,6 +205,7 @@ def main():
     s = sub.add_parser("score")
     s.add_argument("--run", required=True)
     s.add_argument("--judge", default="")
+    s.add_argument("--conditions", default="", help="judge only these (e.g. C); one process per condition runs in parallel")
     s.set_defaults(fn=cmd_score)
     a = ap.parse_args()
     a.fn(a)
