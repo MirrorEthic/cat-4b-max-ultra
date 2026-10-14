@@ -3,7 +3,9 @@
 set -uo pipefail
 RUN=/media/garret-sutherland/dev-data/cat4b/run
 if [[ -f $RUN/gen.pid ]] && kill -0 "$(cat $RUN/gen.pid)" 2>/dev/null; then
-  pkill -P "$(cat $RUN/gen.pid)" 2>/dev/null; kill "$(cat $RUN/gen.pid)" 2>/dev/null; echo "generator stopped"
+  # the generator itself launches this script when it finishes, so skip $$ or we kill ourselves before the teacher
+  for c in $(pgrep -P "$(cat $RUN/gen.pid)"); do [[ $c == $$ ]] || kill "$c" 2>/dev/null; done
+  kill "$(cat $RUN/gen.pid)" 2>/dev/null; echo "generator stopped"
 fi
 rm -f $RUN/gen.pid
 for p in $(pgrep -x llama-server); do
