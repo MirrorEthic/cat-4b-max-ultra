@@ -1,0 +1,8 @@
+id = "cat4b.r.2026-10-14.v0-early-retention"
+type = "result"
+status = "VALIDATED"
+created = "2026-10-14"
+claim = "Judged on the frozen set, v0-early keeps task retention against the base with the cat prompt while doubling persistence: paired B → C retention 4.58 → 4.63 (+0.046, 95% −0.058 to +0.150, n 481), B → F 4.58 → 4.67 (+0.089, −0.025 to +0.201), persistence 1.51 → 3.05 and 2.99; C and F do not differ (persistence −0.062, −0.187 to +0.066), so the cat is in the weights. The losses sit in exact payload (text_payload 4.38 → 3.97; payload and consequential at retention 5: 57/67 → 53/67) and in false cat facts (1/188 → 3/394 with the cat prompt, 9/392 without)."
+scope = "v0-early (checkpoints/v0-early/step00434), text layer, one sample per item, Gemma-4-31B judge; rubric 0.2 on image items, 0.1 elsewhere (0.2 changes only image turns). Not yet against A (base, stock prompt only)."
+supports = ["cat4b.train.v0-early-interim-adapter", "cat4b.arch.text-only-tuning"]
+evidence = ["file:crg/evidence/C-eval.md@c116c3b#v0-early-retention", "commit:887ff1d", "commit:639c9de"]
