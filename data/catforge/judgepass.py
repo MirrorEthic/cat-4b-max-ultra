@@ -5,6 +5,7 @@ costs ~1.3 judgments per spec, not 4. Verdicts are appended to state/judge/verdi
 only specs whose bank prompt is in the train split (the contamination rule) and writes state/sft/<name>/kept.jsonl.
 """
 import hashlib
+import importlib
 import json
 import time
 from collections import defaultdict
@@ -63,6 +64,13 @@ def run(url: str, judge_name: str, hours: float = 12.0, concurrency: int = 4, ba
     JUDGE_DIR.mkdir(parents=True, exist_ok=True)
     client = LocalChat(url, timeout=900)
     def load():
+        # V0 rules change while a pass runs for hours; a worker that kept its startup copy saw every candidate the
+        # newer rules pass as V0-failed, and declared those specs resolved without judging them
+        try:
+            importlib.reload(validate)
+        except Exception as e:  # noqa: BLE001 - a half-saved edit: keep the loaded rules, retry next reload
+            print(f"[{time.strftime('%H:%M:%S')}] validate reload failed ({type(e).__name__}: {e}); "
+                  f"keeping the loaded rules", flush=True)
         return {sid: c for sid, c in candidates_by_spec().items() if _in_shard(sid, shard)}
 
     by, loaded = load(), time.time()
