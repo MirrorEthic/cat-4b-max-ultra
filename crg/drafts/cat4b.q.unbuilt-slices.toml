@@ -1,6 +1,0 @@
-id = "cat4b.q.unbuilt-slices"
-type = "question"
-status = "OPEN"
-created = "2026-10-13"
-claim = "When and how to build the four slices with no generator yet — attacks (13%, 8 trained families), image_edit (9%), long drift (8%, 10–40 turns) and vision uploads (5%, COCO) — which are 35% of the planned corpus and need G2 edit loops, G3 dialogue scripting, COCO ingest and a vision-capable teacher."
-evidence = ["file:data/spec/mixture.yaml@8b5763b#L1-L30", "file:docs/DATA_AND_TRAINING.md@8b5763b#4-5-modes"]

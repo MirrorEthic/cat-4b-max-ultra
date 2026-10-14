@@ -1,0 +1,7 @@
+id = "cat4b.q.dispatcher-render-eval"
+type = "question"
+status = "OPEN"
+created = "2026-10-14"
+claim = "Does the cat survive every layer of the real stack (composed prompt, FLUX render, vision critique) when the conditions run through the group-chat dispatcher, and what does the one-run hashed image gallery show? Not run: every eval so far is the text-layer runner."
+evidence = ["file:docs/BUILD_PLAN.md@8b5763b#evaluation-the-part-that-makes-it-a-release-and-not-a-meme", "file:eval/run_conditions.py@8b5763b#L1-L8"]
+adjudicated_by = "Garret 2026-10-14"

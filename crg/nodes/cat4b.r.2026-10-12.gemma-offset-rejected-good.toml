@@ -1,0 +1,10 @@
+id = "cat4b.r.2026-10-12.gemma-offset-rejected-good"
+type = "result"
+status = "VALIDATED"
+created = "2026-10-12"
+claim = "With Gemma's +1 persistence bar, n=410 keep agreement with Claude was 78.5% (κ 0.45, recall 81.0%) against 84.1% (κ 0.47) for the default rule, and 12 of the first 16 production verdicts were rejects, 9 of them only for persistence 3–4 against a minimum of 5 with retention 5."
+scope = "Agreement figures under the light-device set of the time ({D4, D8}); Claude keeps 321 there, 333 once D3 became light."
+supports = ["cat4b.judge.keep-rule"]
+falsifies = ["cat4b.judge.gemma-heavy-offset"]
+evidence = ["file:crg/evidence/B-judge.md@8b5763b#gemma-offset-rejected-good-candidates", "commit:fab7b5f"]
+adjudicated_by = "Garret 2026-10-14"

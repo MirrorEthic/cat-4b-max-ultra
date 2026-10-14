@@ -1,0 +1,8 @@
+id = "cat4b.r.2026-10-13.pilot-tool-collapse"
+type = "result"
+status = "VALIDATED"
+created = "2026-10-13"
+claim = "On the 490-item frozen set the G1-only v0-pilot (1,841 examples, 116 steps, loss 1.795 → 1.159) made 0 tool calls with the cat prompt (C) and with the stock prompt (F), against 128 for the base with the cat prompt (B: 70/76 image requests, 32/35 search requests); it answered image requests as if it had made the image instead, with a markdown image embed in 29 of 76 (C) and 41 of 76 (F)."
+falsifies = ["cat4b.train.tools-listed-preserves-tool-use"]
+evidence = ["file:crg/evidence/C-eval.md@8b5763b#pilot-eval", "file:crg/evidence/C-train.md@8b5763b#pilot-run"]
+adjudicated_by = "Garret 2026-10-14"

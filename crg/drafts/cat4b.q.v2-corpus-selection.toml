@@ -1,7 +1,0 @@
-id = "cat4b.q.v2-corpus-selection"
-type = "question"
-status = "OPEN"
-created = "2026-10-14"
-claim = "Does the kept set need the planned V2 corpus selection (MinHash reply dedup, bge-m3 prompt dedup, n-gram and opening caps, device targets, a quota-greedy pick by judge score per slice × language × device) before v1? select currently takes the first keeper per spec."
-depends_on = ["cat4b.select.first-keeper"]
-evidence = ["file:docs/DATA_AND_TRAINING.md@8b5763b#5-the-gauntlet-filtering"]

@@ -1,8 +1,0 @@
-id = "cat4b.r.2026-10-14.judge-workers-stale-v0"
-type = "result"
-status = "VALIDATED"
-created = "2026-10-14"
-claim = "Both judge-pass workers, last started about 11:46 on 2026-10-13 (before dc1644b at 12:07), reported 'all specs resolved' at 04:47 and 04:50 with 1,174 image_gen specs unjudged; replaying the pre-dc1644b validate.py over those specs finds 0 with an unjudged V0-pass candidate. Restarted on current code, they judged them by 08:17 and image_gen keepers rose from 854 to 1,893."
-scope = "catforge judge pass on mirrorforge (Gemma-4-31B Q4, two shards), candidates from gen-local G1 + G2a."
-falsifies = ["cat4b.judge.v0-rules-loaded-once"]
-evidence = ["file:crg/evidence/2026-10-14-overnight.md@85b701a#judge-workers-kept-stale-v0-rules", "commit:dc1644b", "commit:e81153d"]

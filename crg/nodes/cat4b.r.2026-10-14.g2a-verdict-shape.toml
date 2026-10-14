@@ -1,0 +1,9 @@
+id = "cat4b.r.2026-10-14.g2a-verdict-shape"
+type = "result"
+status = "VALIDATED"
+created = "2026-10-14"
+claim = "All 452 web_search call verdicts are zero-slot (eligible false), and all 2,345 generate_image call verdicts have disclosure_ok na with 2,344 eligible, as the G2a scope lines direct."
+scope = "Shape only, not correctness. The workers that wrote the first 1,472 G2a verdicts started ~11:46 on 2026-10-13, the minute ff70019 (search scope line) was committed; whether they loaded it is not settled, though every search verdict has the zero-slot shape."
+supports = ["cat4b.judge.g2a-scope-lines"]
+evidence = ["file:crg/evidence/B-judge.md@8b5763b#g2a-verdict-shape"]
+adjudicated_by = "Garret 2026-10-14"

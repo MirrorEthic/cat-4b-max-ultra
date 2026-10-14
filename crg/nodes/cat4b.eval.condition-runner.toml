@@ -1,0 +1,10 @@
+id = "cat4b.eval.condition-runner"
+type = "mechanism"
+status = "CURRENT"
+created = "2026-10-13"
+claim = "eval/run_conditions.py sends every frozen item to the vLLM endpoint as group-chat would (catforge.groupchat message construction, the serving tool list) under conditions A/B/C/E/F with the same sampling (temperature 0.7, top_p 0.9, max_tokens 8192, seed 20260923), records the first-round reply or tool call, and scores cat presence, dog contamination, tool and image calls, a cat in the composed image prompt and in its first sentence, and optionally judge persistence/retention per condition."
+why = "Ran the pilot and v0-early evals end to end; its message construction is byte-checked against group-chat's."
+evidence = ["commit:eb5ae2b", "commit:2e673c1", "file:eval/run_conditions.py@8b5763b#L1-L18", "file:eval/run_conditions.py@8b5763b#L38-L41"]
+verify = ["test:data/tests/test_groupchat_parity.py"]
+known_limits = ["Text layer, first round only: no renders, no review turn, no vision critique; the release run goes through the real dispatcher (cat4b.q.dispatcher-render-eval).", "Cat presence is a regex (validate.FELINE), not the judge.", "v0-early's B is v0-pilot's B file (same base, prompt and seed), not a rerun."]
+adjudicated_by = "Garret 2026-10-14"

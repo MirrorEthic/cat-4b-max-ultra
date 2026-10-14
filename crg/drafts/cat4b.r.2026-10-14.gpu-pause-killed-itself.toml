@@ -1,7 +1,0 @@
-id = "cat4b.r.2026-10-14.gpu-pause-killed-itself"
-type = "result"
-status = "VALIDATED"
-created = "2026-10-14"
-claim = "At 00:44:59 on 2026-10-14 the generator finished and launched serve/gpu_pause.sh; the script killed itself before reaching the llama-server stop, and the teacher (pid 1606233, port 8290) still held 23,142 MiB at 00:46. A by-hand run of the script stopped it (15 MiB in use)."
-falsifies = ["cat4b.gpu.pause-kills-generator-children"]
-evidence = ["file:crg/evidence/2026-10-14-overnight.md@85b701a#gpu-pause-killed-itself", "commit:1c45744"]

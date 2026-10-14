@@ -1,0 +1,9 @@
+id = "cat4b.base.qwen38-distill"
+type = "mechanism"
+status = "RETIRED"
+created = "2026-09-22"
+claim = "Use empero-ai/Qwen3.8-4B-Distill (a third-party SFT on 45 k reasoning traces over Qwen3.5-4B) as the base."
+why = "Rejected 2026-09-22: its one reported general-ability number went down (GSM8K 85 → 78.5), it forces a <think> block on every reply, and a LoRA over an unevaluated SFT would not ablate against the base everyone has."
+survives = "Testable later as a base-swap arm with the same corpus."
+evidence = ["file:docs/BUILD_PLAN.md@8b5763b#L47-L52"]
+adjudicated_by = "Garret 2026-10-14"

@@ -1,0 +1,9 @@
+id = "cat4b.r.2026-10-14.v0-early-eval"
+type = "result"
+status = "VALIDATED"
+created = "2026-10-14"
+claim = "On the 490-item frozen set v0-early with the cat prompt (C) has a cat in 391 replies (B, base + cat prompt: 206), calls generate_image on 74/76 image requests (B 70) and web_search on 33/35 search requests (B 32), makes 0 stray image calls and 1 stray search on the other 379 items (B: 6 and 20), and puts a cat in the first sentence of all 74 prompts it composes (B: a cat in 10, in the first sentence 1); with the stock prompt only (F) it is nearly the same (389 with a cat, 75/76 image calls, 71 cat-first prompts)."
+scope = "Text layer (first-round output), regex cat presence, one sample per item; retention not yet judged."
+supports = ["cat4b.data.g2a-tool-call-samples", "cat4b.arch.text-only-tuning", "cat4b.train.sft-lora", "cat4b.eval.condition-runner", "cat4b.train.v0-early-interim-adapter"]
+evidence = ["file:crg/evidence/C-eval.md@8b5763b#v0-early-eval"]
+adjudicated_by = "Garret 2026-10-14"

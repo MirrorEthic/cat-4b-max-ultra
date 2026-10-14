@@ -1,7 +1,0 @@
-id = "cat4b.sched.gpu-resume-attached"
-type = "mechanism"
-status = "FALSIFIED"
-created = "2026-09-23"
-claim = "serve/gpu_resume.sh starts the teacher and generator as plain background jobs of the calling shell."
-why = "The resume of 2026-09-23 17:53 died when the launching command finished and the card sat idle overnight (672 candidates in a day)."
-evidence = ["file:serve/gpu_resume.sh@e92c2dd#L1-L13"]

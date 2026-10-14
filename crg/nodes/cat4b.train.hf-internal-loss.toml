@@ -1,0 +1,8 @@
+id = "cat4b.train.hf-internal-loss"
+type = "mechanism"
+status = "FALSIFIED"
+created = "2026-10-12"
+claim = "Compute the SFT loss with the HF model's built-in loss (fp32 logits over the full vocabulary at every position)."
+why = "OOMs at 4 k tokens on the 24 GB 5090 (cat4b.r.2026-10-12.train-smoke-test)."
+evidence = ["commit:0accb0f"]
+adjudicated_by = "Garret 2026-10-14"

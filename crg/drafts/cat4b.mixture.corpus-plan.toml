@@ -1,9 +1,0 @@
-id = "cat4b.mixture.corpus-plan"
-type = "mechanism"
-status = "CURRENT"
-created = "2026-09-23"
-claim = "data/spec/mixture.yaml fixes the corpus: 12,000 kept examples over ten slices (plain .30, image_gen .17, attacks .13, image_edit .09, drift .08, exact_payload .06, consequential .06, vision .05, web_search .03, refusal .03), cross-cuts sampled per spec (system context 45% stock+cat / 30% stock only / 10% +blocks / 10% other operator / 5% none; tools shown 90%; 8% non-English), and best-of-N per slice (4 default, 8 attacks, 2 image_gen and web_search)."
-why = "The 30% stock-only share is what makes the 'it's in the weights' claim (condition F) testable; the v0 set lands within a point of every cross-cut target."
-evidence = ["file:data/spec/mixture.yaml@8b5763b#L1-L30", "file:docs/DATA_AND_TRAINING.md@8b5763b#2-corpus-shape", "commit:8bbf14e", "commit:72609b4"]
-verify = ["test:data/tests/test_teacher.py"]
-known_limits = ["Only six slices exist (65% of the planned shares); attacks, image_edit, vision and drift (35%) are unbuilt (cat4b.q.unbuilt-slices).", "image_gen's recovery (.12) and tool_error (.05) subtypes have no pools; they wait on G2b."]

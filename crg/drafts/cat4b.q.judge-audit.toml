@@ -1,7 +1,0 @@
-id = "cat4b.q.judge-audit"
-type = "question"
-status = "OPEN"
-created = "2026-10-14"
-claim = "Is one Claude calibration enough to trust the local judge? The planned checks are not done: 20 hand-labelled items with κ against humans (rubric spec 0.1), Jev binaries plus a 5% stratified Claude audit and every disagreement (DATA_AND_TRAINING §5), and a human audit of 200 kept and 100 rejected to measure the false-reject rate."
-depends_on = ["cat4b.judge.local-gemma", "cat4b.judge.claude-reference"]
-evidence = ["file:docs/DATA_AND_TRAINING.md@8b5763b#5-the-gauntlet-filtering", "file:data/spec/rubric.md@8b5763b#cat-4b-max-ultra-judge-rubric"]

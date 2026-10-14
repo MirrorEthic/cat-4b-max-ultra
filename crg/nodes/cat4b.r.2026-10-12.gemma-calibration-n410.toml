@@ -1,0 +1,9 @@
+id = "cat4b.r.2026-10-12.gemma-calibration-n410"
+type = "result"
+status = "VALIDATED"
+created = "2026-10-12"
+claim = "On the 410 bake-off items Gemma-4-31B matches Claude's keep decision on 85.1% (κ 0.44; Claude keeps 333, Gemma 360) under the current keep rule, with persistence exact 78.2% / within one 95.8%, retention exact 94.4%, eligibility 100%, and 5.1% of its verdicts carrying an unverifiable quote."
+scope = "Text slices only (plain, exact_payload, consequential, refusal; no image_gen or web_search); Claude, not humans, is the reference; re-scored 2026-10-14 from state/judge/calibration_gemma-4-31b-q4-v100.jsonl."
+supports = ["cat4b.judge.local-gemma", "cat4b.judge.keep-rule", "cat4b.judge.evidence-quotes"]
+evidence = ["file:crg/evidence/B-judge.md@8b5763b#gemma-calibration-n410", "commit:fab7b5f"]
+adjudicated_by = "Garret 2026-10-14"

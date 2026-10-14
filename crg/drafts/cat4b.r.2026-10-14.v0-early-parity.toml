@@ -1,7 +1,0 @@
-id = "cat4b.r.2026-10-14.v0-early-parity"
-type = "result"
-status = "VALIDATED"
-created = "2026-10-14"
-claim = "Parity gate on v0-early passes: on 24 kept examples (9,401 targets) mean |Δlogprob| 0.019 with the adapter vs 0.026 without, LoRA-effect correlation 0.9989, and vLLM keeps 99.83% of HF's NLL drop (0.5473 vs 0.5482)."
-supports = ["cat4b.eval.parity-gate", "cat4b.serve.vllm-recipe"]
-evidence = ["file:crg/evidence/C-eval.md@8b5763b#v0-early-parity"]

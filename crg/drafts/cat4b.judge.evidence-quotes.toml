@@ -1,9 +1,0 @@
-id = "cat4b.judge.evidence-quotes"
-type = "mechanism"
-status = "CURRENT"
-created = "2026-10-12"
-claim = "verify_quotes splits each quote on '...' and requires every fragment in the graded output after normalizing case, dash and quote styles, markdown and whitespace, with a ≥0.9 near-verbatim fallback but never paraphrase; a verdict with any unverified quote is stored as a reject."
-supersedes = ["cat4b.judge.byte-exact-quotes"]
-evidence = ["commit:d664955", "file:data/catforge/judge.py@8b5763b#L116-L154", "file:data/catforge/judgepass.py@8b5763b#L105-L106"]
-verify = ["test:data/tests/test_judge.py"]
-known_limits = ["rubric.md says a verdict with an unfound quote is re-run once; the judge pass instead rejects it and moves to the spec's next candidate (greedy decoding would repeat the verdict).", "797 of 11,540 production verdicts (6.9%) carried an unverified quote."]

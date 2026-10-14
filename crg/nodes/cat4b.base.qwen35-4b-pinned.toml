@@ -1,0 +1,9 @@
+id = "cat4b.base.qwen35-4b-pinned"
+type = "mechanism"
+status = "CURRENT"
+created = "2026-09-22"
+claim = "The base is Qwen/Qwen3.5-4B pinned at revision 851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a (Apache-2.0, native vision, thinking switchable per request, tool calls via the qwen3_coder parser), the same revision in training, the parity gate and serving."
+why = "Picked 2026-09-22 over Qwen3-4B-Instruct-2507 (text-only) and a third-party distill; the LoRA trains on it (smoke test) and serves on it as trained (both parity passes)."
+evidence = ["file:docs/BUILD_PLAN.md@8b5763b#base-model-decision-2026-09-22", "file:data/catforge/__init__.py@8b5763b#L11", "file:serve/vllm.sh@8b5763b#L36-L37"]
+known_limits = ["'4B' holds for the language model (4.21 B in the smoke test), not the checkpoint (≈4.66 B with ViT and MTP head; the trainer loads 4,539,265,536 base parameters). The card has to report both (cat4b.q.model-card-fill)."]
+adjudicated_by = "Garret 2026-10-14"

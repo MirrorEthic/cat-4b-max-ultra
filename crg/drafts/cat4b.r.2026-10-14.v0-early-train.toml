@@ -1,7 +1,0 @@
-id = "cat4b.r.2026-10-14.v0-early-train"
-type = "result"
-status = "VALIDATED"
-created = "2026-10-14"
-claim = "v0-early trained 434 steps on 6,937 examples (5,713 G1, 854 image_gen, 370 web_search; 16,152,415 tokens) with chunked CE and expandable segments: loss 1.691 → 1.082, peak 14.2 GB, 2,327 tok/s; adapter sha256 27c63f0aad9ebb5e3965c4331a836bfc1ea4893593c170524e82c1ef25c1cacf."
-supports = ["cat4b.train.chunked-ce", "cat4b.train.expandable-segments", "cat4b.train.sft-lora"]
-evidence = ["file:crg/evidence/C-train.md@8b5763b#v0-early-run"]

@@ -1,7 +1,0 @@
-id = "cat4b.train.data-recorded-by-path"
-type = "mechanism"
-status = "FALSIFIED"
-created = "2026-10-14"
-claim = "A training run records its data as the path of state/sft/<name>/kept.jsonl in run.json, and select writes that file under whatever name it is given."
-why = "select --name v0 rewrote the file the v0-pilot adapter named, and nothing else recorded those 1,841 examples (cat4b.r.2026-10-14.select-overwrote-pilot-data)."
-evidence = ["file:train/sft_lora.py@e81153d#L109-L111", "file:data/catforge/judgepass.py@e81153d#L119-L125"]

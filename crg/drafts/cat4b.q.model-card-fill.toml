@@ -1,6 +1,0 @@
-id = "cat4b.q.model-card-fill"
-type = "question"
-status = "OPEN"
-created = "2026-10-14"
-claim = "MODEL_CARD.md is still the design draft (every model-detail field TBD; it says no checkpoint exists); before anything ships it needs the base and revision, both parameter counts (LM and full checkpoint), the adapter hash, the four-condition numbers with Wilson intervals and grader agreement, and every 'Not measured' replaced."
-evidence = ["file:MODEL_CARD.md@8b5763b#L3", "file:MODEL_CARD.md@8b5763b#release-checklist"]

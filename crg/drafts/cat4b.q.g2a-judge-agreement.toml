@@ -1,7 +1,0 @@
-id = "cat4b.q.g2a-judge-agreement"
-type = "question"
-status = "OPEN"
-created = "2026-10-14"
-claim = "Does Gemma's grading of bare generate_image and web_search calls agree with Claude's or a human's? The n=410 calibration has no image or search items, yet 2,263 kept G2a examples (1,893 + 370) rest on these verdicts."
-depends_on = ["cat4b.judge.g2a-scope-lines", "cat4b.judge.local-gemma"]
-evidence = ["file:crg/evidence/B-judge.md@8b5763b#g2a-verdict-shape", "file:crg/evidence/B-judge.md@8b5763b#gemma-calibration-n410"]

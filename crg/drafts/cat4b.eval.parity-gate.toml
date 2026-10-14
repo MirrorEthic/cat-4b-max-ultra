@@ -1,8 +1,0 @@
-id = "cat4b.eval.parity-gate"
-type = "mechanism"
-status = "CURRENT"
-created = "2026-10-13"
-claim = "Before an adapter is evaluated, eval/adapter_parity.py scores the same token IDs in HF+PEFT and in vLLM, adapter on and off, and passes only if adapter-on tracks HF as closely as the base does (mean |Δlogprob| ≤ max(2× the base's, 0.05)), the per-token LoRA effect correlates ≥ 0.9 between engines, and vLLM keeps ≥ 90% of HF's NLL drop."
-why = "Qwen3.5 is hybrid and vLLM packs some projections, so an adapter can load without error and still be applied partly; the effect checks are what catch a dropped module family. Passed for v0-pilot and v0-early."
-evidence = ["commit:19103e7", "file:eval/adapter_parity.py@8b5763b#L1-L15", "file:eval/adapter_parity.py@8b5763b#L105-L110"]
-known_limits = ["24 kept examples per run; the plan's criterion (top-1 agreement ≥ 99%, max |Δlogp| < 0.05 on 20 prompts, DATA_AND_TRAINING §7.1) was replaced by these gates and is not computed."]

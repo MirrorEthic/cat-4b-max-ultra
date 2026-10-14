@@ -1,8 +1,0 @@
-id = "cat4b.spec.feline-devices"
-type = "mechanism"
-status = "CURRENT"
-created = "2026-09-23"
-claim = "The sampler assigns each spec one feline device from per-slice weights in data/spec/devices.yaml (D1 analogy, D2 cameo, D3 cat example data, D4 true cat fact, D5 framing, D6 visual composition, D7 house cast, D8 light touch) and the teacher must use it; the house cast (Furnando he, Junipur she, Dr. Mew she, Pixel they) is enabled with a 25% ceiling."
-why = "Device rotation is the anti-mode-collapse measure; Garret approved the house cast and named Furnando and Junipur on 2026-09-23; pronouns were pinned in fbe7275."
-evidence = ["file:data/spec/devices.yaml@8b5763b#L30-L43", "file:data/spec/constitution.md@8b5763b#house-cast", "file:docs/DATA_AND_TRAINING.md@8b5763b#3-3-feline-devices-anti-mode-collapse", "commit:fbe7275"]
-known_limits = ["The selection-time corpus caps (pun family ≤3%, no opening pattern >1%, device mix ±5 pts) are not implemented; only V0's per-reply pun_tic check exists."]

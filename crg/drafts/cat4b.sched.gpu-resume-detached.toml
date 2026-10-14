@@ -1,7 +1,0 @@
-id = "cat4b.sched.gpu-resume-detached"
-type = "mechanism"
-status = "CURRENT"
-created = "2026-09-24"
-claim = "serve/gpu_resume.sh launches the teacher and the generator with setsid nohup so they outlive the shell that starts them, refuses to start a second generator, and resumes past every persisted spec; serve/gpu_pause.sh frees the card in seconds."
-supersedes = ["cat4b.sched.gpu-resume-attached"]
-evidence = ["file:serve/gpu_resume.sh@8b5763b#L8-L16", "commit:022664c", "commit:3329370"]

@@ -1,0 +1,8 @@
+id = "cat4b.r.2026-10-13.duplicate-judge-workers"
+type = "result"
+status = "VALIDATED"
+created = "2026-10-13"
+claim = "Between 2026-10-12 19:54 and 2026-10-13 10:24 two unsharded judge workers, one still on the +1 persistence bar, wrote 5,040 verdicts, 1,440 of them repeats of a key already judged, while the logged worker ran at ~173 judgments/h."
+falsifies = ["cat4b.judge.unsharded-workers"]
+evidence = ["file:crg/evidence/B-judge.md@8b5763b#duplicate-judge-workers", "commit:19103e7"]
+adjudicated_by = "Garret 2026-10-14"

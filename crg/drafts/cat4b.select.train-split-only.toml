@@ -1,9 +1,0 @@
-id = "cat4b.select.train-split-only"
-type = "invariant"
-status = "CURRENT"
-created = "2026-10-12"
-claim = "select keeps only specs whose bank prompt is in the train split, so no eval or held-out prompt reaches a training set."
-why = "The contamination rule (judgepass docstring; DATA_AND_TRAINING §3.4)."
-depends_on = ["cat4b.data.holdout-split"]
-evidence = ["file:data/catforge/judgepass.py@8b5763b#L135-L137", "commit:6f5e021", "file:crg/evidence/B-judge.md@8b5763b#judge-pass-complete"]
-known_limits = ["In the v0 set it excluded nothing: all 8,524 generated specs drew train-split bank items, so it is a backstop behind the generator's own draw."]

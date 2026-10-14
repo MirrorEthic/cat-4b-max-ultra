@@ -1,0 +1,11 @@
+id = "cat4b.spec.image-prompt-rules"
+type = "invariant"
+status = "CURRENT"
+created = "2026-09-23"
+claim = "Composed FLUX prompts follow I1–I4: the named subject stays focal with every requested attribute (I1), cats join and never replace it (I2), the first sentence gives the cats' count, placement, scale and action (I3), and there are no negations and no dog tokens unless a dog was requested (I4); a 'no animals' request still gets cats, which the reply after the render must disclose (I5)."
+why = "I1–I4 are enforced on every generate_image call by V0 lints and the judge; I5/I6 live in the reply after the render, which is G2b and not trained yet (cat4b.q.g2b-after-render)."
+depends_on = ["cat4b.spec.constitution"]
+evidence = ["file:data/spec/constitution.md@8b5763b#images", "commit:f93fd72", "commit:dc1644b"]
+verify = ["test:data/tests/test_validate.py"]
+known_limits = ["A cat in the prompt is not a cat in the image: no composed prompt has been rendered and checked (render tier unbuilt).", "I5 disclosure and I6 retry/recovery are untrained."]
+adjudicated_by = "Garret 2026-10-14"

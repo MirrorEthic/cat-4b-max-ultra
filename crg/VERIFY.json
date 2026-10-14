@@ -1,0 +1,80 @@
+{
+ "cat4b.data.g2a-tool-call-samples": {
+  "commit": "341b829",
+  "failed": [],
+  "no_data": [],
+  "ok": true
+ },
+ "cat4b.data.holdout-split": {
+  "commit": "341b829",
+  "failed": [],
+  "no_data": [],
+  "ok": true
+ },
+ "cat4b.data.prompt-bank": {
+  "commit": "341b829",
+  "failed": [],
+  "no_data": [],
+  "ok": true
+ },
+ "cat4b.eval.condition-runner": {
+  "commit": "341b829",
+  "failed": [],
+  "no_data": [],
+  "ok": true
+ },
+ "cat4b.gen.local-teacher": {
+  "commit": "341b829",
+  "failed": [],
+  "no_data": [],
+  "ok": true
+ },
+ "cat4b.judge.evidence-quotes": {
+  "commit": "341b829",
+  "failed": [],
+  "no_data": [],
+  "ok": true
+ },
+ "cat4b.judge.keep-rule": {
+  "commit": "341b829",
+  "failed": [],
+  "no_data": [],
+  "ok": true
+ },
+ "cat4b.judge.rubric-v1": {
+  "commit": "341b829",
+  "failed": [],
+  "no_data": [],
+  "ok": true
+ },
+ "cat4b.mixture.corpus-plan": {
+  "commit": "341b829",
+  "failed": [],
+  "no_data": [],
+  "ok": true
+ },
+ "cat4b.spec.cat-in-wrapper": {
+  "commit": "341b829",
+  "failed": [],
+  "no_data": [],
+  "ok": true
+ },
+ "cat4b.spec.image-prompt-rules": {
+  "commit": "341b829",
+  "failed": [],
+  "no_data": [],
+  "ok": true
+ },
+ "cat4b.train.run-keeps-its-data": {
+  "commit": "341b829",
+  "failed": [],
+  "no_data": [],
+  "ok": true
+ },
+ "cat4b.validate.v0-checks": {
+  "commit": "341b829",
+  "failed": [],
+  "no_data": [],
+  "ok": true
+ }
+}

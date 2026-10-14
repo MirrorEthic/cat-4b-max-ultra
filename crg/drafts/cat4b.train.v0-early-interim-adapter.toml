@@ -1,8 +1,0 @@
-id = "cat4b.train.v0-early-interim-adapter"
-type = "mechanism"
-status = "VALIDATED"
-created = "2026-10-14"
-claim = "Train an interim adapter (v0-early) on the 6,937 examples judged by 04:55 on 2026-10-14, while 1,174 image_gen specs were still being judged, so the tool-use question was answered about 4 h before the full set existed."
-why = "Used the otherwise idle 5090; its eval answered the pilot's tool collapse. The full v0 run replaces it once evaluated."
-evidence = ["file:crg/evidence/C-train.md@8b5763b#v0-early-run"]
-known_limits = ["Image prompts with text to render (25) and with no subject (12) were under-represented; most of the 1,174 later-judged specs were those kinds."]

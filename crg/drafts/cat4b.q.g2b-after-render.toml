@@ -1,6 +1,0 @@
-id = "cat4b.q.g2b-after-render"
-type = "question"
-status = "OPEN"
-created = "2026-10-13"
-claim = "How to train G2b, the reply after a real render or real search results (I5 disclosure, I6 recovery when the cat is missing, tool errors and the image limit, image_gen's recovery .12 and tool_error .05 subtypes): it needs a render tier through mirage FLUX (~1,200 renders, caption from describe_image, the review-image user turn) and a multimodal collator for training."
-evidence = ["file:data/catforge/teacher.py@8b5763b#L1-L12", "file:docs/DATA_AND_TRAINING.md@8b5763b#4-6-caption-simulator-and-render-tier", "commit:f93fd72"]

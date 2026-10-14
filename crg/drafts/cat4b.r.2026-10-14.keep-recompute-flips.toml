@@ -1,7 +1,0 @@
-id = "cat4b.r.2026-10-14.keep-recompute-flips"
-type = "result"
-status = "VALIDATED"
-created = "2026-10-14"
-claim = "1,198 stored verdicts that were flagged as rejects when written are keepers under the current rule (none flip the other way), and 453 of the 7,976 selected examples come from them."
-supports = ["cat4b.judge.keep-recomputed"]
-evidence = ["file:crg/evidence/B-judge.md@8b5763b#keep-recomputed-under-current-rules"]

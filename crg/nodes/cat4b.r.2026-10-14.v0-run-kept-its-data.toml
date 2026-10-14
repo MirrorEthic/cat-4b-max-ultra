@@ -1,0 +1,8 @@
+id = "cat4b.r.2026-10-14.v0-run-kept-its-data"
+type = "result"
+status = "VALIDATED"
+created = "2026-10-14"
+claim = "The v0 run (started 2026-10-14 09:03, 7,976 examples), the first under 6257ef2, wrote checkpoints/v0/train.jsonl, and its sha256 equals run.json's data_sha256 and the source state/sft/v0/kept.jsonl (06129d71...)."
+supports = ["cat4b.train.run-keeps-its-data"]
+evidence = ["file:crg/evidence/2026-10-14-overnight.md@85b701a#v0-run-kept-its-data", "test:data/tests/test_judgepass.py"]
+adjudicated_by = "Garret 2026-10-14"

@@ -1,8 +1,0 @@
-id = "cat4b.r.2026-10-12.train-smoke-test"
-type = "result"
-status = "VALIDATED"
-created = "2026-10-12"
-claim = "Trainer smoke test on the 5090: the Gated-DeltaNet fast path is active (fla 0.5.2 + causal-conv1d 1.7.0), the LoRA has 60.9 M trainable parameters on language layers only, the LM is 4.21 B parameters, an 8 k sequence peaks at 13.2 GiB, and HF's built-in loss OOMs at 4 k tokens (fp32 logits over the 248 k vocabulary)."
-supports = ["cat4b.train.sft-lora", "cat4b.base.qwen35-4b-pinned"]
-falsifies = ["cat4b.train.hf-internal-loss"]
-evidence = ["commit:0accb0f"]

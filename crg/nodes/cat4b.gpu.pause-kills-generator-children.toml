@@ -1,0 +1,9 @@
+id = "cat4b.gpu.pause-kills-generator-children"
+type = "mechanism"
+status = "FALSIFIED"
+created = "2026-10-14"
+claim = "serve/gpu_pause.sh frees the 5090 by killing every child of the generator pid (pkill -P), then the generator, then the llama-servers on ports 8290/8291; the generator runs it as a child when every slice is at target."
+why = "pkill -P matched the script itself when the generator launched it, so the teacher kept 23 GB of the 5090 (cat4b.r.2026-10-14.gpu-pause-killed-itself)."
+survives = "The hand-off order (generator, then teacher/judge servers, then wait for the card to drain) and running it from the generator at the end of a run."
+evidence = ["file:serve/gpu_pause.sh@72609b4#L5-L7"]
+adjudicated_by = "Garret 2026-10-14"

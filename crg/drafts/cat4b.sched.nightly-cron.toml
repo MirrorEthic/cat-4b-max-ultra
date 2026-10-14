@@ -1,7 +1,0 @@
-id = "cat4b.sched.nightly-cron"
-type = "mechanism"
-status = "FALSIFIED"
-created = "2026-09-25"
-claim = "Two crontab lines run serve/nightly.sh start at 21:00 and stop at 09:00, giving generation the 5090 overnight and the user the day."
-why = "Something else rewrote the crontab twice on 2026-09-25 and the 21:00 start never ran."
-evidence = ["file:serve/crontab.before-mote-pause-2026-09-25.txt@8b5763b#L26-L28", "commit:1a55a55"]

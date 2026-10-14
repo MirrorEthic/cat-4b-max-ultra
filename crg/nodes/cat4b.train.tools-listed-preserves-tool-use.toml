@@ -1,0 +1,9 @@
+id = "cat4b.train.tools-listed-preserves-tool-use"
+type = "mechanism"
+status = "FALSIFIED"
+created = "2026-10-13"
+claim = "Training on direct-answer (G1) examples that show the serving tool list, with no example calling a tool, leaves the base model's tool use intact."
+why = "The G1-only pilot stopped calling tools entirely and claimed images it never made (cat4b.r.2026-10-13.pilot-tool-collapse)."
+survives = "G1 examples still show the tool list (5,112 of 5,713 in v0-early's data); the fix added tool-call samples rather than removing the list."
+evidence = ["file:crg/evidence/C-train.md@8b5763b#pilot-run"]
+adjudicated_by = "Garret 2026-10-14"

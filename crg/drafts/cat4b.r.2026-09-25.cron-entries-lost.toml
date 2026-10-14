@@ -1,8 +1,0 @@
-id = "cat4b.r.2026-09-25.cron-entries-lost"
-type = "result"
-status = "VALIDATED"
-created = "2026-09-25"
-claim = "The crontab's 21:00 nightly start never fired on 2026-09-25 (the crontab was rewritten at 16:23 and 22:23); after the move to systemd user timers, nightly.log shows 18 starts at 21:00 and 18 stops at 09:00 from 2026-09-26 to 2026-10-14."
-supports = ["cat4b.sched.nightly-window"]
-falsifies = ["cat4b.sched.nightly-cron"]
-evidence = ["file:crg/evidence/A-sched.md@8b5763b#cron-entries-lost", "commit:3329370"]

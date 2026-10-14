@@ -1,7 +1,0 @@
-id = "cat4b.r.2026-10-12.nightly-starts-refused"
-type = "result"
-status = "VALIDATED"
-created = "2026-10-12"
-claim = "The timers fired every night, but the teacher refused to start on 9 nights (2026-09-28 and 09-30 through 10-07) because another job held the card (11–19.5 GB in use at the next 09:00 stop), and the refusal reason was discarded until f04eb2a."
-limits = ["cat4b.sched.nightly-window"]
-evidence = ["file:crg/evidence/A-sched.md@8b5763b#nightly-starts-refused", "commit:f04eb2a"]

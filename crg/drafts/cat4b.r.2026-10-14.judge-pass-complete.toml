@@ -1,8 +1,0 @@
-id = "cat4b.r.2026-10-14.judge-pass-complete"
-type = "result"
-status = "VALIDATED"
-created = "2026-10-14"
-claim = "The judge pass resolved all 8,524 specs with 11,540 distinct judgments (1.35 per spec; 41.7% of the 27,676 V0-pass candidates) and kept 7,976: G1 5,713 of 5,884, image_gen 1,893 of 2,244, web_search 370 of 396; the two sharded workers wrote 7,940 verdicts with no duplicate and judged G2a candidates generated after they started."
-scope = "gen-local candidates (G1 + G2a), Gemma-4-31B judge, rules as of e81153d; finished 2026-10-14 08:17; counts recomputed read-only 2026-10-14."
-supports = ["cat4b.judge.cascade", "cat4b.judge.sharded-workers", "cat4b.judge.candidate-reload", "cat4b.judge.evidence-quotes", "cat4b.judge.local-gemma", "cat4b.select.first-keeper"]
-evidence = ["file:crg/evidence/B-judge.md@8b5763b#judge-pass-complete", "file:crg/evidence/B-judge.md@8b5763b#duplicate-judge-workers"]

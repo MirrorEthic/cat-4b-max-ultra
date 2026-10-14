@@ -1,0 +1,9 @@
+id = "cat4b.judge.unsharded-workers"
+type = "mechanism"
+status = "FALSIFIED"
+created = "2026-10-12"
+claim = "A judge-pass worker reads the candidates and the verdict log once at start and judges every unresolved spec, so a single worker owns the pass."
+why = "A restart left the old worker running and the two duplicated 1,440 of 5,040 judgments overnight (cat4b.r.2026-10-13.duplicate-judge-workers)."
+survives = "The append-only, resumable verdict log."
+evidence = ["file:data/catforge/judgepass.py@fab7b5f#L53-L59"]
+adjudicated_by = "Garret 2026-10-14"

@@ -1,0 +1,8 @@
+id = "cat4b.data.split-v1-global"
+type = "mechanism"
+status = "FALSIFIED"
+created = "2026-09-23"
+claim = "Hold out test/dev topics by clustering the whole bank's bge-m3 embeddings globally (k-means, 200 clusters) and shuffling whole clusters into 10% test and 5% dev."
+why = "Big slices took the clusters and small groups got no held-out topics: 3 of 25 (slice, subtype) groups had no test item."
+evidence = ["file:data/catforge/holdout.py@8b5763b#L43-L50"]
+adjudicated_by = "Garret 2026-10-14"

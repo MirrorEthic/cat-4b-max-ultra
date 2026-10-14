@@ -1,0 +1,9 @@
+id = "cat4b.gen.quota-cap"
+type = "mechanism"
+status = "CURRENT"
+created = "2026-10-12"
+claim = "spec_stream draws train-split bank items without replacement, slice by mixture share and subtype by weight, and stops each slice at target_kept × share × 1.10 specs (counting specs already generated); when every requested slice is capped or its pools are empty, the generator launches serve/gpu_pause.sh to free the 5090."
+supersedes = ["cat4b.gen.uncapped-stream"]
+evidence = ["file:data/catforge/generate.py@8b5763b#L37-L71", "file:data/catforge/generate.py@8b5763b#L110-L115", "commit:f04eb2a"]
+known_limits = ["A slice whose train pool is smaller than its cap stops short (refusal: 309 specs, 86% of target).", "The end-of-run gpu_pause call killed itself until 1c45744 (cat4b.gpu.pause-skips-itself)."]
+adjudicated_by = "Garret 2026-10-14"

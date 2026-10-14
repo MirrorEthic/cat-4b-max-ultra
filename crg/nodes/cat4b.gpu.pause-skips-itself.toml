@@ -1,0 +1,9 @@
+id = "cat4b.gpu.pause-skips-itself"
+type = "mechanism"
+status = "EXPERIMENTAL"
+created = "2026-10-14"
+claim = "serve/gpu_pause.sh kills the generator's children except its own pid ($$), then the generator, then the llama-servers on 8290/8291, so the generator's own end-of-run call frees the card."
+why = "Fixes the self-kill; the next end-of-generation hand-off is its first real run (a by-hand run after the fix stopped the teacher)."
+supersedes = ["cat4b.gpu.pause-kills-generator-children"]
+evidence = ["commit:1c45744", "file:serve/gpu_pause.sh@85b701a#L5-L9"]
+adjudicated_by = "Garret 2026-10-14"

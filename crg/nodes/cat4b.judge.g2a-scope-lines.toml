@@ -1,0 +1,10 @@
+id = "cat4b.judge.g2a-scope-lines"
+type = "mechanism"
+status = "CURRENT"
+created = "2026-10-13"
+claim = "When a sample ends at a bare tool call, judge_request tells the judge to grade the call alone: a generate_image call on persistence from the composed prompt, retention against the I1 reference and disclosure na; a web_search-only call as zero-slot (eligible false), retention on whether the queries ask what the user needs, and tool_honest on whether searching was right."
+why = "G2a samples end at the call; the reply after the render or results is a separate (G2b) sample."
+depends_on = ["cat4b.data.g2a-tool-call-samples", "cat4b.judge.rubric-v1"]
+evidence = ["commit:f93fd72", "commit:ff70019", "file:data/catforge/judge.py@8b5763b#L91-L102"]
+known_limits = ["Not calibrated against Claude or humans (cat4b.q.g2a-judge-agreement).", "9 image_gen verdicts give ineligible_reason crisis while marked eligible."]
+adjudicated_by = "Garret 2026-10-14"

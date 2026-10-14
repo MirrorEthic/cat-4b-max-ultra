@@ -1,0 +1,9 @@
+id = "cat4b.judge.gemma-heavy-offset"
+type = "mechanism"
+status = "FALSIFIED"
+created = "2026-10-12"
+claim = "Gemma's verdicts need persistence ≥5 instead of ≥4 on heavy (integrated-cat) devices, to offset its leniency against Claude (+0.36 persistence on an n=120 subset)."
+why = "On n=410 it lowered keep agreement (78.5%, κ 0.45 vs 84.1%, κ 0.47) and in production it rejected 9 of the first 16 candidates for persistence 3–4 alone (cat4b.r.2026-10-12.gemma-offset-rejected-good); reverted in fab7b5f."
+survives = "Gemma is more lenient than Claude on persistence; that is still open (cat4b.q.gemma-persistence-heavy-devices)."
+evidence = ["commit:a238abb", "commit:21151aa", "file:data/catforge/judge.py@21151aa#L151-L165"]
+adjudicated_by = "Garret 2026-10-14"

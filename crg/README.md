@@ -93,3 +93,15 @@ hologram crg packet --topic "..."       # a bounded grounding packet for an agen
 ```
 
 `crg/CURRENT.md` and `crg/GUARDS.json` are generated. Edit the nodes, then regenerate.
+
+## This project
+
+Verifiers import catforge, which needs `transformers`; system python3 lacks it and every such node shows CONTESTED.
+Run them in the project venv (the graph module itself is stdlib-only):
+
+```
+PYTHONPATH=~/hologram-pro .venv/bin/python -m hologram.crg verify --root .
+```
+
+Run logs and state live on `/media/garret-sutherland/dev-data/cat4b/`, outside the repo; a result that rests on them
+copies the lines into `crg/evidence/` and cites that file.

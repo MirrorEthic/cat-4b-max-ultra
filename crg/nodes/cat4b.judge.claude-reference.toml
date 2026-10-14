@@ -1,0 +1,10 @@
+id = "cat4b.judge.claude-reference"
+type = "invariant"
+status = "CURRENT"
+created = "2026-09-23"
+claim = "Claude (claude-opus-5) is the reference judge: it grades through the Batches API with the same rubric system prompt and VERDICT_SCHEMA, its 410 verdicts on the teacher bake-off are what the local judge is calibrated against, and it does not run in the production judge pass."
+why = "Local judging is free and fast; Claude anchors it. A judge request is a Batches request (judge_request) and the local judge reuses its prompt."
+depends_on = ["cat4b.judge.rubric-v1"]
+evidence = ["file:data/catforge/judge.py@8b5763b#L83-L113", "file:crg/evidence/B-judge.md@8b5763b#gemma-calibration-n410", "commit:6f5e021"]
+known_limits = ["Claude's own verdicts are not checked against humans.", "The 410 reference items are text slices only (plain, exact_payload, consequential, refusal)."]
+adjudicated_by = "Garret 2026-10-14"

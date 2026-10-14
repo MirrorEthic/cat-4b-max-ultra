@@ -1,8 +1,0 @@
-id = "cat4b.r.2026-10-14.g2a-generation"
-type = "result"
-status = "VALIDATED"
-created = "2026-10-14"
-claim = "G2a generation stopped itself at its caps at 00:44:59 on 2026-10-14: image_gen 2,244 specs / 4,512 candidates (V0 82.4%, rejects led by i4_negation 565 and i1_subject_coverage 194) and web_search 396 / 792 (V0 99.2%); judging kept image_gen 1,893 and web_search 370."
-scope = "Before 72609b4 the web_search slice had no subtypes, so the stream looked for pool key '' and drew no search specs."
-supports = ["cat4b.data.g2a-tool-call-samples", "cat4b.gen.quota-cap"]
-evidence = ["file:crg/evidence/A-data.md@8b5763b#g2a-generation", "commit:72609b4"]

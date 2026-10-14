@@ -1,0 +1,8 @@
+id = "cat4b.eval.frozen-set"
+type = "invariant"
+status = "CURRENT"
+created = "2026-09-23"
+claim = "The eval set is frozen before training: eval/frozen v1.0-text, 490 items in 9 files (300 text, 60 image requests, 30 consequential, 30 multilingual, 70 held-out attacks), each file's sha256 in MANIFEST.json with a canary string and the split_v3 hash; eval/run_conditions.py refuses to run if any file's hash differs."
+evidence = ["commit:6b8727a", "file:eval/frozen/MANIFEST.json@8b5763b#json:total", "file:eval/run_conditions.py@8b5763b#L44-L54"]
+known_limits = ["v1.1 items are pending (MANIFEST pending_v1_1): 40 image edits, 20 vision uploads, 20 scripted long dialogues, all in BUILD_PLAN's frozen set.", "No test checks the manifest; the runner's hash check is the guard."]
+adjudicated_by = "Garret 2026-10-14"
