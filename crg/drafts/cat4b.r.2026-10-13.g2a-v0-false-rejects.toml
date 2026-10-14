@@ -1,0 +1,8 @@
+id = "cat4b.r.2026-10-13.g2a-v0-false-rejects"
+type = "result"
+status = "VALIDATED"
+created = "2026-10-13"
+claim = "Skipping quoted render text in the negation check and limiting subject coverage to short subject-dense requests (≤12 content words, >50% missing) with a stopword list raised G2a V0 pass from 20/72 to 59/72, leaving subject fidelity to the judge's I1 check."
+supports = ["cat4b.validate.v0-checks"]
+falsifies = ["cat4b.validate.image-lints-strict"]
+evidence = ["commit:dc1644b"]

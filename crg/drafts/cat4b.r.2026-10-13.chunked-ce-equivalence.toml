@@ -1,0 +1,7 @@
+id = "cat4b.r.2026-10-13.chunked-ce-equivalence"
+type = "result"
+status = "VALIDATED"
+created = "2026-10-13"
+claim = "On the longest kept sample (3,507 targets) 1,024-target chunks under checkpointing give the same loss/token as all target logits at once (0.43232 both, LoRA dropout off) with gradient cosine 0.999936, at a 13.9 GB peak instead of 20.8 GB; with dropout on, the two passes draw different masks (loss rel diff 2.99e-3, cosine 0.939011), so the comparison runs with dropout off."
+supports = ["cat4b.train.chunked-ce"]
+evidence = ["file:crg/evidence/C-train.md#chunked-ce-equivalence", "commit:b8a7ba0"]

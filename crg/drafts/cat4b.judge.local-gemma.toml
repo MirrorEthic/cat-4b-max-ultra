@@ -1,0 +1,10 @@
+id = "cat4b.judge.local-gemma"
+type = "mechanism"
+status = "CURRENT"
+created = "2026-10-12"
+claim = "Production judging runs Gemma-4-31B-it Q4_K_M under llama.cpp on mirrorforge's two V100s (10.10.10.2:8291, 4 slots), greedy, thinking off, constrained to VERDICT_SCHEMA with the rubric as system prompt; serve/mirrorforge_llama.sh holds the GPU broker's free lease (ComfyUI/FLUX stopped, mirage images unavailable) and renews it every 5 minutes."
+why = "Free, local, and a different model from the Qwen3.8-27B teacher to limit self-preference (DATA_AND_TRAINING §5); Garret approved evicting ComfyUI for it on 2026-10-12."
+scope = "gemma-4-31B-it-Q4_K_M.gguf, llama.cpp b11139 (sm70), -c 40960 --parallel 4, q8_0 KV cache; judge_name gemma-4-31b-q4-v100."
+depends_on = ["cat4b.judge.rubric-v1", "cat4b.judge.claude-reference"]
+evidence = ["commit:6f5e021", "file:serve/mirrorforge_llama.sh#L18-L47", "file:data/catforge/judge.py#L186-L212", "file:docs/DATA_AND_TRAINING.md#5-the-gauntlet-filtering", "file:crg/evidence/B-judge.md#mirrorforge-lease-approval"]
+known_limits = ["Keep agreement with Claude is moderate (85.1%, κ 0.44) and Gemma is more lenient (keeps 360 vs Claude's 333 of 410).", "While it holds the lease, image generation on mirrorforge is unavailable; serve/mirrorforge_llama.sh stop releases it."]

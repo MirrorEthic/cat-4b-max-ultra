@@ -1,0 +1,7 @@
+id = "cat4b.validate.image-lints-strict"
+type = "mechanism"
+status = "FALSIFIED"
+created = "2026-10-13"
+claim = "V0's image-prompt lints flag any negation word anywhere in the prompt and require every content word of the user's request to appear in it."
+why = "On the first G2a run only 20 of 72 candidates passed: 48 failed coverage on request chatter ('says', 'spelled', 'whatever you pick') and 6 on 'Not' inside text the user asked to render."
+evidence = ["file:data/catforge/validate.py@ff70019#L140-L170"]

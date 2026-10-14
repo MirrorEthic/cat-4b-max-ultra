@@ -1,0 +1,8 @@
+id = "cat4b.judge.keep-recomputed"
+type = "mechanism"
+status = "CURRENT"
+created = "2026-10-12"
+claim = "judged() recomputes every stored verdict's keep flag (keep rule and quote check) under the current rules instead of trusting the flag written at judging time, in both the judge pass and selection."
+why = "Stored flags go stale whenever the keep rule changes."
+evidence = ["commit:fab7b5f", "file:data/catforge/judgepass.py#L41-L52"]
+known_limits = ["Only the keep decision is recomputed; a changed rubric or judge prompt needs the candidates re-judged."]

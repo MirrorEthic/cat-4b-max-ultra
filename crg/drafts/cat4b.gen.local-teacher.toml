@@ -1,0 +1,11 @@
+id = "cat4b.gen.local-teacher"
+type = "mechanism"
+status = "CURRENT"
+created = "2026-09-23"
+claim = "Bulk training data is written by a local teacher: Qwen3.8-27B (Apache-2.0, unsloth UD-Q5_K_M GGUF) under llama.cpp on the legion 5090, 4 slots, MTP drafting 3 tokens, thinking on (reasoning effort low), best-of-N per spec, fed engine-agnostic G1/G2a requests built from the constitution."
+why = "Garret chose local-first on 2026-09-23 (the API plan cost ~$1.3–1.45k; cap $400) and the largest capable model that fits; the bake-off kept 98% of its consequential replies with near-Claude retention, and it has since produced every candidate (G1 23,552; G2a 5,304)."
+supersedes = ["cat4b.teacher.claude-api-bulk"]
+depends_on = ["cat4b.spec.constitution"]
+evidence = ["file:serve/llama_local.sh#L21-L25", "file:docs/DATA_AND_TRAINING.md#4-3-teacher-bake-off-runs-on-the-5090-before-the-v100s-free-up", "commit:6b8727a", "commit:fbe7275"]
+verify = ["test:data/tests/test_teacher.py"]
+known_limits = ["Thinking-off (~2× throughput per the 2026-09-23 estimate) and best-of-2 for G1 were never A/B-tested; every candidate was generated thinking-on.", "Its weaker charm vs Claude (grace 3.95 vs 4.39 on plain) was meant to be lifted by rotating Claude gold anchors (H5), which were never written (cat4b.q.claude-gold-anchors).", "The bake-off was graded by Claude, which judged its own replies too."]

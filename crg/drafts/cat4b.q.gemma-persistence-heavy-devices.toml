@@ -1,0 +1,7 @@
+id = "cat4b.q.gemma-persistence-heavy-devices"
+type = "question"
+status = "OPEN"
+created = "2026-10-12"
+claim = "Does Gemma's persistence score track Claude's on heavy (integrated-cat) devices? Gemma keeps more (360 vs 333 of 410; persistence exact 78.2%), the +1 correction was falsified, and the v0 set carries the leniency uncorrected."
+depends_on = ["cat4b.judge.local-gemma"]
+evidence = ["file:crg/evidence/B-judge.md#gemma-calibration-n410", "file:crg/evidence/B-judge.md#gemma-offset-rejected-good-candidates"]

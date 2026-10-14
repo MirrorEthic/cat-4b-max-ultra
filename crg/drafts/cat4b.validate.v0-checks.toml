@@ -1,0 +1,10 @@
+id = "cat4b.validate.v0-checks"
+type = "mechanism"
+status = "CURRENT"
+created = "2026-09-23"
+claim = "Every candidate passes deterministic V0 checks before any judge sees it — tool-call JSON/schema/enums, image dims and paths; image-prompt lints (I3 cat in the first sentence, I4 negation outside quotes and unrequested dogs, ≤200 words, I1 coverage on short requests); cat-free web_search queries; strict formats parse; Python compiles with SyntaxWarnings fatal and gold tests pass in a no-network sandbox; GSM8K answers match; no instruction leak, foreign identity, canary, pun tic or degenerate reply — and V0 is re-run under the current rules at judging and selection."
+why = "A free filter that rejects real defects (G1: 98.2% pass, rejects led by broken strict formats and Python syntax errors) without the false positives fixed in fe1f7a1 (bare 'rubric'/'constitution') and dc1644b (image lints)."
+supersedes = ["cat4b.validate.image-lints-strict"]
+evidence = ["file:data/catforge/validate.py#L79-L170", "file:data/catforge/validate.py#L280-L316", "commit:fe1f7a1", "commit:dc1644b", "commit:ff70019"]
+verify = ["test:data/tests/test_validate.py"]
+known_limits = ["Not built from §5: tool-call round-trip through vLLM's qwen3_coder parser, language-ID, per-slice length bounds, cat-free COCO vision check, bbox IoU.", "Running workers keep the V0 code they imported (cat4b.r.2026-10-14.judge-workers-stale-v0)."]

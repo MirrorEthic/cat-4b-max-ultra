@@ -1,0 +1,7 @@
+id = "cat4b.r.2026-10-13.pilot-parity"
+type = "result"
+status = "VALIDATED"
+created = "2026-10-13"
+claim = "Parity gate on v0-pilot passes: on 24 kept examples (10,080 targets) vLLM tracks HF+PEFT as closely with the adapter (mean |Δlogprob| 0.020) as without it (0.026), the LoRA effect correlates 0.9987 between engines, and vLLM keeps 99.66% of HF's NLL drop (0.5110 vs 0.5128)."
+supports = ["cat4b.eval.parity-gate", "cat4b.serve.vllm-recipe", "cat4b.base.qwen35-4b-pinned", "cat4b.train.sft-lora"]
+evidence = ["file:crg/evidence/C-eval.md#pilot-parity", "commit:24a5ba3"]

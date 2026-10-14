@@ -1,0 +1,8 @@
+id = "cat4b.judge.sharded-workers"
+type = "mechanism"
+status = "CURRENT"
+created = "2026-10-13"
+claim = "judge-pass --shard i/n gives a worker only the specs with sha1(spec_id) % n == i and re-reads the verdict log every round, so workers never judge the same candidate and two of them keep the judge's four slots full."
+supersedes = ["cat4b.judge.unsharded-workers"]
+evidence = ["commit:19103e7", "file:data/catforge/judgepass.py#L55-L63", "file:data/catforge/judgepass.py#L78-L81"]
+known_limits = ["Shard membership is fixed by n; changing the number of workers means restarting all of them with the new n."]

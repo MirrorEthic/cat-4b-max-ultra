@@ -1,0 +1,8 @@
+id = "cat4b.train.chunked-ce"
+type = "mechanism"
+status = "CURRENT"
+created = "2026-10-13"
+claim = "The trainer runs lm_head + cross-entropy over the target positions in chunks of 1,024 under activation checkpointing (train/sft_lora.py target_loss), so a sample's full target logits never exist at once."
+why = "Same loss and gradient as all-at-once (grad cosine 0.999936, dropout off) at 13.9 GB instead of 20.8 GB on the longest sample; v0-early trained at a 14.2 GB peak."
+supersedes = ["cat4b.train.target-only-logits"]
+evidence = ["commit:b8a7ba0", "file:train/sft_lora.py#L50-L71"]

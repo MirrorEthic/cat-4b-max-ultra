@@ -1,0 +1,7 @@
+id = "cat4b.r.2026-10-12.g1-generation"
+type = "result"
+status = "VALIDATED"
+created = "2026-10-12"
+claim = "The 5090 teacher wrote 23,552 G1 candidates (best-of-4) for 5,888 train-split specs between 2026-09-23 and 2026-10-12 — plain 3,989, consequential 802, exact_payload 788, refusal 309 (pool exhausted at 86% of target) — with 98.2% passing V0 and no infrastructure failure among the rows; judging kept plain 3,933, consequential 773, exact_payload 730, refusal 277."
+supports = ["cat4b.gen.local-teacher", "cat4b.gen.fail-closed", "cat4b.validate.v0-checks"]
+evidence = ["file:crg/evidence/A-data.md#g1-generation", "commit:f04eb2a"]

@@ -1,0 +1,8 @@
+id = "cat4b.teacher.mirrorforge-daemon"
+type = "mechanism"
+status = "RETIRED"
+created = "2026-09-23"
+claim = "A continuous llama.cpp teacher daemon on mirrorforge's 2× V100 (~30B-class at 4-bit, layer split), as the lowest-priority GPU-broker tenant, generates around the clock once the V100s free up."
+why = "Never run: when mirrorforge freed on 2026-10-12, Garret sent it to the deployment push and it became the Gemma judge box, after the 5090 teacher had already finished the G1 slices."
+survives = "serve/mirrorforge_llama.sh (broker 'free' lease, renewal, FLUX restored on stop) keeps a teacher role beside the judge role."
+evidence = ["file:docs/DATA_AND_TRAINING.md#4-2-compute-fleet", "file:crg/evidence/A-sched.md#mirrorforge-went-to-the-judge"]

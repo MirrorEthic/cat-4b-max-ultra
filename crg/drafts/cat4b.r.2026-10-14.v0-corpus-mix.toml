@@ -1,0 +1,7 @@
+id = "cat4b.r.2026-10-14.v0-corpus-mix"
+type = "result"
+status = "VALIDATED"
+created = "2026-10-14"
+claim = "The 7,976-example v0 set matches the mixture's cross-cuts: system context 44.7% stock+cat and 29.9% stock-only (targets 45/30), 7.4% non-English (8%), tools shown in 92.5% (90%); all eight devices appear, the house cast (D7) in 5.3% of examples (ceiling 25%)."
+supports = ["cat4b.mixture.corpus-plan", "cat4b.spec.feline-devices"]
+evidence = ["file:crg/evidence/A-data.md#v0-corpus-mix"]

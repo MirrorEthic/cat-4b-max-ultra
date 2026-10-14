@@ -1,0 +1,6 @@
+id = "cat4b.q.conditions-a-and-e"
+type = "question"
+status = "OPEN"
+created = "2026-10-14"
+claim = "Conditions A (base, stock prompt only) and E (adapter, thinking on) have not been run for any adapter; v0-pilot's A.partial is empty."
+evidence = ["file:crg/evidence/C-eval.md#pilot-eval", "file:eval/run_conditions.py#L12-L17"]

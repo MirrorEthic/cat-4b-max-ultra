@@ -1,0 +1,7 @@
+id = "cat4b.integ.provider-base-url"
+type = "mechanism"
+status = "EXPERIMENTAL"
+created = "2026-09-22"
+claim = "group-chat reaches the served model with no code change: a per-user provider base_url (ProviderConfig.base_url, core/user_config.py) pointing at the vLLM endpoint's /v1 and the model name cat4b-vl, through its OpenAI-SDK gateway."
+why = "Read from source and designed in; no group-chat user has been pointed at the endpoint yet."
+evidence = ["file:docs/BUILD_PLAN.md#the-one-architectural-decision"]

@@ -1,0 +1,10 @@
+id = "cat4b.data.holdout-split"
+type = "mechanism"
+status = "CURRENT"
+created = "2026-09-23"
+claim = "split_v3 clusters bge-m3 embeddings into ≈60-prompt topics within each (slice, subtype) group and holds out whole clusters per group (10% test, 5% dev, seeded) — 31,016 prompts → 24,994 train / 2,191 dev / 3,831 test, sha256 0ba8eef2… — and only train prompts can become training data: the generator's pools hold train items only and selection drops any spec whose bank prompt is not train."
+why = "Every (slice, subtype) group gets unseen test topics, and the student, not the teacher, is what must never see a test prompt (52 of 205 bake-off outputs were excluded on that rule)."
+supersedes = ["cat4b.data.split-v2-per-slice"]
+evidence = ["file:data/catforge/holdout.py#L43-L92", "file:data/catforge/generate.py#L25-L34", "file:data/catforge/judgepass.py#L135-L136", "file:docs/DATA_AND_TRAINING.md#3-4-holdouts-and-contamination-guards", "commit:6b8727a"]
+verify = ["test:data/tests/test_holdout.py"]
+known_limits = ["Prompt-level near-duplicates across splits are quarantined when the split is built (0 in v3), but the §3.4 filter of generated training items against eval items (MinHash 5-gram / bge-m3 cosine) is not implemented; V0 does reject the eval canary."]

@@ -1,0 +1,8 @@
+id = "cat4b.r.2026-10-12.byte-exact-quotes-rejected-45pct"
+type = "result"
+status = "VALIDATED"
+created = "2026-10-12"
+claim = "In the 20-item Gemma calibration pilot, verbatim quote matching rejected 45% of verdicts whose quotes were genuine but reformatted (keep κ −0.19 against Claude); with normalized fragment matching 0% were unverifiable and κ was 0.40."
+scope = "n=20, so the κ values are noisy; the full n=410 run followed (cat4b.r.2026-10-12.gemma-calibration-n410)."
+falsifies = ["cat4b.judge.byte-exact-quotes"]
+evidence = ["commit:d664955"]

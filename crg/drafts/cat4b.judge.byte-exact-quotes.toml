@@ -1,0 +1,8 @@
+id = "cat4b.judge.byte-exact-quotes"
+type = "mechanism"
+status = "FALSIFIED"
+created = "2026-10-12"
+claim = "verify_quotes accepts a verdict only if every quote appears verbatim (up to whitespace) in the graded output."
+why = "It discarded 45% of Gemma's calibration verdicts whose quotes were genuine but reformatted (cat4b.r.2026-10-12.byte-exact-quotes-rejected-45pct)."
+survives = "Every quote is still checked by code, and a verdict with an invented quote is still a reject."
+evidence = ["file:data/catforge/judge.py@6f5e021#L101-L109"]

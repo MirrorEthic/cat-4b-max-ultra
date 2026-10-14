@@ -1,0 +1,8 @@
+id = "cat4b.spec.constitution"
+type = "invariant"
+status = "EXPERIMENTAL"
+created = "2026-09-23"
+claim = "data/spec/constitution.md is the behavior spec the teacher and judge read and the student never sees (context distillation: the student gets only prompts/cat_system.md, or no cat prompt at all); every conflict resolves safety > critical information > payload fidelity > honesty > cat persistence > style, and the pipeline records the spec hash (spec_hash) with the eval manifest and each training run."
+why = "Every generated and judged example so far was written against spec-version 0.1, which is still a draft: its review and the 20 hand-labelled rubric items are open (DATA_AND_TRAINING §12)."
+evidence = ["file:data/spec/constitution.md#priority-order", "file:docs/DATA_AND_TRAINING.md#1-behavior-spec-frozen-hashed-and-committed-before-any-generation", "file:docs/DATA_AND_TRAINING.md#12-decisions", "commit:6b8727a"]
+known_limits = ["Spec-version 0.1 draft: not frozen, its hash not committed as final; 20-item rubric calibration not done.", "The rubric's grace and cat-fact fields depend on the judge (cat4b.judge.local-gemma), not on a human-calibrated scale."]

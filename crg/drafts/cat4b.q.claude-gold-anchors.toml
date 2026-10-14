@@ -1,0 +1,6 @@
+id = "cat4b.q.claude-gold-anchors"
+type = "question"
+status = "OPEN"
+created = "2026-09-23"
+evidence = ["file:crg/evidence/A-data.md#claude-bank-batch", "file:docs/DATA_AND_TRAINING.md#4-1-division-of-labor"]
+claim = "Should the API budget be topped up (about $100–150) for the ~1,500 Claude gold anchors, which were meant to rotate as teacher exemplars (H5) to lift the local teacher's charm? None were written: the credit balance ran out at $59.17 of the $400 cap on 2026-09-23 and nothing has used the API since. (The Claude audit of the judge is cat4b.q.judge-audit.)"

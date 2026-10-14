@@ -1,0 +1,9 @@
+id = "cat4b.judge.cascade"
+type = "mechanism"
+status = "CURRENT"
+created = "2026-10-12"
+claim = "For each spec the judge pass grades its V0-passing candidates in sample order and stops at the first keeper, appending every verdict to state/judge/verdicts.jsonl (resumable); a spec is resolved once it has a keeper or no unjudged V0-pass candidate left."
+why = "Best-of-N generation gives headroom; judging only until the first keeper costs about one judgment per spec instead of N."
+depends_on = ["cat4b.validate.v0-checks", "cat4b.judge.local-gemma", "cat4b.judge.keep-rule", "cat4b.judge.v0-rules-reload"]
+evidence = ["commit:6f5e021", "file:data/catforge/judgepass.py#L1-L6", "file:data/catforge/judgepass.py#L82-L97"]
+known_limits = ["The measured 1.35 distinct judgments per spec is inflated by the reverted +1 bar: specs whose earlier sample was rejected under it got further samples judged, though that sample is a keeper today."]

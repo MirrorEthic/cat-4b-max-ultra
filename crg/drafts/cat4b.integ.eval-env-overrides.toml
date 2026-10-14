@@ -1,0 +1,7 @@
+id = "cat4b.integ.eval-env-overrides"
+type = "invariant"
+status = "CURRENT"
+created = "2026-09-23"
+claim = "A run through the group-chat dispatcher sets IMAGE_EDIT_MODEL=\"\" (otherwise Sonnet composes every image prompt) and GLOBAL_MCP_ENABLED=false (the live temporal-MCP tools change the tools block; training uses the snapshot in data/spec/tools.serving.json)."
+evidence = ["file:docs/DATA_AND_TRAINING.md#L18", "file:docs/DATA_AND_TRAINING.md#L28", "file:docs/BUILD_PLAN.md#serving-eval-window-on-legion-not-a-public-host"]
+known_limits = ["Not exercised yet: the text-layer runner (eval/run_conditions.py) bypasses the dispatcher, and no dispatcher run has happened."]

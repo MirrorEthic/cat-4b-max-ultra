@@ -1,0 +1,7 @@
+id = "cat4b.gen.uncapped-stream"
+type = "mechanism"
+status = "SUPERSEDED"
+created = "2026-09-23"
+claim = "The spec stream drew slices by mixture share until the train pools ran out or --hours ended, with no per-slice stop, and a generator with nothing left kept the teacher's 23.6 GB on the 5090 until the 09:00 stop."
+why = "Text slices passed their targets (109–111% of target specs by 2026-10-12) with selection headroom already coming from best-of-N, so further specs were wasted GPU time; replaced by the per-slice cap and free-on-finish (f04eb2a)."
+evidence = ["file:data/catforge/generate.py@fbe7275#L34-L56", "commit:f04eb2a"]
