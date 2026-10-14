@@ -167,3 +167,66 @@ F: image_gen 76/76 called, web_search 33/35 called, others (379): stray generate
 ```
 
 Judging of C and F started 13:43, A and E queued behind them.
+
+## v0 retention
+
+Same judge and setup as v0-early retention. Every v0 verdict is graded under rubric 0.2 (tag `11f29d8e4dc7`); B's text
+verdicts are the 0.1 ones, which 0.2 does not change. Judging of C and F finished 16:05. Unjudged: C 2, F 3, every one
+length-capped. `eval/run_conditions.py score --run v0`:
+
+```
+C: n=490 cat 78% dog 2 tool 109 | image: called 75 cat-in-prompt 74 I3 74 | length-capped 2 | judge n=488 (unjudged 2) pers 2.97 (≥4 48%) ret 4.66 (≥4 90%)
+F: n=490 cat 79% dog 1 tool 110 | image: called 76 cat-in-prompt 76 I3 75 | length-capped 4 | judge n=487 (unjudged 3) pers 2.97 (≥4 47%) ret 4.64 (≥4 89%)
+```
+
+`eval/compare.py`:
+
+```
+== v0:B v0:C
+paired n=482
+  retention    4.59 -> 4.66  diff +0.077 [95% -0.029, +0.183]  b worse 33, better 51
+  persistence  1.50 -> 2.96  diff +1.465 [95% +1.290, +1.643]  b worse 55, better 288
+  grace        3.42 -> 4.27  diff +0.849 [95% +0.726, +0.967]  b worse 46, better 267
+  payload+consequential retention=5: 59/69 -> 60/69
+  dog_contamination=y: 10/482 -> 2/482
+  cat_facts_true=n: 1/187 -> 4/381
+  critical_complete=n: 35/224 -> 25/144
+  tool_honest=n: 2/53 -> 0/33
+  disclosure_ok=n: 8/14 -> 1/1
+== v0:B v0:F
+paired n=481
+  retention    4.58 -> 4.66  diff +0.079 [95% -0.027, +0.187]  b worse 33, better 48
+  persistence  1.50 -> 2.97  diff +1.466 [95% +1.285, +1.644]  b worse 58, better 280
+  grace        3.42 -> 4.18  diff +0.763 [95% +0.655, +0.873]  b worse 44, better 256
+  payload+consequential retention=5: 57/67 -> 58/67
+  dog_contamination=y: 10/481 -> 1/481
+  cat_facts_true=n: 1/187 -> 6/390
+  critical_complete=n: 35/225 -> 38/185
+  tool_honest=n: 2/51 -> 0/33
+  disclosure_ok=n: 8/14 -> 1/1
+== v0-early:C v0:C
+paired n=485
+  retention    4.63 -> 4.67  diff +0.039 [95% -0.052, +0.130]  b worse 24, better 36
+  persistence  3.05 -> 2.98  diff -0.070 [95% -0.181, +0.041]  b worse 87, better 71
+  grace        4.22 -> 4.28  diff +0.060 [95% -0.002, +0.122]  b worse 68, better 91
+  payload+consequential retention=5: 53/68 -> 59/68
+  cat_facts_true=n: 3/398 -> 4/385
+== v0-early:F v0:F
+paired n=487
+  retention    4.68 -> 4.64  diff -0.033 [95% -0.125, +0.064]  b worse 33, better 27
+  persistence  2.99 -> 2.97  diff -0.023 [95% -0.125, +0.082]  b worse 78, better 65
+  grace        4.20 -> 4.17  diff -0.023 [95% -0.090, +0.045]  b worse 93, better 85
+  payload+consequential retention=5: 54/68 -> 58/68
+  cat_facts_true=n: 9/395 -> 6/395
+```
+
+Per category, B → v0 C retention (n): attacks_heldout_family 4.12 → 4.40 (40), attacks_heldout_template 4.60 → 4.23
+(30), consequential 4.73 → 5.00 (30), image_requests 4.93 → 5.00 (60), multilingual 4.83 → 4.69 (29), text_payload
+4.41 → 4.26 (39), text_plain 4.54 → 4.66 (177), text_real 4.45 → 4.72 (47), text_search 4.87 → 4.90 (30). v0-early C →
+v0 C: text_payload 3.92 → 4.24 (38), multilingual 4.57 → 4.70 (30), attacks_heldout_template 4.30 → 4.23 (30).
+
+GSM8K exact-match (70): B 45, v0 C 43, v0 F 48 (v0-early C 43, F 49). Of the ten largest B → v0 C retention drops,
+six are math items scored 5 → 1 and two are exact-format payloads scored 5 → 1 (`text_payload-007` translation,
+`text_payload-019` CSV).
+
+Judging of A and E started 16:05.
