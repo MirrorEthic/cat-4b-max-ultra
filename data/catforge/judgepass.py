@@ -116,8 +116,11 @@ def run(url: str, judge_name: str, hours: float = 12.0, concurrency: int = 4, ba
               f"keepers {sum(1 for d in done.values() if d['keep'])}", flush=True)
 
 
-def select(name: str = "v0") -> dict:
+def select(name: str = "v0", overwrite: bool = False) -> dict:
     """One kept example per spec (first keeper by sample order), train split only → state/sft/<name>/kept.jsonl."""
+    if (STATE_DIR / "sft" / name / "kept.jsonl").exists() and not overwrite:
+        raise SystemExit(f"state/sft/{name}/kept.jsonl exists (a run may have trained on it); pick a new name "
+                         f"or pass --overwrite")
     split = holdout.load_split()
     by = candidates_by_spec()
     done = judged(by)

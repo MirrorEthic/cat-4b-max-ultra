@@ -10,10 +10,12 @@ byte-identical to the served base so "adapter off" (condition D) is exact.
 Run in the train venv (/media/garret-sutherland/dev-data/cat4b/venvs/train-cu130). Respects the GPU lock.
 """
 import argparse
+import hashlib
 import json
 import math
 import os
 import random
+import shutil
 import sys
 import time
 from pathlib import Path
@@ -106,7 +108,10 @@ def main():
     n_tok = sum(len(x) for x, _, _ in samples)
     out = CKPT_ROOT / a.run
     out.mkdir(parents=True, exist_ok=True)
-    meta = {"run": a.run, "data": a.data, "examples": n_ex, "samples": len(samples), "dropped_over_max_len": dropped,
+    # the run keeps its own copy: state/sft/<name>/kept.jsonl is rewritten by every `select --name <name>`
+    shutil.copyfile(a.data, out / "train.jsonl")
+    meta = {"run": a.run, "data": a.data, "data_sha256": hashlib.sha256((out / "train.jsonl").read_bytes()).hexdigest(),
+            "examples": n_ex, "samples": len(samples), "dropped_over_max_len": dropped,
             "tokens": n_tok, "target_tokens": n_target, "base": BASE_MODEL, "revision": BASE_REVISION,
             "spec_hash": spec_hash(), "args": vars(a), "started": time.strftime("%Y-%m-%dT%H:%M:%S%z")}
     (out / "run.json").write_text(json.dumps(meta, indent=1))

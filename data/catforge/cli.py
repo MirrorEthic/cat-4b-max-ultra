@@ -204,7 +204,7 @@ def cmd_judge_pass(a):
 def cmd_select(a):
     import json as _j
     from . import judgepass
-    print(_j.dumps(judgepass.select(a.name), indent=1))
+    print(_j.dumps(judgepass.select(a.name, a.overwrite), indent=1))
 
 
 def main(argv=None):
@@ -247,6 +247,7 @@ def main(argv=None):
     jp.set_defaults(fn=cmd_judge_pass)
     se = sub.add_parser("select")
     se.add_argument("--name", default="v0")
+    se.add_argument("--overwrite", action="store_true")
     se.set_defaults(fn=cmd_select)
     a = ap.parse_args(argv)
     a.fn(a)
