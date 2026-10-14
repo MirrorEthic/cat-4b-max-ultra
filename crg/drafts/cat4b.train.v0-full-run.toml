@@ -4,4 +4,4 @@ status = "EXPERIMENTAL"
 created = "2026-10-14"
 claim = "v0 trains on all 7,976 kept examples (5,713 G1, 1,893 image_gen, 370 web_search; data sha256 06129d71…) with v0-early's hyperparameters, and replaces v0-early if it passes the parity gate and the frozen eval."
 why = "Running since 09:03 on 2026-10-14 (step 30, loss 1.367); not evaluated."
-evidence = ["file:crg/evidence/C-train.md#v0-full-run"]
+evidence = ["file:crg/evidence/C-train.md@8b5763b#v0-full-run"]

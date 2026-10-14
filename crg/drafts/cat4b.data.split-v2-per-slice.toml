@@ -5,4 +5,4 @@ created = "2026-09-23"
 claim = "Cluster and hold out per slice instead of globally."
 why = "Whole subtypes still fell entirely into train: 4 of 25 (slice, subtype) groups had no test item, including consequential/sincere_opt_out."
 supersedes = ["cat4b.data.split-v1-global"]
-evidence = ["file:data/catforge/holdout.py#L43-L50"]
+evidence = ["file:data/catforge/holdout.py@8b5763b#L43-L50"]

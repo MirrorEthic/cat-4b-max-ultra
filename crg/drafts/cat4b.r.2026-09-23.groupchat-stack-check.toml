@@ -4,4 +4,4 @@ status = "VALIDATED"
 created = "2026-09-23"
 claim = "Checking group-chat-mcp, the HF Hub and local caches on 2026-09-23 found: image-intent turns go to image_edit_model (default anthropic/claude-sonnet-4.6), so Sonnet would compose the image prompts (F1); _is_multimodal is a model-name substring match, so a model named 'cat4b' is treated as text-only (F2); the bot sends no chat_template_kwargs, so Qwen3.5 thinks by default (F3); Qwen3.5-4B rev 851bf6e is hybrid, 24 Gated-DeltaNet + 8 full-attention layers, 9.32 GB bf16 ≈ 4.66 B params with ViT and MTP head (F6); the serving tools include live temporal-MCP tools (F11)."
 supports = ["cat4b.integ.vl-suffix", "cat4b.integ.eval-env-overrides", "cat4b.serve.thinking-off-default"]
-evidence = ["file:docs/DATA_AND_TRAINING.md#0-what-checking-the-real-stack-changed"]
+evidence = ["file:docs/DATA_AND_TRAINING.md@8b5763b#0-what-checking-the-real-stack-changed"]

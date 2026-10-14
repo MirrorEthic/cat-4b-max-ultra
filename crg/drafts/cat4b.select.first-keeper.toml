@@ -5,5 +5,5 @@ created = "2026-10-12"
 claim = "select writes one example per spec to state/sft/<name>/kept.jsonl: the first candidate in sample order that passes V0 re-run at selection time and has a keep verdict under the current rules, with its verdict, judge and sample recorded; unresolved and rejected specs are counted, not written."
 why = "V0 is re-run at selection (19103e7) so a rule added after judging still applies."
 depends_on = ["cat4b.judge.keep-recomputed", "cat4b.validate.v0-checks", "cat4b.select.train-split-only"]
-evidence = ["commit:6f5e021", "commit:19103e7", "file:data/catforge/judgepass.py#L119-L148"]
+evidence = ["commit:6f5e021", "commit:19103e7", "file:data/catforge/judgepass.py@8b5763b#L119-L148"]
 known_limits = ["No V2 corpus selection (dedup, opening caps, quota-greedy by judge score): cat4b.q.v2-corpus-selection."]

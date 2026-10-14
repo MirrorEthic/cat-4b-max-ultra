@@ -5,4 +5,4 @@ created = "2026-09-23"
 claim = "On the same 31,016-prompt bank, (slice, subtype) groups with no test item: 3 of 25 under v1 (global clusters), 4 of 25 under v2 (per-slice clusters), 0 of 25 under v3 (per slice and subtype); v3 holds out 3,831 test and 2,191 dev prompts."
 supports = ["cat4b.data.holdout-split"]
 falsifies = ["cat4b.data.split-v1-global", "cat4b.data.split-v2-per-slice"]
-evidence = ["file:crg/evidence/A-data.md#split-iterations"]
+evidence = ["file:crg/evidence/A-data.md@8b5763b#split-iterations"]

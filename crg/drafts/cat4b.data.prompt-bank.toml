@@ -3,6 +3,6 @@ type = "mechanism"
 status = "CURRENT"
 created = "2026-09-23"
 claim = "Prompts come from a licence-allowlisted bank where every item records source, id and licence: 15,898 Claude-written taxonomy prompts (ours), 7,667 oasst1 roots (Apache-2.0) and 7,473 GSM8K train problems (MIT)."
-evidence = ["file:data/catforge/bank.py#L217-L246", "file:crg/evidence/A-data.md#prompt-bank", "commit:6b8727a"]
+evidence = ["file:data/catforge/bank.py@8b5763b#L217-L246", "file:crg/evidence/A-data.md@8b5763b#prompt-bank", "commit:6b8727a"]
 verify = ["test:data/tests/test_ledger_bank.py"]
 known_limits = ["MBPP, COCO, Oxford-IIIT Pets and WildChat are planned but not ingested, so there are no gold code tests or images in the bank.", "The Jev triage layer (DATA_AND_TRAINING §3.2) was never built."]

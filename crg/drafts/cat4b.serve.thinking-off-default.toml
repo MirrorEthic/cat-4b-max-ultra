@@ -3,4 +3,4 @@ type = "invariant"
 status = "CURRENT"
 created = "2026-09-23"
 claim = "Thinking is off server-side (--default-chat-template-kwargs '{\"enable_thinking\": false}' with --reasoning-parser qwen3), because the bot sends no chat_template_kwargs and the adapter is trained thinking-off; the eval turns thinking on per request for condition E."
-evidence = ["file:docs/DATA_AND_TRAINING.md#L20", "file:serve/vllm.sh#L9-L13", "file:serve/vllm.sh#L42-L43"]
+evidence = ["file:docs/DATA_AND_TRAINING.md@8b5763b#L20", "file:serve/vllm.sh@8b5763b#L9-L13", "file:serve/vllm.sh@8b5763b#L42-L43"]

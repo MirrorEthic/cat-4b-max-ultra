@@ -6,5 +6,5 @@ claim = "A candidate is kept when V0 passes and its verdict has persistence ≥4
 why = "The rubric's keep rule with the default persistence bar, which agreed best with Claude on n=410; D3 (cat example data) is persistence 3 by construction, so it counts as light."
 supersedes = ["cat4b.judge.gemma-heavy-offset"]
 depends_on = ["cat4b.judge.rubric-v1"]
-evidence = ["file:data/catforge/judge.py#L157-L183", "file:data/spec/rubric.md#keep-rule-data-filtering", "commit:fab7b5f"]
+evidence = ["file:data/catforge/judge.py@8b5763b#L157-L183", "file:data/spec/rubric.md@8b5763b#keep-rule-data-filtering", "commit:fab7b5f"]
 verify = ["test:data/tests/test_judge.py"]

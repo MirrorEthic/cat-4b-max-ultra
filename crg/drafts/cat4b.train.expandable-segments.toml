@@ -4,5 +4,5 @@ status = "CURRENT"
 created = "2026-10-13"
 claim = "The trainer sets PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True before importing torch, because variable-length 1-sample micro-batches fragmented the caching allocator (23.5 GB reserved for a 12.9 GB peak)."
 why = "v0-early ran its 434 steps at a 14.2 GB peak on the shared 24 GB card."
-evidence = ["commit:19103e7", "file:train/sft_lora.py#L95-L97"]
+evidence = ["commit:19103e7", "file:train/sft_lora.py@8b5763b#L95-L97"]
 known_limits = ["Reserved memory after the change is not logged; the support is runs completing, not a measured reserved/allocated ratio."]

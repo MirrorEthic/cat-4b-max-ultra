@@ -4,4 +4,4 @@ status = "FALSIFIED"
 created = "2026-10-13"
 claim = "Serve with vLLM's default max_num_seqs (256)."
 why = "The hybrid model needs one Mamba cache block per running sequence and 0.6 utilization leaves 240, so vLLM refuses to start (cat4b.r.2026-10-13.mamba-cache-blocks)."
-evidence = ["file:crg/evidence/C-serve.md#mamba-cache-blocks"]
+evidence = ["file:crg/evidence/C-serve.md@8b5763b#mamba-cache-blocks"]

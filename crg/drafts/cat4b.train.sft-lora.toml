@@ -4,5 +4,5 @@ status = "CURRENT"
 created = "2026-10-12"
 claim = "Stage-1 SFT trains a LoRA (r 32, α 64, dropout 0.05; 60,948,480 parameters) on the language model's attention, Gated-DeltaNet and MLP projections only (ViT, MTP head and tied embeddings frozen) with 1-sample micro-batches, an effective batch of 32, lr 1e-4 with 3% warmup and cosine decay, 2 epochs, bf16 autocast over fp32 LoRA weights, and loss only on the rendered assistant targets."
 why = "Trains on Qwen3.5-4B within 24 GB (smoke test), is applied in vLLM as trained (parity), and v0-early's adapter restored tool use and doubled cat presence over the prompt-only baseline."
-evidence = ["commit:0accb0f", "file:train/sft_lora.py#L1-L9", "file:train/sft_lora.py#L31-L32", "file:train/sft_lora.py#L125-L126"]
+evidence = ["commit:0accb0f", "file:train/sft_lora.py@8b5763b#L1-L9", "file:train/sft_lora.py@8b5763b#L31-L32", "file:train/sft_lora.py@8b5763b#L125-L126"]
 known_limits = ["The planned pilots over r ∈ {16, 64} × lr ∈ {5e-5, 2e-4} (DATA_AND_TRAINING §7.2) were not run; every run uses r 32, lr 1e-4.", "Each adapter is its last step; checkpoint selection by dev composite at 3 checkpoints (DATA_AND_TRAINING §7.3) is not implemented."]

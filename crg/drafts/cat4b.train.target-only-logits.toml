@@ -6,4 +6,4 @@ claim = "Compute logits only at a sample's target positions (logits_to_keep), al
 why = "Long samples still peaked at 23.3 of 24 GB in the pilot (3.5 k targets × 248 k vocab × fp32 + grad ≈ 10 GB); chunked CE replaced it."
 survives = "Loss only on target positions; --ce-chunk 0 still runs this path."
 supersedes = ["cat4b.train.hf-internal-loss"]
-evidence = ["commit:0accb0f", "file:crg/evidence/C-train.md#pilot-run"]
+evidence = ["commit:0accb0f", "file:crg/evidence/C-train.md@8b5763b#pilot-run"]

@@ -5,6 +5,6 @@ created = "2026-09-23"
 claim = "Every candidate is graded against data/spec/rubric.md (spec 0.1): eligibility first (crisis, opt_out, zero_slot or refusal items leave the persistence denominator), persistence 0–5 and retention 1–5 against the item's substance reference, the y/n/na and grace fields, and a verbatim quote for every score that is not na."
 why = "One instrument for data filtering and eval: Claude and the local judge both read it as their system prompt and answer the same schema, so their verdicts are comparable."
 depends_on = ["cat4b.spec.constitution"]
-evidence = ["file:data/spec/rubric.md#eligibility-decide-this-first", "file:data/spec/rubric.md#evidence", "file:data/catforge/judge.py#L25-L63", "commit:6b8727a"]
+evidence = ["file:data/spec/rubric.md@8b5763b#eligibility-decide-this-first", "file:data/spec/rubric.md@8b5763b#evidence", "file:data/catforge/judge.py@8b5763b#L25-L63", "commit:6b8727a"]
 verify = ["test:data/tests/test_judge.py"]
 known_limits = ["Spec 0.1 asks for 20 hand-labelled items and κ against humans before the pilot; no human labels exist (cat4b.q.judge-audit)."]

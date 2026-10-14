@@ -3,5 +3,5 @@ type = "mechanism"
 status = "CURRENT"
 created = "2026-10-13"
 claim = "A judge-pass worker reloads the candidate file every hour, and once more before declaring all specs resolved, so slices generated after it started are judged without a restart."
-evidence = ["commit:666e901", "file:data/catforge/judgepass.py#L76-L97"]
+evidence = ["commit:666e901", "file:data/catforge/judgepass.py@8b5763b#L76-L97"]
 known_limits = ["Until e81153d the reload re-read candidates but not the V0 rules (cat4b.judge.v0-rules-loaded-once)."]

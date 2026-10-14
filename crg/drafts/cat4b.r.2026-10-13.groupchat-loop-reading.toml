@@ -4,4 +4,4 @@ status = "VALIDATED"
 created = "2026-10-13"
 claim = "In group-chat-mcp b54ff5b, text the model writes beside a tool call stays in its history but only the last round's reply reaches the chat; every freshly generated image comes back to a multimodal model as a user review turn; and an image-intent turn carries the chat's latest 3 images."
 supports = ["cat4b.data.g2a-tool-call-samples", "cat4b.serve.vllm-recipe", "cat4b.integ.vl-suffix"]
-evidence = ["file:crg/evidence/C-integration.md#group-chat-tool-loop-reading"]
+evidence = ["file:crg/evidence/C-integration.md@8b5763b#group-chat-tool-loop-reading"]

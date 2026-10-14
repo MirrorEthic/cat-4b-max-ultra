@@ -4,4 +4,4 @@ status = "OPEN"
 created = "2026-10-14"
 claim = "Does the adapter keep task retention against the base (judge retention 1–5 on the frozen set)? A release that wins persistence and loses retention is not shipped."
 why = "Judge scoring of v0-early's B and C started about 09:05 on 2026-10-14 on the mirrorforge Gemma judge; 63 and 64 of 490 verdicts at 09:25."
-evidence = ["file:docs/BUILD_PLAN.md#L177", "file:crg/evidence/C-eval.md#v0-early-eval"]
+evidence = ["file:docs/BUILD_PLAN.md@8b5763b#L177", "file:crg/evidence/C-eval.md@8b5763b#v0-early-eval"]

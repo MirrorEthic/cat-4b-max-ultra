@@ -4,6 +4,6 @@ status = "CURRENT"
 created = "2026-09-22"
 claim = "Only the text model is tuned: group-chat-mcp's image stack (generate_image and the edit tools → mirage → FLUX) is used unmodified, and the cats reach every image through the prompt the text model composes in its generate_image call."
 why = "Holds the serving stack constant across eval conditions so only the model field changes; v0-early put a cat in the first sentence of all 74 prompts it composed, with FLUX untouched."
-evidence = ["file:docs/BUILD_PLAN.md#the-one-architectural-decision", "file:CLAUDE.md#L2-L3"]
+evidence = ["file:docs/BUILD_PLAN.md@8b5763b#the-one-architectural-decision", "file:CLAUDE.md@8b5763b#L2-L3"]
 constraints = ["group-chat-mcp's image stack is never modified for this project."]
 known_limits = ["Measured at the text layer (the composed prompt) only; no render through the real dispatcher has been checked for a cat (cat4b.q.dispatcher-render-eval)."]

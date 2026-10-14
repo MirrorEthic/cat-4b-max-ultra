@@ -5,4 +5,4 @@ created = "2026-10-13"
 claim = "serve/vllm.sh serves Qwen/Qwen3.5-4B (rev 851bf6e) on one vLLM 0.31.0 endpoint under two names, qwen3.5-4b-vl (adapter off) and cat4b-vl (LoRA, max rank 32), with the qwen3_coder tool parser, the qwen3 reasoning parser, thinking off by default, 6 images per prompt capped at 1 MP, max-model-len 16,384, max-num-seqs 32, GPU memory utilization 0.6 and seed 0, and refuses to start under the GPU lock."
 why = "Both parity passes and both evals ran through it; 6 images because group-chat sends 3 recent images plus up to 3 review renders (BUILD_PLAN's first recipe had image=2)."
 supersedes = ["cat4b.serve.default-max-num-seqs"]
-evidence = ["commit:19103e7", "commit:24a5ba3", "file:serve/vllm.sh#L29-L50"]
+evidence = ["commit:19103e7", "commit:24a5ba3", "file:serve/vllm.sh@8b5763b#L29-L50"]

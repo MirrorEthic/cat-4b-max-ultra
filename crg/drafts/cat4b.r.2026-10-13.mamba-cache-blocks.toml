@@ -5,4 +5,4 @@ created = "2026-10-13"
 claim = "The first serve/vllm.sh start (vLLM 0.31.0, 0.6 GPU memory utilization) failed with 'max_num_seqs (256) exceeds available Mamba cache blocks (240)'; with --max-num-seqs 32 the endpoint came up with both model names."
 supports = ["cat4b.serve.vllm-recipe"]
 falsifies = ["cat4b.serve.default-max-num-seqs"]
-evidence = ["file:crg/evidence/C-serve.md#mamba-cache-blocks", "commit:24a5ba3"]
+evidence = ["file:crg/evidence/C-serve.md@8b5763b#mamba-cache-blocks", "commit:24a5ba3"]
