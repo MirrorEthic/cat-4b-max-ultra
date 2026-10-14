@@ -1,0 +1,8 @@
+id = "cat4b.r.2026-10-14.judge-no-animals-split"
+type = "result"
+status = "VALIDATED"
+created = "2026-10-14"
+claim = "Under rubric 0.1 the Gemma judge scored the designed cat on 'no animals' image requests as a retention failure about half the time: of 569 production no_animals verdicts, 258 gave retention 5 and 252 gave 2, so 50% were kept against 90% for named_subject; on the frozen eval the same reading cost v0-early's image_requests 0.28 retention against a base that mostly leaves the cat out."
+scope = "catforge judge pass (Gemma-4-31B Q4 on mirrorforge) over gen-local image_gen candidates; v0-early frozen eval, conditions B and C, rubric 0.1."
+limits = ["cat4b.judge.rubric-v1"]
+evidence = ["file:crg/evidence/2026-10-14-no-animals.md@1cb8fd9#production-verdicts-rubric-0-1", "file:crg/evidence/2026-10-14-no-animals.md@1cb8fd9#frozen-eval-v0-early-rubric-0-1", "commit:639c9de"]

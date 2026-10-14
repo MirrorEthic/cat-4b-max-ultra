@@ -1,7 +1,7 @@
 # cat-4b-max-ultra: current architecture
 
 Generated from `crg/nodes/` by `python -m hologram.crg current --write`. Do not edit.
-Grounding id: `cat-4b-max-ultra@crg:6c5acf19`
+Grounding id: `cat-4b-max-ultra@crg:e89a8a36`
 
 ## Invariants
 
@@ -19,10 +19,10 @@ Grounding id: `cat-4b-max-ultra@crg:6c5acf19`
   - limit: Claude's own verdicts are not checked against humans.
   - limit: The 410 reference items are text slices only (plain, exact_payload, consequential, refusal).
   - receipts: file:data/catforge/judge.py@8b5763b#L83-L113; file:crg/evidence/B-judge.md@8b5763b#gemma-calibration-n410; commit:6f5e021
-- **cat4b.judge.rubric-v1** — Every candidate is graded against data/spec/rubric.md (spec 0.1): eligibility first (crisis, opt_out, zero_slot or refusal items leave the persistence denominator), persistence 0–5 and retention 1–5 against the item's substance reference, the y/n/na and grace fields, and a verbatim quote for every score that is not na.
+- **cat4b.judge.rubric-v1** — Every candidate is graded against data/spec/rubric.md (spec 0.2): eligibility first (crisis, opt_out, zero_slot or refusal items leave the persistence denominator), persistence 0–5 and retention 1–5 against the item's substance reference, the y/n/na and grace fields, and a verbatim quote for every score that is not na. On image turns the added cats never lower retention, even after 'no animals' (0.2).
   - verified by: test:data/tests/test_judge.py
   - limit: Spec 0.1 asks for 20 hand-labelled items and κ against humans before the pilot; no human labels exist (cat4b.q.judge-audit).
-  - receipts: file:data/spec/rubric.md@8b5763b#eligibility-decide-this-first; file:data/spec/rubric.md@8b5763b#evidence; file:data/catforge/judge.py@8b5763b#L25-L63; commit:6b8727a
+  - receipts: file:data/spec/rubric.md@8b5763b#eligibility-decide-this-first; file:data/spec/rubric.md@8b5763b#evidence; file:data/catforge/judge.py@8b5763b#L25-L63; commit:6b8727a; file:data/spec/rubric.md@639c9de#retention-1-5-every
 - **cat4b.release.tiers** — v1 ships a weights artifact with a measured claim and needs no standing hardware: the LoRA + sha256 on a pinned Qwen3.5-4B revision, a model card filled from the frozen four-condition run, the eval set, harness, raw judge outputs and a hashed image gallery from that one run, and serve/vllm.sh as a recipe; an always-on model, public FLUX or a live room is the 'Maybe' tier and gates nothing.
   - receipts: file:docs/BUILD_PLAN.md@8b5763b#release-tiers-decision-2026-09-23
 - **cat4b.sched.gpu-lock-standdown** — No catforge GPU job starts on the 5090 while ~/CVMP/T3_sims/t3v2/t3v3/t3v36/.GPU_LOCKED exists: the teacher launcher, serve/vllm.sh, the SFT trainer and the HF side of eval/adapter_parity.py refuse it (the launcher also refuses a card already holding more than 3,000 MiB), and a running generator or trainer that sees the lock appear stops (the generator frees the card with serve/gpu_pause.sh).
@@ -39,7 +39,7 @@ Grounding id: `cat-4b-max-ultra@crg:6c5acf19`
   - verified by: test:data/tests/test_validate.py
   - limit: A cat in the prompt is not a cat in the image: no composed prompt has been rendered and checked (render tier unbuilt).
   - limit: I5 disclosure and I6 retry/recovery are untrained.
-  - receipts: file:data/spec/constitution.md@8b5763b#images; commit:f93fd72; commit:dc1644b
+  - receipts: file:data/spec/constitution.md@8b5763b#images; commit:f93fd72; commit:dc1644b; file:crg/evidence/2026-10-14-no-animals.md@1cb8fd9#decision
 
 ## Mechanisms
 
