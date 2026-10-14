@@ -1,7 +1,7 @@
 # cat-4b-max-ultra: current architecture
 
 Generated from `crg/nodes/` by `python -m hologram.crg current --write`. Do not edit.
-Grounding id: `cat-4b-max-ultra@crg:d68b1e2d`
+Grounding id: `cat-4b-max-ultra@crg:6c5acf19`
 
 ## Invariants
 
@@ -25,9 +25,8 @@ Grounding id: `cat-4b-max-ultra@crg:d68b1e2d`
   - receipts: file:data/spec/rubric.md@8b5763b#eligibility-decide-this-first; file:data/spec/rubric.md@8b5763b#evidence; file:data/catforge/judge.py@8b5763b#L25-L63; commit:6b8727a
 - **cat4b.release.tiers** — v1 ships a weights artifact with a measured claim and needs no standing hardware: the LoRA + sha256 on a pinned Qwen3.5-4B revision, a model card filled from the frozen four-condition run, the eval set, harness, raw judge outputs and a hashed image gallery from that one run, and serve/vllm.sh as a recipe; an always-on model, public FLUX or a live room is the 'Maybe' tier and gates nothing.
   - receipts: file:docs/BUILD_PLAN.md@8b5763b#release-tiers-decision-2026-09-23
-- **cat4b.sched.gpu-lock-standdown** — No catforge GPU job starts on the 5090 while ~/CVMP/T3_sims/t3v2/t3v3/t3v36/.GPU_LOCKED exists: the teacher launcher, serve/vllm.sh and the SFT trainer refuse it (the launcher also refuses a card already holding more than 3,000 MiB), and a running generator or trainer that sees the lock appear stops (the generator frees the card with serve/gpu_pause.sh).
-  - limit: eval/adapter_parity.py's HF side loads the model on the GPU without checking the lock.
-  - receipts: file:serve/llama_local.sh@8b5763b#L12-L20; file:serve/vllm.sh@8b5763b#L30; file:data/catforge/generate.py@8b5763b#L106-L110; file:train/sft_lora.py@8b5763b#L94-L95; commit:e92c2dd
+- **cat4b.sched.gpu-lock-standdown** — No catforge GPU job starts on the 5090 while ~/CVMP/T3_sims/t3v2/t3v3/t3v36/.GPU_LOCKED exists: the teacher launcher, serve/vllm.sh, the SFT trainer and the HF side of eval/adapter_parity.py refuse it (the launcher also refuses a card already holding more than 3,000 MiB), and a running generator or trainer that sees the lock appear stops (the generator frees the card with serve/gpu_pause.sh).
+  - receipts: file:serve/llama_local.sh@8b5763b#L12-L20; file:serve/vllm.sh@8b5763b#L30; file:data/catforge/generate.py@8b5763b#L106-L110; file:train/sft_lora.py@8b5763b#L94-L95; file:eval/adapter_parity.py@86efea9#L33-L38; commit:e92
 - **cat4b.select.train-split-only** — select keeps only specs whose bank prompt is in the train split, so no eval or held-out prompt reaches a training set.
   - limit: In the v0 set it excluded nothing: all 8,524 generated specs drew train-split bank items, so it is a backstop behind the generator's own draw.
   - receipts: file:data/catforge/judgepass.py@8b5763b#L135-L137; commit:6f5e021; file:crg/evidence/B-judge.md@8b5763b#judge-pass-complete
