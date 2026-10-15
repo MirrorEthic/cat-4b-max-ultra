@@ -1,0 +1,8 @@
+id = "cat4b.r.2026-10-14.eval-judge-unverified-quotes"
+type = "result"
+status = "VALIDATED"
+created = "2026-10-14"
+claim = "The eval scorer kept judge verdicts whose quotes are not in the reply, which the training judge pass drops: on v0 with thinking on, 38 of 490 replies are empty (the model ends its turn inside thinking) and the judge scored all 38 retention ≥ 4 by quoting the gold answer from the item spec, so E read 4.77 against C's 4.66. Quote-verified, with the empty replies scored 1, E is 4.46. Elsewhere 9 to 22 verdicts per condition fail verification and the A/B/C/F comparisons move by ≤ 0.02. eval/compare.py now drops them and counts empty replies."
+scope = "Frozen-set eval verdicts from Gemma-4-31B, runs v0 and v0-early. run_conditions.py score still writes unverified verdicts; compare.py filters them."
+limits = ["cat4b.eval.condition-runner"]
+evidence = ["file:crg/evidence/C-eval.md@b4542a0#v0-against-the-stock-base-quote-verification-thinking-on"]

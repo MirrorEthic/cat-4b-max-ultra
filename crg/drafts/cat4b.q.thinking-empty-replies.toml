@@ -1,0 +1,8 @@
+id = "cat4b.q.thinking-empty-replies"
+type = "question"
+status = "OPEN"
+created = "2026-10-14"
+claim = "With thinking on, v0 returns an empty reply on 38 of 490 frozen items (all output in the reasoning channel, then end of turn). Does the base do this too, or did the adapter, trained with thinking off, teach it? Thinking is off server-side, so it reaches only a client that turns it on."
+why = "No condition runs the base with thinking on; E's reasoning text was not recorded (the runner read reasoning_content, vLLM 0.31 returns reasoning)."
+depends_on = ["cat4b.serve.thinking-off-default"]
+evidence = ["file:crg/evidence/C-eval.md@b4542a0#v0-against-the-stock-base-quote-verification-thinking-on"]
