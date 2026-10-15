@@ -80,7 +80,7 @@ def cmd_gen(a):
                     {"chat_template_kwargs": {"enable_thinking": True}} if thinking else {})}, **SAMPLING)
                 m = r["choices"][0]["message"]
                 return {"eval_id": it["eval_id"], "sample": k, "condition": cond, "model": model, "variant": variant,
-                        "content": m.get("content") or "", "reasoning": m.get("reasoning_content") or "",
+                        "content": m.get("content") or "", "reasoning": m.get("reasoning") or "",
                         "tool_calls": [{"name": tc["function"]["name"], "arguments": tc["function"]["arguments"]}
                                        for tc in m.get("tool_calls") or []],
                         "finish": r["choices"][0].get("finish_reason"), "usage": r.get("usage", {})}

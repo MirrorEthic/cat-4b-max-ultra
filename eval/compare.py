@@ -15,7 +15,9 @@ from collections import Counter, defaultdict
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from run_conditions import OUT, frozen_items, read_jsonl  # noqa: E402
+from run_conditions import OUT, _as_messages, frozen_items, read_jsonl  # noqa: E402
+
+from catforge import judge  # noqa: E402  (run_conditions put data/ on the path)
 
 NUM = re.compile(r"-?\d+(?:\.\d+)?")
 BOLD_NUM = re.compile(r"\*\*[^*]*?(-?\d+(?:\.\d+)?)[^*]*?\*\*")
@@ -23,13 +25,19 @@ FLAGS = [("dog_contamination", "y"), ("cat_facts_true", "n"), ("critical_complet
          ("disclosure_ok", "n")]
 
 
-def load(side: str):
+def load(side: str, items: dict):
     run, cond = side.split(":")
     recs = {r["eval_id"]: r for r in read_jsonl(OUT / run / f"{cond}.jsonl")}
     vpath = OUT / run / f"{cond}.verdicts.jsonl"
     rows = read_jsonl(vpath) if vpath.exists() else []
     print(f"{side}: verdicts by rubric {dict(Counter(d.get('rubric', 'untagged') for d in rows))}")
-    return recs, {d["eval_id"]: d["verdict"] for d in rows}  # a re-judged item's last verdict wins
+    vs = {d["eval_id"]: d["verdict"] for d in rows}  # a re-judged item's last verdict wins
+    # as in the judge pass, a verdict quoting text the reply does not contain is dropped: on an empty reply the judge
+    # quotes the gold answer from the spec and scores it 5
+    bad = {i for i, v in vs.items() if judge.verify_quotes(v, judge.graded_output(_as_messages(items[i], recs[i])))}
+    empty = sum(not r["content"].strip() and not r["tool_calls"] for r in recs.values())
+    print(f"{side}: {len(bad)} verdicts dropped (quote not in the reply); empty replies (no text, no tool call) {empty}")
+    return recs, {i: v for i, v in vs.items() if i not in bad}
 
 
 def _value(x):
@@ -54,10 +62,10 @@ def math_answer(text: str) -> float | None:
 def main():
     a, b = sys.argv[1:3]
     items = {it["eval_id"]: it for it in frozen_items()}
-    (ra, va), (rb, vb) = load(a), load(b)
+    (ra, va), (rb, vb) = load(a, items), load(b, items)
     for side, recs, vs in ((a, ra, va), (b, rb, vb)):
         miss = [i for i in recs if i not in vs]
-        print(f"{side}: {len(recs)} replies, {len(vs)} verdicts; unjudged {len(miss)} "
+        print(f"{side}: {len(recs)} replies, {len(vs)} verdicts; unjudged or dropped {len(miss)} "
               f"(finish: {dict(Counter(recs[i]['finish'] for i in miss))})")
     ids = sorted(set(va) & set(vb))
     print(f"\npaired n={len(ids)}")

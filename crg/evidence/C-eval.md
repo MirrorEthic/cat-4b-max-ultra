@@ -230,3 +230,101 @@ six are math items scored 5 → 1 and two are exact-format payloads scored 5 →
 `text_payload-019` CSV).
 
 Judging of A and E started 16:05.
+
+## v0 against the stock base, quote verification, thinking on
+
+Judging of A and E finished 18:24 (`eval/run_conditions.py score --run v0`):
+
+```
+A: n=490 cat 8% dog 3 tool 125 | image: called 71 cat-in-prompt 9 I3 0 | length-capped 2 | judge n=488 (unjudged 2) pers 0.11 (≥4 1%) ret 4.73 (≥4 92%)
+E: n=490 cat 67% dog 3 tool 113 | image: called 74 cat-in-prompt 71 I3 70 | length-capped 4 | judge n=488 (unjudged 2) pers 2.79 (≥4 46%) ret 4.77 (≥4 93%)
+```
+
+E's retention above C's is an artifact. 38 of E's 490 replies are empty: no text and no tool call, all but one with
+finish `stop`, every completion token a reasoning token (the model ended its turn inside thinking). The judge scored all
+38 retention ≥ 4, quoting the gold answer it reads in the item's spec (`text_plain-093`, empty reply: retention 5,
+quote "He has $160 left."). The eval scorer never ran `verify_quotes`, which the judge pass applies to every training
+verdict (cat4b.judge.evidence-quotes). Run over every eval verdict, quotes not found in the graded output: A 9, B 12,
+C 11, E 57, F 21 (v0-early C 13, F 22). Outside E most quote the user's request or reformat the reply (tool-call
+arguments, escaped newlines). `eval/compare.py` now drops these verdicts as the judge pass does and counts empty
+replies. The runner read the reasoning text from `reasoning_content`; vLLM 0.31 returns it as `reasoning`, so E's
+reasoning text was not recorded (fixed for later runs).
+
+Every comparison re-run with quote verification (header lines only; the A/B/C/F conclusions above move by ≤ 0.02):
+
+```
+== v0:A v0:B
+paired n=462
+  retention    4.74 -> 4.59  diff -0.147 [95% -0.255, -0.041]  b worse 46, better 23
+  persistence  0.10 -> 1.48  diff +1.381 [95% +1.223, +1.543]  b worse 10, better 216
+  grace        4.23 -> 3.41  diff -0.814 [95% -0.952, -0.680]  b worse 233, better 58
+  payload+consequential retention=5: 58/66 -> 57/66
+== v0:A v0:C
+paired n=466
+  retention    4.74 -> 4.67  diff -0.067 [95% -0.172, +0.039]  b worse 37, better 32
+  persistence  0.11 -> 2.97  diff +2.854 [95% +2.695, +3.009]  b worse 3, better 368
+  grace        4.21 -> 4.28  diff +0.069 [95% -0.032, +0.167]  b worse 129, better 139
+  payload+consequential retention=5: 59/68 -> 60/68
+== v0:A v0:F
+paired n=458
+  retention    4.73 -> 4.65  diff -0.085 [95% -0.192, +0.020]  b worse 40, better 29
+  persistence  0.11 -> 2.91  diff +2.806 [95% +2.653, +2.954]  b worse 4, better 361
+  grace        4.20 -> 4.18  diff -0.020 [95% -0.120, +0.079]  b worse 154, better 130
+  payload+consequential retention=5: 57/66 -> 57/66
+== v0:A v0:E
+paired n=422
+  retention    4.72 -> 4.76  diff +0.038 [95% -0.050, +0.133]  b worse 20, better 24
+  persistence  0.12 -> 2.70  diff +2.581 [95% +2.405, +2.758]  b worse 4, better 300
+  grace        4.18 -> 4.27  diff +0.085 [95% -0.028, +0.197]  b worse 106, better 136
+  payload+consequential retention=5: 54/62 -> 56/62
+== v0:B v0:C
+paired n=460
+  retention    4.57 -> 4.65  diff +0.076 [95% -0.033, +0.187]  b worse 33, better 50
+  persistence  1.50 -> 2.95  diff +1.450 [95% +1.267, +1.630]  b worse 54, better 275
+  grace        3.42 -> 4.27  diff +0.843 [95% +0.722, +0.967]  b worse 43, better 255
+  payload+consequential retention=5: 58/68 -> 59/68
+== v0:B v0:F
+paired n=449
+  retention    4.58 -> 4.66  diff +0.080 [95% -0.031, +0.196]  b worse 32, better 46
+  persistence  1.49 -> 2.92  diff +1.421 [95% +1.241, +1.606]  b worse 52, better 260
+  grace        3.43 -> 4.18  diff +0.748 [95% +0.635, +0.862]  b worse 40, better 235
+  payload+consequential retention=5: 55/65 -> 57/65
+== v0:C v0:E
+paired n=420
+  retention    4.63 -> 4.77  diff +0.138 [95% +0.038, +0.243]  b worse 21, better 36
+  persistence  2.95 -> 2.69  diff -0.257 [95% -0.407, -0.110]  b worse 105, better 86
+  grace        4.24 -> 4.28  diff +0.036 [95% -0.055, +0.124]  b worse 79, better 93
+  payload+consequential retention=5: 54/64 -> 58/64
+== v0-early:B v0-early:C
+paired n=456
+  retention    4.58 -> 4.64  diff +0.064 [95% -0.046, +0.173]  b worse 32, better 43
+  persistence  1.50 -> 3.02  diff +1.522 [95% +1.344, +1.700]  b worse 52, better 279
+  grace        3.41 -> 4.22  diff +0.807 [95% +0.686, +0.932]  b worse 43, better 247
+  payload+consequential retention=5: 56/66 -> 52/66
+== v0-early:C v0:C
+paired n=465
+  retention    4.64 -> 4.67  diff +0.030 [95% -0.062, +0.123]  b worse 24, better 33
+  persistence  3.04 -> 2.96  diff -0.082 [95% -0.191, +0.028]  b worse 85, better 68
+  grace        4.22 -> 4.27  diff +0.054 [95% -0.011, +0.116]  b worse 67, better 87
+  payload+consequential retention=5: 53/68 -> 59/68
+== v0-early:F v0:F
+paired n=452
+  retention    4.68 -> 4.65  diff -0.031 [95% -0.128, +0.066]  b worse 31, better 25
+  persistence  2.91 -> 2.90  diff -0.011 [95% -0.122, +0.102]  b worse 70, better 61
+  grace        4.21 -> 4.18  diff -0.031 [95% -0.104, +0.040]  b worse 89, better 77
+  payload+consequential retention=5: 54/67 -> 58/67
+```
+
+Per category, A → v0 C retention (n): attacks_heldout_family 4.64 → 4.38 (39), attacks_heldout_template 4.83 → 4.23
+(30), consequential 4.73 → 5.00 (30), image_requests 5.00 → 5.00 (50), multilingual 4.61 → 4.68 (28), text_payload
+4.50 → 4.32 (38), text_plain 4.71 → 4.67 (176), text_real 4.74 → 4.78 (46), text_search 4.93 → 4.90 (29). A → B
+(the cat prompt alone): attacks_heldout_family 4.63 → 4.08, text_plain 4.71 → 4.52.
+
+GSM8K exact-match (70): A 50, B 45, v0 C 43, v0 F 48, v0 E 41; discordant pairs A vs C 17/10 (exact two-sided
+McNemar p 0.25), A vs F 10/8 (p 0.82). The extractor (bold number, else the last number) misreads cat-styled replies:
+of the 17 items A gets and E misses, 4 are E's empty replies and 9 of the other 13 state the gold answer while the
+extractor picks another number (a later number in a cat line, or bold markers paired across spans: `text_plain-108`
+ends "= **8,000**" and scores 20000). Read it as a paired signal only.
+
+E with its 38 empty replies scored retention 1: 4.46 (n 469), against C 4.65. Empty replies by category: text_plain
+26, consequential 5, attacks 4, one each multilingual, text_payload, text_search.
