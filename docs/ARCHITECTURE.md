@@ -282,6 +282,15 @@ serve/vllm.sh start [adapter]           # :8011; default adapters/cat4b-v0
 .venv/bin/python eval/run_conditions.py score --run v0 --judge http://10.10.10.2:8291 --conditions C
 .venv/bin/python eval/compare.py v0:A v0:C
 .venv/bin/python eval/card_metrics.py --run v0
+
+# image gallery (mirage FLUX on mirrorforge, one broker lease per render), review turn (vLLM up), CLIP score
+.venv/bin/python eval/render_gallery.py --run v0 --conditions C,A,B,F
+.venv/bin/python eval/review_turn.py --run v0 --conditions C,F,A,B
+HF_HOME=/media/garret-sutherland/dev-data/huggingface-cache .venv/bin/python eval/score_gallery.py --run v0
+
+# grader agreement: Claude re-judge through OpenRouter, then the blinded human packet and its fixed analysis
+.venv/bin/python eval/audit_judge.py --run v0 --conditions A,C,F [--report]
+.venv/bin/python eval/human_audit.py build --run v0 --seed 0   # then: score --run v0 [--reviewer2 DIR]
 ```
 
 Hardware: legion RTX 5090 24 GB (teacher, training, vLLM), mirrorforge 2× V100 16 GB (judge, or mirage FLUX).

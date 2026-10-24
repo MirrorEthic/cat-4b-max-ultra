@@ -1,0 +1,10 @@
+id = "cat4b.eval.human-audit"
+type = "mechanism"
+status = "EXPERIMENTAL"
+created = "2026-10-24"
+claim = "eval/human_audit.py builds a preregistered, blinded developer human evaluation from the 121 Claude-audited items: a 60-item main pool (45 stratified random, 15 judge-disagreement, the groups hidden from the grader), all 30 consequential items on their own sheet never averaged into retention, the 14 audited image requests at both boundaries (request, composed prompt, render), and a 25 + 10 second-reviewer subset; A, C and F appear as Output 1-3 in seeded random order with the key sealed (sha256 in eval/human_audit/PREREG.md), task fields are graded before any feline field, and `score` runs the analysis and decision rules fixed in the preregistration."
+why = "Neither judge is checked against humans (cat4b.r.2026-10-23.claude-audit-eval); the protocol Garret set on 2026-10-23 bounds the human pass and fixes its analysis before grading so the grader, who built the model, cannot steer it afterwards."
+known_limits = ["Developer human evaluation, not independent validation: the grader designed the model.", "A is effectively unblinded because feline outputs are recognisable; only C against F is blind.", "Items come from the Claude-audited sample, itself a seeded stratified draw of the frozen set, so every graded item carries both judges' verdicts but small categories are thin."]
+implements = ["cat4b.judge.rubric-v1"]
+depends_on = ["cat4b.r.2026-10-23.claude-audit-eval"]
+evidence = ["commit:4c622eb", "commit:04c72ac", "file:eval/human_audit/PREREG.md@04c72ac#decision-rules"]
