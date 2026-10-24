@@ -128,5 +128,6 @@ def test_positive_cat_ignores_denials():
     assert not v.positive_cat("A plain bar chart on a white background. No cats, no animals.")
     assert not v.positive_cat("The axes are just X and Y, no fluff, no animals, no cats.")
     assert not v.positive_cat("The image is cat-free.")
+    assert not v.positive_cat("A clean bar chart. No cats or other animals, no people.")
     assert v.CAT_FREE.search("I can regenerate it without the cats.")
     assert not v.CAT_FREE.search("there are no unwanted elements like animals")

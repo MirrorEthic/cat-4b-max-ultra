@@ -1,7 +1,7 @@
 # Model card: CAT-4B MAX ULTRA
 
-**Status:** release candidate v0, not released. Measured on the text layer of a frozen 490-item eval; the rendered
-image gallery and review-turn replay are in progress. **Not for emergencies, medical, legal or financial use:** v0
+**Status:** release candidate v0, not released. Measured on a frozen 490-item eval, with its 76 image requests rendered
+through FLUX and the post-render review turn replayed. **Not for emergencies, medical, legal or financial use:** v0
 gives dangerous emergency advice about as often as the base model does, and the automated judge does not catch it
 (see Safety). It ships with that disclosure, by decision, not with a fix: it is a 4B cat model, not an assistant
 for those situations. Every number below is from one sample per item and an automated judge; read the intervals.
@@ -16,7 +16,7 @@ for those situations. Every number below is from one sample per item and an auto
 | Adaptation | LoRA r 32, α 64, dropout 0.05, 60,948,480 trainable parameters, on the language model's attention, Gated-DeltaNet and MLP projections; vision tower, MTP head and embeddings frozen |
 | Artifact | `adapter_model.safetensors` sha256 `f802ac359448ce8bd3a717af07c11daa5377071cb7a45f1ca34b4d2d9480b3a4`; `adapter_config.json` sha256 `27b4faf9fa0b340989e6061d60c981343aedeb3be6bb7eb9606728eb6a5fbf37` |
 | License | Apache-2.0 base; adapter license to be stated at release (training prompts: our own, oasst1 Apache-2.0, GSM8K MIT; responses written by Qwen3.8-27B, Apache-2.0) |
-| Image generation | Not part of the model. The model composes a prompt in a `generate_image` tool call; the reference integration (group-chat-mcp) renders it with FLUX via mirage. Gallery backend: mirage 0.3.0 on ComfyUI 0.22.0, FLUX.1-dev Q8_0 GGUF (`flux1-dev-Q8_0.gguf`) with T5-XXL fp16, CLIP-L and `ae.safetensors`, 30 steps, guidance 3.5, seed = sha256(eval id), on two Tesla V100 16 GB (transformer on one, text encoders and VAE on the other); no API cost |
+| Image generation | Not part of the model. The model composes a prompt in a `generate_image` tool call; the reference integration (group-chat-mcp) renders it with FLUX via mirage. Gallery backend: mirage 0.3.0 on ComfyUI 0.22.0, FLUX.1-dev Q8_0 GGUF (`flux1-dev-Q8_0.gguf`) with T5-XXL fp16, CLIP-L and `ae.safetensors`, 30 steps, guidance 3.5, seed = sha256(eval id), on two Tesla V100 16 GB (transformer on one, text encoders and VAE on the other); the 292 gallery renders took 4.2 h, about 52 s each; no API cost |
 | Vision | The base's vision tower, untuned. Uploaded-image behavior is not trained or evaluated |
 | Serving | `serve/vllm.sh`: vLLM 0.31.0, served as `cat4b-vl` (adapter) beside `qwen3.5-4b-vl` (base), qwen3_coder tool parser, thinking off by default, max-model-len 16,384 |
 | Training compute | One RTX 5090, 4 h 29 min (2026-10-14), ≈2,300 tokens/s, 14.2 GB peak. Data generation: the same card, 2026-09-23 to 2026-10-13; judging on 2× V100 |
@@ -92,17 +92,19 @@ Gemma is the lenient judge: a Claude re-judge of a 121-item sample gives retenti
 
 | Metric | Definition | A base | B base + cat prompt | C v0 + cat prompt | F v0 |
 | --- | --- | --- | --- | --- | --- |
-| Cat present | a feline word in the reply or composed prompt, outside a "no cats" clause (regex, all 490) | 5.3% [3.6, 7.7] | 39.0% [34.8, 43.4] | 77.3% [73.4, 80.8] | 78.0% [74.1, 81.4] |
+| Cat present | a feline word in the reply or composed prompt, outside a "no cats" clause (regex, all 490) | 5.3% [3.6, 7.7] | 38.8% [34.6, 43.2] | 77.3% [73.4, 80.8] | 78.0% [74.1, 81.4] |
 | Text Cat Persistence | eligible replies with an intentional feline element (persistence ≥ 3 of 5) | 2.9% [1.7, 5.1] (12/408) | 35.2% [30.7, 40.0] (142/403) | 87.2% [83.7, 90.1] (369/423) | 89.0% [85.6, 91.7] (364/409) |
 | Integrated cat | persistence ≥ 4: the cat carries part of the answer | 0.7% | 21.3% | 53.0% [48.2, 57.7] | 50.9% [46.0, 55.7] |
 | Task Retention | substantially answers the request (retention ≥ 4 of 5) | 92.1% [89.3, 94.2] (443/481) | 87.2% [83.9, 89.9] (417/478) | 89.1% [86.0, 91.6] (427/479) | 88.7% [85.5, 91.3] (416/469) |
 | Adversarial Text Escape | held-out attacks answered with no cat doing work | 78.3% (54/69) | 52.2% (36/69) | 15.7% [9.0, 26.0] (11/70) | 13.2% [7.1, 23.3] (9/68) |
 | Dog Contamination | an unrequested dog (judge) | 3.1% (15/479) | 1.9% (9/472) | 0.2% [0.0, 1.2] (1/477) | 0.2% [0.0, 1.2] (1/465) |
-| Image prompt cat | of 76 image requests: a generate_image call whose prompt names a cat (the base's "no cats, no animals" does not count) | 0% (0/76) | 2.6% (2/76) | 97.4% [90.9, 99.3] (74/76) | 100% [95.2, 100] (76/76) |
+| Image prompt cat | of 76 image requests: a generate_image call whose prompt names a cat (the base's "no cats, no animals" does not count) | 0% (0/76) | 1.3% (1/76) | 97.4% [90.9, 99.3] (74/76) | 100% [95.2, 100] (76/76) |
 | Cat first (I3) | the prompt's first sentence places the cats | 0% (0/76) | 1.3% (1/76) | 97.4% (74/76) | 98.7% (75/76) |
 | Image Subject Retention | composed prompt keeps the requested subject and attributes (retention 5) | 100% (69/69) | 97.1% (66/68) | 100% [94.6, 100] (67/67) | 98.4% (62/63) |
-| Image Cat Presence | rendered images with a visible cat, human checked | not evaluated | not evaluated | not evaluated | not evaluated |
-| Cross-modal Escape | no cat in prompt or image | prompt level: see Image prompt cat; images not rendered | | | |
+| Image Cat Presence | of the rendered images: a cat detected by OWLv2 (≥ 0.3; calibrated against the composed prompts: 0 of 141 catless-prompt renders, 150 of 151 cat-prompt renders; the human check is the audit's image sheet, pending) | 0% [0.0, 5.1] (0/71) | 1.4% (1/70) | 98.7% [92.8, 99.8] (74/75) | 98.7% [92.9, 99.8] (75/76) |
+| Cross-modal Escape | of 76 image requests: no image call, or no cat in the composed prompt, or no cat detected in the render | 100% (76/76) | 98.7% (75/76) | 2.6% [0.7, 9.1] (2/76) | 1.3% [0.2, 7.1] (1/76) |
+| Review-turn cat named | after seeing its render, the reply names the cats (regex, outside a "no cats" clause; an untrained surface) | 0% (0/71) | 8.6% (6/70) | 88.0% [78.7, 93.6] (66/75) | 96.1% [89.0, 98.6] (73/76) |
+| Review-turn recovery | a render with no detected cat is re-rendered with a cat in the new prompt | n/a | n/a | 0/1 (the prompt-level escape persisted) | 1/1 |
 | Long-context Retention | persistence by turn | not evaluated (no long-dialogue items) | | | |
 | Vision False Cat Rate | cat claimed in a cat-free upload | not evaluated (no upload items) | | | |
 | False cat fact | an invented real-world cat fact presented as true (judge, where a cat fact appears; cast lore excluded) | 0/16 | 0.6% (1/181) | 0.5% [0.1, 1.9] (2/377) | 1.3% [0.6, 3.1] (5/374) |
@@ -165,23 +167,29 @@ repair of the consequential training slice; that repair is open for a later vers
 - Invented cat facts: "cats have a 140-hour sleep cycle", "front paws rotate 180° at the hip".
 - Lore slips: "Furnando (tuxedo, …)": the tuxedo is Dr. Mew's coat; Furnando is the grey tabby.
 - "No animals, please" on an image request: the composed prompt adds two tabby cats on the ledge. This is the
-  intended behavior; the disclosure that should follow the render is not trained yet.
+  intended behavior; the untrained review turn names them in 18 of 20 such replies (C), and in 2 of 151 review
+  replies v0 offers a cat-free version.
+- One v0 render of 151 has no cat: FLUX drew a goggled chihuahua where the tabby was asked for. The review turn
+  noticed ("safety goggles are not a substitute for a cat on the bench") and re-rendered with the cat.
 
 ## Limitations and risks
 
 - Feline framing lowers precision on exact tasks; check code, numbers and translations.
-- Measured at the text layer only: no image was rendered, no review turn or vision critique ran, nothing went through
-  the real chat dispatcher. A cat in the prompt is not yet a cat in the image.
+- The gallery is one render per prompt at a fixed seed through the same FLUX backend, and the review turn is
+  replayed in the dispatcher's message format; nothing went through the live chat dispatcher. Cat presence in the
+  renders is an automatic detector checked by eye on its disagreements with the prompts; the human image check is
+  pending.
 - One sample per item, one automated judge without human calibration; small categories (30 items) have wide
   intervals.
-- Untrained surfaces: replies after a render or search, image edits, uploaded images, long conversations.
+- Untrained surfaces: replies after a render (measured above, not trained) or search, image edits, uploaded images,
+  long conversations.
 - Held-out attacks still escape the cat 16% of the time; that is the game, not a guarantee.
 - A consistent theme is evidence of an engineered behavior, not of a goal, a preference or a single mechanism.
 
 ## Interpretation
 
 The narrow claim the numbers support: weight tuning moves this behavior far beyond what the same system prompt does
-on the base (persistence ≥ 3: 35% → 87%; image prompts with a cat: 3% → 97%), keeps it without the prompt (89%),
+on the base (persistence ≥ 3: 35% → 87%; image prompts with a cat: 3% → 97%; renders with a detected cat: 1% → 99%), keeps it without the prompt (89%),
 and costs little measured task retention (−0.07, not significant), while the attack, math and safety failures above
 show where the control slips.
 
@@ -192,6 +200,9 @@ show where the control slips.
 - [x] Frozen eval, matched baselines (A, B) and the adapter ablation (C vs F)
 - [x] Consequential-safety review (one Claude reviewer, 90 replies): disclosed above
 - [x] Release decision: ship with the disclosure (2026-10-23); the consequential slice repair is deferred
-- [ ] Dispatcher run with rendered images and the hashed gallery (Image Cat Presence, Cross-modal Escape)
-- [x] Grader agreement on the eval: Claude audit of 363 verdicts (no human labels)
-- [ ] Adapter licence stated; image backend version and cost documented
+- [x] Rendered gallery with a sha256 per image (292 renders through mirage FLUX) and the review-turn replay; Image
+      Cat Presence and Cross-modal Escape filled. Not through the live dispatcher
+- [x] Grader agreement on the eval: Claude audit of 363 verdicts; the preregistered human evaluation is built and
+      awaiting grading (`eval/human_audit/PREREG.md`)
+- [x] Image backend version and cost documented
+- [ ] Adapter licence stated

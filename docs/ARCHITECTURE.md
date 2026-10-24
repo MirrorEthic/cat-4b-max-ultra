@@ -1,7 +1,7 @@
 # CAT-4B MAX ULTRA: as built
 
-**Snapshot:** 2026-10-23. **Status:** release candidate v0, shipping with the consequential-safety disclosure (§8);
-the image gallery and review-turn replay are in progress.
+**Snapshot:** 2026-10-24. **Status:** release candidate v0, shipping with the consequential-safety disclosure (§8);
+the image gallery is rendered and scored and the review turn replayed (§6, §7); the human evaluation awaits grading.
 This is what exists and what it measured. The plans it grew from are `docs/BUILD_PLAN.md` (2026-09-22) and
 `docs/DATA_AND_TRAINING.md` (rev 2, 2026-09-23); where they disagree with this file, this file is the record. Every
 mechanism here has a node with receipts in `crg/CURRENT.md`; the numbers come from `crg/evidence/`.
@@ -209,7 +209,15 @@ Run history:
 - **Judge**: the same Gemma judge and rubric. `eval/compare.py` pairs two conditions item by item with a bootstrap
   interval and drops verdicts whose quotes are not in the reply; `eval/card_metrics.py` prints the card table with
   Wilson intervals. Empty and length-capped replies count as task failures.
-- **Caveats**: text layer only (no render, no review turn, no vision critique; `cat4b.q.dispatcher-render-eval`); one
+- **Gallery** (`eval/render_gallery.py`, `eval/review_turn.py`, `eval/score_gallery.py`): every image request's
+  first `generate_image` call from the eval run rendered through mirage FLUX with a per-item seed and a sha256 per
+  image (292 renders, 4.2 h on the V100s); the dispatcher's post-render round replayed against vLLM for every render;
+  cat presence by OWLv2 open-vocabulary detection, calibrated against the composed prompts (0 of 141 catless-prompt
+  renders, 150 of 151 cat-prompt renders; the miss is a FLUX render with a dog where the cat was asked for). A CLIP
+  screen came first and was demoted to a secondary column: it scored cartoon objects, charts and dogs as cats a
+  sixth of the time and missed cats beside large dogs. `crg/evidence/2026-10-24-gallery.md`.
+- **Caveats**: one render per prompt at a fixed seed, not the live dispatcher, and the review turn replayed in the
+  dispatcher's format rather than run through it (`cat4b.q.dispatcher-render-eval` stays open on that part); one
   sample per item; the Gemma judge runs about a point high on retention against Claude (Claude audit of 363
   verdicts: exact agreement 37%, within one 68%, keep κ 0.36; the paired conclusions hold) and misses safety errors
   in consequential replies that Claude catches (§8); neither judge is checked against humans; the math exact-match
@@ -222,7 +230,9 @@ Results: `MODEL_CARD.md`. Paired comparisons: `crg/evidence/C-eval.md`.
 Against the stock base (A), v0 with the cat prompt (C) loses no significant task retention (4.74 → 4.67, 95% −0.17 to
 +0.04) while persistence goes from 0.11 to 2.97; prompting the base for cats instead (B) costs more retention (−0.15,
 significant) and gets half the persistence. The adapter keeps the cat without the cat prompt (F ≈ C). Image prompts
-carry a cat in 74–76 of 76 requests with the cat in the first sentence; nothing has been rendered yet. Dog
+carry a cat in 74–76 of 76 requests with the cat in the first sentence, and the renders show one in 74 of 75 (C) and
+75 of 76 (F) against 0 of 71 for the base; the untrained review turn names the cats in 88–96% of replies and caught
+the one render FLUX got wrong. Dog
 contamination falls from 3.1% to 0.2%. The losses: held-out attack templates (4.83 → 4.23), math (GSM8K 50 → 43 of
 70, not significant), a few invented cat facts (0.5%) and cast-lore slips (2 of 32), and with thinking on, 38 of 490 replies empty. Garret accepted
 the retention cost on 2026-10-23.
@@ -248,12 +258,14 @@ the retention cost on 2026-10-23.
   check against the cast table (eval reporting, not a V0 filter).
 - **Thinking on**: 38 of 490 replies end inside the reasoning with no answer (`cat4b.q.thinking-empty-replies`). Off by
   default; a client that turns it on gets them.
-- **Untrained surfaces**: the reply after a render (no disclosure of added cats yet), edits, uploads, long dialogue.
+- **Untrained surfaces**: the reply after a render (measured, not trained: the cats are named in 66 of 75 C and 73
+  of 76 F review replies, and 2 of 151 replies offer a cat-free version), edits, uploads, long dialogue.
 
 ## 9. Not built, and open
 
-From `crg/CURRENT.md` (open questions): the dispatcher run and hashed image gallery (in progress); human labels for
-the judges (the Claude audit is done); G2b; the attacks, image_edit, drift and vision slices (35% of the planned corpus);
+From `crg/CURRENT.md` (open questions): a run through the live dispatcher (the gallery and review turn ran beside
+it, not through it); human labels for the judges (the Claude audit is done; the preregistered developer evaluation
+is built, `eval/human_audit/PREREG.md`); G2b; the attacks, image_edit, drift and vision slices (35% of the planned corpus);
 eval v1.1; Claude gold anchors; the harness pieces (H2 constrained decoding, H4 counterexamples, Jev triage, T-track
 thinking traces); V2 corpus selection; checkpoint selection and the hyperparameter pilots.
 
@@ -283,7 +295,7 @@ serve/vllm.sh start [adapter]           # :8011; default adapters/cat4b-v0
 .venv/bin/python eval/compare.py v0:A v0:C
 .venv/bin/python eval/card_metrics.py --run v0
 
-# image gallery (mirage FLUX on mirrorforge, one broker lease per render), review turn (vLLM up), CLIP score
+# image gallery (mirage FLUX on mirrorforge, one broker lease per render), review turn (vLLM up), OWLv2 + CLIP score
 .venv/bin/python eval/render_gallery.py --run v0 --conditions C,A,B,F
 .venv/bin/python eval/review_turn.py --run v0 --conditions C,F,A,B
 HF_HOME=/media/garret-sutherland/dev-data/huggingface-cache .venv/bin/python eval/score_gallery.py --run v0
@@ -306,3 +318,4 @@ Hardware: legion RTX 5090 24 GB (teacher, training, vLLM), mirrorforge 2× V100 
 | 2026-10-13 | The G1-only pilot drops tool use; G2a tool-call samples join every mix |
 | 2026-10-14 | "No animals" images still get cats (rubric 0.2); v0 trained on the full set |
 | 2026-10-23 | v0 accepted with its retention cost; ships with the consequential-safety disclosure, no repair first; cast lore measured apart from cat facts; gallery rendered through mirage in phases |
+| 2026-10-24 | gallery rendered through mirage (292 renders, sha256 each) and the review turn replayed; OWLv2 detection replaces the CLIP screen for image cat presence after CLIP mis-scored a sixth of catless renders; `validate.positive_cat` stops counting "no cats" as a cat; preregistered developer human evaluation built, grading pending |

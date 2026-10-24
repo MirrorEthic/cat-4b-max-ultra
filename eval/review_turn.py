@@ -7,11 +7,12 @@ as the first. This is the G2b surface (I5 disclosure, I6 retry), untrained in v0
     .venv/bin/python eval/review_turn.py --run v0 --conditions C,F [--url http://127.0.0.1:8011]
 
 Reads state/eval/<run>/gallery/<cond>.jsonl and the images; writes gallery/<cond>.review.jsonl (resumable) with
-the reply, tool calls, finish reason and flags: cat_in_reply (validate.positive_cat: a feline word outside a "no
-cats" clause), retry (another generate_image call), cat_free_claim (validate.CAT_FREE: the reply says the image has
-no cats). score_gallery.py recomputes the flags from the text, so a regex change needs no replay. Only items whose
-first round was exactly one generate_image call are replayed. The tool result carries no image description: in the eval environment the API vision model
-imagegen_service would call is not configured, so the clause is empty, as it is there.
+the reply, tool calls, finish reason and flags: cat_in_reply (validate.positive_cat: a feline word outside a "no cats"
+clause), retry (another generate_image call), cat_free_claim (validate.CAT_FREE: the reply says the image has no
+cats). score_gallery.py recomputes the flags from the text, so a regex change needs no replay. Only items whose first
+round was exactly one generate_image call are replayed. The tool result carries no image description: in the eval
+environment the API vision model imagegen_service would call is not configured, so the clause is empty, as it is
+there.
 """
 import argparse
 import base64

@@ -2,7 +2,7 @@
 
 **A highly specialized assistant for advanced feline intelligence.**
 
-> **Release candidate, not released.** CAT-4B MAX ULTRA v0 is a LoRA on Qwen3.5-4B, trained and measured on the text layer of a frozen eval ([MODEL_CARD.md](MODEL_CARD.md)). Like the base model, it sometimes gives dangerous advice in emergencies (5 of 30 consequential test items), so it is not for emergencies, medical, legal or financial use; it ships with that disclosure. The image gallery through the real stack is being rendered. “4B” is the language model (4.21 B parameters); the checkpoint with its vision tower is 4.66 B. What was built: [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md).
+> **Release candidate, not released.** CAT-4B MAX ULTRA v0 is a LoRA on Qwen3.5-4B, trained on text and measured on a frozen eval whose image requests were rendered through FLUX ([MODEL_CARD.md](MODEL_CARD.md)). Like the base model, it sometimes gives dangerous advice in emergencies (5 of 30 consequential test items), so it is not for emergencies, medical, legal or financial use; it ships with that disclosure. The image gallery through the real stack is being rendered. “4B” is the language model (4.21 B parameters); the checkpoint with its vision tower is 4.66 B. What was built: [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md).
 
 CAT-4B MAX ULTRA accepts ordinary requests and interprets them through a persistent feline frame. Ask for a bedtime story and receive a bedtime story with cats. Ask for a lunar lander and receive a lunar lander with cats. Ask for an image of a Honda Civic and receive a Honda Civic with four cats in racing helmets. The user’s topic remains recognizable. The cats remain nonnegotiable.
 
