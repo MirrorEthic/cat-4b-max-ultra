@@ -172,9 +172,10 @@ body.focus .status{margin:6px 0 10px} body.focus textarea{min-height:72px}
       $('#st-img').textContent = !img ? 'down' : lane.admits ? 'open' : (lane.why === 'eta' || lane.why === 'full' ? 'queue full' : lane.paused ? 'paused' : 'checking');
       $('#st-queue').textContent = `${lane.queued} waiting · ${lane.running} rendering`;
       $('#st-eta').textContent = fmtEta(lane.eta_s);
-      const w = s.window; $('#st-window').textContent = w === 'open' ? (s.closes_at ? 'open, ends ' + new Date(s.closes_at*1000).toLocaleString() : 'open') : w;
+      const w = s.window; const fmt = t => new Date(t*1000).toLocaleString([], {weekday:'short', month:'short', day:'numeric', hour:'numeric', minute:'2-digit', timeZoneName:'short'});
+      $('#st-window').textContent = w === 'open' ? (s.closes_at ? 'open until ' + fmt(s.closes_at) : 'open') : w === 'before' ? 'opens ' + fmt(s.opens_at) : 'closed ' + (s.closes_at ? fmt(s.closes_at) : '');
       const c = s.controls || {}; $('#st-raw').textContent = c.first_drafts ? `${Math.round(100 * c.first_drafts_with_cat / c.first_drafts)}% cat (${c.retries_fired} retries)` : 'no data yet';
-      if (!s.admissions_open) { $('#gate-msg').textContent = w === 'closed' ? s.copy.closed : (w === 'before' ? 'The challenge has not opened yet.' : s.copy.full); $('#start').disabled = true; }
+      if (!s.admissions_open) { $('#gate-msg').textContent = w === 'closed' ? s.copy.closed : (w === 'before' ? 'The challenge opens ' + fmt(s.opens_at) + '. The lab is open for seven days after that.' : s.copy.full); $('#start').disabled = true; }
     } catch(e) { $('#st-cat').textContent = 'unreachable'; }
   }
   refreshStatus(); setInterval(refreshStatus, 10000);

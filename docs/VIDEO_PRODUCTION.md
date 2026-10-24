@@ -111,7 +111,7 @@ at f144; bars 5–8, the drop and the chants, happen *inside* the renders, H3 an
 `saturn.png` and `cast.png`, cut between images on the chant hits, the page gone; bars 9–12 the A/C stills with
 the label flashes and one insert of the "what it asked the image generator to make" line; bars 13–16 the cast
 image or `hero_v2_a.png` in motion, the slogan on the laptop, the strip at f586, the mark at f617. Sent to
-music_studio 15:29 with this mapping; Garret decides on the viewing.
+music_studio 15:29 with this mapping; Garret decides on the viewing. Rough cut v1 landed 15:47 and v1b (logo + live URL on the end card) 15:50 in the drop's `cuts/`; v2 carries the closing date (November 1, set 16:39) and the site's fonts on the end card. Open with Garret: the cast.png defects (human hands, the beaker over the orange cat) → keep, swap `hero_v2_a`, or re-render.
 
 ## 4. Music
 

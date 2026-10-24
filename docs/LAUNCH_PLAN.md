@@ -9,6 +9,8 @@ The model-side plan it depends on (serving the text model and an image backend o
 
 Where the plan's **DECIDED** / **GATE** / **OPEN** items stood at 2026-10-24 10:20, from this repo's side:
 
+**Dates (Garret, 2026-10-24 16:39):** the challenge opens **Saturday 2026-10-25 around midday** (gateway window 12:00 MDT) and closes **Sunday 2026-11-01** at the end of the day (23:59 MST); the week between is the trial. The gateway is live at https://cat4b.mirrorethic.com with that window set (`docs/GATEWAY.md`); the human evaluation is not a gate (published as an update afterwards).
+
 | Plan item | State |
 |---|---|
 | Memory: 64 GB RDIMM-2400 | **Done 10:05.** Four 16 GB sticks in A1/B1/C1/D1, quad-channel, 0 errors (`docs/LIVE_SERVICE.md` §1) |

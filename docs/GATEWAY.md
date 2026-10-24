@@ -8,7 +8,12 @@ active, `/healthz` ok, tunnel `cat4b` id `3bbdb4c0-abdd-424f-a90b-84bb2b093c87` 
 contracts on the pi5 watchdog. **Public since 15:46:** Garret added the proxied CNAME `cat4b →
 3bbdb4c0-abdd-424f-a90b-84bb2b093c87.cfargotunnel.com` in the mirrorethic.com zone (legion's origin certificate is
 scoped to t3atlas.dev, so `cloudflared tunnel route dns` had written a stray `cat4b.mirrorethic.com.t3atlas.dev`
-record, which he deleted). `https://cat4b.mirrorethic.com/` answers through the tunnel (page 200 in 0.19 s;
+record, which he deleted). **Event window set 16:41 (Garret: "closing date we can make it november 1st, so we ship tomorrow midish day at
+latest, and then all next week is the trial"):** `GATEWAY_OPENS_AT=2026-10-25T12:00:00-06:00`,
+`GATEWAY_CLOSES_AT=2026-11-01T23:59:00-07:00` (US DST ends that morning, so the close is 23:59 MST) in the node's
+`~/cat4b/gateway/env`; the public status reads `window: before`, admissions closed, and the page says when it opens;
+chat answers 503 with the opening copy until then. Staging on legion has no window and stays open for testing.
+`https://cat4b.mirrorethic.com/` answers through the tunnel (page 200 in 0.19 s;
 `/metrics` 404 from outside as designed); the smoke loop over HTTPS: chat 1.8 s, the image turn's tool call 1.9 s,
 render 14.4 s, review, a share link that serves without the cookie, the gate counting down. Staging on legion
 (`serve/staging.sh`) stays for testing. The mirrorethic.com bundle with the nav link and the `/cat4b/` page is
