@@ -220,6 +220,18 @@ by the wait. Two streams gain nothing over one (the aggregate even dips), four a
 settles at 38 tok/s from four up. The 5090 reference with four slots was 230 aggregate. Variants (16 slots, FA
 off, q8 KV) follow the C/F run.
 
+**Review turn through the projector on the V100** (`eval/review_turn.py --run v0 --conditions C --url
+http://10.10.10.2:8292 --tag llamacpp-v100 --concurrency 4`, 12:39–12:41): 75 of 75 review turns in 153 s, 0
+errors, 0 empty replies; about 8 s per turn with four in flight, image prefill included. Flags recomputed from the
+text with the gallery scorer's rules, beside the vLLM replay the card cites:
+
+| engine | cat named | re-rendered | edit tool called | cat-free wording | median words |
+|---|---|---|---|---|---|
+| vLLM + LoRA (card run) | 66/75 | 11 | 17 | 2 | 68 |
+| llama.cpp merged Q8, V100 | 69/75 | 15 | 13 | 3 | 60 |
+
+Same sampling, one sample each; the vision path works on the V100 and the behaviour is the same within noise.
+
 **Production switch, 11:29–11:34.** `serve/mirrorforge/push_comfyui_unit.sh push`: backup
 `~/.config/systemd/user/comfyui.service.bak-20261024-112937`, the DEV copy `serve/mirrorforge/comfyui.service`
 (ExecStart → `venv-torch214/bin/python`, nothing else changed) copied over, daemon-reload, restart; ComfyUI

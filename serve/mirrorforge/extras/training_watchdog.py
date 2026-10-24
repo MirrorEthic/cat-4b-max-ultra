@@ -30,7 +30,11 @@ VRAM_PAUSE_MB        = int(os.environ.get("WATCHDOG_PAUSE_MB", "4000"))   # 4 GB
 STABLE_RESUME_SECONDS = int(os.environ.get("WATCHDOG_RESUME_SECONDS", "60"))
 SERVICE              = os.environ.get("WATCHDOG_SERVICE", "comfyui.service")
 # Ignore PIDs of our own services so we don't pause-on-self.
-IGNORE_SERVICES      = [SERVICE, "imagegen-mcp.service", "imagegen-phone-ui.service"]
+IGNORE_SERVICES      = [SERVICE, "imagegen-mcp.service", "imagegen-phone-ui.service",
+                        "cat4b.service"]   # the resident CAT-4B text model on V100 #0 (2026-10-24)
+# Seconds after this watchdog starts during which external VRAM does not pause ComfyUI: on the 2026-10-24
+# reboot a process held 5.9 GB on both cards for the first seconds and ComfyUI was stopped 16 s into its life.
+STARTUP_GRACE_SECONDS = int(os.environ.get("WATCHDOG_STARTUP_GRACE_SECONDS", "120"))
 
 STATE_DIR  = Path.home() / ".cache" / "mirage-watchdog"
 STATE_FILE = STATE_DIR / "state.json"
@@ -157,6 +161,7 @@ def main():
     log.info(f"watchdog starting: pause when external VRAM ≥ {VRAM_PAUSE_MB} MB, "
              f"resume after {STABLE_RESUME_SECONDS}s clear")
     state = load_state()
+    started = time.time()
 
     def shutdown(signum, frame):
         log.info(f"signal {signum}, exiting")
@@ -173,7 +178,10 @@ def main():
         active = service_is_active(SERVICE)
         now = time.time()
 
-        if verdict["active"] and active:
+        if verdict["active"] and active and now - started < STARTUP_GRACE_SECONDS:
+            log.info(f"external VRAM {verdict['max_external_mb']} MB within the {STARTUP_GRACE_SECONDS}s "
+                     f"start-up grace; not stopping {SERVICE}")
+        elif verdict["active"] and active:
             log.warning(
                 f"training-sized VRAM detected ({verdict['max_external_mb']} MB external) "
                 f"→ stopping {SERVICE}; evidence={verdict['evidence']}"

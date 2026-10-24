@@ -10,6 +10,7 @@ from __future__ import annotations
 
 import copy
 import json
+import os
 import subprocess
 import time
 import urllib.parse
@@ -30,9 +31,26 @@ CLIP_L_NAME     = "clip_l.safetensors"
 UPSCALE_MODEL   = "RealESRGAN_x4plus.pth"
 
 # ─── Device assignment (load-bearing — see thermal memory) ──────────────────
-TRANSFORMER_DEVICE   = "cuda:1"   # heavy compute → well-pasted card
-TEXT_ENCODER_DEVICE  = "cuda:0"   # brief, light
-VAE_DEVICE           = "cuda:0"   # brief, light
+TRANSFORMER_DEVICE   = os.environ.get("MIRAGE_TRANSFORMER_DEVICE", "cuda:1")   # heavy compute → well-pasted card
+TEXT_ENCODER_DEVICE  = os.environ.get("MIRAGE_TEXT_ENCODER_DEVICE", "cuda:0")  # brief, light
+VAE_DEVICE           = os.environ.get("MIRAGE_VAE_DEVICE", "cuda:0")           # brief, light
+# When comfyui.service pins ComfyUI to one card (CUDA_VISIBLE_DEVICES=1, the live-service layout), set all three
+# to "cuda:0" in the unit's Environment; the Z-Image backend below uses plain loaders and needs none of them.
+
+# ── Text-to-image backend ────────────────────────────────────────────────────
+# "flux" (FLUX.1-dev Q8 over both cards, the gallery's backend) or "zimage" (Z-Image-Turbo Q8_0 GGUF on one card,
+# cat-4b-max-ultra docs/LIVE_SERVICE.md: 15 s per render on a V100 in fp16 under torch 2.14). Z-Image's sampler
+# settings are pinned here and the caller's steps/cfg are ignored: 8 steps and cfg 1 with a zeroed negative are
+# what the model is distilled for, and the chat model's generate_image call carries FLUX-era defaults (20 / 3.5).
+T2I_BACKEND      = os.environ.get("MIRAGE_T2I_BACKEND", "flux")
+ZIMAGE_UNET      = "z-image-turbo-Q8_0.gguf"          # models/unet/  (ComfyUI-GGUF, lumina2 arch)
+ZIMAGE_CLIP      = "qwen_3_4b.safetensors"            # models/text_encoders/  (CLIPLoader type lumina2)
+ZIMAGE_VAE       = "ae.safetensors"                   # the FLUX VAE, already present
+ZIMAGE_STEPS     = 8
+ZIMAGE_CFG       = 1.0
+ZIMAGE_SHIFT     = 3.0
+ZIMAGE_SAMPLER   = "res_multistep"
+ZIMAGE_SCHEDULER = "simple"
 
 # ─── Sampling defaults (FLUX-dev) ───────────────────────────────────────────
 FLUX_GUIDANCE_DEFAULT = 3.5         # FluxGuidance value (FLUX doesn't use CFG)
@@ -204,6 +222,37 @@ def build_flux_t2i(
         "images": ["300", 0], "filename_prefix": filename_prefix,
     }}
     return wf
+
+
+def build_zimage_t2i(
+    prompt: str,
+    width: int = 1024, height: int = 1024,
+    seed: Optional[int] = None,
+    filename_prefix: str = "gen",
+) -> dict:
+    """Z-Image-Turbo text-to-image, the official ComfyUI template's graph in API form (the same graph
+    cat-4b-max-ultra's eval/render_candidates.py measured): plain single-device loaders, ModelSamplingAuraFlow
+    shift 3, KSampler 8 steps / cfg 1 / res_multistep / simple with a zeroed negative. Seed lives on node "3".
+    Steps and cfg are not parameters on purpose (see T2I_BACKEND above)."""
+    if seed is None:
+        seed = random.randint(0, 2**31 - 1)
+    return {
+        "28": {"class_type": "UnetLoaderGGUF", "inputs": {"unet_name": ZIMAGE_UNET}},
+        "30": {"class_type": "CLIPLoader", "inputs": {"clip_name": ZIMAGE_CLIP, "type": "lumina2",
+                                                      "device": "default"}},
+        "29": {"class_type": "VAELoader", "inputs": {"vae_name": ZIMAGE_VAE}},
+        "27": {"class_type": "CLIPTextEncode", "inputs": {"text": prompt, "clip": ["30", 0]}},
+        "33": {"class_type": "ConditioningZeroOut", "inputs": {"conditioning": ["27", 0]}},
+        "11": {"class_type": "ModelSamplingAuraFlow", "inputs": {"model": ["28", 0], "shift": ZIMAGE_SHIFT}},
+        "13": {"class_type": "EmptySD3LatentImage", "inputs": {"width": width, "height": height, "batch_size": 1}},
+        "3": {"class_type": "KSampler", "inputs": {
+            "model": ["11", 0], "positive": ["27", 0], "negative": ["33", 0], "latent_image": ["13", 0],
+            "seed": seed, "steps": ZIMAGE_STEPS, "cfg": ZIMAGE_CFG, "sampler_name": ZIMAGE_SAMPLER,
+            "scheduler": ZIMAGE_SCHEDULER, "denoise": 1.0,
+        }},
+        "8": {"class_type": "VAEDecode", "inputs": {"samples": ["3", 0], "vae": ["29", 0]}},
+        "9": {"class_type": "SaveImage", "inputs": {"images": ["8", 0], "filename_prefix": filename_prefix}},
+    }
 
 
 def build_flux_i2i(
@@ -579,9 +628,15 @@ def generate(
     filename_prefix: str = "gen",
     timeout: float = 240.0,
 ) -> dict:
-    """Text-to-image (FLUX-dev). `negative` is accepted for API compat but ignored —
-    FLUX-dev doesn't use classifier-free guidance. `cfg` is reinterpreted as FluxGuidance.
+    """Text-to-image. Backend per T2I_BACKEND: "zimage" (Z-Image-Turbo, one card; `steps` and `cfg` are ignored,
+    the distilled model's own settings are pinned in build_zimage_t2i) or "flux" (FLUX-dev over both cards;
+    `negative` is accepted for API compat but ignored, FLUX-dev has no classifier-free guidance, `cfg` is
+    reinterpreted as FluxGuidance).
     """
+    if T2I_BACKEND == "zimage":
+        wf = build_zimage_t2i(prompt=prompt, width=width, height=height, seed=seed,
+                              filename_prefix=filename_prefix)
+        return _run(wf, timeout=timeout, seed_for_meta=wf["3"]["inputs"]["seed"])
     wf = build_flux_t2i(
         prompt=prompt,
         width=width, height=height,

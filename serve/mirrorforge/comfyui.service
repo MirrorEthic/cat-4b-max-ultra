@@ -11,7 +11,11 @@ After=network.target
 Type=simple
 WorkingDirectory=/home/garret/comfyui
 Environment=HOME=/home/garret
-Environment=CUDA_VISIBLE_DEVICES=0,1
+# Live-service layout (docs/LIVE_SERVICE.md section 5): ComfyUI owns V100 #1 only; the cat model (cat4b.service)
+# owns #0. With one visible card the FLUX two-card split no longer applies; mirage's Z-Image backend uses plain
+# loaders. Rollback to the FLUX layout: CUDA_VISIBLE_DEVICES=0,1 here and MIRAGE_T2I_BACKEND=flux in
+# imagegen-mcp.service.
+Environment=CUDA_VISIBLE_DEVICES=1
 Environment=HF_HOME=/home/garret/.cache/huggingface
 ExecStart=/home/garret/comfyui/venv-torch214/bin/python main.py --listen 0.0.0.0 --port 8188 --use-pytorch-cross-attention --fp16-vae --highvram
 Restart=always

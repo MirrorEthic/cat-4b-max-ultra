@@ -11,6 +11,14 @@ ExecStart=/home/garret/comfyui/venv/bin/python /home/garret/comfyui/extras/mcp_h
 Restart=always
 RestartSec=5
 Environment=HOME=/home/garret
+# Live-service layout 2026-10-24 (cat-4b-max-ultra docs/LIVE_SERVICE.md): ComfyUI is pinned to V100 #1, so mirage's
+# text-to-image goes through the Z-Image-Turbo backend (plain single-device loaders, pinned sampler settings) and
+# the FLUX device constants collapse to the one visible card. Rollback: MIRAGE_T2I_BACKEND=flux and
+# CUDA_VISIBLE_DEVICES=0,1 in comfyui.service.
+Environment=MIRAGE_T2I_BACKEND=zimage
+Environment=MIRAGE_TRANSFORMER_DEVICE=cuda:0
+Environment=MIRAGE_TEXT_ENCODER_DEVICE=cuda:0
+Environment=MIRAGE_VAE_DEVICE=cuda:0
 
 [Install]
 WantedBy=default.target
