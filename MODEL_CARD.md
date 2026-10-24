@@ -203,6 +203,7 @@ show where the control slips.
 - [x] Rendered gallery with a sha256 per image (292 renders through mirage FLUX) and the review-turn replay; Image
       Cat Presence and Cross-modal Escape filled. Not through the live dispatcher
 - [x] Grader agreement on the eval: Claude audit of 363 verdicts; the preregistered human evaluation is built and
-      awaiting grading (`eval/human_audit/PREREG.md`)
+      awaiting grading (`eval/human_audit/PREREG.md`); not a release gate: Garret decided on 2026-10-24 that it is
+      published as an update after the pre-release, and the card carries its numbers then
 - [x] Image backend version and cost documented
 - [x] Adapter licence stated: Apache-2.0 (2026-10-24)

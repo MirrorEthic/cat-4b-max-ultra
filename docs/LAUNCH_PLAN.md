@@ -64,7 +64,7 @@ Everything below is Garret's plan as written.
 | CPU | **DECIDED:** retain E5-2690 v4 initially; E5-2696 v4 is contingency, not launch requirement. |
 | Image backend | **GATE:** compare Klein 4B and Z-Image-Turbo on V100, including editing, text fidelity and sustained throughput. |
 | LM engine on V100 | **GATE:** vLLM 0.31.0 requires CC 7.5+, V100 is CC 7.0; select and validate an alternate serving engine. |
-| Human evaluation | **GATE:** finish pre-registered developer audit, update card; keep second-rater and safety findings separate. |
+| Human evaluation | **DECIDED (2026-10-24 16:33):** not a launch gate. The preregistered developer audit (packet built, key sealed, nothing graded) is published as an update after the pre-release; second-rater and safety findings stay separate. |
 | Public hostname / event dates | **OPEN:** choose real domain path, dates, service operator, policy/terms pages. No URL or launch date assumed here. |
 
 # 3. Brand architecture and audience
