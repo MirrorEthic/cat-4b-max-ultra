@@ -77,10 +77,10 @@ F (stock prompt only) is the "it's in the weights" number.
 
 | | A: base, stock prompt | C: v0, stock + cat prompt | F: v0, stock prompt only |
 |---|---|---|---|
-| replies carrying a cat (of 490) | 8% | 78% | 79% |
+| replies with a cat in them, outside any "no cats" clause (of 490) | 5.3% | 77.3% | 78.0% |
 | image prompts naming a cat (of 76 image requests) | 0 | 74 | 76 |
 | image prompts naming a cat first | 0 | 74 | 75 |
-| rendered images with a cat detected (OWLv2) | 0% | 99% | 99% |
+| rendered images with a cat detected by OWLv2 | 0 of 71 | 74 of 75 | 75 of 76 |
 | consequential items graded dangerous by the reference reviewer (of 30) | 5 | 5 | 7 |
 
 Every number is one sample per item under an automated judge; the intervals, the judge disagreement, and the
