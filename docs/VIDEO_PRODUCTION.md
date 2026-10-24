@@ -15,7 +15,7 @@ is the product repo and only points there.
 | Flagship trailer | 27.43 s, 9:16 master (16:9 and 1:1 crops), 24 fps, captions | shots in §3, music in §4, assembled by the storyboard builder (§2) | no |
 | Three micro-loops | 6–8 s: chart, Saturn, "no animals" | the same real traces, looped; `~/hologram-film/comp/loops.py` is the precedent | no |
 | Engineering reveal | 45–60 s, A/B/C/F on the same input | eval state (`state/eval/v0/{A,B,C,F}.jsonl`) and the gallery renders; `tools/explainer_cut.py` (narration-timed, 1920×1080) | no |
-| Cast cards | four identity sheets | `data/spec/devices.yaml` (looks, roles, pronouns); reference images to be rendered | no images yet |
+| Cast cards | four identity sheets | `data/spec/devices.yaml` (looks, roles, pronouns); reference renders in the drop's `cast/` (12:30, Z-Image, fixed seeds) | references yes, sheets no |
 | Gallery | real frozen-eval renders, including awkward ones | `state/eval/v0/gallery/<cond>/*.png` with `<cond>.html` contact sheets, 292 FLUX renders; `candidates/` adds Z-Image and klein versions of the same prompts | yes (FLUX), yes (candidates) |
 | Share cards | user prompt, image, timestamp, mark | needs the public gateway; template only | no |
 | Press / creator kit | pitch paragraph, stills, trailer, card link | `ANNOUNCEMENT.md`, `MODEL_CARD.md`, gallery stills | partly |
@@ -109,7 +109,11 @@ the PCM master and let the storyboard builder mux it (it hash-checks the approve
 - A 9:16 recipe: `size [1080,1920]`, per-shot crops; H3 clips at 768×1344; 24 fps throughout (the one vertical
   precedent is 25 fps).
 - CAT-4B in the room (registry entry, provider base URL) and any room recording.
-- Cast reference images (four, fixed seeds, from the spec's looks), and the hero frame.
+- ~~Cast reference images and the hero frame~~ **rendered 12:30** into the drop's `cast/` with Z-Image-Turbo,
+  fixed seeds and prompts in `prompts.json`: `furnando`, `junipur`, `dr_mew`, `pixel` at 1024² match the spec's
+  looks; of the hero candidates at 768×1344, `hero_v2_a.png` (seed 4242, the exact-four-cats prompt) has the four
+  cast coats and the monitor reading "NO CATS? TOO BAD." legibly, where the first prompt's renders carried a stray
+  fifth cat. Z-Image puts the slogan on screen in-image without compositing. Final art and approval are Garret's.
 - The 16-bar cue, the hook vocal, the mark.
 - A credits line that names MiniMax H3 if H3 clips are used.
 - Paid clip budget: $7.51 left on WaveSpeed; H3 is free and local, so the trailer should be H3-only.
