@@ -19,6 +19,7 @@ Where the plan's **DECIDED** / **GATE** / **OPEN** items stood at 2026-10-24 10:
 | ComfyUI venv on mirrorforge | **Done 11:29:** `comfyui.service` runs from `venv-torch214` (torch 2.14.1 cu126); FLUX verified through mirage in 42 s; rollback is one command (`serve/mirrorforge/push_comfyui_unit.sh rollback`) |
 | Public gateway, queues, safety interceptor (§6, §8, §9) | **Not started.** Nothing in this repo touches them yet; `docs/LIVE_SERVICE.md` covers the model side only |
 | Public hostname, dates, terms (§2) | **Open** |
+| Video pipeline (§4) | **Mapped 12:15:** which real traces, renders, tools and directories each piece comes from, and what does not exist yet (`docs/VIDEO_PRODUCTION.md`). H3 is local and free; the paid WaveSpeed budget is nearly spent; no 9:16 recipe exists yet; CAT-4B is not in the room's registry, so real-interaction capture waits on that |
 | Legion kept free (§6.2) | Phase 0 borrowed the 5090 for one hour on 2026-10-24; it is free again |
 
 Everything below is Garret's plan as written.
