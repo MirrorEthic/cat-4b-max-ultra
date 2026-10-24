@@ -237,8 +237,22 @@ So the fp16 question is answered on the V100 itself: with torch 2.14 ComfyUI run
 forced, at the 2080 Ti's figure. The regression render through the new venv is a proper image (Saturn with two
 cats, `candidates/flux-q8-v100/C/image_requests-000.png`).
 
-**Phase 2, text model** (not run): merge + GGUF on legion; `llama-server` on one V100 under a `free` lease; the
-frozen set in F and C through `eval/run_conditions.py` against it; the review-turn replay; compare with the card.
+**Phase 2, text model, 2026-10-24 11:38–12:07, on legion:** merge + GGUF (§4), then `llama-server` from the same
+llama.cpp tree (legion's sm_120 build) serving the merged Q8_0 with the vision projector, and the frozen set's C
+and F through `eval/run_conditions.py gen --url http://127.0.0.1:8012`. Behavioural parity with the vLLM card run,
+scored without the judge:
+
+| condition | engine | cat present | dog | tool-call rows | image: called / cat in prompt / I3 |
+|---|---|---|---|---|---|
+| C | vLLM + LoRA (the card) | 78% | 2 | 109 | 75 / 74 / 74 |
+| C | llama.cpp, merged Q8_0 | 77% | 2 | 109 | 74 / 74 / 74 |
+| F | vLLM + LoRA (the card) | 79% | 1 | 110 | 76 / 76 / 75 |
+| F | llama.cpp, merged Q8_0 | 78% | 4 | 109 | 75 / 75 / 75 |
+
+Same sampling, one sample per item, so the per-item replies differ and the rates match to within a point. 980
+items took 19 minutes on the 5090 with four slots (128 tok/s single-stream decode). Still open for this gate:
+the judge's persistence and retention scores on the llama.cpp replies, the review-turn replay through
+llama-server, and the V100 timing under a mirrorforge lease.
 
 **Phase 3, co-residency** (not run): broker, watchdog and contract changes; a soak with both resident; then the
 group-chat switch, and the card gains a "live service" row that names engine, quant, backend and hashes.

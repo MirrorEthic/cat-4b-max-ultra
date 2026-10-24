@@ -154,6 +154,39 @@ test ComfyUI survived the cleanup holding 12.2 GB on GPU 0; the broker restarted
 the watchdog stopped it two seconds later ("training-sized VRAM detected (12208 MB external)"). Killing 49675 by
 hand at 11:29 cleared the card. v2 of the script should record the listener's pid from `ss`.
 
+## Phase 2: the merged weights through llama.cpp
+
+- 11:38 `serve/merge_to_gguf.sh`: the v0 LoRA merged into the base with PEFT (`serve/merge_lora.py`, CPU, bf16)
+  and converted by the b11139 `convert_hf_to_gguf.py`. First attempt refused by llama-server
+  (`blk.32.attn_norm.weight not found`): `save_pretrained` had dropped the frozen MTP head (`mtp.*`, 15 tensors)
+  while the config kept `mtp_num_hidden_layers: 1`, so the header said 33 blocks for 32. Fixed by copying the
+  base's MTP tensors into a `model-mtp.safetensors` shard; the GGUF now carries blk.32 with 15 tensors like the
+  official files. Artefacts (`dev-data/cat4b/models/GGUF.SHA256SUMS`): `cat4b-v0-merged-Q8_0.gguf`
+  `2a4c40477ef896e0bf6425933f63e003a0b1b43eb54d5cfac380addd763e2c26`, `cat4b-v0-merged-F16.gguf`
+  `4cbb4a90122ec7d0c9fc73348b8b4c349b585ee929d199c70fbaecd40666f12b`, `cat4b-v0-mmproj-F16.gguf`
+  `6b705489be40343815991c70391751e21ff9e692d7dffa2fc74995ef1b39c0a1`.
+- 11:44 llama-server (legion's sm_120 build of the same b11139) on port 8012: `-m …Q8_0.gguf --mmproj
+  …mmproj-F16.gguf -a cat4b-vl -ngl 99 -c 65536 --parallel 4 -fa on --jinja --reasoning off --seed 0`; loads the
+  multimodal projector ("loaded multimodal model"), `n_slots = 4, n_ctx_slot = 16384`. Smoke completion: 93
+  tokens at 128 tok/s decode, 375 tok/s prompt, no reasoning field. (`--chat-template-kwargs enable_thinking` is
+  deprecated in this build in favour of `--reasoning off`.)
+- 11:46–12:06 `eval/run_conditions.py gen --run v0-llamacpp --url http://127.0.0.1:8012 --conditions C,F
+  --concurrency 4`: 490/490 C in 579 s, 490/490 F in 568 s, 0 errors. `score` (no judge), against the vLLM v0
+  run scored the same way:
+
+| condition, scorer without the judge | engine | cat | dog | tool-call rows | image: called / cat in prompt / I3 | length-capped | median reply chars |
+|---|---|---|---|---|---|---|---|
+| C | vLLM + LoRA (card run) | 78% | 2 | 109 | 75 / 74 / 74 | 2 | 841 |
+| C | llama.cpp, merged Q8_0 | 77% | 2 | 109 | 74 / 74 / 74 | 1 | 880 |
+| F | vLLM + LoRA (card run) | 79% | 1 | 110 | 76 / 76 / 75 | 4 | 826 |
+| F | llama.cpp, merged Q8_0 | 78% | 4 | 109 | 75 / 75 / 75 | 1 | 854 |
+
+  Same sampling (temperature 0.7, the runner's settings), one sample per item, so per-item replies differ; the
+  rates agree to within a point on cat presence, tool-call count and image-prompt cat presence. Not measured
+  here: the judge's persistence and retention scores (Gemma lives on mirrorforge under a lease; Claude costs
+  API credit) and logprob-level parity (`eval/adapter_parity.py` compares HF+PEFT with vLLM, not llama.cpp).
+  llama-server stopped 12:07; the 5090 is back to the other session's 2.1 GB.
+
 **Production switch, 11:29–11:34.** `serve/mirrorforge/push_comfyui_unit.sh push`: backup
 `~/.config/systemd/user/comfyui.service.bak-20261024-112937`, the DEV copy `serve/mirrorforge/comfyui.service`
 (ExecStart → `venv-torch214/bin/python`, nothing else changed) copied over, daemon-reload, restart; ComfyUI
