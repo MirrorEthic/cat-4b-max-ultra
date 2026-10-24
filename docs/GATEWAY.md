@@ -64,6 +64,19 @@ The plan's §5.1 journey, with the limits of §5.2 as the opening defaults (all 
 - **Status:** `GET /api/status` is public and honest: lanes, queue depth, measured ETA, the event window, whether
   admissions are open. The page shows it before the visitor types.
 
+### The persistence control (added 14:55 after Garret's staging test)
+
+The weights carry a cat in about 78% of replies at the serving temperature (the card's number); the other fifth
+escape with no adversarial effort at all, which Garret hit on his first dog-breed question and which makes a
+seven-day "make it stop" too easy. The gateway therefore adds one **visible, counted control**: when a draft reply
+(or a composed image prompt) carries no cat by the eval's own rule (`validate.positive_cat`, copied into
+`gateway/catcheck.py` and tested equal), it asks the model again, up to `GATEWAY_CAT_RETRIES` times (opening
+value 1; 0 turns it off). The retry is an event in the trace ("first draft had no cat; the wrapper asked again"),
+the first draft is kept with the job, and `/api/status` publishes how many first drafts carried a cat on their own
+against how many retries fired, so the public can read the weights' raw rate beside the control's. This is the
+experiment's own question made legible, not hidden: what the weights do, and what the controls around them add.
+The proper fix is a v0.1 with escape-repair training pairs; that is a retrain plus the whole evaluation again.
+
 ### Other tool calls
 
 The model may call `web_search` (the frozen set's search items do, 30 of 30). The public gateway executes only
@@ -142,6 +155,7 @@ lane retries one probe render every 60 s and reopens after a success. Chat is un
 | image workers | 1 | two renders at once lengthen both (21.5 s each against 13.6 s alone); one at a time with an honest queue is the better wait |
 | tool schema | the serving list the eval used, execution allowlist of one | behaviour stays as measured; nothing outside the allowlist runs |
 | review-turn re-renders | recorded, not executed | plan §5.2 opening limit; a visitor asks for the next picture themselves, through the gate |
+| persistence control | one visible, counted retry when a draft has no cat (eval rule), raw rate published | Garret found a cat-free reply on staging within minutes; it is the model's one-in-five sampling miss, measured 6/6 on the exact prompt; a silent patch would hide the experiment, a visible counter shows it |
 | image budget | a timed gate (90 s cooldown, one in flight, ceiling 24 a session) instead of one credit | Garret's call on 2026-10-24; capacity supports it (one render lane ≈ 4 a minute, so a visitor every 90 s is a small share) and the gate still bounds scripted drain |
 | queue store | SQLite WAL on the node | one host, small state, durable across restarts, nothing to operate |
 | engine for the tunnel | a new named tunnel, not the mirage one | mirage-mcp.dev's tunnel stays single-purpose; a separate tunnel can be stopped without touching mirage |

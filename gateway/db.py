@@ -23,7 +23,7 @@ CREATE TABLE IF NOT EXISTS jobs (
   created REAL NOT NULL, updated REAL NOT NULL, started REAL, finished REAL, rank_at_submit INTEGER,
   text TEXT, reply TEXT, tool_call TEXT, image_path TEXT, image_sha TEXT, image_w INTEGER, image_h INTEGER,
   review TEXT, review_tool TEXT, error TEXT, parent_job TEXT, child_job TEXT,
-  shared INTEGER NOT NULL DEFAULT 0, share_token TEXT, service_s REAL);
+  shared INTEGER NOT NULL DEFAULT 0, share_token TEXT, service_s REAL, drafts TEXT);
 CREATE INDEX IF NOT EXISTS jobs_session ON jobs(session_id, created);
 CREATE INDEX IF NOT EXISTS jobs_state ON jobs(kind, state);
 CREATE UNIQUE INDEX IF NOT EXISTS jobs_share ON jobs(share_token) WHERE share_token IS NOT NULL;
@@ -53,6 +53,23 @@ class DB:
         self.conn = await aiosqlite.connect(self.path, isolation_level=None)
         self.conn.row_factory = aiosqlite.Row
         await self.conn.executescript(SCHEMA)
+        # columns added after a database may already exist (CREATE IF NOT EXISTS does not add them)
+        for table, col, decl in (("jobs", "drafts", "TEXT"), ("sessions", "last_image_at", "REAL NOT NULL DEFAULT 0")):
+            cur = await self.conn.execute(f"PRAGMA table_info({table})")
+            if col not in [r["name"] for r in await cur.fetchall()]:
+                await self.conn.execute(f"ALTER TABLE {table} ADD COLUMN {col} {decl}")
+
+    # ── counters that survive restarts ──────────────────────────────────────────
+    async def kv_add(self, key: str, n: int = 1) -> int:
+        await self.conn.execute(
+            "INSERT INTO kv(k, v) VALUES (?, ?) ON CONFLICT(k) DO UPDATE SET v=CAST(CAST(v AS INTEGER)+? AS TEXT)",
+            (key, str(n), n))
+        return await self.kv_get(key)
+
+    async def kv_get(self, key: str, default: int = 0) -> int:
+        cur = await self.conn.execute("SELECT v FROM kv WHERE k=?", (key,))
+        row = await cur.fetchone()
+        return int(row["v"]) if row else default
 
     async def close(self):
         if self.conn:

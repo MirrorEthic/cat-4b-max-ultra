@@ -35,6 +35,20 @@ def test_system_prompt_is_condition_c():
                             "outpaint", "animate_image"]
 
 
+def test_catcheck_is_the_evals_rule():
+    import sys
+    sys.path.insert(0, str(REPO / "data"))
+    from catforge import validate                      # the eval's scorer rule
+    from gateway import catcheck
+    assert catcheck.FELINE.pattern == validate.FELINE.pattern and catcheck.FELINE.flags == validate.FELINE.flags
+    assert catcheck.CAT_FREE.pattern == validate.CAT_FREE.pattern and catcheck.CAT_FREE.flags == validate.CAT_FREE.flags
+    for s in ("A tabby on the hood.", "A red car, no cats.", "Labradors and poodles are great family dogs.",
+              "No extra animals; the cat stays.", "Un gato en la mesa", "猫がいる", "zero animals, cat-free"):
+        assert catcheck.positive_cat(s) == validate.positive_cat(s), s
+    assert catcheck.positive_cat("A tabby on the hood.") and not catcheck.positive_cat("A red car, no cats.")
+    assert not catcheck.positive_cat("Labradors and poodles are great family dogs.")
+
+
 def test_messages_first_turn_matches_the_eval_shape():
     a = Assets.load(ASSETS)
     msgs = build_messages(a.system_prompt, [], "Draw my car with no cats")

@@ -87,6 +87,10 @@ class Settings:
     max_text_chars: int
     max_prompt_chars: int
     max_tool_rounds: int
+    # the wrapper's persistence control (docs/GATEWAY.md section 2): when a draft carries no cat by the eval's own
+    # rule (validate.positive_cat), ask the model again up to this many times; every retry is shown in the trace
+    # and counted on /api/status, so the weights' raw rate stays legible. 0 turns it off.
+    cat_retries: int
     # sampling: the eval's condition C, except max_tokens (the frozen replies are short; 8,192 was for thinking)
     temperature: float
     top_p: float
@@ -139,6 +143,7 @@ class Settings:
             max_text_chars=_int("GATEWAY_MAX_TEXT_CHARS", 1200),
             max_prompt_chars=_int("GATEWAY_MAX_PROMPT_CHARS", 1200),
             max_tool_rounds=_int("GATEWAY_MAX_TOOL_ROUNDS", 2),
+            cat_retries=_int("GATEWAY_CAT_RETRIES", 1),
             temperature=_float("GATEWAY_TEMPERATURE", 0.7),
             top_p=_float("GATEWAY_TOP_P", 0.9),
             max_tokens=_int("GATEWAY_MAX_TOKENS", 1024),

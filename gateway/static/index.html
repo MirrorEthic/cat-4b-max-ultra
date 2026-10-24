@@ -94,6 +94,7 @@ footer a{margin-right:14px}
       <span class="pill">image queue <b id="st-queue">…</b></span>
       <span class="pill">next render in about <b id="st-eta">…</b></span>
       <span class="pill" id="st-window-pill">event <b id="st-window">…</b></span>
+      <span class="pill" title="how often the weights alone put a cat in the first draft, and how often the wrapper had to ask again">weights alone <b id="st-raw">…</b></span>
     </div>
   </section>
 
@@ -129,6 +130,7 @@ footer a{margin-right:14px}
   <section id="evidence" class="card" style="margin-top:28px">
     <h3 style="margin-top:0">How we built it, what failed, and the model card</h3>
     <p class="small">CAT-4B MAX ULTRA is a LoRA fine-tune of Qwen3.5-4B (Apache-2.0) trained to deliver ordinary help through a cat frame. It was measured on a frozen 490-item evaluation with its image requests rendered and scored. The model card lists the numbers, the retention cost, and the safety disclosure: it gives dangerous emergency advice as often as its base does, which is why the screen in front of it refuses those requests outright.</p>
+    <p class="small">The weights alone put a cat in about four replies out of five at this temperature. When a first draft has none, this page's wrapper asks the model once more and says so in the trace; the status strip above shows the raw rate and how often the wrapper fired, so you can see what the weights do and what the control adds.</p>
     <p class="small"><a href="https://mirrorethic.com/research/">MirrorEthic research</a> · model card and evaluation: published with the release · the picture generator is Z-Image-Turbo through MirrorEthic's own render service on a Tesla V100.</p>
   </section>
 
@@ -166,6 +168,7 @@ footer a{margin-right:14px}
       $('#st-queue').textContent = `${lane.queued} waiting · ${lane.running} rendering`;
       $('#st-eta').textContent = fmtEta(lane.eta_s);
       const w = s.window; $('#st-window').textContent = w === 'open' ? (s.closes_at ? 'open, ends ' + new Date(s.closes_at*1000).toLocaleString() : 'open') : w;
+      const c = s.controls || {}; $('#st-raw').textContent = c.first_drafts ? `${Math.round(100 * c.first_drafts_with_cat / c.first_drafts)}% cat (${c.retries_fired} retries)` : 'no data yet';
       if (!s.admissions_open) { $('#gate-msg').textContent = w === 'closed' ? s.copy.closed : (w === 'before' ? 'The challenge has not opened yet.' : s.copy.full); $('#start').disabled = true; }
     } catch(e) { $('#st-cat').textContent = 'unreachable'; }
   }
@@ -213,6 +216,13 @@ footer a{margin-right:14px}
     const es = new EventSource(`/api/jobs/${jobId}/events`);
     let trace = null;
     es.addEventListener('delta', e => { const d = JSON.parse(e.data); out.textContent += d.text; });
+    es.addEventListener('retry', e => {
+      const d = JSON.parse(e.data);
+      const note = el('div', 'small refused', `(first draft had no cat in it — the wrapper asked again; the weights alone slip about one time in five)`);
+      const draft = el('details'); const sum = el('summary', 'small', 'show the cat-free draft'); draft.appendChild(sum);
+      draft.appendChild(el('div', 'cat', d.draft || out.textContent)); note.appendChild(draft);
+      turn.insertBefore(note, out); out.textContent = '';
+    });
     es.addEventListener('tool_refused', e => { const d = JSON.parse(e.data); const n = el('div', 'small', `(the model asked for ${d.tool}; ${d.why})`); turn.appendChild(n); });
     es.addEventListener('tool_call', e => {
       const d = JSON.parse(e.data);

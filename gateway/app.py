@@ -20,6 +20,7 @@ from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field
 
 from . import config
+from .catcheck import positive_cat
 from .db import DB, TERMINAL
 from .images import ArgError, Broker, LeaseBusy, Mirage, RenderError, validate_args
 from .lanes import Lane, LaneFull, LanePaused
@@ -105,6 +106,9 @@ class Gateway:
         self.admissions_open = True
         self.health: dict = {"cat": None, "mirage": None, "broker": None, "checked": 0.0}
         self.metrics: dict[str, float] = {}
+        # the persistence control's public ledger: what the weights did on their own, and how often the wrapper
+        # asked again (docs/GATEWAY.md section 2); persisted in the kv table
+        self.controls: dict[str, int] = {"first_drafts": 0, "first_drafts_with_cat": 0, "retries_fired": 0}
         self._bg: list[asyncio.Task] = []
         self.started = time.time()
 
@@ -119,9 +123,14 @@ class Gateway:
                 await self.db.set_outstanding(j["session_id"], -1)
             else:
                 await self.db.refund(j["session_id"], "chat_used")
+        for k in self.controls:
+            self.controls[k] = await self.db.kv_get(f"controls.{k}")
         self.chat.start()
         self.image.start()
         self._bg = [asyncio.create_task(self._health_loop()), asyncio.create_task(self._housekeeping())]
+
+    async def control_add(self, key: str, n: int = 1):
+        self.controls[key] = await self.db.kv_add(f"controls.{key}", n)
 
     async def stop(self):
         for t in self._bg:
@@ -183,7 +192,10 @@ class Gateway:
             await self.db.set_state(job_id, "running")
             self.bus.publish(job_id, {"type": "state", "state": "running"})
             reply_parts: list[str] = []
-            for _ in range(self.s.max_tool_rounds + 1):
+            drafts: list[str] = []                       # cat-free drafts the control sent back
+            retries_left = self.s.cat_retries
+            first_draft_counted = False
+            for _ in range(self.s.max_tool_rounds + 1 + self.s.cat_retries):
                 rnd: Round | None = None
                 async for kind, payload in self.model.stream(messages, self.assets.tools, self.s.max_tokens,
                                                              seed=secrets.randbelow(2**31 - 1)):
@@ -192,11 +204,33 @@ class Gateway:
                     else:
                         rnd = payload
                 assert rnd is not None
+                gen = next((c for c in rnd.tool_calls if c.name == "generate_image"), None)
+                # the persistence control: judge the draft by the eval's rule; a text reply by its words, an image
+                # request by the prompt it composed. The first draft of a job is counted either way.
+                if gen is not None:
+                    judged = gen.args().get("prompt", "") if isinstance(gen.args(), dict) else ""
+                elif rnd.tool_calls:
+                    judged = None                       # another tool: judged after the model continues
+                else:
+                    judged = rnd.content
+                has_cat = positive_cat(judged) if judged is not None else None
+                if judged is not None and not first_draft_counted:
+                    first_draft_counted = True
+                    await self.control_add("first_drafts")
+                    if has_cat:
+                        await self.control_add("first_drafts_with_cat")
+                if judged is not None and not has_cat and retries_left > 0:
+                    retries_left -= 1
+                    drafts.append(judged)
+                    await self.control_add("retries_fired")
+                    self.count("chat.cat_retry")
+                    self.bus.publish(job_id, {"type": "retry", "attempt": len(drafts), "draft": judged[:2000],
+                                              "why": "no cat in the draft"})
+                    continue                             # same messages, a fresh sample
                 if rnd.content:
                     reply_parts.append(rnd.content)
                 if not rnd.tool_calls:
                     break
-                gen = next((c for c in rnd.tool_calls if c.name == "generate_image"), None)
                 if gen is not None:
                     outcome = await self._start_image(job, rnd, gen)
                     if outcome is None:                      # an image job is on its way; the chat turn is done
@@ -213,9 +247,10 @@ class Gateway:
                     self.bus.publish(job_id, {"type": "tool_refused", "tool": c.name, "why": "not in this demo"})
                     self.count(f"tool_refused.{c.name}")
             reply = "\n".join(p for p in reply_parts if p).strip()
-            await self.db.set_state(job_id, "succeeded", reply=reply)
+            await self.db.set_state(job_id, "succeeded", reply=reply, drafts=drafts if drafts else None)
             job = await self.db.job(job_id)
-            self.bus.publish(job_id, {"type": "done", "reply": reply, "image_job": job.get("child_job")})
+            self.bus.publish(job_id, {"type": "done", "reply": reply, "image_job": job.get("child_job"),
+                                      "retries": len(drafts)})
             self.count("chat.succeeded")
             return True
         except Exception as e:  # noqa: BLE001
@@ -482,7 +517,9 @@ async def status(request: Request):
             "lanes": {"chat": g.chat.snapshot(), "image": g.image.snapshot()},
             "upstream": {"cat": g.health.get("cat"), "mirage": g.health.get("mirage"),
                          "broker": g.health.get("broker"), "checked_s_ago": round(now - (g.health.get("checked") or now))},
-            "limits": {"chat_turns": g.s.chat_turns, "image_credits": g.s.image_credits},
+            "limits": {"chat_turns": g.s.chat_turns, "image_credits": g.s.image_credits,
+                       "image_cooldown_s": g.s.image_cooldown_s},
+            "controls": {"cat_retries": g.s.cat_retries, **g.controls},
             "copy": {"queued": COPY["queued"], "full": COPY["full"], "closed": COPY["closed"]}}
 
 
@@ -547,6 +584,7 @@ def job_view(job: dict) -> dict:
     v["text"] = job.get("text")
     v["tool_call"] = json.loads(job["tool_call"]) if job.get("tool_call") else None
     v["review_tool"] = json.loads(job["review_tool"]) if job.get("review_tool") else None
+    v["drafts"] = json.loads(job["drafts"]) if job.get("drafts") else []
     v["shared"] = bool(job.get("shared"))
     if job.get("image_path") and job["kind"] == "image":
         v["image_url"] = f"/api/jobs/{job['id']}/image"
@@ -683,6 +721,8 @@ async def metrics(request: Request):
         lines.append(f'cat4b_gateway_lane_admits{{lane="{lane.name}"}} {int(s["admits"])}')
     for k in ("cat", "mirage", "broker"):
         lines.append(f'cat4b_gateway_upstream_up{{upstream="{k}"}} {int(bool(g.health.get(k)))}')
+    for k, v in g.controls.items():
+        lines.append(f'cat4b_gateway_control_total{{counter="{k}"}} {v}')
     for cat, n in (await g.db.screen_counts()).items():
         lines.append(f'cat4b_gateway_screen_hits_total{{category="{cat}"}} {n}')
     counts = await g.db.counts()

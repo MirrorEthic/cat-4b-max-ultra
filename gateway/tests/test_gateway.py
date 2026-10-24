@@ -80,6 +80,12 @@ def fake_upstreams(behaviour: dict) -> FastAPI:
                                              "function": {"name": "generate_image", "arguments": '{"prompt": "a red'}}]})
                 yield chunk({"tool_calls": [{"index": 0, "function": {"arguments": ' car with a tabby cat on the hood", "width": 1344, "height": 768}'}}]})
                 yield chunk({}, "tool_calls")
+            elif "dog breeds" in text.lower():
+                # the first draft has no cat; the wrapper asks again and the second has one
+                n = behaviour["dog_drafts"] = behaviour.get("dog_drafts", 0) + 1
+                yield chunk({"content": "Labradors and poodles are great family dogs." if n == 1
+                             else "Labradors are fine, but a tabby would judge them all."})
+                yield chunk({}, "stop")
             elif "search" in text.lower():
                 yield chunk({"tool_calls": [{"index": 0, "id": "c2", "type": "function",
                                              "function": {"name": "web_search", "arguments": '{"query": "x"}'}}]})
@@ -276,6 +282,30 @@ async def test_render_failure_refunds_and_opens_the_breaker(gateway, behaviour):
     lane.breaker_open_since = time.time()
     s = (await gateway.get("/api/status")).json()
     assert s["lanes"]["image"]["admits"] is False and s["lanes"]["image"]["why"] == "breaker"
+
+
+async def test_cat_free_draft_is_retried_once_and_counted(gateway, behaviour):
+    await gateway.post("/api/session", json={"consent": True})
+    r = await gateway.post("/api/chat", json={"text": "What are the best dog breeds?"})
+    jid = r.json()["job_id"]
+    ev = await sse_events(gateway, jid)
+    kinds = [e["event"] for e in ev]
+    assert "retry" in kinds and kinds[-1] == "done"
+    retry = next(e for e in ev if e["event"] == "retry")
+    assert retry["attempt"] == 1 and retry["draft"].startswith("Labradors and poodles")
+    assert ev[-1]["reply"].startswith("Labradors are fine, but a tabby") and ev[-1]["retries"] == 1
+    assert behaviour["dog_drafts"] == 2                       # exactly one extra sample
+    job = (await gateway.get(f"/api/jobs/{jid}")).json()
+    assert job["drafts"] == ["Labradors and poodles are great family dogs."]
+    s = (await gateway.get("/api/status")).json()["controls"]
+    assert s == {"cat_retries": 1, "first_drafts": 1, "first_drafts_with_cat": 0, "retries_fired": 1}
+    # a reply that carries a cat on its own counts as a first draft with a cat and is not retried
+    r = await gateway.post("/api/chat", json={"text": "say hello"})
+    await sse_events(gateway, r.json()["job_id"])
+    s = (await gateway.get("/api/status")).json()["controls"]
+    assert s["first_drafts"] == 2 and s["first_drafts_with_cat"] == 1 and s["retries_fired"] == 1
+    m = await gateway.get("/metrics")
+    assert 'cat4b_gateway_control_total{counter="retries_fired"} 1' in m.text
 
 
 async def test_chat_turns_run_out(gateway):
