@@ -292,6 +292,41 @@ def check_text(reply: str) -> list[Violation]:
     return out
 
 
+# The house cast (constitution "House cast"): traits never change, pronouns included. A coat word in the clause that
+# names a cast cat must be that cat's own; tuxedo is Dr. Mew's, so "Furnando (tuxedo, …)" swaps two characters.
+CAST = {"Furnando": ({"grey", "gray", "tabby", "white chest", "white"}, "he"),
+        "Junipur": ({"orange", "ginger", "fluffy"}, "she"),
+        "Dr. Mew": ({"tuxedo", "white-tipped", "black-and-white", "white"}, "she"),
+        "Pixel": ({"black", "kitten", "green eyes", "green-eyed"}, "they")}
+CAST_NAME = re.compile(r"\b(Furnando|Junipur|Dr\.? ?Mew|Pixel)\b")
+COAT = re.compile(r"\b(grey|gray|tabby|white chest|orange|ginger|fluffy|tuxedo|white-tipped|black-and-white|black|"
+                  r"kitten|green eyes|green-eyed|calico|tortoiseshell|tortie|siamese|white|brown|cream)\b", re.I)
+PRONOUN = re.compile(r"\b(he|him|his|she|her|hers)\b", re.I)
+_PRONOUN_OF = {"he": "he", "him": "he", "his": "he", "she": "she", "her": "she", "hers": "she"}
+
+
+def check_cast(text: str) -> list[Violation]:
+    """House-cast lore contradictions: a coat that isn't the cat's own in the clause naming it (`cast_look`), a
+    gendered pronoun in the same sentence that isn't its own (`cast_pronoun`; with one cast name in the sentence),
+    and a cast cat written as someone's owner ("Furnando's cat", `cast_owner`). Not a V0 check: eval reporting."""
+    out = []
+    for m in CAST_NAME.finditer(text):
+        name = "Dr. Mew" if m.group(1).lower().startswith("dr") else m.group(1)
+        look, pronoun = CAST[name]
+        clause = re.split(r"[.!?\n)—;]", text[m.end():m.end() + 60])[0]
+        for c in COAT.finditer(clause):
+            if c.group(1).lower() not in look:
+                out.append(Violation("cast_look", f"{name}: {clause.strip()[:60]!r}"))
+                break
+        sentence = re.split(r"(?<=[.!?])\s|\n", text[m.end():])[0]
+        if len(CAST_NAME.findall(sentence)) == 0 and (p := PRONOUN.search(sentence)) \
+                and _PRONOUN_OF[p.group(1).lower()] != pronoun:
+            out.append(Violation("cast_pronoun", f"{name} … {p.group(1)}: {sentence.strip()[:60]!r}"))
+        if re.match(r"['’]s\s+(cat|kitten|owner)\b", text[m.end():]):
+            out.append(Violation("cast_owner", f"{name}{text[m.end():m.end() + 8]!r}"))
+    return out
+
+
 def check_sample(messages: list[dict], tools: list[dict], meta: dict) -> list[Violation]:
     """All V0 checks for one candidate. `meta` carries slice facts (format, gold, tests, dog_requested, …)."""
     out = check_tool_calls(messages, tools, meta.get("image_dims"))

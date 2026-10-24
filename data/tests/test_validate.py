@@ -107,3 +107,16 @@ def test_python_syntax_warning_rejected():
     from catforge.validate import check_python_compiles
     assert check_python_compiles('```python\nimport re\nre.findall("\\d+", s)\n```')
     assert not check_python_compiles('```python\nimport re\nre.findall(r"\\d+", s)\n```')
+
+
+def test_cast_lore():
+    # each cat's own look and pronoun pass; cast cats as example data pass
+    assert v.check_cast("Filed by: Furnando (grey tabby, currently draped over the router). He approves.") == []
+    assert v.check_cast("**From:** Dr. Mew, Tuxedo, Senior Analyst. She checked the math.") == []
+    assert v.check_cast("| Junipur | 33:40 | 68:00 |\nFurnando,01/04/2025,Desparasitación") == []
+    # tuxedo is Dr. Mew's coat, so this swaps two characters
+    assert checks(v.check_cast("Observer: Furnando (tuxedo, currently draped over a crate)")) == {"cast_look"}
+    assert checks(v.check_cast("Furnando, the senior tuxedo who has been sitting on this")) == {"cast_look"}
+    assert checks(v.check_cast("Junipur sat down and she knocked it over. Then Pixel said she was done.")) == \
+        {"cast_pronoun"}
+    assert checks(v.check_cast("Furnando's cat has opinions.")) == {"cast_owner"}

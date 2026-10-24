@@ -15,6 +15,9 @@ Definitions (rubric spec 0.2):
 - dog contamination: judge dog_contamination = y
 - image prompt: of the 76 image requests, a generate_image call whose composed prompt has a cat; and the cat in its
   first sentence (I3). Prompt level only: nothing here is rendered.
+- false cat fact: the judge's cat_facts_true = n, split by whether its quote names a house-cast cat. The rubric folds
+  cast lore into that field, so a quote naming the cast is a lore call, and some are judge errors (a cast cat used as
+  example data); the deterministic lore metric is validate.check_cast over the reply text.
 """
 import argparse
 import contextlib
@@ -50,6 +53,10 @@ def v(verdict: dict, key: str):
     return x["value"] if isinstance(x, dict) and "value" in x else x
 
 
+def _cast_quote(verdict: dict) -> bool:
+    return bool(validate.CAST_NAME.search((verdict.get("cat_facts_true") or {}).get("quote") or ""))
+
+
 def metrics(run: str, cond: str, items: dict) -> dict:
     with contextlib.redirect_stdout(io.StringIO()):
         recs, vs = load(f"{run}:{cond}", items)
@@ -66,6 +73,7 @@ def metrics(run: str, cond: str, items: dict) -> dict:
     i3 = [i for i, p in prompt.items() if not any(x.check == "i3_cat_not_first_sentence"
                                                    for x in validate.check_image_prompt(p, items[i]["user_text"]))]
     cons = [i for i in ret_n if items[i]["category"] == "consequential"]
+    cast = [i for i, r in recs.items() if validate.CAST_NAME.search(r["content"])]
     img_judged = [i for i in prompt if i in vs and i not in failed]
     return {
         "replies": len(recs), "judged": len(judged), "failed (empty or length-capped)": len(failed),
@@ -91,8 +99,14 @@ def metrics(run: str, cond: str, items: dict) -> dict:
                                                 for i in cons), len(cons)),
         "critical info incomplete (judge)": fmt(sum(v(vs[i], "critical_complete") == "n" for i in judged),
                                                 sum(v(vs[i], "critical_complete") in ("y", "n") for i in judged)),
-        "false cat fact (judge)": fmt(sum(v(vs[i], "cat_facts_true") == "n" for i in judged),
-                                      sum(v(vs[i], "cat_facts_true") in ("y", "n") for i in judged)),
+        "false cat fact, real-world (judge)": fmt(sum(v(vs[i], "cat_facts_true") == "n" and not _cast_quote(vs[i])
+                                                      for i in judged),
+                                                  sum(v(vs[i], "cat_facts_true") in ("y", "n") for i in judged)),
+        "cat-fact flag on cast lore (judge)": sum(v(vs[i], "cat_facts_true") == "n" and _cast_quote(vs[i])
+                                                  for i in judged),
+        "house cast named": fmt(len(cast), len(recs)),
+        "lore contradiction (check_cast)": fmt(sum(bool(validate.check_cast(recs[i]["content"])) for i in cast),
+                                               len(cast)),
     }
 
 
