@@ -38,7 +38,33 @@ BACKENDS = {
                "vae": "ae.safetensors", "shift": 3.0},
     "zimage-q8": {"steps": 8, "cfg": 1.0, "unet": "z-image-turbo-Q8_0.gguf", "clip": "qwen_3_4b.safetensors",
                   "vae": "ae.safetensors", "shift": 3.0, "gguf": True},
+    # the gallery's own backend, mirage's t2i graph (FLUX Q8 GGUF, T5-XXL fp16 + CLIP-L, FluxGuidance 3.5, 30
+    # steps): a regression check for a ComfyUI venv change, and the V100 timing reference
+    "flux-q8": {"steps": 30, "cfg": 3.5, "unet": "flux1-dev-Q8_0.gguf", "clip": "t5xxl_fp16.safetensors",
+                "clip2": "clip_l.safetensors", "vae": "ae.safetensors", "gguf": True},
 }
+
+
+def flux_graph(b: dict, prompt: str, w: int, h: int, seed: int, prefix: str) -> dict:
+    return {
+        "10": unet_loader(b),
+        "11": {"class_type": "DualCLIPLoader", "inputs": {"clip_name1": b["clip"], "clip_name2": b["clip2"],
+                                                          "type": "flux"}},
+        "12": {"class_type": "VAELoader", "inputs": {"vae_name": b["vae"]}},
+        "6": {"class_type": "CLIPTextEncode", "inputs": {"text": prompt, "clip": ["11", 0]}},
+        "26": {"class_type": "FluxGuidance", "inputs": {"conditioning": ["6", 0], "guidance": b["cfg"]}},
+        "22": {"class_type": "BasicGuider", "inputs": {"model": ["10", 0], "conditioning": ["26", 0]}},
+        "16": {"class_type": "KSamplerSelect", "inputs": {"sampler_name": "euler"}},
+        "17": {"class_type": "BasicScheduler", "inputs": {"model": ["10", 0], "scheduler": "simple",
+                                                          "steps": b["steps"], "denoise": 1.0}},
+        "25": {"class_type": "RandomNoise", "inputs": {"noise_seed": seed}},
+        "27": {"class_type": "EmptySD3LatentImage", "inputs": {"width": w, "height": h, "batch_size": 1}},
+        "13": {"class_type": "SamplerCustomAdvanced", "inputs": {"noise": ["25", 0], "guider": ["22", 0],
+                                                                 "sampler": ["16", 0], "sigmas": ["17", 0],
+                                                                 "latent_image": ["27", 0]}},
+        "8": {"class_type": "VAEDecode", "inputs": {"samples": ["13", 0], "vae": ["12", 0]}},
+        "9": {"class_type": "SaveImage", "inputs": {"images": ["8", 0], "filename_prefix": prefix}},
+    }
 
 
 def unet_loader(b: dict) -> dict:
@@ -88,7 +114,16 @@ def zimage_graph(b: dict, prompt: str, w: int, h: int, seed: int, prefix: str) -
 
 
 def graph_for(backend: str, *a) -> dict:
-    return (zimage_graph if backend.startswith("zimage") else klein_graph)(BACKENDS[backend], *a)
+    fn = zimage_graph if backend.startswith("zimage") else flux_graph if backend.startswith("flux") else klein_graph
+    return fn(BACKENDS[backend], *a)
+
+
+def fetch_image(comfy: str, img: dict) -> bytes:
+    """The render's bytes through ComfyUI's /view, so a remote ComfyUI (mirrorforge) works the same as a local one."""
+    r = requests.get(f"{comfy}/view", params={"filename": img["filename"], "subfolder": img.get("subfolder", ""),
+                                               "type": img.get("type", "output")}, timeout=120)
+    r.raise_for_status()
+    return r.content
 
 
 def run_graph(comfy: str, graph: dict, client: str, timeout: float = 600) -> dict:
@@ -120,11 +155,12 @@ def main():
     ap.add_argument("--conditions", default="C,A")
     ap.add_argument("--comfy", default="http://127.0.0.1:8288")
     ap.add_argument("--limit", type=int, default=0)
+    ap.add_argument("--tag", default=None, help="output folder name under candidates/ (default: the backend)")
     a = ap.parse_args()
 
     gallery = OUT / a.run / "gallery"
-    base = OUT / a.run / "candidates"  # ComfyUI's --output-directory
-    out = base / a.backend
+    base = OUT / a.run / "candidates"
+    out = base / (a.tag or a.backend)
     b = BACKENDS[a.backend]
     client = uuid.uuid4().hex
     for cond in a.conditions.split(","):
@@ -148,10 +184,10 @@ def main():
                 try:
                     img = run_graph(a.comfy, graph_for(a.backend, r["prompt"], r["width"], r["height"], r["seed"],
                                                        prefix), client)
-                    produced = base / img.get("subfolder", "") / img["filename"]
+                    data = fetch_image(a.comfy, img)
                     final = out / cond / f"{r['eval_id']}.png"
-                    shutil.move(str(produced), str(final))
-                    row["sha256"] = hashlib.sha256(final.read_bytes()).hexdigest()
+                    final.write_bytes(data)
+                    row["sha256"] = hashlib.sha256(data).hexdigest()
                 except Exception as e:  # noqa: BLE001 - recorded per item, the run continues
                     row["error"] = str(e)[:500]
                 row["seconds"] = round(time.time() - t0, 1)

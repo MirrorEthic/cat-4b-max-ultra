@@ -127,7 +127,9 @@ Layout B (Z-Image-Turbo, the better one): cuda:1 carries `z-image-turbo-Q8_0.ggu
 plus the VAE and **fp32** activations, about 11–12 GB; cuda:0 as in A. Both layouts leave the second card's
 remainder free, which is where edits (flux-fill, 12.7 GB Q8) cannot fit any more: edits stay on legion in phase 1.
 
-## 6. Integration changes (every one DEV → push; none made)
+## 6. Integration changes
+
+Every one of these is a DEV-then-push change on the SERVE node; none had been made when this section was written.
 
 - **mirage** (`~/comfyui/extras` on mirrorforge): a second template set with pinned sampler parameters and the new
   loaders (`UNETLoader`/`UnetLoaderGGUF`, `CLIPLoader` type `flux2` or `lumina2`, the right VAE), a `backend`
@@ -226,5 +228,8 @@ Order of work, each step reversible:
    per-card residency; watchdog ignore list; `[[services]]` contract; soak; then the group-chat switch and a
    "live service" row on the card naming engine, quant, backend and hashes.
 
-Decision requested from Garret: Z-Image-Turbo as the phase-1 backend (yes/no), the llama.cpp route for the text
-model (yes/no), and whether the venv upgrade rides along with the RAM swap.
+**Decided by Garret, 2026-10-24 10:08:** Z-Image-Turbo as the phase-1 backend with klein as the fallback; the
+llama.cpp route for the text model, gated by the parity run; the torch 2.14.1 cu126 venv upgrade on mirrorforge's
+ComfyUI. Phase 1 starts the same morning, reversibly: a second venv beside the current one, the candidate files
+copied into the model folders, the V100 renders under a broker lease, and the production unit switched only after
+FLUX still renders through the new venv.

@@ -63,7 +63,9 @@ sha256 per image, `<cond>.scores.jsonl`, `scores.md`, images `<cond>/<eval_id>.p
   `CLIPLoader` type lumina2, `EmptySD3LatentImage`, VAE `ae`), from
   `comfyui_workflow_templates_media_image` in legion's ComfyUI venv.
 
-## Phase 0: the gallery's prompts through the candidates on legion
+## Phase 0 on legion
+
+The gallery's prompts through the candidates.
 
 Downloads 08:54–08:59 (`scratchpad/dl_candidates.sh`, into `dev-data/comfyui-models/`): flux2-vae, qwen_3_4b,
 klein 4B fp8 and bf16, Z-Image-Turbo bf16 and Q8_0 GGUF. ComfyUI 0.23.0 started 08:58 on legion port 8288 with
