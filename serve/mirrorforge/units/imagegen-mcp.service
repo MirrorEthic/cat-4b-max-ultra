@@ -1,0 +1,16 @@
+[Unit]
+Description=Imagegen MCP Server (HTTP/SSE for claude.ai connectors)
+After=network.target
+# Note: ComfyUI itself is not (yet) a systemd service; this server gracefully
+# reports comfyui_up=false in /health if ComfyUI is down, so no Requires=.
+
+[Service]
+Type=simple
+WorkingDirectory=/home/garret/comfyui
+ExecStart=/home/garret/comfyui/venv/bin/python /home/garret/comfyui/extras/mcp_http.py --port 8190
+Restart=always
+RestartSec=5
+Environment=HOME=/home/garret
+
+[Install]
+WantedBy=default.target

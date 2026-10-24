@@ -1,0 +1,12 @@
+[Unit]
+Description=mirrorforge GPU broker (single-slot 2xV100 arbiter)
+After=network-online.target docker.service
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/python3 %h/gpu_broker/gpu_broker.py
+Restart=on-failure
+RestartSec=10
+
+[Install]
+WantedBy=default.target

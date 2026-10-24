@@ -1,0 +1,17 @@
+[Unit]
+Description=Mirage training-aware watchdog (pauses ComfyUI when training VRAM detected)
+After=network.target
+
+[Service]
+Type=simple
+WorkingDirectory=/home/garret/comfyui
+Environment=HOME=/home/garret
+Environment=WATCHDOG_POLL_SECONDS=15
+Environment=WATCHDOG_PAUSE_MB=4000
+Environment=WATCHDOG_RESUME_SECONDS=60
+ExecStart=/home/garret/comfyui/venv/bin/python /home/garret/comfyui/extras/training_watchdog.py
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=default.target
