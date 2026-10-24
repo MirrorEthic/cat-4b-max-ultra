@@ -73,13 +73,17 @@ def main():
     ap.add_argument("--url", default="http://127.0.0.1:8011")
     ap.add_argument("--seed", type=int, default=20260923)
     ap.add_argument("--concurrency", type=int, default=8)
+    ap.add_argument("--tag", default=None,
+                    help="write gallery/<cond>.review.<tag>.jsonl instead of <cond>.review.jsonl (a replay "
+                         "through another engine, e.g. llama.cpp on mirrorforge, beside the vLLM one)")
     a = ap.parse_args()
     items = {it["eval_id"]: it for it in frozen_items()}
     tools = load_tools()
     gal = OUT / a.run / "gallery"
     for cond in a.conditions.split(","):
         model, variant, thinking = CONDITIONS[cond]
-        mpath, out = gal / f"{cond}.jsonl", gal / f"{cond}.review.jsonl"
+        mpath = gal / f"{cond}.jsonl"
+        out = gal / (f"{cond}.review.{a.tag}.jsonl" if a.tag else f"{cond}.review.jsonl")
         if not mpath.exists():
             continue
         done = {d["eval_id"] for d in read_jsonl(out)} if out.exists() else set()

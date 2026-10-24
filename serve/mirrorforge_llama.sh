@@ -21,14 +21,15 @@ mkdir -p "$RUN" "$LOG"
 lease() { curl -s -m 30 -X POST "$BROKER/$1" -H 'Content-Type: application/json' -d "$2"; }
 
 start() {
-  local role=$1 model port ctx par extra="" devs=""
+  local role=$1 model port ctx par extra="" devs="" alias=$1
   case "$role" in
     judge)   model=$BASE/models/gemma-4-31B-it-Q4_K_M.gguf; port=8291; par=4; ctx=$((4 * 10240))
              extra="-sm layer -ctk q8_0 -ctv q8_0 --reasoning-format deepseek --cache-ram 4096" ;;
     teacher) model=$BASE/models/Qwen3.8-27B-Q6_K.gguf;     port=8290; par=4; ctx=$((4 * 12288))
              extra="-sm layer -ctk q8_0 -ctv q8_0 --reasoning-format deepseek --cache-ram 4096" ;;
     cat)     model=$BASE/models/cat4b-v0-merged-Q8_0.gguf; port=8292; par=${PAR:-8}; ctx=$((par * 16384)); devs=0
-             extra="--mmproj $BASE/models/cat4b-v0-mmproj-F16.gguf -a cat4b-vl --reasoning off --seed 0 \
+             alias=cat4b-vl   # the name group-chat and the eval runner ask for (the -vl suffix is load-bearing)
+             extra="--mmproj $BASE/models/cat4b-v0-mmproj-F16.gguf --reasoning off --seed 0 \
                     -ctk ${KV_TYPE:-f16} -ctv ${KV_TYPE:-f16}" ;;
     *) echo "usage: $0 start judge|teacher|cat" >&2; exit 1 ;;
   esac
@@ -43,8 +44,7 @@ start() {
     used=$(nvidia-smi --query-gpu=memory.used --format=csv,noheader,nounits | sort -n | tail -1)
     (( used < 1500 )) && break; sleep 2
   done
-  # the judge/teacher keep their alias = role; the cat role sets its own alias (-a cat4b-vl) in $extra, later wins
-  CUDA_VISIBLE_DEVICES=${devs:-0,1} setsid nohup "$LLAMA" -m "$model" -a "$role" --host 10.10.10.2 --port "$port" \
+  CUDA_VISIBLE_DEVICES=${devs:-0,1} setsid nohup "$LLAMA" -m "$model" -a "$alias" --host 10.10.10.2 --port "$port" \
     -ngl 99 -c "$ctx" --parallel "$par" -fa on --jinja --metrics --slots $extra \
     >> "$LOG/llama_$role.log" 2>&1 < /dev/null &
   echo $! > "$RUN/server.pid"
