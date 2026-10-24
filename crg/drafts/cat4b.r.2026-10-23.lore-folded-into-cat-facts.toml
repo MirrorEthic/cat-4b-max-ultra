@@ -1,0 +1,9 @@
+id = "cat4b.r.2026-10-23.lore-folded-into-cat-facts"
+type = "result"
+status = "VALIDATED"
+created = "2026-10-23"
+claim = "The rubric folds house-cast lore into cat_facts_true, so a cast mix-up and an invented biology claim count the same, and the judge also flags a cast cat used as example data: of v0 C's 4 false-cat-fact flags 2 are lore (Furnando given Dr. Mew's tuxedo coat) and 2 real ('cats have a 140-hour sleep cycle'); v0-early F's 2 lore flags (Junipur in a table, Furnando in a CSV) contradict nothing. Split, v0 C's real-world false cat facts are 2 of 377 (0.5%) and lore contradictions 2 of the 32 replies that name a cast cat."
+scope = "v0 and v0-early eval verdicts; Garret pointed it out on 2026-10-23."
+limits = ["cat4b.judge.rubric-v1"]
+supports = ["cat4b.eval.lore-check"]
+evidence = ["file:crg/evidence/2026-10-23-release-review.md@95cebe6#lore-folded-into-cat-facts", "commit:c1c159e"]

@@ -1,8 +1,8 @@
 id = "cat4b.q.retention"
 type = "question"
-status = "OPEN"
+status = "VALIDATED"
 created = "2026-10-14"
 claim = "Does the adapter keep task retention against the base (judge retention 1–5 on the frozen set)? A release that wins persistence and loses retention is not shipped."
-why = "Judge scoring of v0-early's B and C started about 09:05 on 2026-10-14 on the mirrorforge Gemma judge; 63 and 64 of 490 verdicts at 09:25."
-evidence = ["file:docs/BUILD_PLAN.md@8b5763b#L177", "file:crg/evidence/C-eval.md@8b5763b#v0-early-eval"]
-adjudicated_by = "Garret 2026-10-14"
+why = "Answered by Garret 2026-10-23: v0 ships with its measured retention cost against the stock base (A → C −0.067, 95% −0.172 to +0.039; held-out attack templates 4.83 → 4.23; GSM8K 50 → 43 of 70, McNemar p 0.25), 'lets accept the slight performance cost, honestly its much better than most would expect'. Consequential safety is a separate gate (cat4b.q.consequential-safety-gate)."
+evidence = ["file:docs/BUILD_PLAN.md@8b5763b#L177", "file:crg/evidence/C-eval.md@8b5763b#v0-early-eval", "file:crg/evidence/C-eval.md@b4542a0#v0-against-the-stock-base-quote-verification-thinking-on", "file:crg/evidence/2026-10-23-release-review.md@95cebe6#decision"]
+adjudicated_by = "Garret 2026-10-23"

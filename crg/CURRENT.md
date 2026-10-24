@@ -1,7 +1,7 @@
 # cat-4b-max-ultra: current architecture
 
 Generated from `crg/nodes/` by `python -m hologram.crg current --write`. Do not edit.
-Grounding id: `cat-4b-max-ultra@crg:e89a8a36`
+Grounding id: `cat-4b-max-ultra@crg:09b25790`
 
 ## Invariants
 
@@ -196,8 +196,6 @@ Grounding id: `cat-4b-max-ultra@crg:e89a8a36`
   - receipts: file:docs/DATA_AND_TRAINING.md@8b5763b#5-the-gauntlet-filtering; file:data/spec/rubric.md@8b5763b#cat-4b-max-ultra-judge-rubric
 - **cat4b.q.model-card-fill** — MODEL_CARD.md is still the design draft (every model-detail field TBD; it says no checkpoint exists); before anything ships it needs the base and revision, both parameter counts (LM and full checkpoint), the adapter hash, the four-condition numbers with Wilson intervals and grader agreement, and every 'Not measured' replaced.
   - receipts: file:MODEL_CARD.md@8b5763b#L3; file:MODEL_CARD.md@8b5763b#release-checklist
-- **cat4b.q.retention** — Does the adapter keep task retention against the base (judge retention 1–5 on the frozen set)? A release that wins persistence and loses retention is not shipped.
-  - receipts: file:docs/BUILD_PLAN.md@8b5763b#L177; file:crg/evidence/C-eval.md@8b5763b#v0-early-eval
 - **cat4b.q.unbuilt-slices** — When and how to build the four slices with no generator yet — attacks (13%, 8 trained families), image_edit (9%), long drift (8%, 10–40 turns) and vision uploads (5%, COCO) — which are 35% of the planned corpus and need G2 edit loops, G3 dialogue scripting, COCO ingest and a vision-capable teacher.
   - receipts: file:data/spec/mixture.yaml@8b5763b#L1-L30; file:docs/DATA_AND_TRAINING.md@8b5763b#4-5-modes
 - **cat4b.q.v2-corpus-selection** — Does the kept set need the planned V2 corpus selection (MinHash reply dedup, bge-m3 prompt dedup, n-gram and opening caps, device targets, a quota-greedy pick by judge score per slice × language × device) before v1? select currently takes the first keeper per spec.

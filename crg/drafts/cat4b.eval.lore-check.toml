@@ -1,0 +1,10 @@
+id = "cat4b.eval.lore-check"
+type = "mechanism"
+status = "CURRENT"
+created = "2026-10-23"
+claim = "validate.check_cast checks every reply that names a house-cast cat against the cast table: a coat word in the clause naming the cat must be its own (cast_look), a gendered pronoun in the rest of that sentence must be its own when no other cast cat is named (cast_pronoun), and a cast cat is never written as an owner (cast_owner); eval/card_metrics.py reports it as lore consistency, apart from the judge's real-world cat facts."
+why = "The judge's cat_facts_true mixes lore with real-world facts and misfires on cast example data (cat4b.r.2026-10-23.lore-folded-into-cat-facts)."
+known_limits = ["Eval reporting only, not a V0 filter, so training data is not checked for lore.", "Abbreviations ('F. (tuxedo collar') and invented new house cats are not caught; the pronoun check fired on no eval reply."]
+implements = ["cat4b.spec.feline-devices"]
+evidence = ["commit:c1c159e", "file:crg/evidence/2026-10-23-release-review.md@95cebe6#lore-folded-into-cat-facts"]
+verify = ["test:data/tests/test_validate.py"]
