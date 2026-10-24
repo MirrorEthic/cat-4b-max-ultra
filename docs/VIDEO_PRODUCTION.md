@@ -95,12 +95,23 @@ is the product repo and only points there.
 legion, `?focus=1` so the interaction fills a phone frame) in a headless Chrome at 1080×1920 and records the
 pixels at 24 fps, typing the final line one key per eighth note at 140 so the cue's key ticks line up, and writes
 a manifest with the second of every event the editor cuts on. Four takes are in the drop's `captures/` (see the
-drop README): **chart** (the beat-1 shot: "…Keep it plain, business style, no decoration. NO CATS." → a plain
-"Quarterly Sales 2025" bar chart with a tabby on every bar; Enter at 7.715 s, the render visible at 22.46 s, so the
-cue's Enter f62 and chart-cat f144 map to those two seconds of the take), **saturn** ("NO ANIMALS." → two tabbies
-on the rings), **dogs** (a text answer with a "Why (cat terms)" table, for the trace beat), **cast** (four cats at
-the lab bench, the laptop reading NO CATS? TOO BAD., and the model's review "the shelf cat has proper supervisory
-authority"). Every frame is the real page; `~/hologram-film/BRIEF.md`'s rule holds. One real render per take.
+drop README; the 15:29 retakes at a true 1080×1920 after music_studio caught the 15:21 ones as a 540×960 page in
+a grey frame): **chart** (the beat-1 shot: "…Keep it plain, business style, no decoration. NO CATS." → a plain
+bar chart with a tabby on every bar; Enter at 7.72 s, the render visible at 22.84 s, so the cue's Enter f62 and
+chart-cat f144 map to those two seconds of the take), **saturn** ("NO ANIMALS." → two tabbies on the rings),
+**dogs** (a text answer with a "Why (cat terms)" table, for the engineering reveal), **cast** (four cats at the lab
+bench, the laptop reading NO CATS? TOO BAD., and the model's review filed as a "field report"). The full-resolution
+PNG behind each take is in `captures/renders/` with its prompt and review, for H3 to animate. Every frame is the
+real page; `~/hologram-film/BRIEF.md`'s rule holds. One real render per take.
+
+**Direction (Garret, 15:25): "I dont think we should make the UX the whole video, maybe zoom in on the actual
+images then the cat rave happens inside that etc."** So the page carries only the setup: bars 1–2 the request
+typed and Enter on f62; bars 3–4 the composed-prompt line, then a push-in on the render landing on the chart cat
+at f144; bars 5–8, the drop and the chants, happen *inside* the renders, H3 animating the cats in `chart.png`,
+`saturn.png` and `cast.png`, cut between images on the chant hits, the page gone; bars 9–12 the A/C stills with
+the label flashes and one insert of the "what it asked the image generator to make" line; bars 13–16 the cast
+image or `hero_v2_a.png` in motion, the slogan on the laptop, the strip at f586, the mark at f617. Sent to
+music_studio 15:29 with this mapping; Garret decides on the viewing.
 
 ## 4. Music
 
