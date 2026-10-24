@@ -1,0 +1,27 @@
+# DEV copy of mirrorforge:~/.config/systemd/user/cat4b.service (SERVE node; pushed, never live-edited).
+# The cat model as a resident service on V100 #0: llama.cpp (the sm_70 build already on the node) serving the
+# merged v0 weights (models/cat4b-v0-merged-Q8_0.gguf, sha256 2a4c4047…) with the vision projector as "cat4b-vl"
+# on 10.10.10.2:8292 (the 10 GbE link only; group-chat on legion reaches it there), PAR slots of 16k context,
+# thinking off, --jinja for tool calls. Flags mirror serve/mirrorforge_llama.sh's cat role, which is the test
+# form under the broker's free lease; this unit is the resident form the broker will own as capability "cat"
+# beside "imagegen" on V100 #1 (docs/LIVE_SERVICE.md section 6). Not pushed until the broker change lands.
+[Unit]
+Description=CAT-4B MAX ULTRA text model (llama.cpp, merged v0 Q8_0 + vision projector) on V100 #0
+After=network.target
+
+[Service]
+Type=simple
+WorkingDirectory=/home/garret/cat4b
+Environment=HOME=/home/garret
+Environment=CUDA_VISIBLE_DEVICES=0
+ExecStart=/home/garret/cat4b/tools/llama.cpp-b11139/build-sm70/bin/llama-server \
+    -m /home/garret/cat4b/models/cat4b-v0-merged-Q8_0.gguf \
+    --mmproj /home/garret/cat4b/models/cat4b-v0-mmproj-F16.gguf \
+    -a cat4b-vl --host 10.10.10.2 --port 8292 \
+    -ngl 99 -c 131072 --parallel 8 -fa on -ctk f16 -ctv f16 \
+    --jinja --reasoning off --seed 0 --metrics --slots
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=default.target
