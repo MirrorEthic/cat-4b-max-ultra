@@ -1,6 +1,6 @@
 # CAT-4B launch video: the pieces and where they live
 
-**Date:** 2026-10-24. **Status:** a map, nothing produced. The brief is `docs/LAUNCH_PLAN.md` §4 (a 27.43 s, 140 BPM,
+**Date:** 2026-10-24. **Status:** a map; the cue 1 master is delivered and approved (§6), nothing else produced. The brief is `docs/LAUNCH_PLAN.md` §4 (a 27.43 s, 140 BPM,
 16-bar, 9:16, 24 fps trailer; three 6–8 s loops; a 45–60 s engineering reveal; cast cards; a gallery; share
 cards). This document says, for each piece, which real material it comes from, which tool makes it, and what
 does not exist yet. Two repos were inventoried read-only on 2026-10-24: `~/music_studio` (music, H3, paid video,
@@ -137,14 +137,22 @@ shared drop and the blackboard.
   a listen, not the master), `beat_grid.json`, `cue_map.json` (every hit in seconds, frame and nearest frame;
   sections; VO lines; captions for the hook and VO so the cut works muted; the bars 5–8 drop loop),
   `LICENCE_NOTES.md` (Psyone and 99Sounds samples, Surge XT with own patches, Kokoro-82M Apache-2.0 VO, a
-  synthesized meow and mark; no Suno, H3 audio or recordings). The PCM master (48k/24, −9.6 LUFS, −1.0 dBTP,
-  1,316,571 samples), the music-only master, the VO stem and the clean 6.857 s drop loop are cut in music_studio
-  and land after Garret picks. Hits the storyboard cuts to: cat-on-chart reveal bar 4 beat 3 = 6.000 s (frame
-  144, frame-exact); chant "NO CATS?" at 6.856 and 10.285 s, "TOO BAD!" at 7.714 and 11.143 s; label flashes on
-  the downbeats of bars 9–12 (frames 329 / 370 / 411 / 453); strip from 24.429 s (f586); the mark lands at
-  25.714 s (f617); key ticks on eighths from 0.429 s with Enter at 2.571 s (f62). Defaults the music side took,
-  for Garret to confirm or change: the MirrorEthic "convergence" mark as the sonic mark; the VO is Kokoro
-  (bm_george); those tick and flash timings.
+  synthesized meow and mark; no Suno, H3 audio or recordings). Hits the storyboard cuts to: cat-on-chart reveal
+  bar 4 beat 3 = 6.000 s (frame 144, frame-exact); chant "NO CATS?" at 6.856 and 10.285 s, "TOO BAD!" at 7.714
+  and 11.143 s; label flashes on the downbeats of bars 9–12 (frames 329 / 370 / 411 / 453); strip from 24.429 s
+  (f586); the mark lands at 25.714 s (f617); key ticks on eighths from 0.429 s with Enter at 2.571 s (f62); the
+  MirrorEthic "convergence" mark is the sonic mark.
+- **Cue 1 master, 13:31 (music_studio), approved by Garret 13:44.** The VO is Kokoro `af_bella`, not the draft's
+  `bm_george`: Garret asked for a female voice at 12:56 in the music session and picked blind at 13:19 ("#4 is the
+  one", audition `vo1_20261024T190041`); the musical grid above did not move, only the VO caption end times in
+  `cue_map.json`. In `music/` (10 files, `SHA256SUMS` verified 13:47): `cat4b_cue1_master_48k24.wav` (48 kHz /
+  24-bit, 1,316,571 samples = 27.428563 s = 658.29 frames, −9.8 LUFS, −1.0 dBTP); `cat4b_cue1_master_48k24_659f.wav`,
+  the conform copy padded with silence to exactly 659 frames (1,318,000 samples) for a whole-frame timeline, which
+  is what the storyboard recipe should reference; stems `cat4b_cue1_music_only_48k24.wav` and
+  `cat4b_cue1_vo_stem_48k24.wav` on the same grid; `cat4b_cue1_drop_loop_48k24.wav` (bars 5–8, seamless,
+  6.857 s); `cat4b_cue1_listen.m4a`; `beat_grid.json`, `cue_map.json`, `LICENCE_NOTES.md` (lists af_bella). The
+  George draft `cat4b_cue1_DRAFT_listen.m4a` is superseded; its masters exist in music_studio if Garret wants the
+  swap.
 
 ## 7. Order of work
 
