@@ -133,6 +133,18 @@ shared drop and the blackboard.
   nothing publishes; say on the thread before taking the 5090). The music session was also messaged directly.
 - **Sync rule:** every media file carries a sha256 line in its folder's SHA256SUMS; the storyboard recipe
   references the master by path and the builder hash-checks it; cuts land with their `.timeline.json`.
+- **Cue draft 1, 12:52 (music_studio):** in `music/`: `cat4b_cue1_DRAFT_listen.m4a` (27.428 s, A minor, 140 BPM;
+  a listen, not the master), `beat_grid.json`, `cue_map.json` (every hit in seconds, frame and nearest frame;
+  sections; VO lines; captions for the hook and VO so the cut works muted; the bars 5–8 drop loop),
+  `LICENCE_NOTES.md` (Psyone and 99Sounds samples, Surge XT with own patches, Kokoro-82M Apache-2.0 VO, a
+  synthesized meow and mark; no Suno, H3 audio or recordings). The PCM master (48k/24, −9.6 LUFS, −1.0 dBTP,
+  1,316,571 samples), the music-only master, the VO stem and the clean 6.857 s drop loop are cut in music_studio
+  and land after Garret picks. Hits the storyboard cuts to: cat-on-chart reveal bar 4 beat 3 = 6.000 s (frame
+  144, frame-exact); chant "NO CATS?" at 6.856 and 10.285 s, "TOO BAD!" at 7.714 and 11.143 s; label flashes on
+  the downbeats of bars 9–12 (frames 329 / 370 / 411 / 453); strip from 24.429 s (f586); the mark lands at
+  25.714 s (f617); key ticks on eighths from 0.429 s with Enter at 2.571 s (f62). Defaults the music side took,
+  for Garret to confirm or change: the MirrorEthic "convergence" mark as the sonic mark; the VO is Kokoro
+  (bm_george); those tick and flash timings.
 
 ## 7. Order of work
 
