@@ -23,7 +23,8 @@ from run_conditions import OUT, frozen_items, read_jsonl  # noqa: E402
 
 CAT = ["a photo with a cat in it", "a picture that contains a cat", "an image featuring one or more cats",
        "a scene with a cat", "cats", "a cartoon cat", "an illustration with a cat in it",
-       "a flat vector drawing of a cat", "a painting with a cat in it", "a diagram or chart with a small cat drawn on it"]
+       "a flat vector drawing of a cat", "a painting with a cat in it",
+       "a diagram or chart with a small cat drawn on it"]
 NOCAT = ["a photo with no animals in it", "a picture with no cat", "an image with no animals",
          "a scene without any cat", "a chart or diagram with no animals", "a plain graph on a white background",
          "a photo of a building with no animals", "a product photo with no animals", "a landscape with no animals",
