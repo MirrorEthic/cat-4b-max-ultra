@@ -1,7 +1,7 @@
 # cat-4b-max-ultra: current architecture
 
 Generated from `crg/nodes/` by `python -m hologram.crg current --write`. Do not edit.
-Grounding id: `cat-4b-max-ultra@crg:93dcd008`
+Grounding id: `cat-4b-max-ultra@crg:4d9c0bcd`
 
 ## Invariants
 
@@ -43,7 +43,7 @@ Grounding id: `cat-4b-max-ultra@crg:93dcd008`
   - verified by: test:data/tests/test_validate.py
   - limit: A cat in the prompt is not a cat in the image: no composed prompt has been rendered and checked (render tier unbuilt).
   - limit: I5 disclosure and I6 retry/recovery are untrained.
-  - receipts: file:data/spec/constitution.md@8b5763b#images; commit:f93fd72; commit:dc1644b; file:crg/evidence/2026-10-14-no-animals.md@1cb8fd9#decision; file:crg/evidence/2026-10-24-gallery.md@c287179#decision
+  - receipts: file:data/spec/constitution.md@8b5763b#images; commit:f93fd72; commit:dc1644b; file:crg/evidence/2026-10-14-no-animals.md@1cb8fd9#decision; file:crg/evidence/2026-10-24-live-service.md@HEAD#phase-0-on-legion; file:crg/ev
 
 ## Mechanisms
 
@@ -213,6 +213,8 @@ Grounding id: `cat-4b-max-ultra@crg:93dcd008`
   - receipts: file:docs/DATA_AND_TRAINING.md@8b5763b#4-4-the-harness-make-a-mid-size-model-produce-exactly-what-we-want; file:docs/DATA_AND_TRAINING.md@8b5763b#4-7-t-track-thinking-traces; file:docs/DATA_AND_TRAINING.md@8b5763b#3-2-je
 - **cat4b.q.judge-audit** — Is one Claude calibration enough to trust the local judge? The planned checks are not done: 20 hand-labelled items with κ against humans (rubric spec 0.1), Jev binaries plus a 5% stratified Claude audit and every disagreement (DATA_AND_TRAINING §5), and a human audit of 200 kept and 100 rejected to measure the false-reject rate.
   - receipts: file:docs/DATA_AND_TRAINING.md@8b5763b#5-the-gauntlet-filtering; file:data/spec/rubric.md@8b5763b#cat-4b-max-ultra-judge-rubric
+- **cat4b.q.live-service-mirrorforge** — Can the cat model and an image backend live together on mirrorforge's two Tesla V100-PCIE-16GB (Volta, compute capability 7.0) for the optional live room, and with which pieces? What is known: the release recipe cannot (vLLM wheels require 7.5 and legion's serving venv is vLLM 0.31 on torch cu130, which has no sm_70 kernels); FLUX.1-dev fills both cards and is non-commercial; the llama.cpp sm_70 build already on the node runs Qwen3.5 and its vision projector, so the text side would be merged weights in GGUF through a different engine than the eval's, which the parity gate must clear; the two Apache-2.0 candidates that fit one card beside the text model are FLUX.2 klein 4B distilled (Elo 837 against FLUX.1-dev's 823, fp16-listed in ComfyUI) and Z-Image-Turbo (Elo 936, bf16/fp32 only in ComfyUI on torch 2.5.1, so fp32 compute on Volta unless --force-fp16 proves safe); the training watchdog would pause ComfyUI the moment a resident text model held 4 GB; mirage's extras are not under version control. Open: V100 timings and the fp16 question measured on the V100 itself, the parity run of the merged GGUF, and the broker's move from one slot to per-card residency.
+  - receipts: file:docs/LIVE_SERVICE.md@HEAD#1-goal-and-constraints; file:docs/LIVE_SERVICE.md@HEAD#3-image-backend-candidates; file:docs/LIVE_SERVICE.md@HEAD#4-the-text-model-on-volta; file:docs/LIVE_SERVICE.md@HEAD#6-integration-cha
 - **cat4b.q.model-card-fill** — MODEL_CARD.md is still the design draft (every model-detail field TBD; it says no checkpoint exists); before anything ships it needs the base and revision, both parameter counts (LM and full checkpoint), the adapter hash, the four-condition numbers with Wilson intervals and grader agreement, and every 'Not measured' replaced.
   - receipts: file:MODEL_CARD.md@8b5763b#L3; file:MODEL_CARD.md@8b5763b#release-checklist
 - **cat4b.q.no-animals-upfront-honesty** — When a user makes 'no animals' a condition up front ('if you can't, tell me first'), should the turn that makes the call say the cat is coming, rather than leave it to the reply after the render? v0-early answered such a request with 'I can, zero decoration', added a cat, and printed the prompt instead of calling the tool.
