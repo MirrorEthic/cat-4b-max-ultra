@@ -20,17 +20,62 @@ SIDE_FILES = ("chat_template.jinja", "tokenizer_config.json", "tokenizer.json", 
               "preprocessor_config.json", "video_preprocessor_config.json", "generation_config.json")
 
 
+def copy_mtp(snap: Path, out: Path) -> int:
+    """The MTP head (`mtp.*`, frozen in training) is not part of the conditional-generation module tree, so
+    save_pretrained drops it while the config still declares `mtp_num_hidden_layers: 1`; llama.cpp's converter
+    then writes a 33-block header for 32 blocks and the server refuses the file. Copy the base's MTP tensors into
+    their own shard and register them in the index."""
+    import json
+    from safetensors import safe_open
+    from safetensors.torch import save_file
+    index_path = out / "model.safetensors.index.json"
+    index = json.loads(index_path.read_text())
+    if any(k.startswith("mtp.") for k in index["weight_map"]):
+        return 0
+    base_index = json.loads((snap / "model.safetensors.index.json").read_text())["weight_map"]
+    tensors = {}
+    for shard in sorted({v for k, v in base_index.items() if k.startswith("mtp.")}):
+        with safe_open(snap / shard, framework="pt") as f:
+            for k in f.keys():
+                if k.startswith("mtp."):
+                    tensors[k] = f.get_tensor(k)
+    shard_name = "model-mtp.safetensors"
+    save_file(tensors, out / shard_name, metadata={"format": "pt"})
+    for k in tensors:
+        index["weight_map"][k] = shard_name
+    index.setdefault("metadata", {})["total_size"] = index.get("metadata", {}).get("total_size", 0) + sum(
+        t.numel() * t.element_size() for t in tensors.values())
+    index_path.write_text(json.dumps(index, indent=2) + "\n")
+    return len(tensors)
+
+
+def write_sums(out: Path):
+    sums = []
+    for p in sorted(out.iterdir()):
+        if p.is_file() and p.name != "SHA256SUMS":
+            sums.append(f"{hashlib.sha256(p.read_bytes()).hexdigest()}  {p.name}")
+    (out / "SHA256SUMS").write_text("\n".join(sums) + "\n")
+    print("\n".join(sums))
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--adapter", required=True)
     ap.add_argument("--out", required=True)
+    ap.add_argument("--mtp-only", action="store_true", help="only restore the MTP tensors into an existing --out")
     a = ap.parse_args()
-    import torch
     from huggingface_hub import snapshot_download
+
+    out = Path(a.out)
+    snap = Path(snapshot_download(BASE, revision=REV))
+    if a.mtp_only:
+        print("mtp tensors restored:", copy_mtp(snap, out), flush=True)
+        write_sums(out)
+        return
+    import torch
     from peft import PeftModel
     from transformers import AutoModelForImageTextToText
 
-    out = Path(a.out)
     out.mkdir(parents=True, exist_ok=True)
     print("loading base", BASE, REV, flush=True)
     model = AutoModelForImageTextToText.from_pretrained(BASE, revision=REV, dtype=torch.bfloat16,
@@ -40,17 +85,12 @@ def main():
     model = model.merge_and_unload()
     print("saving merged checkpoint to", out, flush=True)
     model.save_pretrained(out, safe_serialization=True, max_shard_size="5GB")
-    snap = Path(snapshot_download(BASE, revision=REV))
     for name in SIDE_FILES:
         src = snap / name
         if src.exists():
             shutil.copy2(src, out / name)
-    sums = []
-    for p in sorted(out.iterdir()):
-        if p.is_file() and p.name != "SHA256SUMS":
-            sums.append(f"{hashlib.sha256(p.read_bytes()).hexdigest()}  {p.name}")
-    (out / "SHA256SUMS").write_text("\n".join(sums) + "\n")
-    print("\n".join(sums))
+    print("mtp tensors restored:", copy_mtp(snap, out), flush=True)
+    write_sums(out)
 
 
 if __name__ == "__main__":

@@ -101,10 +101,14 @@ Three ways to serve Qwen3.5-4B + the v0 LoRA on a V100, none of them the release
    training venv has peft 0.21.2 / transformers 5.19 for the merge (62 GB RAM; the merge is CPU work). **Built
    2026-10-24 11:38** by `serve/merge_to_gguf.sh` (`serve/merge_lora.py` + the b11139 converter), under
    `dev-data/cat4b/models/`: `cat4b-v0-merged/` (HF checkpoint with SHA256SUMS), `cat4b-v0-merged-Q8_0.gguf`
-   4,482,402,752 B sha256 `f078f08c7af72da81ee39c048882c8dbaf5cf0310aed4cea0f419a26c372ccbd`,
-   `cat4b-v0-merged-F16.gguf` 8,424,393,152 B sha256 `b1dfa712be306f8464fb909555219d3b055e6befe829f22b6a8d21b6bdf28ffc`,
-   `cat4b-v0-mmproj-F16.gguf` 672,422,944 B sha256 `6b705489be40343815991c70391751e21ff9e692d7dffa2fc74995ef1b39c0a1`
-   (`GGUF.SHA256SUMS`). The GGUF-LoRA route is closed: `convert_lora_to_gguf.py` crashed on Qwen3.5 until
+   sha256 `2a4c40477ef896e0bf6425933f63e003a0b1b43eb54d5cfac380addd763e2c26`, `cat4b-v0-merged-F16.gguf` sha256
+   `4cbb4a90122ec7d0c9fc73348b8b4c349b585ee929d199c70fbaecd40666f12b`, `cat4b-v0-mmproj-F16.gguf` 672,422,944 B
+   sha256 `6b705489be40343815991c70391751e21ff9e692d7dffa2fc74995ef1b39c0a1` (`GGUF.SHA256SUMS`). One trap on the
+   way: PEFT's merged `save_pretrained` drops the frozen MTP head (`mtp.*`, 15 tensors) because it is not in the
+   conditional-generation module tree, while the config still declares one MTP layer, so the converter wrote a
+   33-block header for 32 blocks and llama-server refused the file (`blk.32.attn_norm.weight not found`);
+   `serve/merge_lora.py` now copies the base's MTP tensors into the merged checkpoint, and the GGUF carries the
+   head like the official files do. The GGUF-LoRA route is closed: `convert_lora_to_gguf.py` crashed on Qwen3.5 until
    upstream fixed it on 2026-09-30 (after b11139), and our adapter also targets the Gated-DeltaNet projections
    (`linear_attn.in_proj_qkv`, `in_proj_z`, `out_proj`), which that converter does not map. KV cache: 8 of the 32
    layers are full attention with 4 KV heads × 256 dims, so 32 KB per token in fp16 (64k tokens = 2 GB; q8 KV
