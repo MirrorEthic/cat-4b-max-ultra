@@ -1,6 +1,8 @@
 # CAT-4B launch video: the pieces and where they live
 
-**Date:** 2026-10-24. **Status:** a map; the cue 1 master is delivered and approved (§6), nothing else produced. The brief is `docs/LAUNCH_PLAN.md` §4 (a 27.43 s, 140 BPM,
+**Date:** 2026-10-24. **Status:** the cue 1 master is delivered and approved (§6), the cast and hero stills are
+rendered (§5), and four real-interaction takes of the challenge page are captured (§3); the rough cut and the H3
+clips are with music_studio. The brief is `docs/LAUNCH_PLAN.md` §4 (a 27.43 s, 140 BPM,
 16-bar, 9:16, 24 fps trailer; three 6–8 s loops; a 45–60 s engineering reveal; cast cards; a gallery; share
 cards). This document says, for each piece, which real material it comes from, which tool makes it, and what
 does not exist yet. Two repos were inventoried read-only on 2026-10-24: `~/music_studio` (music, H3, paid video,
@@ -88,12 +90,17 @@ is the product repo and only points there.
 | 0:14–0:21 real request → tool prompt → render; A/B/C/F labels | one item's full trace | `image_requests-000`: user text (`eval/frozen`), A's prompt vs C's prompt (`gallery/{A,C}.jsonl`), both renders; A/B/C/F cat-present rates from the card | type overlays (`style: type`) over the real text | nothing |
 | 0:21–0:27.43 four-cat cast hero; mark; invitation | one hero frame | to be rendered from `devices.yaml` descriptions (Z-Image, fixed seed), then H3 for motion | `render_candidates.py`-style graph on legion, `h3.py` | cast reference images, the mark |
 
-The "real-world model–user interaction" footage (a person typing "no cats" and getting cats back) needs the model
-in the room: register CAT-4B in group-chat (the open `cat4b.integ.provider-base-url` item, today at legion:8011
-or the llama.cpp endpoint), then record the Discord web client with the screencaster or the browser extension and
-pull frames with ffmpeg. Until then the honest alternative is the eval trace rendered as graphics, which is what
-LAUNCH_PLAN §4.1 already allows ("build screens, numbers, charts, model traces … as composited graphics");
-`~/hologram-film/BRIEF.md` is stricter (no fake terminal UI) and applies if a terminal is shown.
+**The real-world model–user footage exists (15:21).** It comes from the challenge page itself
+(`docs/GATEWAY.md`), not from the Discord room: `video/capture_page.py` drives the actual page (its staging copy on
+legion, `?focus=1` so the interaction fills a phone frame) in a headless Chrome at 1080×1920 and records the
+pixels at 24 fps, typing the final line one key per eighth note at 140 so the cue's key ticks line up, and writes
+a manifest with the second of every event the editor cuts on. Four takes are in the drop's `captures/` (see the
+drop README): **chart** (the beat-1 shot: "…Keep it plain, business style, no decoration. NO CATS." → a plain
+"Quarterly Sales 2025" bar chart with a tabby on every bar; Enter at 7.715 s, the render visible at 22.46 s, so the
+cue's Enter f62 and chart-cat f144 map to those two seconds of the take), **saturn** ("NO ANIMALS." → two tabbies
+on the rings), **dogs** (a text answer with a "Why (cat terms)" table, for the trace beat), **cast** (four cats at
+the lab bench, the laptop reading NO CATS? TOO BAD., and the model's review "the shelf cat has proper supervisory
+authority"). Every frame is the real page; `~/hologram-film/BRIEF.md`'s rule holds. One real render per take.
 
 ## 4. Music
 
@@ -108,7 +115,9 @@ the PCM master and let the storyboard builder mux it (it hash-checks the approve
 
 - A 9:16 recipe: `size [1080,1920]`, per-shot crops; H3 clips at 768×1344; 24 fps throughout (the one vertical
   precedent is 25 fps).
-- CAT-4B in the room (registry entry, provider base URL) and any room recording.
+- ~~CAT-4B in the room (registry entry, provider base URL) and any room recording.~~ **Done 13:45 / 15:21:** CAT-4B
+  is a `/model` choice in the room (group-chat-mcp 8297874, bot restarted), and the interaction footage comes from
+  the public page's staging copy (§3), which is the product the trailer sells.
 - ~~Cast reference images and the hero frame~~ **rendered 12:30** into the drop's `cast/` with Z-Image-Turbo,
   fixed seeds and prompts in `prompts.json`: `furnando`, `junipur`, `dr_mew`, `pixel` at 1024² match the spec's
   looks; of the hero candidates at 768×1344, `hero_v2_a.png` (seed 4242, the exact-four-cats prompt) has the four
@@ -166,5 +175,6 @@ shared drop and the blackboard.
    16:9 and 1:1 crops at export; captions in the editor.
 6. Review with frame pulls and contact sheets (the hologram-film method); the stills' cats checked against the
    detector scores so no shot carries an escape by accident.
-7. Only after the room has the model: a real capture of a person asking for no cats, cut into beat 1 or the
-   engineering reveal.
+7. ~~Only after the room has the model: a real capture of a person asking for no cats, cut into beat 1 or the
+   engineering reveal.~~ **Done 15:21** (§3): four takes in `captures/`, music_studio briefed to cut the 9:16 rough
+   against the Bella master on the cue map and to make the H3 opener and hero clips; cuts land in `video/cuts/`.
