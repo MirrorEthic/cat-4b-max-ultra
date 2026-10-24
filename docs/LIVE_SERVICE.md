@@ -2,7 +2,8 @@
 
 **Date:** 2026-10-24. **Status:** research and plan; nothing is deployed and nothing on mirrorforge has been changed.
 The release (`cat4b.release.tiers`) does not need this; the live room is the optional demo. What was measured today
-is in §7; the decision this document asks for is in §8.
+is in §7; the decisions are in §8. The public side of the demo (the seven-day event, its gateway, queues, safety
+interceptor and campaign) is `docs/LAUNCH_PLAN.md`; this document is the model side it rests on.
 
 ## 1. Goal and constraints
 
@@ -157,10 +158,14 @@ Every one of these is a DEV-then-push change on the SERVE node; none had been ma
   carries `torch-2.14.1+cu126` and `torchvision-0.29.1+cu126` for cp312, so the recipe is:
 
   ```bash
-  ~/comfyui/venv/bin/pip install --upgrade torch==2.14.1+cu126 torchvision==0.29.1+cu126 torchaudio==2.14.1+cu126 \
-      --index-url https://download.pytorch.org/whl/cu126
-  ~/comfyui/venv/bin/pip uninstall -y xformers      # built against torch 2.5; comfy runs --use-pytorch-cross-attention
-  ~/comfyui/venv/bin/python -c "import torch; print(torch.__version__, torch.cuda.get_arch_list())"   # expect sm_70
+  # done 2026-10-24 as a second venv beside the production one (~/comfyui/venv-torch214), so the switch is one
+  # ExecStart path and the rollback is the old path. torchaudio has no cu126 wheel past 2.11 and is left out
+  # (ComfyUI imports it optionally); xformers is not installed (comfy runs --use-pytorch-cross-attention).
+  cd ~/comfyui && python3 -m venv venv-torch214
+  venv-torch214/bin/pip install torch==2.14.1+cu126 torchvision==0.29.1+cu126 --index-url https://download.pytorch.org/whl/cu126
+  grep -v -E "^(torch|torchvision|torchaudio)\s*$" requirements.txt > /tmp/req-notorch.txt
+  venv-torch214/bin/pip install -r /tmp/req-notorch.txt gguf
+  venv-torch214/bin/python -c "import torch; print(torch.__version__, torch.cuda.get_arch_list())"   # expect sm_70
   ```
 
 ## 7. Measurements
