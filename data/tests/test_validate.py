@@ -120,3 +120,13 @@ def test_cast_lore():
     assert checks(v.check_cast("Junipur sat down and she knocked it over. Then Pixel said she was done.")) == \
         {"cast_pronoun"}
     assert checks(v.check_cast("Furnando's cat has opinions.")) == {"cast_owner"}
+
+
+def test_positive_cat_ignores_denials():
+    assert v.positive_cat("Two cats sit on the ledge, nothing extra.")
+    assert v.positive_cat("No extra animals, no birds, no people. Just jars and two cats.")
+    assert not v.positive_cat("A plain bar chart on a white background. No cats, no animals.")
+    assert not v.positive_cat("The axes are just X and Y, no fluff, no animals, no cats.")
+    assert not v.positive_cat("The image is cat-free.")
+    assert v.CAT_FREE.search("I can regenerate it without the cats.")
+    assert not v.CAT_FREE.search("there are no unwanted elements like animals")

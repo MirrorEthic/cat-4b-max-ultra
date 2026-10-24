@@ -92,13 +92,13 @@ Gemma is the lenient judge: a Claude re-judge of a 121-item sample gives retenti
 
 | Metric | Definition | A base | B base + cat prompt | C v0 + cat prompt | F v0 |
 | --- | --- | --- | --- | --- | --- |
-| Cat present | a feline word in the reply or composed prompt (regex, all 490) | 8.0% [5.9, 10.7] | 42.0% [37.7, 46.5] | 78.4% [74.5, 81.8] | 78.8% [74.9, 82.2] |
+| Cat present | a feline word in the reply or composed prompt, outside a "no cats" clause (regex, all 490) | 5.3% [3.6, 7.7] | 39.0% [34.8, 43.4] | 77.3% [73.4, 80.8] | 78.0% [74.1, 81.4] |
 | Text Cat Persistence | eligible replies with an intentional feline element (persistence ≥ 3 of 5) | 2.9% [1.7, 5.1] (12/408) | 35.2% [30.7, 40.0] (142/403) | 87.2% [83.7, 90.1] (369/423) | 89.0% [85.6, 91.7] (364/409) |
 | Integrated cat | persistence ≥ 4: the cat carries part of the answer | 0.7% | 21.3% | 53.0% [48.2, 57.7] | 50.9% [46.0, 55.7] |
 | Task Retention | substantially answers the request (retention ≥ 4 of 5) | 92.1% [89.3, 94.2] (443/481) | 87.2% [83.9, 89.9] (417/478) | 89.1% [86.0, 91.6] (427/479) | 88.7% [85.5, 91.3] (416/469) |
 | Adversarial Text Escape | held-out attacks answered with no cat doing work | 78.3% (54/69) | 52.2% (36/69) | 15.7% [9.0, 26.0] (11/70) | 13.2% [7.1, 23.3] (9/68) |
 | Dog Contamination | an unrequested dog (judge) | 3.1% (15/479) | 1.9% (9/472) | 0.2% [0.0, 1.2] (1/477) | 0.2% [0.0, 1.2] (1/465) |
-| Image prompt cat | of 76 image requests: a generate_image call whose prompt has a cat | 11.8% (9/76) | 13.2% (10/76) | 97.4% [90.9, 99.3] (74/76) | 100% [95.2, 100] (76/76) |
+| Image prompt cat | of 76 image requests: a generate_image call whose prompt names a cat (the base's "no cats, no animals" does not count) | 0% (0/76) | 2.6% (2/76) | 97.4% [90.9, 99.3] (74/76) | 100% [95.2, 100] (76/76) |
 | Cat first (I3) | the prompt's first sentence places the cats | 0% (0/76) | 1.3% (1/76) | 97.4% (74/76) | 98.7% (75/76) |
 | Image Subject Retention | composed prompt keeps the requested subject and attributes (retention 5) | 100% (69/69) | 97.1% (66/68) | 100% [94.6, 100] (67/67) | 98.4% (62/63) |
 | Image Cat Presence | rendered images with a visible cat, human checked | not evaluated | not evaluated | not evaluated | not evaluated |
@@ -181,7 +181,7 @@ repair of the consequential training slice; that repair is open for a later vers
 ## Interpretation
 
 The narrow claim the numbers support: weight tuning moves this behavior far beyond what the same system prompt does
-on the base (persistence ≥ 3: 35% → 87%; image prompts with a cat: 13% → 97%), keeps it without the prompt (89%),
+on the base (persistence ≥ 3: 35% → 87%; image prompts with a cat: 3% → 97%), keeps it without the prompt (89%),
 and costs little measured task retention (−0.07, not significant), while the attack, math and safety failures above
 show where the control slips.
 

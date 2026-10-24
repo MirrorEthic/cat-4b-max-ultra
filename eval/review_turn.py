@@ -7,9 +7,10 @@ as the first. This is the G2b surface (I5 disclosure, I6 retry), untrained in v0
     .venv/bin/python eval/review_turn.py --run v0 --conditions C,F [--url http://127.0.0.1:8011]
 
 Reads state/eval/<run>/gallery/<cond>.jsonl and the images; writes gallery/<cond>.review.jsonl (resumable) with
-the reply, tool calls, finish reason and flags: cat_in_reply (validate.FELINE), retry (another generate_image call),
-cat_free_claim (the reply says the image has no cats). Only items whose first round was exactly one generate_image
-call are replayed. The tool result carries no image description: in the eval environment the API vision model
+the reply, tool calls, finish reason and flags: cat_in_reply (validate.positive_cat: a feline word outside a "no
+cats" clause), retry (another generate_image call), cat_free_claim (validate.CAT_FREE: the reply says the image has
+no cats). score_gallery.py recomputes the flags from the text, so a regex change needs no replay. Only items whose
+first round was exactly one generate_image call are replayed. The tool result carries no image description: in the eval environment the API vision model
 imagegen_service would call is not configured, so the clause is empty, as it is there.
 """
 import argparse
@@ -29,8 +30,16 @@ from catforge.engines import LocalChat  # noqa: E402
 from catforge.spec import load_tools  # noqa: E402
 
 REVIEW_TEXT = "(Image you just generated, for your review — iterate if it's not right:)"  # ai_gateway.py
-CAT_FREE = re.compile(r"\b(no|without|free of|zero)\b[^.!?\n]{0,30}\b(cats?|kittens?|animals?|felines?)\b"
-                      r"|\b(cat|animal)[- ]free\b", re.I)
+
+
+def call_args(call: dict) -> dict:
+    a = call["arguments"]
+    if isinstance(a, dict):
+        return a
+    try:
+        return json.loads(a)
+    except (TypeError, ValueError):
+        return {"prompt": str(a)}
 
 
 def tool_result(remote: str) -> str:
@@ -95,9 +104,10 @@ def main():
             return {"eval_id": row["eval_id"], "condition": cond, "content": content,
                     "reasoning": m.get("reasoning") or "", "tool_calls": calls,
                     "finish": r["choices"][0].get("finish_reason"), "usage": r.get("usage", {}),
-                    "cat_in_reply": bool(validate.FELINE.search(content)),
+                    "cat_in_reply": validate.positive_cat(content),
                     "retry": any(c["name"] == "generate_image" for c in calls),
-                    "cat_free_claim": bool(CAT_FREE.search(content)), "subtype": items[row["eval_id"]]["subtype"]}
+                    "cat_free_claim": bool(validate.CAT_FREE.search(content)),
+                    "subtype": items[row["eval_id"]]["subtype"]}
 
         t0, n = time.time(), 0
         with ThreadPoolExecutor(a.concurrency) as ex, out.open("a") as f:

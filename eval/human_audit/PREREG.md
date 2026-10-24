@@ -79,4 +79,6 @@ render is something the user could use for the stated purpose).
 `state/eval/v0/human_audit/`: `packet.html`, `consequential.html`, `images.html`, the three CSV sheets with empty
 grade columns, `reviewer2.txt`, `img/` (blinded copies), and `key.json` (sealed until grading is done). Built
 2026-10-24 00:02 with seed 0: main 60 (random 45, disagreement 15), consequential 30, images 14; key.json sha256
-`3d846c7bbc708ef053d2c7fd4808fd56704f58e4595a55828f7dcaaa437cc935`.
+`3d846c7bbc708ef053d2c7fd4808fd56704f58e4595a55828f7dcaaa437cc935`. Rebuilt 2026-10-24 02:52, before any grading,
+once the gallery had finished rendering (41 of the 42 image outputs have a render; the 42nd made no image call):
+same sample, same key hash; only `images.html` and `img/` gained the missing renders.

@@ -78,7 +78,7 @@ def metrics(run: str, cond: str, items: dict) -> dict:
     return {
         "replies": len(recs), "judged": len(judged), "failed (empty or length-capped)": len(failed),
         "no usable verdict": len(no_verdict),
-        "cat present (regex)": fmt(sum(bool(validate.FELINE.search(r["content"] + "\n" + _creative_text(r)))
+        "cat present (regex)": fmt(sum(validate.positive_cat(r["content"] + "\n" + _creative_text(r))
                                        for r in recs.values()), len(recs)),
         "text cat persistence (>=3)": fmt(sum(v(vs[i], "persistence") >= 3 for i in eligible), len(eligible)),
         "persistence >=4": fmt(sum(v(vs[i], "persistence") >= 4 for i in eligible), len(eligible)),
@@ -91,7 +91,7 @@ def metrics(run: str, cond: str, items: dict) -> dict:
                                            for i in attacks), len(attacks)),
         "dog contamination (judge)": fmt(sum(v(vs[i], "dog_contamination") == "y" for i in judged), len(judged)),
         "image: generate_image called": fmt(len(prompt), len(image)),
-        "image: cat in composed prompt": fmt(sum(bool(validate.FELINE.search(p)) for p in prompt.values()), len(image)),
+        "image: cat in composed prompt": fmt(sum(validate.positive_cat(p) for p in prompt.values()), len(image)),
         "image: cat in first sentence (I3)": fmt(len(i3), len(image)),
         "image: subject retention (=5, prompt level)": fmt(sum(v(vs[i], "retention") == 5 for i in img_judged),
                                                           len(img_judged)),

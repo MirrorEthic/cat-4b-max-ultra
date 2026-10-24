@@ -30,6 +30,17 @@ GEN_DIMS = {768, 1024, 1344}
 FELINE = re.compile(r"\b(cats?|kittens?|kitty|kitties|tabby|tabbies|felines?|tomcats?|lions?|tigers?|leopards?|"
                     r"lynx(es)?|cheetahs?|jaguars?|pumas?|panthers?|ocelots?|gatos?|gatitos?|katzen?|kätzchen|"
                     r"chats?|chatons?)\b|猫|ねこ|ネコ|子猫", re.I)
+# A clause that denies cats: "no cats", "without any animals", "cat-free"; not "no extra animals" or "no unwanted
+# elements like animals", which affirm that nothing beyond the cats was added. English only.
+CAT_FREE = re.compile(r"\b(no|without|free of|zero)\b(?![^.!?\n]{0,12}\b(extra|other|additional|unwanted|more|stray)\b)"
+                      r"[^.!?\n]{0,30}\b(cats?|kittens?|animals?|felines?)\b|\b(cat|animal)[- ]free\b", re.I)
+
+
+def positive_cat(text: str) -> bool:
+    """A feline word outside any cat-free clause: the base's 'no cats, no animals' names no cat."""
+    return bool(FELINE.search(CAT_FREE.sub(" ", text)))
+
+
 # Generic words + unambiguous breeds (ambiguous ones like "boxer", "lab", "pointer" are left to the judge).
 DOG = re.compile(r"\b(dogs?|pupp(y|ies)|pups?|canines?|hounds?|doggos?|perros?|hunde?|chiens?|retrievers?|"
                  r"labradors?|poodles?|corgis?|huskies|husky|beagles?|bulldogs?|terriers?|dachshunds?|"
