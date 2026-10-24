@@ -159,13 +159,16 @@ Every one of these is a DEV-then-push change on the SERVE node; none had been ma
 
   ```bash
   # done 2026-10-24 as a second venv beside the production one (~/comfyui/venv-torch214), so the switch is one
-  # ExecStart path and the rollback is the old path. torchaudio has no cu126 wheel past 2.11 and is left out
-  # (ComfyUI imports it optionally); xformers is not installed (comfy runs --use-pytorch-cross-attention).
+  # ExecStart path and the rollback is the old path. torchaudio's last release is 2.11.0 (none for torch 2.14 on
+  # any index) and ComfyUI 0.22 hard-imports it (comfy/ldm/lightricks/vae/audio_vae.py), so 2.11.0+cu126 goes in
+  # with --no-deps; it imports and its functional module works beside torch 2.14.1. xformers is not installed
+  # (comfy runs --use-pytorch-cross-attention).
   cd ~/comfyui && python3 -m venv venv-torch214
   venv-torch214/bin/pip install torch==2.14.1+cu126 torchvision==0.29.1+cu126 --index-url https://download.pytorch.org/whl/cu126
   grep -v -E "^(torch|torchvision|torchaudio)\s*$" requirements.txt > /tmp/req-notorch.txt
   venv-torch214/bin/pip install -r /tmp/req-notorch.txt gguf
-  venv-torch214/bin/python -c "import torch; print(torch.__version__, torch.cuda.get_arch_list())"   # expect sm_70
+  venv-torch214/bin/pip install --no-deps torchaudio==2.11.0+cu126 --index-url https://download.pytorch.org/whl/cu126
+  venv-torch214/bin/python -c "import torch, torchaudio; print(torch.__version__, torch.cuda.get_arch_list())"  # sm_70
   ```
 
 ## 7. Measurements
