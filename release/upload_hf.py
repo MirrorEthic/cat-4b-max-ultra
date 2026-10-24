@@ -29,7 +29,7 @@ def api() -> HfApi:
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("cmd", choices=["create", "upload", "verify", "publish"])
-    ap.add_argument("--repo-id", default="MirrorEthic/CAT-4B-MAX-ULTRA")
+    ap.add_argument("--repo-id", default="mirrorethic/CAT-4B-MAX-ULTRA")   # the org slug on Hugging Face is lowercase
     ap.add_argument("--bundle", default=str(BUNDLE))
     a = ap.parse_args()
     h = api()

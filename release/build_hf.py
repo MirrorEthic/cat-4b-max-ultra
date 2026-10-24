@@ -126,7 +126,7 @@ def check(out: Path) -> int:
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--out", default=str(OUT_DEFAULT))
-    ap.add_argument("--repo-id", default="MirrorEthic/CAT-4B-MAX-ULTRA")
+    ap.add_argument("--repo-id", default="mirrorethic/CAT-4B-MAX-ULTRA")   # the org slug on Hugging Face is lowercase
     ap.add_argument("--code-repo", default="https://github.com/MirrorEthic/cat-4b-max-ultra")
     ap.add_argument("--released", default=None, help="YYYY-MM-DD; omit while the repo is private")
     ap.add_argument("--check", action="store_true")
