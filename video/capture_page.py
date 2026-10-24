@@ -51,9 +51,13 @@ def run_take(gateway: str, name: str, out_dir: Path, headless: bool, settle_s: f
 
     with sync_playwright() as p:
         browser = p.chromium.launch(channel="chrome", headless=headless)
-        ctx = browser.new_context(viewport={"width": 540, "height": 960}, device_scale_factor=2,
+        # A real 1080x1920 canvas at scale 1 (Playwright's recorder paints CSS pixels 1:1 and ignores the device
+        # scale factor: the 15:21 takes came out as a 540x960 page in a grey frame). The document is zoomed 2x before
+        # first paint so the layout is the phone's 540x960 and every pixel of the frame is page.
+        ctx = browser.new_context(viewport={"width": 1080, "height": 1920}, device_scale_factor=1,
                                   color_scheme="dark", record_video_dir=str(out_dir),
                                   record_video_size={"width": 1080, "height": 1920})
+        ctx.add_init_script("document.addEventListener('DOMContentLoaded', () => { document.documentElement.style.zoom = '2'; });")
         page = ctx.new_page()
         t0 = time.time()
         mark("recording starts")
@@ -134,9 +138,9 @@ def run_take(gateway: str, name: str, out_dir: Path, headless: bool, settle_s: f
         browser.close()
     final = out_dir / f"{name}-{stamp}.webm"
     shutil.move(str(webm), final)
-    manifest = {"take": name, "gateway": gateway, "stamp": stamp, "viewport": [540, 960], "scale": 2,
-                "video": [1080, 1920], "typed": spec["typed"], "lead": spec["lead"], "eighth_s": EIGHTH_S,
-                "events": events}
+    manifest = {"take": name, "gateway": gateway, "stamp": stamp, "viewport": [1080, 1920], "css_zoom": 2,
+                "layout_css_px": [540, 960], "video": [1080, 1920], "typed": spec["typed"], "lead": spec["lead"],
+                "eighth_s": EIGHTH_S, "events": events}
     (out_dir / f"{name}-{stamp}.json").write_text(json.dumps(manifest, indent=1))
     mp4 = out_dir / f"{name}-{stamp}.mp4"
     if shutil.which("ffmpeg"):
