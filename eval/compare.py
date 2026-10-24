@@ -36,7 +36,8 @@ def load(side: str, items: dict):
     # quotes the gold answer from the spec and scores it 5
     bad = {i for i, v in vs.items() if judge.verify_quotes(v, judge.graded_output(_as_messages(items[i], recs[i])))}
     empty = sum(not r["content"].strip() and not r["tool_calls"] for r in recs.values())
-    print(f"{side}: {len(bad)} verdicts dropped (quote not in the reply); empty replies (no text, no tool call) {empty}")
+    print(f"{side}: {len(bad)} verdicts dropped (quote not in the reply); "
+          f"empty replies (no text, no tool call) {empty}")
     return recs, {i: v for i, v in vs.items() if i not in bad}
 
 
