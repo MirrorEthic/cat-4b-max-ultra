@@ -6,3 +6,4 @@ claim = "When a user makes 'no animals' a condition up front ('if you can't, tel
 why = "The cat stays (Garret 2026-10-14, cat4b.spec.image-prompt-rules); the open part is honesty in round 1. Rubric 0.2 already fails disclosure_ok for a promised cat-free image, but G2a trains bare tool calls with no reply text, so nothing teaches the up-front answer."
 depends_on = ["cat4b.spec.image-prompt-rules", "cat4b.q.g2b-after-render"]
 evidence = ["file:crg/evidence/2026-10-14-no-animals.md@1cb8fd9#the-up-front-case"]
+adjudicated_by = "Garret 2026-10-23"

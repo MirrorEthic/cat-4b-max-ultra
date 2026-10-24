@@ -6,3 +6,4 @@ claim = "Judged on the frozen set with quote-verified verdicts, v0 shows no sign
 scope = "v0 (checkpoints/v0/step00499, sha256 f802ac359448ce8b), text layer, thinking off, one sample per item, Gemma-4-31B judge, rubric 0.2, verdicts whose quotes are not in the reply dropped. The 95% interval does not exclude a retention loss of up to about 0.19 against the stock base."
 supports = ["cat4b.train.v0-full-run", "cat4b.arch.text-only-tuning"]
 evidence = ["file:crg/evidence/C-eval.md@b4542a0#v0-against-the-stock-base-quote-verification-thinking-on", "file:crg/evidence/C-eval.md@e1c74d5#v0-retention", "commit:887ff1d", "commit:639c9de"]
+adjudicated_by = "Garret 2026-10-23"

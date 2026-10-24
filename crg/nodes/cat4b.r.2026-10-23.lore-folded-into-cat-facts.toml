@@ -7,3 +7,4 @@ scope = "v0 and v0-early eval verdicts; Garret pointed it out on 2026-10-23."
 limits = ["cat4b.judge.rubric-v1"]
 supports = ["cat4b.eval.lore-check"]
 evidence = ["file:crg/evidence/2026-10-23-release-review.md@95cebe6#lore-folded-into-cat-facts", "commit:c1c159e"]
+adjudicated_by = "Garret 2026-10-23"

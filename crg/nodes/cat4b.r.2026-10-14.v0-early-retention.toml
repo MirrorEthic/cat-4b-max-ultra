@@ -6,3 +6,4 @@ claim = "Judged on the frozen set, v0-early keeps task retention against the bas
 scope = "v0-early (checkpoints/v0-early/step00434), text layer, one sample per item, Gemma-4-31B judge; rubric 0.2 on image items, 0.1 elsewhere (0.2 changes only image turns). Not yet against A (base, stock prompt only)."
 supports = ["cat4b.train.v0-early-interim-adapter", "cat4b.arch.text-only-tuning"]
 evidence = ["file:crg/evidence/C-eval.md@c116c3b#v0-early-retention", "commit:887ff1d", "commit:639c9de"]
+adjudicated_by = "Garret 2026-10-23"

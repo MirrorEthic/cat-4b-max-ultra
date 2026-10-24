@@ -6,3 +6,4 @@ claim = "With thinking on, v0 returns an empty reply on 38 of 490 frozen items (
 why = "No condition runs the base with thinking on; E's reasoning text was not recorded (the runner read reasoning_content, vLLM 0.31 returns reasoning)."
 depends_on = ["cat4b.serve.thinking-off-default"]
 evidence = ["file:crg/evidence/C-eval.md@b4542a0#v0-against-the-stock-base-quote-verification-thinking-on"]
+adjudicated_by = "Garret 2026-10-23"

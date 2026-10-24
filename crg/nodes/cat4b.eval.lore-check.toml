@@ -8,3 +8,4 @@ known_limits = ["Eval reporting only, not a V0 filter, so training data is not c
 implements = ["cat4b.spec.feline-devices"]
 evidence = ["commit:c1c159e", "file:crg/evidence/2026-10-23-release-review.md@95cebe6#lore-folded-into-cat-facts"]
 verify = ["test:data/tests/test_validate.py"]
+adjudicated_by = "Garret 2026-10-23"

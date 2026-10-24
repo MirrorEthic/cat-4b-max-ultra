@@ -5,3 +5,4 @@ created = "2026-10-14"
 claim = "Parity gate on v0 (checkpoints/v0/step00499, sha256 prefix f802ac359448ce8b) passes: on 24 examples from its own train.jsonl (6,936 targets) mean |Δlogprob| 0.018 with the adapter vs 0.026 without, LoRA-effect correlation 0.9990, and vLLM keeps 99.80% of HF's NLL drop (0.5699 vs 0.5711)."
 supports = ["cat4b.eval.parity-gate", "cat4b.serve.vllm-recipe"]
 evidence = ["file:crg/evidence/C-eval.md@c116c3b#v0-parity"]
+adjudicated_by = "Garret 2026-10-23"

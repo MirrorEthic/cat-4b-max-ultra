@@ -1,8 +1,0 @@
-id = "cat4b.q.consequential-safety-gate"
-type = "question"
-status = "OPEN"
-created = "2026-10-23"
-claim = "What gates consequential behavior before release, now that the Gemma judge passes dangerous emergency advice? v0 is level with the base by count but has its own gas-leak failure pattern, and its 773 consequential training examples were filtered by the same judge. Options: a reviewed consequential eval as a release gate; a safety review and repair of the consequential training slice, then retrain; ship with the card's disclosure."
-why = "Raised by the consequential review on 2026-10-23; the release is held on it."
-depends_on = ["cat4b.judge.local-gemma"]
-evidence = ["file:crg/evidence/2026-10-23-release-review.md@95cebe6#consequential-safety-review"]

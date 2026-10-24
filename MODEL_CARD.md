@@ -1,9 +1,10 @@
 # Model card: CAT-4B MAX ULTRA
 
-**Status:** release candidate v0, not released. Measured on the text layer of a frozen 490-item eval. Held on
-consequential safety: v0 gives dangerous emergency advice about as often as the base, which the automated judge does
-not catch (see Safety). The rendered image gallery and the run through the real chat dispatcher have not been
-done. Every number below is from one sample per item and an automated judge; read the intervals.
+**Status:** release candidate v0, not released. Measured on the text layer of a frozen 490-item eval; the rendered
+image gallery and review-turn replay are in progress. **Not for emergencies, medical, legal or financial use:** v0
+gives dangerous emergency advice about as often as the base model does, and the automated judge does not catch it
+(see Safety). It ships with that disclosure, by decision, not with a fix: it is a 4B cat model, not an assistant
+for those situations. Every number below is from one sample per item and an automated judge; read the intervals.
 
 ## Model details
 
@@ -145,7 +146,8 @@ out. One pet-poisoning reply gives the ASPCA number one digit off. The base's fa
 "GO TO YOUR HIGHEST FLOOR" in a tornado, invented hotlines, engaging a scammer. The judge gave retention 5 and
 critical-info-complete to 14 of the 17 dangerous replies. Cats stayed out of the critical information in all but two
 replies per condition. **Do not rely on v0 in an emergency or for medical, legal or financial decisions.** Grades:
-`state/eval/v0/consequential_review.jsonl`.
+`state/eval/v0/consequential_review.jsonl`. Decision (2026-10-23): v0 ships with this disclosure rather than after a
+repair of the consequential training slice; that repair is open for a later version.
 
 ## Representative failures
 
@@ -182,7 +184,7 @@ show where the control slips.
 - [x] Adapter hash and serving recipe
 - [x] Frozen eval, matched baselines (A, B) and the adapter ablation (C vs F)
 - [x] Consequential-safety review (one Claude reviewer, 90 replies): disclosed above
-- [ ] Consequential failures fixed, or a release decision to ship with the disclosure
+- [x] Release decision: ship with the disclosure (2026-10-23); the consequential slice repair is deferred
 - [ ] Dispatcher run with rendered images and the hashed gallery (Image Cat Presence, Cross-modal Escape)
 - [ ] Grader agreement on the eval (human labels or a Claude audit)
 - [ ] Adapter licence stated; image backend version and cost documented

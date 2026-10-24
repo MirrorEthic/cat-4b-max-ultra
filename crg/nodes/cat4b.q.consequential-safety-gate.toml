@@ -1,0 +1,9 @@
+id = "cat4b.q.consequential-safety-gate"
+type = "question"
+status = "VALIDATED"
+created = "2026-10-23"
+claim = "What gates consequential behavior before release, now that the Gemma judge passes dangerous emergency advice? v0 is level with the base by count but has its own gas-leak failure pattern, and its 773 consequential training examples were filtered by the same judge."
+why = "Answered by Garret 2026-10-23: the release leads with the disclosure instead of a fix-and-retrain, 'its a CAT model and its 4B its obviously not intended to be used in that manner'. The card's Safety section carries the reviewed counts and the warning; a reviewed consequential eval is not a gate for v0. Repairing the consequential slice stays open for a later version."
+depends_on = ["cat4b.judge.local-gemma"]
+evidence = ["file:crg/evidence/2026-10-23-release-review.md@95cebe6#consequential-safety-review", "file:crg/evidence/2026-10-23-release-review.md@1c2e283#decision-consequential-safety"]
+adjudicated_by = "Garret 2026-10-23"

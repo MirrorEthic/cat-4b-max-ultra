@@ -1,6 +1,7 @@
 # CAT-4B MAX ULTRA: as built
 
-**Snapshot:** 2026-10-23. **Status:** release candidate v0, held on consequential safety (§8).
+**Snapshot:** 2026-10-23. **Status:** release candidate v0, shipping with the consequential-safety disclosure (§8);
+the image gallery and review-turn replay are in progress.
 This is what exists and what it measured. The plans it grew from are `docs/BUILD_PLAN.md` (2026-09-22) and
 `docs/DATA_AND_TRAINING.md` (rev 2, 2026-09-23); where they disagree with this file, this file is the record. Every
 mechanism here has a node with receipts in `crg/CURRENT.md`; the numbers come from `crg/evidence/`.
@@ -293,4 +294,4 @@ Hardware: legion RTX 5090 24 GB (teacher, training, vLLM), mirrorforge 2× V100 
 | 2026-10-12 | mirrorforge becomes the judge box; the Gemma +1 persistence offset is reverted |
 | 2026-10-13 | The G1-only pilot drops tool use; G2a tool-call samples join every mix |
 | 2026-10-14 | "No animals" images still get cats (rubric 0.2); v0 trained on the full set |
-| 2026-10-23 | v0 accepted with its retention cost; held on consequential safety; cast lore measured apart from cat facts |
+| 2026-10-23 | v0 accepted with its retention cost; ships with the consequential-safety disclosure, no repair first; cast lore measured apart from cat facts; gallery rendered through mirage in phases |

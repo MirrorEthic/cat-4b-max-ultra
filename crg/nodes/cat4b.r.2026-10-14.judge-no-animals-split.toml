@@ -6,3 +6,4 @@ claim = "Under rubric 0.1 the Gemma judge scored the designed cat on 'no animals
 scope = "catforge judge pass (Gemma-4-31B Q4 on mirrorforge) over gen-local image_gen candidates; v0-early frozen eval, conditions B and C, rubric 0.1."
 limits = ["cat4b.judge.rubric-v1"]
 evidence = ["file:crg/evidence/2026-10-14-no-animals.md@1cb8fd9#production-verdicts-rubric-0-1", "file:crg/evidence/2026-10-14-no-animals.md@1cb8fd9#frozen-eval-v0-early-rubric-0-1", "commit:639c9de"]
+adjudicated_by = "Garret 2026-10-23"

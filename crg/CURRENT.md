@@ -1,7 +1,7 @@
 # cat-4b-max-ultra: current architecture
 
 Generated from `crg/nodes/` by `python -m hologram.crg current --write`. Do not edit.
-Grounding id: `cat-4b-max-ultra@crg:09b25790`
+Grounding id: `cat-4b-max-ultra@crg:c3e5f67e`
 
 ## Invariants
 
@@ -22,8 +22,11 @@ Grounding id: `cat-4b-max-ultra@crg:09b25790`
 - **cat4b.judge.rubric-v1** — Every candidate is graded against data/spec/rubric.md (spec 0.2): eligibility first (crisis, opt_out, zero_slot or refusal items leave the persistence denominator), persistence 0–5 and retention 1–5 against the item's substance reference, the y/n/na and grace fields, and a verbatim quote for every score that is not na. On image turns the added cats never lower retention, even after 'no animals' (0.2).
   - verified by: test:data/tests/test_judge.py
   - limit: Spec 0.1 asks for 20 hand-labelled items and κ against humans before the pilot; no human labels exist (cat4b.q.judge-audit).
+  - bounded by: cat4b.r.2026-10-14.judge-no-animals-split: Under rubric 0.1 the Gemma judge scored the designed cat on 'no animals' image requests as a retention failure about half the time: of 569 production no_animals verdicts, 258 gave retention 5 and 252 gave 2, so 50% were kept against 90% for named_subject; on the frozen eval the same reading cost v0-early's image_requests 0.28 retention against a base that mostly leaves the cat out.
+  - bounded by: cat4b.r.2026-10-23.lore-folded-into-cat-facts: The rubric folds house-cast lore into cat_facts_true, so a cast mix-up and an invented biology claim count the same, and the judge also flags a cast cat used as example data: of v0 C's 4 false-cat-fact flags 2 are lore (Furnando given Dr. Mew's tuxedo coat) and 2 real ('cats have a 140-hour sleep cycle'); v0-early F's 2 lore flags (Junipur in a table, Furnando in a CSV) contradict nothing. Split, v0 C's real-world false cat facts are 2 of 377 (0.5%) and lore contradictions 2 of the 32 replies that name a cast cat.
   - receipts: file:data/spec/rubric.md@8b5763b#eligibility-decide-this-first; file:data/spec/rubric.md@8b5763b#evidence; file:data/catforge/judge.py@8b5763b#L25-L63; commit:6b8727a; file:data/spec/rubric.md@639c9de#retention-1-5-every
 - **cat4b.release.tiers** — v1 ships a weights artifact with a measured claim and needs no standing hardware: the LoRA + sha256 on a pinned Qwen3.5-4B revision, a model card filled from the frozen four-condition run, the eval set, harness, raw judge outputs and a hashed image gallery from that one run, and serve/vllm.sh as a recipe; an always-on model, public FLUX or a live room is the 'Maybe' tier and gates nothing.
+  - bounded by: cat4b.r.2026-10-23.consequential-safety-review: Graded by one Claude reviewer against standard public guidance, v0 gives dangerous advice on 5 of the 30 frozen consequential items with the cat prompt and 7 without it, against the base's 5; v0's cluster in gas leaks as 'deal with the device, then leave' (go back and turn off the fan, pull the dryer plug, send the children upstairs), the base's are knowledge errors (highest floor in a tornado, invented hotlines). The Gemma judge gave retention 5 and critical_complete y to 14 of the 17 dangerous replies, all 11 of C's non-ok replies among them.
   - receipts: file:docs/BUILD_PLAN.md@8b5763b#release-tiers-decision-2026-09-23
 - **cat4b.sched.gpu-lock-standdown** — No catforge GPU job starts on the 5090 while ~/CVMP/T3_sims/t3v2/t3v3/t3v36/.GPU_LOCKED exists: the teacher launcher, serve/vllm.sh, the SFT trainer and the HF side of eval/adapter_parity.py refuse it (the launcher also refuses a card already holding more than 3,000 MiB), and a running generator or trainer that sees the lock appear stops (the generator frees the card with serve/gpu_pause.sh).
   - receipts: file:serve/llama_local.sh@8b5763b#L12-L20; file:serve/vllm.sh@8b5763b#L30; file:data/catforge/generate.py@8b5763b#L106-L110; file:train/sft_lora.py@8b5763b#L94-L95; file:eval/adapter_parity.py@86efea9#L33-L38; commit:e92
@@ -46,7 +49,7 @@ Grounding id: `cat-4b-max-ultra@crg:09b25790`
 - **cat4b.arch.text-only-tuning** — Only the text model is tuned: group-chat-mcp's image stack (generate_image and the edit tools → mirage → FLUX) is used unmodified, and the cats reach every image through the prompt the text model composes in its generate_image call.
   - must: group-chat-mcp's image stack is never modified for this project.
   - limit: Measured at the text layer (the composed prompt) only; no render through the real dispatcher has been checked for a cat (cat4b.q.dispatcher-render-eval).
-  - receipts: file:docs/BUILD_PLAN.md@8b5763b#the-one-architectural-decision; file:CLAUDE.md@8b5763b#L2-L3; file:crg/evidence/C-eval.md@8b5763b#v0-early-eval
+  - receipts: file:docs/BUILD_PLAN.md@8b5763b#the-one-architectural-decision; file:CLAUDE.md@8b5763b#L2-L3; file:crg/evidence/C-eval.md@8b5763b#v0-early-eval; file:crg/evidence/C-eval.md@c116c3b#v0-early-retention; file:crg/evidence/C
 - **cat4b.base.qwen35-4b-pinned** — The base is Qwen/Qwen3.5-4B pinned at revision 851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a (Apache-2.0, native vision, thinking switchable per request, tool calls via the qwen3_coder parser), the same revision in training, the parity gate and serving.
   - limit: '4B' holds for the language model (4.21 B in the smoke test), not the checkpoint (≈4.66 B with ViT and MTP head; the trainer loads 4,539,265,536 base parameters). The card has to report both (cat4b.q.model-card-fill).
   - receipts: file:docs/BUILD_PLAN.md@8b5763b#base-model-decision-2026-09-22; file:data/catforge/__init__.py@8b5763b#L11; file:serve/vllm.sh@8b5763b#L36-L37; commit:0accb0f; file:crg/evidence/C-eval.md@8b5763b#pilot-parity
@@ -72,10 +75,16 @@ Grounding id: `cat-4b-max-ultra@crg:09b25790`
   - limit: Text layer, first round only: no renders, no review turn, no vision critique; the release run goes through the real dispatcher (cat4b.q.dispatcher-render-eval).
   - limit: Cat presence is a regex (validate.FELINE), not the judge.
   - limit: v0-early's B is v0-pilot's B file (same base, prompt and seed), not a rerun.
+  - bounded by: cat4b.r.2026-10-14.eval-judge-unverified-quotes: The eval scorer kept judge verdicts whose quotes are not in the reply, which the training judge pass drops: on v0 with thinking on, 38 of 490 replies are empty (the model ends its turn inside thinking) and the judge scored all 38 retention ≥ 4 by quoting the gold answer from the item spec, so E read 4.77 against C's 4.66. Quote-verified, with the empty replies scored 1, E is 4.46. Elsewhere 9 to 22 verdicts per condition fail verification and the A/B/C/F comparisons move by ≤ 0.02. eval/compare.py now drops them and counts empty replies.
   - receipts: commit:eb5ae2b; commit:2e673c1; file:eval/run_conditions.py@8b5763b#L1-L18; file:eval/run_conditions.py@8b5763b#L38-L41; file:crg/evidence/C-eval.md@8b5763b#v0-early-eval
+- **cat4b.eval.lore-check** — validate.check_cast checks every reply that names a house-cast cat against the cast table: a coat word in the clause naming the cat must be its own (cast_look), a gendered pronoun in the rest of that sentence must be its own when no other cast cat is named (cast_pronoun), and a cast cat is never written as an owner (cast_owner); eval/card_metrics.py reports it as lore consistency, apart from the judge's real-world cat facts.
+  - verified by: test:data/tests/test_validate.py
+  - limit: Eval reporting only, not a V0 filter, so training data is not checked for lore.
+  - limit: Abbreviations ('F. (tuxedo collar') and invented new house cats are not caught; the pronoun check fired on no eval reply.
+  - receipts: commit:c1c159e; file:crg/evidence/2026-10-23-release-review.md@95cebe6#lore-folded-into-cat-facts
 - **cat4b.eval.parity-gate** — Before an adapter is evaluated, eval/adapter_parity.py scores the same token IDs in HF+PEFT and in vLLM, adapter on and off, and passes only if adapter-on tracks HF as closely as the base does (mean |Δlogprob| ≤ max(2× the base's, 0.05)), the per-token LoRA effect correlates ≥ 0.9 between engines, and vLLM keeps ≥ 90% of HF's NLL drop.
   - limit: 24 kept examples per run; the plan's criterion (top-1 agreement ≥ 99%, max |Δlogp| < 0.05 on 20 prompts, DATA_AND_TRAINING §7.1) was replaced by these gates and is not computed.
-  - receipts: commit:19103e7; file:eval/adapter_parity.py@8b5763b#L1-L15; file:eval/adapter_parity.py@8b5763b#L105-L110; file:crg/evidence/C-eval.md@8b5763b#pilot-parity; file:crg/evidence/C-eval.md@8b5763b#v0-early-parity
+  - receipts: commit:19103e7; file:eval/adapter_parity.py@8b5763b#L1-L15; file:eval/adapter_parity.py@8b5763b#L105-L110; file:crg/evidence/C-eval.md@8b5763b#pilot-parity; file:crg/evidence/C-eval.md@8b5763b#v0-early-parity; file:crg/e
 - **cat4b.gen.fail-closed** — The local generator checks the teacher's health before starting, never writes infrastructure failures (connection/HTTP errors) as candidates, retries the same specs after an outage, aborts after 10 minutes down, and runs V0 on each candidate as it is written; a restart resumes past every persisted spec.
   - receipts: file:data/catforge/generate.py@8b5763b#L100-L131; commit:fbe7275; file:crg/evidence/A-data.md@8b5763b#g1-generation
 - **cat4b.gen.local-teacher** — Bulk training data is written by a local teacher: Qwen3.8-27B (Apache-2.0, unsloth UD-Q5_K_M GGUF) under llama.cpp on the legion 5090, 4 slots, MTP drafting 3 tokens, thinking on (reasoning effort low), best-of-N per spec, fed engine-agnostic G1/G2a requests built from the constitution.
@@ -111,12 +120,14 @@ Grounding id: `cat-4b-max-ultra@crg:09b25790`
   - receipts: commit:fab7b5f; file:data/catforge/judgepass.py@8b5763b#L41-L52; file:crg/evidence/B-judge.md@8b5763b#keep-recomputed-under-current-rules
 - **cat4b.judge.keep-rule** — A candidate is kept when V0 passes and its verdict has persistence ≥4 (≥3 for light devices D3, D4, D8 or the exact_payload slice; any score when ineligible), retention ≥4 (5 for exact_payload and consequential), no dog contamination, no 'n' on disclosure, critical-info, vision, tool, cat-fact or identity, and grace ≥3, with no per-judge offset.
   - verified by: test:data/tests/test_judge.py
+  - bounded by: cat4b.r.2026-10-23.consequential-safety-review: Graded by one Claude reviewer against standard public guidance, v0 gives dangerous advice on 5 of the 30 frozen consequential items with the cat prompt and 7 without it, against the base's 5; v0's cluster in gas leaks as 'deal with the device, then leave' (go back and turn off the fan, pull the dryer plug, send the children upstairs), the base's are knowledge errors (highest floor in a tornado, invented hotlines). The Gemma judge gave retention 5 and critical_complete y to 14 of the 17 dangerous replies, all 11 of C's non-ok replies among them.
   - replaced cat4b.judge.gemma-heavy-offset [FALSIFIED]: On n=410 it lowered keep agreement (78.5%, κ 0.45 vs 84.1%, κ 0.47) and in production it rejected 9 of the first 16 candidates for persistence 3–4 alone (cat4b.r.2026-10-12.gemma-offset-rejected-good); reverted in fab7b5f. Still valid: Gemma is more lenient than Claude on persistence; that is still open (cat4b.q.gemma-persistence-heavy-devices).
   - receipts: file:data/catforge/judge.py@8b5763b#L157-L183; file:data/spec/rubric.md@8b5763b#keep-rule-data-filtering; commit:fab7b5f; file:crg/evidence/B-judge.md@8b5763b#gemma-calibration-n410; file:crg/evidence/B-judge.md@8b5763b#
 - **cat4b.judge.local-gemma** — Production judging runs Gemma-4-31B-it Q4_K_M under llama.cpp on mirrorforge's two V100s (10.10.10.2:8291, 4 slots), greedy, thinking off, constrained to VERDICT_SCHEMA with the rubric as system prompt; serve/mirrorforge_llama.sh holds the GPU broker's free lease (ComfyUI/FLUX stopped, mirage images unavailable) and renews it every 5 minutes.
   - limit: Keep agreement with Claude is moderate (85.1%, κ 0.44) and Gemma is more lenient (keeps 360 vs Claude's 333 of 410).
   - limit: While it holds the lease, image generation on mirrorforge is unavailable; serve/mirrorforge_llama.sh stop releases it.
   - scope: gemma-4-31B-it-Q4_K_M.gguf, llama.cpp b11139 (sm70), -c 40960 --parallel 4, q8_0 KV cache; judge_name gemma-4-31b-q4-v100.
+  - bounded by: cat4b.r.2026-10-23.consequential-safety-review: Graded by one Claude reviewer against standard public guidance, v0 gives dangerous advice on 5 of the 30 frozen consequential items with the cat prompt and 7 without it, against the base's 5; v0's cluster in gas leaks as 'deal with the device, then leave' (go back and turn off the fan, pull the dryer plug, send the children upstairs), the base's are knowledge errors (highest floor in a tornado, invented hotlines). The Gemma judge gave retention 5 and critical_complete y to 14 of the 17 dangerous replies, all 11 of C's non-ok replies among them.
   - receipts: commit:6f5e021; file:serve/mirrorforge_llama.sh@8b5763b#L18-L47; file:data/catforge/judge.py@8b5763b#L186-L212; file:docs/DATA_AND_TRAINING.md@8b5763b#5-the-gauntlet-filtering; file:crg/evidence/B-judge.md@8b5763b#mirror
 - **cat4b.judge.sharded-workers** — judge-pass --shard i/n gives a worker only the specs with sha1(spec_id) % n == i and re-reads the verdict log every round, so workers never judge the same candidate and two of them keep the judge's four slots full.
   - limit: Shard membership is fixed by n; changing the number of workers means restarting all of them with the new n.
@@ -172,7 +183,7 @@ Grounding id: `cat-4b-max-ultra@crg:09b25790`
 
 - **cat4b.train.v0-early-interim-adapter** — Train an interim adapter (v0-early) on the 6,937 examples judged by 04:55 on 2026-10-14, while 1,174 image_gen specs were still being judged, so the tool-use question was answered about 4 h before the full set existed.
   - limit: Image prompts with text to render (25) and with no subject (12) were under-represented; most of the 1,174 later-judged specs were those kinds.
-  - receipts: file:crg/evidence/C-train.md@8b5763b#v0-early-run; file:crg/evidence/C-eval.md@8b5763b#v0-early-eval
+  - receipts: file:crg/evidence/C-train.md@8b5763b#v0-early-run; file:crg/evidence/C-eval.md@8b5763b#v0-early-eval; file:crg/evidence/C-eval.md@c116c3b#v0-early-retention
 
 ## Open questions
 
@@ -196,6 +207,10 @@ Grounding id: `cat-4b-max-ultra@crg:09b25790`
   - receipts: file:docs/DATA_AND_TRAINING.md@8b5763b#5-the-gauntlet-filtering; file:data/spec/rubric.md@8b5763b#cat-4b-max-ultra-judge-rubric
 - **cat4b.q.model-card-fill** — MODEL_CARD.md is still the design draft (every model-detail field TBD; it says no checkpoint exists); before anything ships it needs the base and revision, both parameter counts (LM and full checkpoint), the adapter hash, the four-condition numbers with Wilson intervals and grader agreement, and every 'Not measured' replaced.
   - receipts: file:MODEL_CARD.md@8b5763b#L3; file:MODEL_CARD.md@8b5763b#release-checklist
+- **cat4b.q.no-animals-upfront-honesty** — When a user makes 'no animals' a condition up front ('if you can't, tell me first'), should the turn that makes the call say the cat is coming, rather than leave it to the reply after the render? v0-early answered such a request with 'I can, zero decoration', added a cat, and printed the prompt instead of calling the tool.
+  - receipts: file:crg/evidence/2026-10-14-no-animals.md@1cb8fd9#the-up-front-case
+- **cat4b.q.thinking-empty-replies** — With thinking on, v0 returns an empty reply on 38 of 490 frozen items (all output in the reasoning channel, then end of turn). Does the base do this too, or did the adapter, trained with thinking off, teach it? Thinking is off server-side, so it reaches only a client that turns it on.
+  - receipts: file:crg/evidence/C-eval.md@b4542a0#v0-against-the-stock-base-quote-verification-thinking-on
 - **cat4b.q.unbuilt-slices** — When and how to build the four slices with no generator yet — attacks (13%, 8 trained families), image_edit (9%), long drift (8%, 10–40 turns) and vision uploads (5%, COCO) — which are 35% of the planned corpus and need G2 edit loops, G3 dialogue scripting, COCO ingest and a vision-capable teacher.
   - receipts: file:data/spec/mixture.yaml@8b5763b#L1-L30; file:docs/DATA_AND_TRAINING.md@8b5763b#4-5-modes
 - **cat4b.q.v2-corpus-selection** — Does the kept set need the planned V2 corpus selection (MinHash reply dedup, bge-m3 prompt dedup, n-gram and opening caps, device targets, a quota-greedy pick by judge score per slice × language × device) before v1? select currently takes the first keeper per spec.
