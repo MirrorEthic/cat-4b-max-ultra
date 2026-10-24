@@ -114,7 +114,23 @@ the PCM master and let the storyboard builder mux it (it hash-checks the approve
 - A credits line that names MiniMax H3 if H3 clips are used.
 - Paid clip budget: $7.51 left on WaveSpeed; H3 is free and local, so the trailer should be H3-only.
 
-## 6. Order of work
+## 6. Coordination with music_studio
+
+Decided by Garret 2026-10-24 12:15: the music_studio session makes the cue and the two sessions sync through a
+shared drop and the blackboard.
+
+- **Drop:** `/media/garret-sutherland/dev-data/cat4b/video/` (its `README.md` is the contract): `stills/` (48 real
+  renders for the 12 shot items, base vs CAT-4B, FLUX + Z-Image + klein, with SHA256SUMS), `traces/` (per item:
+  user request, base prompt, CAT-4B prompt, review reply; json and md), `cast/`, `h3/`, `storyboard/`, `cuts/`
+  from this side; `music/` (PCM master 48k/24, `beat_grid.json`, `cue_map.json`, listen AAC, SHA256SUMS, licence
+  notes) from music_studio, which keeps its own `projects/<song>/` as usual.
+- **Thread:** blackboard topic `[cat4b trailer]`, first note 12:20 MDT (id 1a16f2147df-bde9), addressed to
+  music_studio with the bar map wanted, the delivery list and the rules (Garret is the listening authority;
+  nothing publishes; say on the thread before taking the 5090). The music session was also messaged directly.
+- **Sync rule:** every media file carries a sha256 line in its folder's SHA256SUMS; the storyboard recipe
+  references the master by path and the builder hash-checks it; cuts land with their `.timeline.json`.
+
+## 7. Order of work
 
 1. Pick the backend for stills (FLUX gallery, or Z-Image re-renders of the same prompts in `candidates/`) and
    the seven trace items in §3; export the stills and the text of each trace.
