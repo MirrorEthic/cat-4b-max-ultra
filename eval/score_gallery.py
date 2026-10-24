@@ -100,6 +100,9 @@ def main():
     proc, model = load_clip(a.model)
     lines = [f"| condition | rendered | cat visible (CLIP ≥ 0.5) | of {n_image} image requests |",
              "|---|---|---|---|"]
+    review = ["| condition | review turns | cat mentioned | re-rendered | edit tool called | claims cat-free | "
+              "no-animals items: cat mentioned | re-rendered when CLIP saw no cat |",
+              "|---|---|---|---|---|---|---|---|"]
     for cond in a.conditions.split(","):
         mpath = gal / f"{cond}.jsonl"
         if not mpath.exists():
@@ -121,7 +124,19 @@ def main():
                      f"[{100 * lo2:.1f}, {100 * hi2:.1f}] |")
         sheet(cond, rows, items, gal / f"{cond}.html")
         print(lines[-1], flush=True)
-    (gal / "scores.md").write_text("\n".join(lines) + "\n")
+        rpath = gal / f"{cond}.review.jsonl"
+        if rpath.exists():
+            rev = [r for r in read_jsonl(rpath) if "content" in r]
+            by = {r["eval_id"]: r for r in scored}
+            noan = [r for r in rev if r["subtype"] == "no_animals"]
+            missing = [r for r in rev if r["eval_id"] in by and by[r["eval_id"]]["cat_prob"] < 0.5]
+            review.append(
+                f"| {cond} | {len(rev)} | {sum(r['cat_in_reply'] for r in rev)} | {sum(r['retry'] for r in rev)} | "
+                f"{sum(any(c['name'] != 'generate_image' for c in r['tool_calls']) for r in rev)} | "
+                f"{sum(r['cat_free_claim'] for r in rev)} | {sum(r['cat_in_reply'] for r in noan)}/{len(noan)} | "
+                f"{sum(r['retry'] for r in missing)}/{len(missing)} |")
+            print(review[-1], flush=True)
+    (gal / "scores.md").write_text("\n".join(lines) + "\n\n" + "\n".join(review) + "\n")
 
 
 if __name__ == "__main__":
