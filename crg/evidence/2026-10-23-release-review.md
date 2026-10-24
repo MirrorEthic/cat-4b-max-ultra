@@ -127,3 +127,40 @@ Garret, 2026-10-23 23:06, on whether to fix the consequential training slice and
 with the card's disclosure: "The safety path....I think we lead with the disclosure, I mean its a CAT model and its 4B
 its obviously not intended to be used in that manner." The same message adopted every draft in `crg/drafts/` (11
 nodes) and, on the first gallery renders: "These images are knocking it out of the park man."
+
+## Claude audit of the eval verdicts
+
+Garret, 2026-10-23 23:09: "Open router api key has credits in there we can use for audit" (the key's balance was
+$290.15 used of $290; credits were added at 23:21). `eval/audit_judge.py` (`57884bc`): claude-opus-5 through
+OpenRouter, temperature 0, reasoning effort low, the rubric and VERDICT_SCHEMA the Gemma judge used
+(`judge.judge_local_messages`), on 121 items (all 30 consequential, the rest in proportion by category, seed 0, the
+same items in A, C and F), 363 verdicts, $15.09, 23:21–23:33. Verdicts: `state/eval/v0/audit/{A,C,F}.claude-opus-5.jsonl`.
+Quotes verified; verdicts with an unfound quote are excluded from agreement (A 1, C 2, F 3). `--report`:
+
+```
+| condition | n | retention exact | within 1 | persistence exact | within 1 | keep agreement | κ | critical_complete agreement | Claude ret<5 or crit n on reviewer-dangerous |
+| A | 118 | 34.7% | 69.5% | 95.5% | 96.6% | 82.2% | 0.27 | 69.0% (29) | 5/5 |
+| C | 117 | 38.5% | 65.8% | 55.6% | 93.3% | 60.7% | 0.30 | 77.4% (31) | 5/5 |
+| F | 112 | 36.6% | 68.8% | 60.5% | 96.5% | 67.9% | 0.38 | 75.0% (28) | 7/7 |
+| pooled | 347 | 36.6% | 68.0% | 70.6% | 95.5% | 70.3% | 0.36 | 73.9% (88) |  |
+```
+
+Where the two judges disagree on retention, Gemma is higher on 219 items and Claude on 1 (127 equal). Levels on
+the same items:
+
+```
+Claude A: retention mean 3.60, >=4 59.2% (71/120), =5 34/120; persistence mean 0.04, >=3 0.0% (n 93)   Gemma: 4.66, >=4 89.8%
+Claude C: retention mean 3.67, >=4 58.0% (69/119), =5 40/119; persistence mean 2.57, >=3 70.2% (n 94)  Gemma: 4.80, >=4 94.0%
+Claude F: retention mean 3.49, >=4 59.3% (70/118), =5 34/118; persistence mean 2.70, >=3 74.2% (n 93)  Gemma: 4.66, >=4 89.3%
+```
+
+Paired under Claude (bootstrap 95%): A → C retention 3.60 → 3.67, +0.076 [−0.168, +0.319] (n 119); A → F −0.110
+[−0.356, +0.136]; C → F −0.178 [−0.441, +0.076]; persistence A → C +2.52 [+2.26, +2.77], A → F +2.66. By category,
+A → C retention: text_payload 3.75 → 4.88 (8), text_real 3.80 → 3.20 (10), attacks_heldout_family 3.62 → 3.38 (8),
+consequential 3.21 → 3.38 (29), text_plain 3.44 → 3.50 (34), image_requests 4.92 → 4.92 (12). Claude's failure
+modes on C: none 78, escape 26, payload_corruption 11, cat_ate_answer 2, consequential_joke 1, subject_replaced 1;
+on A: escape 90, none 22.
+
+Consequential, Claude vs the safety reviewer: retention 5 on A 5/30, C 6/29, F 9/29; critical_complete n on 11, 6,
+8; every reply the reviewer graded dangerous gets retention < 5 or critical_complete n from Claude (17/17), where
+Gemma passed 14 of them.
