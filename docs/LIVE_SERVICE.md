@@ -16,10 +16,11 @@ What Volta (compute capability 7.0) does and does not do, from the probes and so
 - fp16 tensor cores (about 112 TFLOPS); **no bf16 tensor cores** (PyTorch reports `is_bf16_supported()` True and
   emulates it through fp32, at fp32 speed); **no fp8 or int8 tensor cores**; no FlashAttention-2. fp8 and int8
   checkpoints load only as storage formats that get cast to the compute dtype per layer.
-- The two cards talk over PCIe Gen2 x16 (per-slot restriction, `nodes/mirrorforge.toml`), no NVLink; 31 GB RAM
-  today (32 GB UDIMM-2133), with a swap to 64 GB RDIMM-2400 planned for 2026-10-24. RAM does not change the VRAM
-  budget, but it lets mirage keep several backends cached for fast swaps and makes CPU-offloading the Qwen3-4B text
-  encoder an option.
+- The two cards talk over PCIe Gen2 x16 (per-slot restriction, `nodes/mirrorforge.toml`), no NVLink. RAM: 48 GB
+  since the 2026-10-24 swap (three 16 GB Samsung RDIMM-2400 in B1, C1, D1; the fourth stick in A1 is not detected
+  and a stick-versus-slot swap test is pending; the manual's four-DIMM layout is A1/B1/C1/D1). RAM does not change
+  the VRAM budget, but it lets mirage keep several backends cached for fast swaps and makes CPU-offloading the
+  Qwen3-4B text encoder an option.
 - Driver 535.309.01 (CUDA 12.2). CUDA 13 builds carry no sm_70 kernels, so anything on `torch+cu130` cannot run
   there. PyTorch 2.11 removed Volta from its cu128/cu129 wheels; cu126 wheels keep it through 2.14 and are announced
   to stop at 2.15. mirrorforge's ComfyUI venv is `torch 2.5.1+cu121` (sm_70 in its arch list); that is the floor the
@@ -137,7 +138,9 @@ remainder free, which is where edits (flux-fill, 12.7 GB Q8) cannot fit any more
   cuda:1, `CUDA_VISIBLE_DEVICES` or MultiGPU device pins) both resident; `free` still evicts everything (training,
   judge); `vision` evicts everything or is retired.
 - **training watchdog**: add the cat service to `IGNORE_SERVICES`, or it pauses ComfyUI the moment llama-server
-  holds its 4.5 GB.
+  holds its 4.5 GB. It also wants a start-up grace period: on the 2026-10-24 reboot a process outside its ignore
+  list held 5.9 GB on both cards for the first seconds after boot, the watchdog stopped ComfyUI 16 s into its
+  life, and mirage reported `degraded` until the 60 s debounce brought ComfyUI back (self-healed by 09:43).
 - **node contract**: `[[services]]` for the cat endpoint (port, `/health`, restart) in `nodes/mirrorforge.toml`;
   the pi5 watchdog then monitors it.
 - **group-chat**: the cat model's provider base URL moves from legion:8011 to mirrorforge (`cat4b.integ.provider-
@@ -172,12 +175,13 @@ backend's template sampler settings; OWLv2 cat detection as in `eval/score_galle
 | FLUX.2 [klein] 4B, fp8 file | 4.07 GB | fp16 weights, manual cast bf16 | 3.0 | 74/75 = 98.7% [92.8, 99.8] | 74/74 | 0/71 = 0.0% [0.0, 5.1] | 0.72 |
 | FLUX.2 [klein] 4B, bf16 file | 7.75 GB | pure fp16 | 3.0 | 74/75 | 74/74 | 0/71 | 0.72 |
 | Z-Image-Turbo, bf16 file | 12.3 GB | pure fp16 | 8.0 | 74/75 = 98.7% [92.8, 99.8] | 74/74 | 0/71 | 0.71 |
-| Z-Image-Turbo, Q8_0 GGUF | 7.22 GB | _rendering_ | | | | | |
+| Z-Image-Turbo, Q8_0 GGUF (the memory-fit file for a V100) | 7.22 GB | pure fp16 (Q8_0 dequantised per layer) | 8.0 | 74/75 | 74/74 | 0/71 | 0.71 |
 
 Every backend reproduces the FLUX gallery's Image Cat Presence exactly: the one C render without a cat is
-multilingual-017, whose composed prompt names no cat (detector 0.004–0.005 on all three), and the base's 71 catless
-prompts stay catless (detector maximum 0.06–0.18). No render was black or NaN; 0 errors in 438 renders. The
-secondary CLIP column keeps its false positives (8–12 of 71 catless renders) and is not cited.
+multilingual-017, whose composed prompt names no cat (detector 0.004–0.005 on all four), and the base's 71 catless
+prompts stay catless (detector maximum 0.06–0.18). No render was black or NaN; 0 errors in 584 renders. The Q8_0
+GGUF file renders the same picture as the bf16 file at the same seed, to the eye, at the same speed. The secondary
+CLIP column keeps its false positives (6–12 of 71 catless renders) and is not cited.
 
 Renders viewed by the session (not a human check): klein fp8 image_requests-000 (Saturn, two cats, 1970s airbrush),
 001 (DeLorean, two cats, the title text garbled), 045 (Saint Bernard with two tabbies), 031 (a hardware shop front

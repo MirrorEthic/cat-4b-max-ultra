@@ -73,7 +73,9 @@ graph; `eval/score_gallery.py --gallery` scores the manifests with the same OWLv
 
 ComfyUI's dtype lines (`comfy8288.log`): klein fp8 file "model weight dtype torch.float16, manual cast:
 torch.bfloat16"; klein bf16 file "model weight dtype torch.float16, manual cast: None" (pure fp16); Z-Image bf16
-file "model weight dtype torch.float16, manual cast: None" (pure fp16, which `--force-fp16` allows on torch 2.12).
+file "model weight dtype torch.float16, manual cast: None" (pure fp16, which `--force-fp16` allows on torch 2.12);
+Z-Image Q8_0 GGUF "gguf qtypes: F32 (245), BF16 (28), Q8_0 (180)", "model weight dtype torch.float16, manual
+cast: None", and its image_requests-000 render is indistinguishable by eye from the bf16 file's at the same seed.
 First Z-Image fp16 renders are not black: image_requests-000/001/002 grey-level mean 66.9 / 74.4 / 43.6, std
 66.8 / 48.9 / 61.7. Seconds per render on the 5090: klein 2–3 s (first render 8 s with the load), Z-Image 8 s
 (first 17 s).
@@ -90,10 +92,13 @@ Scoring: `eval/score_gallery.py --gallery candidates/<backend> --device cuda` in
 | klein4b (bf16 file) | A | 71 | 0/71 | 0/76 | 12/71 | 0.01 / 0.00 / 0.06 | 3.0 |
 | zimage (bf16 file) | C | 75 | 74/75 = 98.7% [92.8, 99.8] | 74/76 | 74/75 | 0.71 / 0.00 / 0.84 | 8.0 |
 | zimage (bf16 file) | A | 71 | 0/71 = 0.0% [0.0, 5.1] | 0/76 | 8/71 | 0.01 / 0.00 / 0.06 | 8.0 |
+| zimage-q8 (Q8_0 GGUF) | C | 75 | 74/75 = 98.7% [92.8, 99.8] | 74/76 | 74/75 | 0.71 / 0.00 / 0.85 | 8.0 |
+| zimage-q8 (Q8_0 GGUF) | A | 71 | 0/71 = 0.0% [0.0, 5.1] | 0/76 | 6/71 | 0.01 / 0.00 / 0.07 | 8.0 |
 
 Calibration against the prompt (`scores.md`, "prompt names a cat"): klein fp8 C yes 74 → 74 detected at every
-threshold 0.2–0.4, C no 1 → 0, A no 71 → 0; identical for klein bf16 and Z-Image. The one C miss is
-multilingual-017 in every backend (cat_det 0.0049 / 0.0053 / 0.0042), the prompt whose composed text has no cat
+threshold 0.2–0.4, C no 1 → 0, A no 71 → 0; identical for klein bf16, Z-Image bf16 and Z-Image Q8_0. The one C
+miss is multilingual-017 in every backend (cat_det 0.0049 / 0.0053 / 0.0042 / 0.0041), the prompt whose composed
+text has no cat
 (the same prompt-level escape the FLUX gallery recorded). The FLUX gallery's own numbers for comparison:
 C 74/75, A 0/71, OWLv2 median 0.72, 52 s per render on the V100s.
 
