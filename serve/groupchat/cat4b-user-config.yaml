@@ -1,0 +1,16 @@
+# group-chat-mcp per-user override that routes one chat user to the live CAT-4B endpoint on mirrorforge.
+# group-chat reads data/users/<username>/config.yaml (core/user_config.py): `model` overrides the model id,
+# `provider` the OpenAI-compatible endpoint. The "-vl" suffix in the model name is what tells ai_gateway the
+# model can see images (its _is_multimodal check), so uploads and the post-render review turn reach the model.
+#
+# Install (data, not code; group-chat's repo stays untouched):
+#   mkdir -p ~/group-chat-mcp/data/users/<username> && cp serve/groupchat/cat4b-user-config.yaml \
+#       ~/group-chat-mcp/data/users/<username>/config.yaml
+# and set CAT4B_API_KEY=unused in group-chat's .env (llama-server runs without an API key; the client sends the
+# header regardless). The room's default model for everyone else is unchanged; the public seven-day event fronts
+# the same endpoint through the launch plan's gateway instead (docs/LAUNCH_PLAN.md section 6).
+model: cat4b-vl
+provider:
+  base_url: http://10.10.10.2:8292/v1
+  api_key_env: CAT4B_API_KEY
+max_tool_rounds: 5
