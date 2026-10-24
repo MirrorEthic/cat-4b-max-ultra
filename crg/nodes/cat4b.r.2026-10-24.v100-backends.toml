@@ -6,3 +6,4 @@ claim = "On one Tesla V100-PCIE-16GB under ComfyUI 0.22.0 with torch 2.14.1+cu12
 scope = "A test ComfyUI from ~/comfyui/venv-torch214 on port 8288 under a broker free lease (production ComfyUI stopped for the run and restored after), one card, production flags without --highvram; the same prompts, sizes and seeds as the FLUX gallery; OWLv2 at 0.3 as in cat4b.r.2026-10-24.gallery-render; timings are single-stream with the encoder on the same card, not the two-card layout the live service would use, and not under concurrent text-model load. klein's A set and the production unit switch are recorded in the evidence file when done."
 supports = ["cat4b.q.live-service-mirrorforge", "cat4b.r.2026-10-24.candidate-backends"]
 evidence = ["file:crg/evidence/2026-10-24-live-service.md@HEAD#phase-1-on-mirrorforge", "file:docs/LIVE_SERVICE.md@HEAD#7-measurements", "file:serve/mirrorforge/comfyui.service@HEAD#L1-L6"]
+adjudicated_by = "Garret 2026-10-24"

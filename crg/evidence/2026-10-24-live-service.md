@@ -154,7 +154,7 @@ test ComfyUI survived the cleanup holding 12.2 GB on GPU 0; the broker restarted
 the watchdog stopped it two seconds later ("training-sized VRAM detected (12208 MB external)"). Killing 49675 by
 hand at 11:29 cleared the card. v2 of the script should record the listener's pid from `ss`.
 
-## Phase 2: the merged weights through llama.cpp
+## Phase 2 the merged weights in GGUF
 
 - 11:38 `serve/merge_to_gguf.sh`: the v0 LoRA merged into the base with PEFT (`serve/merge_lora.py`, CPU, bf16)
   and converted by the b11139 `convert_hf_to_gguf.py`. First attempt refused by llama-server
