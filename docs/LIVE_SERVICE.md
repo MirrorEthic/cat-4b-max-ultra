@@ -308,6 +308,14 @@ reply 1.8 s, lease wait 0.0 s, render 13.6 s, review 1.9 s, 17.6 s end to end (p
 the cat in 18 of 20; OWLv2 finds a cat in 20 of 20 renders (the FLUX gallery had 74 of 75). The user image-request
 loop works on the resident pair at the speed the plan wanted.
 
+**Soak, both cards busy, 13:28–13:33.** Text at 8 in flight (96 requests) while two image loops ran at once:
+text 0 errors, 218 tok/s aggregate and 49 replies a minute (227 / 46 with the other card idle, so renders cost the
+text side nothing measurable); image loops 20/20, render 21.5 s median with two sharing the card (13.6 s alone),
+26.5 s end to end, cat named 20/20, OWLv2 cat in 20/20. Afterwards every unit active with zero restarts, no
+llama-server errors, no watchdog pause, broker clean. Capacity reading for the gateway: one text lane of 8 slots
+at about 46–49 replies a minute, one image lane at about 4 renders a minute (one at a time) that keeps the
+per-image wait near 16 s; a second render in flight only lengthens both.
+
 **group-chat.** CAT-4B is a `/model` choice in the room (group-chat-mcp 8297874: a registry entry that carries
 its own endpoint; the gateway routes a local pick to it, keeps the pick out of tier routing and leaves
 image-intent turns with the cat). The bot process predates the change and has not been restarted; that restart

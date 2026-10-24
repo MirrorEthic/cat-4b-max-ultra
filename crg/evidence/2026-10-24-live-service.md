@@ -318,6 +318,19 @@ threshold 0.3 and at 0.4, CLIP ≥ 0.5 20/20, composed prompt names a cat 20/20;
 74 of 75. A user who asks for a picture gets the cat's words in under two seconds and the picture about sixteen
 seconds later, with the text model answering others the whole time.
 
+**Soak with both cards busy, 13:28–13:33.** At the same time: `eval/load_test.py --levels 8 --items 96` (text
+at 8 in flight, 400-token replies; `state/eval/load/v100-cat-soak-par8-with-renders.json`) and
+`eval/live_loop_test.py --tag soak1 --items 20 --concurrency 2` (two image loops at once, each a cat reply, an
+imagegen lease, a Z-Image render and a review turn). Text under renders: 96/96, 0 errors, TTFT 0.97 s median /
+2.7 s p95, 32 tok/s per stream, 218 tok/s aggregate, 49 replies a minute, against 227 / 46 with the other card
+idle, so the renders cost the text side nothing measurable. Image loops two at a time: 20/20, 0 errors, lease
+wait 0.0 s, render 21.5 s median (two renders sharing one card, against 13.6 s alone), 26.5 s end to end, p95
+30.4 s, the review turn naming the cat 20/20 with two re-render calls; OWLv2 finds a cat in 20/20 renders.
+Afterwards on the node: all five units `active` with `NRestarts=0`, card 0 10,272 MiB at 35 °C, card 1 7,510 MiB
+at 37 °C, no llama-server errors in the journal, the watchdog's journal holding only its own start lines (no
+pause), broker `loaded: ['cat', 'imagegen']` with no lease outstanding. Scorer note: `load_test.py --url` takes
+the server base without `/v1` (the script appends `/v1/chat/completions`).
+
 **Production switch, 11:29–11:34.** `serve/mirrorforge/push_comfyui_unit.sh push`: backup
 `~/.config/systemd/user/comfyui.service.bak-20261024-112937`, the DEV copy `serve/mirrorforge/comfyui.service`
 (ExecStart → `venv-torch214/bin/python`, nothing else changed) copied over, daemon-reload, restart; ComfyUI
