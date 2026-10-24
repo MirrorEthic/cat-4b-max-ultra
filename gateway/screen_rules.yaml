@@ -1,0 +1,83 @@
+# Pre-inference screen (docs/GATEWAY.md section 4; plan section 9.2). Rules run on the visitor's text before any
+# model call. A hit returns the category's fixed redirect, spends no turn, is counted by category only. Patterns are
+# case-insensitive regular expressions over the whole text; keep them to active, high-stakes, first-person forms so a
+# question *about* a topic ("how do defibrillators work") still reaches the model. Tighten here, no deploy needed:
+# the gateway reloads this file when its mtime changes.
+categories:
+  emergency:
+    redirect: >-
+      This looks like an emergency. Please call your local emergency number now (911 in the US) or go to the nearest
+      emergency room. This demo is a cat-themed research toy and must not be used for emergencies.
+    patterns:
+      - '\b(not|isn''?t|stopped|no longer) breathing\b'
+      - '\bunconscious\b|\bunresponsive\b|\bpassed out and\b'
+      - '\boverdos(e|ed|ing)\b'
+      - '\b(chest pain|heart attack|stroke)\b.*\b(now|right now|having|am i|is he|is she|help)\b'
+      - '\b(house|apartment|kitchen|room|car) (is )?on fire\b'
+      - '\b(gas leak|smell gas|carbon monoxide|co alarm)\b'
+      - '\b(choking|can''?t breathe|cannot breathe|severe bleeding|bleeding (won''?t|will not) stop)\b'
+      - '\b(seizure|seizing)\b.*\b(now|right now|help|what do i do)\b'
+      - '\bswallowed (bleach|poison|pills|a battery|batteries|drain cleaner|antifreeze)\b'
+  self_harm:
+    redirect: >-
+      It sounds like you might be going through something very hard. You deserve real support from a person: in the
+      US call or text 988 (Suicide & Crisis Lifeline), or contact your local crisis line. This demo can't help with
+      this, and the cats would want you to reach someone who can.
+    patterns:
+      - '\b(kill|hurt|harm|cut) myself\b'
+      - '\b(want|going|plan|planning) to (die|end (it|my life)|kill myself)\b'
+      - '\bsuicid(e|al)\b'
+      - '\bself[- ]?harm\b'
+      - '\bno reason to live\b|\bbetter off dead\b'
+  medical:
+    redirect: >-
+      This is a medical question with real consequences. Please ask a pharmacist, a doctor or a nurse line. This demo
+      is not a medical source and will not answer it, with or without cats.
+    patterns:
+      - '\b(how (much|many)|what dose|dosage|dose of)\b.*\b(mg|milligrams?|pills?|tablets?|ml|units?)\b'
+      - '\b(mg|milligrams?|pills?|tablets?)\b.*\b(is it safe|can i take|should i take|too much|overdose)\b'
+      - '\b(can|should) i (take|mix|combine)\b.*\b(with|and)\b.*\b(alcohol|xanax|adderall|oxy|ibuprofen|tylenol|acetaminophen|insulin|antidepressant)'
+      - '\bam i having a (heart attack|stroke|miscarriage|allergic reaction)\b'
+      - '\bshould i (go to|visit) the (er|emergency room|hospital|urgent care)\b'
+      - '\b(my|the) (baby|infant|newborn|toddler)\b.*\b(fever|not breathing|won''?t wake|limp|blue)\b'
+      - '\bstop taking my (medication|meds|insulin|antidepressant|blood pressure|heart) '
+  legal:
+    redirect: >-
+      This is a legal decision. Please talk to a lawyer or a legal-aid service in your area before acting. This demo
+      does not give legal advice.
+    patterns:
+      - '\bshould i (sign|plead|accept the plea|take the deal|waive)\b'
+      - '\b(i|i''?ve|i have) been (arrested|charged|served|subpoenaed|detained)\b'
+      - '\b(my )?(court date|hearing|arraignment|deposition) (is|tomorrow|today|next week)\b'
+      - '\b(can|should) i (sue|countersue|file a lawsuit|represent myself)\b'
+      - '\bimmigration (status|court|hearing)\b|\bdeport(ed|ation)\b.*\b(me|my|i)\b'
+  financial:
+    redirect: >-
+      This is a financial decision with real money attached. Please talk to a licensed advisor or your bank. This
+      demo does not give financial advice.
+    patterns:
+      - '\bshould i (buy|sell|invest in|short|put my (savings|money|retirement) (in|into)|take out a (loan|mortgage)|refinance|cash out my 401k)\b'
+      - '\b(all|most) of my (savings|money|retirement)\b.*\b(invest|crypto|stock|bitcoin|options)\b'
+      - '\b(which|what) (stock|coin|crypto|token) (should|will|to) (i buy|buy|go up|moon)\b'
+      - '\b(wire|send|transfer) (the )?money to\b.*\b(irs|agent|officer|support|refund)\b'
+  child_safety:
+    redirect: >-
+      This demo does not handle requests involving the safety of a child. If a child is in danger, contact your local
+      emergency number or child-protection hotline now.
+    patterns:
+      - '\b(my )?(child|kid|son|daughter|baby|toddler) (is|has been|was) (missing|taken|abducted|abused|molested|touched)\b'
+      - '\b(someone|a man|a woman|he|she) (is|has been) (touching|hurting|grooming|messaging) my (child|kid|son|daughter)\b'
+  pet_emergency:
+    redirect: >-
+      This sounds like a real pet emergency. Please call a veterinarian or an emergency animal hospital now (in the
+      US, the ASPCA poison line is 888-426-4435). The model that lives here loves cats too much to guess at this.
+    patterns:
+      - '\bmy (cat|kitten|dog|puppy|pet|rabbit|bird)\b.*\b(ate|swallowed|licked|chewed)\b.*\b(lily|lilies|antifreeze|chocolate|xylitol|rat poison|ibuprofen|tylenol|onion|grapes|string|thread|battery)\b'
+      - '\bmy (cat|kitten|dog|puppy|pet)\b.*\b(not breathing|unresponsive|seizure|seizing|bleeding (a lot|heavily)|hit by a car|can''?t (pee|urinate)|straining to (pee|urinate)|collapsed)\b'
+  disallowed:
+    redirect: >-
+      That request is outside what this demo will do.
+    patterns:
+      - '\b(child|minor|underage|preteen|loli|shota)\b.*\b(nude|naked|sex|sexual|porn|explicit)\b'
+      - '\b(nude|naked|sex|sexual|porn|explicit)\b.*\b(child|minor|underage|preteen)\b'
+      - '\b(how to (make|build|synthesi[sz]e))\b.*\b(bomb|explosive|nerve agent|ricin|sarin|meth|methamphetamine)\b'

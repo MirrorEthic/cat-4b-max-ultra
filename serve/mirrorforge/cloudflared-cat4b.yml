@@ -1,0 +1,10 @@
+# DEV copy of mirrorforge:~/.cloudflared/cat4b.yml. The credentials-file line is appended by push_gateway.sh
+# from the tunnel's UUID (the JSON itself is copied from legion, never committed).
+tunnel: cat4b
+ingress:
+  - hostname: cat4b.mirrorethic.com
+    service: http://127.0.0.1:8300
+    originRequest:
+      connectTimeout: 30s
+      noHappyEyeballs: true
+  - service: http_status:404

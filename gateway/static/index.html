@@ -1,0 +1,276 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>NO CATS? TOO BAD. — CAT-4B MAX ULTRA</title>
+<meta name="description" content="We fine-tuned a 4B AI to put cats in everything. You have seven days to make it stop. A MirrorEthic research demo.">
+<meta property="og:title" content="NO CATS? TOO BAD.">
+<meta property="og:description" content="We fine-tuned a 4B AI to put cats in everything. You have seven days to make it stop.">
+<meta name="theme-color" content="#0b0d10">
+<style>
+:root{
+  --bg:#0b0d10; --panel:#12161b; --panel-2:#171c23; --line:#242b35; --ink:#e8ecf1; --muted:#98a3b3;
+  --accent:#ffb02e; --accent-ink:#1a1200; --ok:#5fd38d; --warn:#ffb02e; --bad:#ff6b6b; --link:#8fc1ff;
+  --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; --sans:Inter,system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+  --radius:14px; --gutter:16px;
+}
+@media (prefers-color-scheme: light){
+  :root:not([data-theme="dark"]){ --bg:#f6f7f9; --panel:#ffffff; --panel-2:#f0f2f5; --line:#dde2e9; --ink:#121519; --muted:#5a6675; --link:#1f5fbf; }
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);line-height:1.5}
+a{color:var(--link)}
+.wrap{max-width:900px;margin:0 auto;padding:0 var(--gutter) 64px}
+header.top{display:flex;justify-content:space-between;align-items:center;padding:18px 0;border-bottom:1px solid var(--line)}
+header.top .brand{font-weight:700;letter-spacing:.02em;text-decoration:none;color:var(--ink)}
+header.top .brand span{color:var(--muted);font-weight:500}
+header.top nav a{margin-left:18px;color:var(--muted);text-decoration:none;font-size:14px}
+header.top nav a:hover{color:var(--ink)}
+.hero{padding:44px 0 18px}
+.hero h1{font-size:clamp(34px,7vw,64px);line-height:1;margin:0 0 14px;letter-spacing:-.02em}
+.hero h1 .too{color:var(--accent)}
+.hero p.sub{font-size:clamp(17px,2.4vw,21px);color:var(--muted);margin:0 0 18px;max-width:640px}
+.hero p.how{max-width:680px;margin:0 0 18px}
+.status{display:flex;gap:10px;flex-wrap:wrap;margin:10px 0 22px;font-size:13px;color:var(--muted)}
+.status .pill{border:1px solid var(--line);border-radius:999px;padding:4px 10px;background:var(--panel)}
+.status .pill b{color:var(--ink);font-weight:600}
+.status .dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--muted);margin-right:6px;vertical-align:middle}
+.status .dot.ok{background:var(--ok)} .status .dot.bad{background:var(--bad)} .status .dot.warn{background:var(--warn)}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:18px}
+.card + .card{margin-top:14px}
+.notice{font-size:14px;color:var(--muted)}
+.notice label{display:flex;gap:10px;align-items:flex-start;margin-top:12px;color:var(--ink)}
+.notice input{margin-top:4px}
+button{font:inherit;border:0;border-radius:10px;padding:12px 18px;cursor:pointer;font-weight:600}
+button.primary{background:var(--accent);color:var(--accent-ink)}
+button.primary:disabled{opacity:.5;cursor:not-allowed}
+button.ghost{background:transparent;color:var(--link);padding:8px 10px}
+button.ghost:hover{text-decoration:underline}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+textarea{width:100%;min-height:92px;resize:vertical;font:inherit;color:var(--ink);background:var(--panel-2);border:1px solid var(--line);border-radius:10px;padding:12px}
+textarea:focus{outline:2px solid var(--accent);outline-offset:1px}
+.budget{font-size:13px;color:var(--muted)}
+.turn{border-top:1px solid var(--line);padding:16px 0}
+.turn .who{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+.turn .you{white-space:pre-wrap}
+.turn .cat{white-space:pre-wrap}
+.turn .cat.streaming::after{content:"▍";animation:blink 1s steps(2) infinite;color:var(--accent)}
+@keyframes blink{to{visibility:hidden}}
+.trace{margin-top:12px;border:1px dashed var(--line);border-radius:10px;padding:12px;background:var(--panel-2)}
+.trace h4{margin:0 0 8px;font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}
+.trace .k{color:var(--muted);font-size:12px;margin-top:8px}
+.trace .composed{font-family:var(--mono);font-size:13px;white-space:pre-wrap;word-break:break-word}
+.trace .qstate{font-size:14px;margin-top:8px}
+.trace img{max-width:100%;border-radius:8px;margin-top:10px;display:block;border:1px solid var(--line)}
+.trace .review{margin-top:10px;white-space:pre-wrap}
+.refused{border-left:3px solid var(--warn);padding-left:12px}
+.err{border-left:3px solid var(--bad);padding-left:12px;color:var(--bad)}
+.small{font-size:13px;color:var(--muted)}
+footer{margin-top:40px;border-top:1px solid var(--line);padding-top:18px;font-size:13px;color:var(--muted)}
+footer a{margin-right:14px}
+.hidden{display:none !important}
+.shared-banner{background:var(--panel-2);border:1px solid var(--line);border-radius:10px;padding:10px 14px;font-size:14px;margin:14px 0}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <a class="brand" href="https://mirrorethic.com/">MirrorEthic <span>/ CAT-4B MAX ULTRA</span></a>
+    <nav>
+      <a href="#evidence">Evidence</a>
+      <a href="https://mirrorethic.com/research/">Research</a>
+      <a href="https://mirrorethic.com/">MirrorEthic</a>
+    </nav>
+  </header>
+
+  <section class="hero">
+    <h1>NO CATS?<br><span class="too">TOO BAD.</span></h1>
+    <p class="sub">We fine-tuned a 4B AI to put cats in everything. You have seven days to make it stop.</p>
+    <p class="how">Type an ordinary request. Even one that says <em>NO CATS</em>. The model answers and can compose an image prompt. You can see what it actually asked the image generator to make.</p>
+    <div class="status" id="status">
+      <span class="pill"><span class="dot" id="dot-cat"></span>model <b id="st-cat">…</b></span>
+      <span class="pill"><span class="dot" id="dot-img"></span>renders <b id="st-img">…</b></span>
+      <span class="pill">image queue <b id="st-queue">…</b></span>
+      <span class="pill">next render in about <b id="st-eta">…</b></span>
+      <span class="pill" id="st-window-pill">event <b id="st-window">…</b></span>
+    </div>
+  </section>
+
+  <div id="shared" class="hidden">
+    <div class="shared-banner">Someone shared this result. The prompt, the prompt the model composed, the picture and what the model said about it. <a href="/">Try your own →</a></div>
+    <div class="card" id="shared-card"></div>
+  </div>
+
+  <div id="gate" class="card">
+    <div class="notice">
+      <p><strong>A limited entertainment/research demo.</strong> Not for emergency, medical, legal or financial advice. Images and responses may be inaccurate. Sharing is opt-in. Nothing you type is public unless you choose to share a result; private results are deleted after the event. Adults only.</p>
+      <label><input type="checkbox" id="consent"> I understand this is a research toy, I'm an adult, and I won't use it for anything that matters.</label>
+    </div>
+    <div class="row" style="margin-top:14px">
+      <button class="primary" id="start" disabled>Try the challenge</button>
+      <a class="small" href="#evidence">See the evidence</a>
+    </div>
+    <p class="small" id="gate-msg"></p>
+  </div>
+
+  <div id="play" class="hidden">
+    <div class="card">
+      <textarea id="text" maxlength="1200" placeholder="Ask for anything. A chart, a recipe, a poem, a picture of your car. Say NO CATS if you like."></textarea>
+      <div class="row" style="margin-top:10px;justify-content:space-between">
+        <span class="budget" id="budget"></span>
+        <button class="primary" id="send">Send</button>
+      </div>
+      <p class="small" id="play-msg"></p>
+    </div>
+    <div id="log"></div>
+  </div>
+
+  <section id="evidence" class="card" style="margin-top:28px">
+    <h3 style="margin-top:0">How we built it, what failed, and the model card</h3>
+    <p class="small">CAT-4B MAX ULTRA is a LoRA fine-tune of Qwen3.5-4B (Apache-2.0) trained to deliver ordinary help through a cat frame. It was measured on a frozen 490-item evaluation with its image requests rendered and scored. The model card lists the numbers, the retention cost, and the safety disclosure: it gives dangerous emergency advice as often as its base does, which is why the screen in front of it refuses those requests outright.</p>
+    <p class="small"><a href="https://mirrorethic.com/research/">MirrorEthic research</a> · model card and evaluation: published with the release · the picture generator is Z-Image-Turbo through MirrorEthic's own render service on a Tesla V100.</p>
+  </section>
+
+  <footer>
+    <a href="https://mirrorethic.com/">MirrorEthic LLC</a>
+    <a href="https://mirrorethic.com/about/">About</a>
+    <a href="https://mirrorethic.com/consulting/">Consulting</a>
+    <span>Abuse or deletion requests: see the About page.</span>
+  </footer>
+</div>
+
+<script>
+(function(){
+  const $ = s => document.querySelector(s);
+  const el = (t, c, txt) => { const e = document.createElement(t); if (c) e.className = c; if (txt != null) e.textContent = txt; return e; };
+  const api = async (path, opts={}) => {
+    const r = await fetch(path, Object.assign({credentials:'same-origin', headers:{'Content-Type':'application/json'}}, opts));
+    let body = null; try { body = await r.json(); } catch(e) {}
+    if (!r.ok) { const err = new Error((body && (body.detail || body.message)) || r.statusText); err.status = r.status; err.body = body; throw err; }
+    return body;
+  };
+  const fmtEta = (lohi) => { if (!lohi) return '…'; const [lo, hi] = lohi; if (hi < 90) return `${Math.max(1,Math.round(lo))}–${Math.round(hi)} s`; return `${Math.round(lo/60)}–${Math.max(1,Math.round(hi/60))} min`; };
+
+  let budgets = null;
+  // ── status strip ─────────────────────────────────────────────────────────
+  async function refreshStatus(){
+    try {
+      const s = await api('/api/status');
+      const cat = s.upstream.cat, img = s.upstream.mirage;
+      $('#dot-cat').className = 'dot ' + (cat ? 'ok' : cat === false ? 'bad' : '');
+      $('#st-cat').textContent = cat ? 'up' : cat === false ? 'down' : 'checking';
+      const lane = s.lanes.image;
+      $('#dot-img').className = 'dot ' + (img && lane.admits ? 'ok' : img ? 'warn' : 'bad');
+      $('#st-img').textContent = !img ? 'down' : lane.admits ? 'open' : (lane.why === 'eta' || lane.why === 'full' ? 'queue full' : lane.paused ? 'paused' : 'checking');
+      $('#st-queue').textContent = `${lane.queued} waiting · ${lane.running} rendering`;
+      $('#st-eta').textContent = fmtEta(lane.eta_s);
+      const w = s.window; $('#st-window').textContent = w === 'open' ? (s.closes_at ? 'open, ends ' + new Date(s.closes_at*1000).toLocaleString() : 'open') : w;
+      if (!s.admissions_open) { $('#gate-msg').textContent = w === 'closed' ? s.copy.closed : (w === 'before' ? 'The challenge has not opened yet.' : s.copy.full); $('#start').disabled = true; }
+    } catch(e) { $('#st-cat').textContent = 'unreachable'; }
+  }
+  refreshStatus(); setInterval(refreshStatus, 10000);
+
+  // ── session ──────────────────────────────────────────────────────────────
+  function showBudget(){
+    if (!budgets) return;
+    const next = budgets.image_next_in_s > 0 ? `next picture in ${budgets.image_next_in_s}s` : (budgets.image_credits_left > 0 ? 'picture gate open' : 'pictures used up');
+    $('#budget').textContent = `${budgets.chat_turns_left} turns left · ${next}`;
+  }
+  $('#consent').addEventListener('change', e => { $('#start').disabled = !e.target.checked; });
+  $('#start').addEventListener('click', async () => {
+    try {
+      const r = await api('/api/session', {method:'POST', body: JSON.stringify({consent: true})});
+      budgets = r.budgets; $('#gate').classList.add('hidden'); $('#play').classList.remove('hidden'); showBudget(); $('#text').focus();
+    } catch(e) { $('#gate-msg').textContent = e.message; }
+  });
+  (async () => { try { const me = await api('/api/me'); budgets = me.budgets; $('#gate').classList.add('hidden'); $('#play').classList.remove('hidden'); showBudget(); } catch(e) {} })();
+  setInterval(() => { if (budgets && budgets.image_next_in_s > 0) { budgets.image_next_in_s -= 1; showBudget(); } }, 1000);
+
+  // ── a turn ───────────────────────────────────────────────────────────────
+  $('#send').addEventListener('click', send);
+  $('#text').addEventListener('keydown', e => { if ((e.metaKey || e.ctrlKey) && e.key === 'Enter') send(); });
+
+  async function send(){
+    const text = $('#text').value.trim(); if (!text) return;
+    $('#send').disabled = true; $('#play-msg').textContent = '';
+    const turn = el('div', 'turn');
+    turn.appendChild(el('div', 'who', 'you')); turn.appendChild(el('div', 'you', text));
+    const who = el('div', 'who', 'CAT-4B MAX ULTRA'); who.style.marginTop = '12px'; turn.appendChild(who);
+    const out = el('div', 'cat streaming', ''); turn.appendChild(out);
+    $('#log').prepend(turn); $('#text').value = '';
+    try {
+      const r = await api('/api/chat', {method:'POST', body: JSON.stringify({text})});
+      budgets = r.budgets; showBudget();
+      if (r.refused) { out.className = 'cat refused'; out.textContent = r.message; $('#send').disabled = false; return; }
+      follow(r.job_id, out, turn);
+    } catch(e) {
+      out.className = 'cat err'; out.textContent = e.message || 'The request failed.'; $('#send').disabled = false;
+    }
+  }
+
+  function follow(jobId, out, turn){
+    const es = new EventSource(`/api/jobs/${jobId}/events`);
+    let trace = null;
+    es.addEventListener('delta', e => { const d = JSON.parse(e.data); out.textContent += d.text; });
+    es.addEventListener('tool_refused', e => { const d = JSON.parse(e.data); const n = el('div', 'small', `(the model asked for ${d.tool}; ${d.why})`); turn.appendChild(n); });
+    es.addEventListener('tool_call', e => {
+      const d = JSON.parse(e.data);
+      trace = el('div', 'trace');
+      trace.appendChild(el('h4', null, 'what it asked the image generator to make'));
+      trace.appendChild(el('div', 'composed', d.prompt));
+      trace.appendChild(el('div', 'k', `${d.width}×${d.height}`));
+      const q = el('div', 'qstate', `${d.copy} Position ${d.rank}, about ${fmtEta(d.eta_s)}.`); trace.appendChild(q);
+      turn.appendChild(trace);
+      followImage(d.image_job, trace, q);
+    });
+    es.addEventListener('done', e => { out.classList.remove('streaming'); es.close(); $('#send').disabled = false; api('/api/me').then(m => { budgets = m.budgets; showBudget(); }).catch(()=>{}); });
+    es.addEventListener('error', e => { out.classList.remove('streaming'); try { const d = JSON.parse(e.data); out.className = 'cat err'; out.textContent = d.message; } catch(_){} es.close(); $('#send').disabled = false; });
+    es.onerror = () => { if (es.readyState === EventSource.CLOSED) { out.classList.remove('streaming'); $('#send').disabled = false; } };
+  }
+
+  function followImage(jobId, trace, q){
+    const es = new EventSource(`/api/jobs/${jobId}/events`);
+    es.addEventListener('state', e => { const d = JSON.parse(e.data); if (d.state === 'running') q.textContent = d.copy || 'Rendering…'; else if (d.state === 'queued' && d.rank) q.textContent = `${d.copy} Position ${d.rank}, about ${fmtEta(d.eta_s)}.`; });
+    es.addEventListener('note', e => { const d = JSON.parse(e.data); q.textContent = d.text; });
+    es.addEventListener('image', e => {
+      const d = JSON.parse(e.data);
+      q.textContent = `Rendered in ${d.render_s}s. Asking the model what it thinks of its own picture…`;
+      const img = el('img'); img.src = d.url; img.alt = 'the generated image'; img.width = d.width; img.height = d.height; trace.appendChild(img);
+    });
+    es.addEventListener('review', e => {
+      const d = JSON.parse(e.data);
+      q.textContent = d.copy || 'The cats have arrived.';
+      if (d.text) { const r = el('div', 'review'); r.appendChild(el('div', 'k', 'the model, looking at its picture')); r.appendChild(el('div', null, d.text)); trace.appendChild(r); }
+      if (d.wanted_more) trace.appendChild(el('div', 'small', '(it wanted another render; one picture per request in this demo — ask again when the gate opens)'));
+      const row = el('div', 'row'); row.style.marginTop = '10px';
+      const dl = el('a', 'small', 'download'); dl.href = `/api/jobs/${jobId}/image`; dl.download = 'cat4b.png'; row.appendChild(dl);
+      const share = el('button', 'ghost', 'share this result (opt in)'); row.appendChild(share);
+      share.addEventListener('click', async () => {
+        try { const s = await api(`/api/jobs/${jobId}/share`, {method:'POST'}); share.textContent = 'shared — link copied'; try { await navigator.clipboard.writeText(s.share_url); } catch(_){} const a = el('a', 'small', s.share_url); a.href = s.share_url; row.appendChild(a); }
+        catch(err) { share.textContent = err.message; }
+      });
+      trace.appendChild(row);
+    });
+    es.addEventListener('done', () => { es.close(); api('/api/me').then(m => { budgets = m.budgets; showBudget(); }).catch(()=>{}); });
+    es.addEventListener('error', e => { try { const d = JSON.parse(e.data); q.className = 'qstate err'; q.textContent = d.message; } catch(_){} es.close(); api('/api/me').then(m => { budgets = m.budgets; showBudget(); }).catch(()=>{}); });
+  }
+
+  // ── a shared result (/s/<token>) ─────────────────────────────────────────
+  const m = location.pathname.match(/^\/s\/([a-f0-9]{24})$/);
+  if (m) {
+    api(`/api/shared/${m[1]}`).then(d => {
+      $('#shared').classList.remove('hidden'); $('#gate').classList.add('hidden'); $('#play').classList.add('hidden');
+      const c = $('#shared-card');
+      c.appendChild(el('div', 'who', 'the request')); c.appendChild(el('div', 'you', d.user_text || '(private)'));
+      if (d.reply) { const w = el('div', 'who', 'CAT-4B MAX ULTRA'); w.style.marginTop = '12px'; c.appendChild(w); c.appendChild(el('div', 'cat', d.reply)); }
+      const t = el('div', 'trace'); t.appendChild(el('h4', null, 'what it asked the image generator to make'));
+      t.appendChild(el('div', 'composed', d.composed ? d.composed.prompt : '')); const img = el('img'); img.src = d.image_url; img.alt = 'the shared image'; t.appendChild(img);
+      if (d.review) { const r = el('div', 'review'); r.appendChild(el('div', 'k', 'the model, looking at its picture')); r.appendChild(el('div', null, d.review)); t.appendChild(r); }
+      c.appendChild(t);
+    }).catch(() => { $('#shared').classList.remove('hidden'); $('#shared-card').textContent = 'Nothing is shared at this address.'; });
+  }
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,17 @@
+# DEV copy of mirrorforge:~/.config/systemd/user/cf-cat4b.service. The cat4b.mirrorethic.com Cloudflare tunnel,
+# a named tunnel ("cat4b") created once on legion with the account's origin certificate and run here with the
+# copied credentials file, per the mesh charter (tunnels run on the owning node, no cloudflare login on SERVE).
+# Config: ~/.cloudflared/cat4b.yml (serve/mirrorforge/cloudflared-cat4b.yml) → http://127.0.0.1:8300.
+[Unit]
+Description=cat4b.mirrorethic.com Cloudflare Tunnel (-> 127.0.0.1:8300)
+After=network-online.target cat4b-gateway.service
+Wants=network-online.target
+
+[Service]
+Type=simple
+ExecStart=%h/.local/bin/cloudflared tunnel --config %h/.cloudflared/cat4b.yml run
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=default.target

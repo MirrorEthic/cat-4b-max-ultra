@@ -1,0 +1,31 @@
+# DEV copy of mirrorforge:~/.config/systemd/user/cat4b-gateway.service (SERVE node; pushed by
+# serve/mirrorforge/push_gateway.sh, never live-edited). The public gateway (docs/GATEWAY.md): uvicorn on
+# 127.0.0.1:8300, reached only through the cf-cat4b tunnel (cat4b.mirrorethic.com). Upstreams are the node's own
+# llama-server (10.10.10.2:8292), mirage (10.10.10.2:8190) and broker (localhost:8077). Secrets live in
+# ~/cat4b/gateway/env (GATEWAY_SECRET_FILE, GATEWAY_ADMIN_TOKEN_FILE point at 0600 files; nothing in this unit).
+[Unit]
+Description=CAT-4B MAX ULTRA public gateway (FastAPI, two lanes, signed sessions) on 127.0.0.1:8300
+After=network.target cat4b.service
+Wants=cat4b.service
+
+[Service]
+Type=simple
+WorkingDirectory=/home/garret/cat4b/gateway
+Environment=HOME=/home/garret
+Environment=PYTHONUNBUFFERED=1
+Environment=GATEWAY_STATE=/home/garret/cat4b/gateway/state
+Environment=GATEWAY_ASSETS=/home/garret/cat4b/gateway/app/gateway/assets
+Environment=CAT_URL=http://10.10.10.2:8292
+Environment=MIRAGE_URL=http://10.10.10.2:8190
+Environment=COMFY_VIEW_URL=http://127.0.0.1:8188/view
+Environment=BROKER_URL=http://127.0.0.1:8077
+Environment=COMFY_OUTPUT_DIR=/home/garret/comfyui/output
+Environment=GATEWAY_PUBLIC_BASE=https://cat4b.mirrorethic.com
+EnvironmentFile=-/home/garret/cat4b/gateway/env
+ExecStart=/home/garret/cat4b/gateway/venv/bin/uvicorn gateway.app:app --app-dir /home/garret/cat4b/gateway/app \
+    --host 127.0.0.1 --port 8300 --proxy-headers --forwarded-allow-ips 127.0.0.1 --no-server-header --log-level info
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=default.target

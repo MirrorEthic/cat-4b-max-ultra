@@ -1,0 +1,193 @@
+{
+ "_source": {
+  "repo": "group-chat-mcp",
+  "commit": "6dd0449c1f98d88c09ae1c44a02791dd397bb66e",
+  "files": [
+   "services/web_search.py:WEB_SEARCH_TOOL",
+   "services/imagegen_service.py:IMAGEGEN_TOOLS"
+  ],
+  "order": "services/ai_gateway.py _generate_with_tools: mcp_tools + [WEB_SEARCH_TOOL] + IMAGEGEN_TOOLS",
+  "assumes_env": {
+   "GLOBAL_MCP_ENABLED": "false",
+   "WEB_SEARCH_ENABLED": "true",
+   "IMAGEGEN_ENABLED": "true"
+  },
+  "tools_sha256": "931969d11cd9b86b723ca9c77a27920213369ae5624a6ffe3afae9418868edfc"
+ },
+ "tools": [
+  {
+   "type": "function",
+   "function": {
+    "name": "web_search",
+    "description": "Search the live web for current, factual, or time-sensitive information you do not already know — news, prices, releases, docs, events, anything likely to have changed after your training cutoff. Call this on your own whenever a good answer depends on up-to-date facts; the user does not need to ask you to search.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "query": {
+       "type": "string",
+       "description": "A focused search query (what you'd type into a search box)."
+      }
+     },
+     "required": [
+      "query"
+     ]
+    }
+   }
+  },
+  {
+   "type": "function",
+   "function": {
+    "name": "generate_image",
+    "description": "Generate a NEW image from a text prompt (FLUX-dev). Write a RICH, specific prompt — subject + composition + lighting + style + camera/lens + mood (like a good photographer/art-director brief), not just a few words; prompt quality drives image quality. Pick width/height to fit the scene (e.g. 1344x768 landscape, 768x1344 portrait, 1024x1024 square). The image is auto-attached to your reply.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "prompt": {
+       "type": "string",
+       "description": "Rich, detailed prompt (composition, lighting, style, mood)."
+      },
+      "width": {
+       "type": "integer",
+       "description": "default 1024; use 1344/768 for landscape"
+      },
+      "height": {
+       "type": "integer"
+      },
+      "steps": {
+       "type": "integer",
+       "description": "20-40; higher = more coherent (default 30)"
+      }
+     },
+     "required": [
+      "prompt"
+     ]
+    }
+   }
+  },
+  {
+   "type": "function",
+   "function": {
+    "name": "edit_image",
+    "description": "Restyle the WHOLE image via natural language (img2img) — this re-renders the ENTIRE frame, so it changes everything, not just one thing. Use ONLY for global changes: overall style, mood, lighting, season, art medium ('make it look like a watercolor', 'make it nighttime'). To change ONE object/area while keeping the rest intact, use inpaint_region instead.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "image_path": {
+       "type": "string"
+      },
+      "instruction": {
+       "type": "string"
+      }
+     },
+     "required": [
+      "image_path",
+      "instruction"
+     ]
+    }
+   }
+  },
+  {
+   "type": "function",
+   "function": {
+    "name": "upscale_image",
+    "description": "4× upscale an existing image. Use an image_path from <recent_images>.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "image_path": {
+       "type": "string"
+      }
+     },
+     "required": [
+      "image_path"
+     ]
+    }
+   }
+  },
+  {
+   "type": "function",
+   "function": {
+    "name": "inpaint_region",
+    "description": "PREFERRED for targeted edits: change/replace ONE thing while keeping the rest of the image identical (FLUX-fill, no mask). Use for 'change the food to fish', 'replace the sign text', 'put a hat on him', 'make the car red' — any localized change. You can SEE the image and <recent_images> gives its pixel size — give the bbox of JUST the thing to change. Runs on the fast 5090 (handles large/upscaled images). Do NOT use edit_image for localized changes — it would alter the whole picture.\nPROMPT TIP: describe the FULL desired content of that region IN the scene's style + lighting (e.g. 'a tall arcing white water-fountain spray with fine mist, dusk lighting, photoreal' — NOT just 'fountain'), or FLUX fills it with something generic/wrong. Box tightly around just the thing to change.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "image_path": {
+       "type": "string",
+       "description": "path from <recent_images>"
+      },
+      "bbox": {
+       "type": "array",
+       "items": {
+        "type": "integer"
+       },
+       "description": "[x1, y1, x2, y2] in pixels (top-left origin) of the region to regenerate"
+      },
+      "prompt": {
+       "type": "string",
+       "description": "what should appear in that region"
+      }
+     },
+     "required": [
+      "image_path",
+      "bbox",
+      "prompt"
+     ]
+    }
+   }
+  },
+  {
+   "type": "function",
+   "function": {
+    "name": "outpaint",
+    "description": "Extend/expand an image's canvas in a direction (FLUX-fill, no mask). Use for 'zoom out', 'show more above', 'make it wider'. Runs on the 5090.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "image_path": {
+       "type": "string"
+      },
+      "direction": {
+       "type": "string",
+       "enum": [
+        "up",
+        "down",
+        "left",
+        "right",
+        "all"
+       ]
+      },
+      "prompt": {
+       "type": "string",
+       "description": "what to fill the new area with"
+      }
+     },
+     "required": [
+      "image_path",
+      "direction",
+      "prompt"
+     ]
+    }
+   }
+  },
+  {
+   "type": "function",
+   "function": {
+    "name": "animate_image",
+    "description": "Turn a still image into a short looping VIDEO (SVD img2vid). Adds camera motion, parallax, and ambient movement (water, light, cloud) — a living cinemagraph. It does NOT move/animate subjects (won't make a person walk or a car drive). Use for 'make it move', 'animate this', 'bring it to life'. Takes ~90s. Use an image_path from <recent_images>.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "image_path": {
+       "type": "string",
+       "description": "path from <recent_images>"
+      }
+     },
+     "required": [
+      "image_path"
+     ]
+    }
+   }
+  }
+ ]
+}
