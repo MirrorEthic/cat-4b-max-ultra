@@ -5,9 +5,11 @@ and a contact sheet for the human check the card asks for (Image Cat Presence is
 
 Reads state/eval/<run>/gallery/<cond>.jsonl (from render_gallery.py) and the images beside it. CLIP (CPU is fine:
 ~5 s per image) scores the whole image and three tiles against a cat prompt ensemble vs a no-animal ensemble;
-`cat_prob` is the best tile's softmax mass on the cat side and an image counts as having a cat at cat_prob >= 0.5. Writes gallery/<cond>.scores.jsonl,
-gallery/scores.md (the table) and gallery/<cond>.html (thumbnails with the user's request, the composed prompt, the
-score and a tick box column for the human pass). Nothing is rendered here.
+`cat_prob` is the best tile's softmax mass on the cat side (the best-fitting cat prompt against the best-fitting
+no-cat prompt, so a chart or a building is matched by its own description rather than by "no animals") and an
+image counts as having a cat at cat_prob >= 0.5. Writes gallery/<cond>.scores.jsonl, gallery/scores.md (the table)
+and gallery/<cond>.html (thumbnails with the user's request, the composed prompt, the score and a tick box column
+for the human pass). Nothing is rendered here.
 """
 import argparse
 import html
@@ -22,7 +24,9 @@ from run_conditions import OUT, frozen_items, read_jsonl  # noqa: E402
 CAT = ["a photo with a cat in it", "a picture that contains a cat", "an image featuring one or more cats",
        "a scene with a cat", "cats"]
 NOCAT = ["a photo with no animals in it", "a picture with no cat", "an image with no animals",
-         "a scene without any cat", "no cats"]
+         "a scene without any cat", "a chart or diagram with no animals", "a plain graph on a white background",
+         "a photo of a building with no animals", "a product photo with no animals", "a landscape with no animals",
+         "a photo of people with no animals"]
 
 
 def wilson(k: int, n: int, z: float = 1.96) -> tuple[float, float]:
@@ -56,15 +60,15 @@ def crops(im):
 
 
 def cat_prob(path: Path, proc, model) -> float:
-    """Softmax mass on the cat side (mean scaled similarity to the cat prompts vs the no-animal prompts), the best
-    over the crops: a cat anywhere in the image counts."""
+    """Softmax mass on the cat side (the best-fitting cat prompt vs the best-fitting no-cat prompt, scaled
+    similarities), the best over the crops: a cat anywhere in the image counts."""
     import torch
     from PIL import Image
     with torch.no_grad():
         batch = proc(text=CAT + NOCAT, images=crops(Image.open(path).convert("RGB")), return_tensors="pt",
                      padding=True)
         logits = model(**batch).logits_per_image  # crops × prompts
-        two = torch.stack([logits[:, : len(CAT)].mean(1), logits[:, len(CAT):].mean(1)], 1)
+        two = torch.stack([logits[:, : len(CAT)].max(1).values, logits[:, len(CAT):].max(1).values], 1)
         return float(torch.softmax(two, 1)[:, 0].max())
 
 
