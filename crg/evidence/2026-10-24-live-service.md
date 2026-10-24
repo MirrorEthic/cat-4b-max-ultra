@@ -187,6 +187,39 @@ hand at 11:29 cleared the card. v2 of the script should record the listener's pi
   API credit) and logprob-level parity (`eval/adapter_parity.py` compares HF+PEFT with vLLM, not llama.cpp).
   llama-server stopped 12:07; the 5090 is back to the other session's 2.1 GB.
 
+## Phase 3: the cat model served on a V100
+
+Garret 12:32: "Dont worry about the flux service being down, thats a service we will sacrifice ... it can take as
+long as it needs to make it correctly, pretty, and bulletproof." 12:33 `bash ~/cat4b/mirrorforge_llama.sh start
+cat` on mirrorforge (the launcher's new role, pushed from `serve/mirrorforge_llama.sh`): llama.cpp b11139 sm_70,
+`cat4b-v0-merged-Q8_0.gguf` + `cat4b-v0-mmproj-F16.gguf`, alias `cat4b-vl`, 10.10.10.2:8292,
+`CUDA_VISIBLE_DEVICES=0`, 8 slots × 16,384, f16 KV, `-fa on --jinja --reasoning off --seed 0`, under the broker's
+`free` lease (ComfyUI stopped). Idle: 10,160 MiB on GPU 0. A first start had alias `cat` because the launcher
+passed two `-a` and the first won; fixed, restarted 12:34 (lease 805939b5f90645a6).
+
+Smoke (single stream, the cat system prompt): 83 tokens in 1.2 s, 99 tok/s decode, 1,987 tok/s prompt, no
+reasoning field; a `generate_image` tool call with the eval's schema returned `finish_reason: tool_calls` and one
+call whose prompt opens with "A sleek orange tabby cat sits on the hood of a parked Honda Civic" for a "no
+animals" request.
+
+**Concurrency sweep** (`eval/load_test.py --levels 1,2,4,8,16 --items 24 --max-tokens 400`, the frozen set's
+`plain` items with the stock + cat system prompt, streaming, temperature 0.7; `state/eval/load/
+v100-cat-par8-f16.json`):
+
+| concurrent | TTFT median / p95 s | reply median / p95 s | per-stream tok/s | aggregate tok/s | replies per min |
+|---|---|---|---|---|---|
+| 1 | 0.14 / 0.16 | 4.1 / 4.1 | 96 | 92 | 18.6 |
+| 2 | 0.18 / 0.21 | 8.8 / 8.9 | 45 | 85 | 17.3 |
+| 4 | 0.22 / 0.82 | 9.8 / 10.7 | 39 | 136 | 27.4 |
+| 8 (= slots) | 1.3 / 1.5 | 10.4 / 11.6 | 38 | 227 | 46.3 |
+| 16 (queued on 8 slots) | 7.2 / 12.7 | 15.0 / 22.6 | 38 | 219 | 43.4 |
+
+0 errors in 120 requests. Reading: one V100 with 8 slots saturates at about 227 tok/s aggregate, 46 replies a
+minute at 400 tokens (about 2,800 an hour); beyond the slot count requests queue in llama-server and TTFT grows
+by the wait. Two streams gain nothing over one (the aggregate even dips), four and eight do; the per-stream rate
+settles at 38 tok/s from four up. The 5090 reference with four slots was 230 aggregate. Variants (16 slots, FA
+off, q8 KV) follow the C/F run.
+
 **Production switch, 11:29–11:34.** `serve/mirrorforge/push_comfyui_unit.sh push`: backup
 `~/.config/systemd/user/comfyui.service.bak-20261024-112937`, the DEV copy `serve/mirrorforge/comfyui.service`
 (ExecStart → `venv-torch214/bin/python`, nothing else changed) copied over, daemon-reload, restart; ComfyUI
