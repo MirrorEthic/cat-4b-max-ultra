@@ -7,3 +7,4 @@ scope = "v0 eval conditions A, C, F; one Claude verdict per item at temperature 
 limits = ["cat4b.judge.local-gemma", "cat4b.judge.rubric-v1"]
 supports = ["cat4b.r.2026-10-23.consequential-safety-review", "cat4b.r.2026-10-14.v0-retention"]
 evidence = ["file:crg/evidence/2026-10-23-release-review.md@95e7ab3#claude-audit-of-the-eval-verdicts", "commit:57884bc"]
+adjudicated_by = "Garret 2026-10-24"

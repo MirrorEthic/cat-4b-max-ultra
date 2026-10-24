@@ -15,7 +15,7 @@ for those situations. Every number below is from one sample per item and an auto
 | Parameters | language model 4,205,751,296 ("4B"); vision tower 333,514,240; MTP head 120,599,552; full checkpoint 4,659,865,088. Tokenizer: the base's (vocabulary 248,320), unchanged |
 | Adaptation | LoRA r 32, α 64, dropout 0.05, 60,948,480 trainable parameters, on the language model's attention, Gated-DeltaNet and MLP projections; vision tower, MTP head and embeddings frozen |
 | Artifact | `adapter_model.safetensors` sha256 `f802ac359448ce8bd3a717af07c11daa5377071cb7a45f1ca34b4d2d9480b3a4`; `adapter_config.json` sha256 `27b4faf9fa0b340989e6061d60c981343aedeb3be6bb7eb9606728eb6a5fbf37` |
-| License | Apache-2.0 base; adapter license to be stated at release (training prompts: our own, oasst1 Apache-2.0, GSM8K MIT; responses written by Qwen3.8-27B, Apache-2.0) |
+| License | Adapter: Apache-2.0 (decided 2026-10-24). Base: Apache-2.0. Training prompts: our own, oasst1 Apache-2.0, GSM8K MIT; responses written by Qwen3.8-27B, Apache-2.0 |
 | Image generation | Not part of the model. The model composes a prompt in a `generate_image` tool call; the reference integration (group-chat-mcp) renders it with FLUX via mirage. Gallery backend: mirage 0.3.0 on ComfyUI 0.22.0, FLUX.1-dev Q8_0 GGUF (`flux1-dev-Q8_0.gguf`) with T5-XXL fp16, CLIP-L and `ae.safetensors`, 30 steps, guidance 3.5, seed = sha256(eval id), on two Tesla V100 16 GB (transformer on one, text encoders and VAE on the other); the 292 gallery renders took 4.2 h, about 52 s each; no API cost |
 | Vision | The base's vision tower, untuned. Uploaded-image behavior is not trained or evaluated |
 | Serving | `serve/vllm.sh`: vLLM 0.31.0, served as `cat4b-vl` (adapter) beside `qwen3.5-4b-vl` (base), qwen3_coder tool parser, thinking off by default, max-model-len 16,384 |
@@ -205,4 +205,4 @@ show where the control slips.
 - [x] Grader agreement on the eval: Claude audit of 363 verdicts; the preregistered human evaluation is built and
       awaiting grading (`eval/human_audit/PREREG.md`)
 - [x] Image backend version and cost documented
-- [ ] Adapter licence stated
+- [x] Adapter licence stated: Apache-2.0 (2026-10-24)

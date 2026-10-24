@@ -8,3 +8,4 @@ known_limits = ["One render per prompt at a fixed seed through mirage, beside th
 implements = ["cat4b.spec.image-prompt-rules"]
 depends_on = ["cat4b.eval.condition-runner"]
 evidence = ["commit:197efc3", "commit:834d98f", "commit:c287179", "file:crg/evidence/2026-10-24-gallery.md@c287179#what-ran"]
+adjudicated_by = "Garret 2026-10-24"

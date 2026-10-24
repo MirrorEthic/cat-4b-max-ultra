@@ -8,3 +8,4 @@ known_limits = ["Developer human evaluation, not independent validation: the gra
 implements = ["cat4b.judge.rubric-v1"]
 depends_on = ["cat4b.r.2026-10-23.claude-audit-eval"]
 evidence = ["commit:4c622eb", "commit:04c72ac", "file:eval/human_audit/PREREG.md@04c72ac#decision-rules"]
+adjudicated_by = "Garret 2026-10-24"

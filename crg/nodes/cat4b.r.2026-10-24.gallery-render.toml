@@ -6,3 +6,4 @@ claim = "Rendered through FLUX, v0's composed prompts put a cat in the image: OW
 scope = "v0 frozen set, 76 image requests in A, B, C and F; one render per prompt at a fixed seed; the detector is calibrated against the composed prompts (0 of 141 catless-prompt renders, 150 of 151 cat-prompt renders) and 17 renders were checked by eye by the session, not by a human; the audit's image sheet is pending. Answers the render layer of cat4b.q.dispatcher-render-eval; the live dispatcher and vision critique remain unrun. Measures the G2b surface of cat4b.q.g2b-after-render before any training for it."
 supports = ["cat4b.eval.gallery-pipeline", "cat4b.spec.image-prompt-rules"]
 evidence = ["file:crg/evidence/2026-10-24-gallery.md@c287179#decision", "commit:c287179"]
+adjudicated_by = "Garret 2026-10-24"

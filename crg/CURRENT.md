@@ -1,7 +1,7 @@
 # cat-4b-max-ultra: current architecture
 
 Generated from `crg/nodes/` by `python -m hologram.crg current --write`. Do not edit.
-Grounding id: `cat-4b-max-ultra@crg:c3e5f67e`
+Grounding id: `cat-4b-max-ultra@crg:93dcd008`
 
 ## Invariants
 
@@ -23,6 +23,7 @@ Grounding id: `cat-4b-max-ultra@crg:c3e5f67e`
   - verified by: test:data/tests/test_judge.py
   - limit: Spec 0.1 asks for 20 hand-labelled items and κ against humans before the pilot; no human labels exist (cat4b.q.judge-audit).
   - bounded by: cat4b.r.2026-10-14.judge-no-animals-split: Under rubric 0.1 the Gemma judge scored the designed cat on 'no animals' image requests as a retention failure about half the time: of 569 production no_animals verdicts, 258 gave retention 5 and 252 gave 2, so 50% were kept against 90% for named_subject; on the frozen eval the same reading cost v0-early's image_requests 0.28 retention against a base that mostly leaves the cat out.
+  - bounded by: cat4b.r.2026-10-23.claude-audit-eval: Against claude-opus-5 on 121 frozen items per condition (363 verdicts, same rubric and schema), the Gemma judge's levels run high: retention exact agreement 36.6%, within one point 68.0%, Gemma higher on 219 of 220 disagreements (Claude retention ≥4 on 58–59% of the sample where Gemma gives 89–94%; persistence ≥3 on C 70% where Gemma gives 87%); keep-rule agreement 70.3%, κ 0.36. The paired conclusions hold under Claude: A → C retention +0.08 (95% −0.17 to +0.32), A → F −0.11 (−0.36 to +0.14), persistence +2.5. Claude gives retention < 5 or critical_complete n to all 17 replies the safety reviewer graded dangerous, where Gemma passed 14.
   - bounded by: cat4b.r.2026-10-23.lore-folded-into-cat-facts: The rubric folds house-cast lore into cat_facts_true, so a cast mix-up and an invented biology claim count the same, and the judge also flags a cast cat used as example data: of v0 C's 4 false-cat-fact flags 2 are lore (Furnando given Dr. Mew's tuxedo coat) and 2 real ('cats have a 140-hour sleep cycle'); v0-early F's 2 lore flags (Junipur in a table, Furnando in a CSV) contradict nothing. Split, v0 C's real-world false cat facts are 2 of 377 (0.5%) and lore contradictions 2 of the 32 replies that name a cast cat.
   - receipts: file:data/spec/rubric.md@8b5763b#eligibility-decide-this-first; file:data/spec/rubric.md@8b5763b#evidence; file:data/catforge/judge.py@8b5763b#L25-L63; commit:6b8727a; file:data/spec/rubric.md@639c9de#retention-1-5-every
 - **cat4b.release.tiers** — v1 ships a weights artifact with a measured claim and needs no standing hardware: the LoRA + sha256 on a pinned Qwen3.5-4B revision, a model card filled from the frozen four-condition run, the eval set, harness, raw judge outputs and a hashed image gallery from that one run, and serve/vllm.sh as a recipe; an always-on model, public FLUX or a live room is the 'Maybe' tier and gates nothing.
@@ -42,7 +43,7 @@ Grounding id: `cat-4b-max-ultra@crg:c3e5f67e`
   - verified by: test:data/tests/test_validate.py
   - limit: A cat in the prompt is not a cat in the image: no composed prompt has been rendered and checked (render tier unbuilt).
   - limit: I5 disclosure and I6 retry/recovery are untrained.
-  - receipts: file:data/spec/constitution.md@8b5763b#images; commit:f93fd72; commit:dc1644b; file:crg/evidence/2026-10-14-no-animals.md@1cb8fd9#decision
+  - receipts: file:data/spec/constitution.md@8b5763b#images; commit:f93fd72; commit:dc1644b; file:crg/evidence/2026-10-14-no-animals.md@1cb8fd9#decision; file:crg/evidence/2026-10-24-gallery.md@c287179#decision
 
 ## Mechanisms
 
@@ -77,6 +78,12 @@ Grounding id: `cat-4b-max-ultra@crg:c3e5f67e`
   - limit: v0-early's B is v0-pilot's B file (same base, prompt and seed), not a rerun.
   - bounded by: cat4b.r.2026-10-14.eval-judge-unverified-quotes: The eval scorer kept judge verdicts whose quotes are not in the reply, which the training judge pass drops: on v0 with thinking on, 38 of 490 replies are empty (the model ends its turn inside thinking) and the judge scored all 38 retention ≥ 4 by quoting the gold answer from the item spec, so E read 4.77 against C's 4.66. Quote-verified, with the empty replies scored 1, E is 4.46. Elsewhere 9 to 22 verdicts per condition fail verification and the A/B/C/F comparisons move by ≤ 0.02. eval/compare.py now drops them and counts empty replies.
   - receipts: commit:eb5ae2b; commit:2e673c1; file:eval/run_conditions.py@8b5763b#L1-L18; file:eval/run_conditions.py@8b5763b#L38-L41; file:crg/evidence/C-eval.md@8b5763b#v0-early-eval
+- **cat4b.eval.gallery-pipeline** — eval/render_gallery.py renders every image request's first generate_image call from an eval run through mirage FLUX (one GPU-broker lease per render, 30 steps, guidance 3.5, seed = sha256(eval_id), a sha256 per image in the manifest); eval/review_turn.py replays the dispatcher's post-render round against vLLM for every render; eval/score_gallery.py scores each render with OWLv2 open-vocabulary detection (the best cat-labelled box against dog queries, a cat at cat_det >= 0.3) as the primary image cat measure, keeps zero-shot CLIP as a secondary column, reuses scores per render sha256, and recomputes the review-turn flags (cat named, cat-free wording, false cat-free claim, re-render, recovery) from the text with validate.positive_cat and validate.CAT_FREE.
+  - limit: One render per prompt at a fixed seed through mirage, beside the live group-chat dispatcher rather than through it; the review turn is replayed in the dispatcher's message format, not run by it.
+  - limit: The tool result carries no image description, as in the eval dispatcher (no API vision model is configured there).
+  - limit: The flags are regexes, read by hand on this run; the human check of the renders is the audit's image sheet.
+  - limit: OWLv2 is calibrated on this gallery's prompts only; a cat drawn in a style it misses would count as an escape.
+  - receipts: commit:197efc3; commit:834d98f; commit:c287179; file:crg/evidence/2026-10-24-gallery.md@c287179#what-ran; file:crg/evidence/2026-10-24-gallery.md@c287179#decision
 - **cat4b.eval.lore-check** — validate.check_cast checks every reply that names a house-cast cat against the cast table: a coat word in the clause naming the cat must be its own (cast_look), a gendered pronoun in the rest of that sentence must be its own when no other cast cat is named (cast_pronoun), and a cast cat is never written as an owner (cast_owner); eval/card_metrics.py reports it as lore consistency, apart from the judge's real-world cat facts.
   - verified by: test:data/tests/test_validate.py
   - limit: Eval reporting only, not a V0 filter, so training data is not checked for lore.
@@ -127,6 +134,7 @@ Grounding id: `cat-4b-max-ultra@crg:c3e5f67e`
   - limit: Keep agreement with Claude is moderate (85.1%, κ 0.44) and Gemma is more lenient (keeps 360 vs Claude's 333 of 410).
   - limit: While it holds the lease, image generation on mirrorforge is unavailable; serve/mirrorforge_llama.sh stop releases it.
   - scope: gemma-4-31B-it-Q4_K_M.gguf, llama.cpp b11139 (sm70), -c 40960 --parallel 4, q8_0 KV cache; judge_name gemma-4-31b-q4-v100.
+  - bounded by: cat4b.r.2026-10-23.claude-audit-eval: Against claude-opus-5 on 121 frozen items per condition (363 verdicts, same rubric and schema), the Gemma judge's levels run high: retention exact agreement 36.6%, within one point 68.0%, Gemma higher on 219 of 220 disagreements (Claude retention ≥4 on 58–59% of the sample where Gemma gives 89–94%; persistence ≥3 on C 70% where Gemma gives 87%); keep-rule agreement 70.3%, κ 0.36. The paired conclusions hold under Claude: A → C retention +0.08 (95% −0.17 to +0.32), A → F −0.11 (−0.36 to +0.14), persistence +2.5. Claude gives retention < 5 or critical_complete n to all 17 replies the safety reviewer graded dangerous, where Gemma passed 14.
   - bounded by: cat4b.r.2026-10-23.consequential-safety-review: Graded by one Claude reviewer against standard public guidance, v0 gives dangerous advice on 5 of the 30 frozen consequential items with the cat prompt and 7 without it, against the base's 5; v0's cluster in gas leaks as 'deal with the device, then leave' (go back and turn off the fan, pull the dryer plug, send the children upstairs), the base's are knowledge errors (highest floor in a tornado, invented hotlines). The Gemma judge gave retention 5 and critical_complete y to 14 of the 17 dangerous replies, all 11 of C's non-ok replies among them.
   - receipts: commit:6f5e021; file:serve/mirrorforge_llama.sh@8b5763b#L18-L47; file:data/catforge/judge.py@8b5763b#L186-L212; file:docs/DATA_AND_TRAINING.md@8b5763b#5-the-gauntlet-filtering; file:crg/evidence/B-judge.md@8b5763b#mirror
 - **cat4b.judge.sharded-workers** — judge-pass --shard i/n gives a worker only the specs with sha1(spec_id) % n == i and re-reads the verdict log every round, so workers never judge the same candidate and two of them keep the judge's four slots full.
