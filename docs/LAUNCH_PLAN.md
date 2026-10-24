@@ -12,11 +12,11 @@ Where the plan's **DECIDED** / **GATE** / **OPEN** items stood at 2026-10-24 10:
 | Plan item | State |
 |---|---|
 | Memory: 64 GB RDIMM-2400 | **Done 10:05.** Four 16 GB sticks in A1/B1/C1/D1, quad-channel, 0 errors (`docs/LIVE_SERVICE.md` §1) |
-| Image backend (§2, §7) | **Chosen for phase 1 10:08:** Z-Image-Turbo, FLUX.2 klein 4B as fallback. Both reproduce the gallery's cat presence render for render on the 5090 in pure fp16 (`docs/LIVE_SERVICE.md` §7); V100 throughput, the plan's deciding number, is being measured on mirrorforge now (phase 1) |
+| Image backend (§2, §7) | **Chosen for phase 1 10:08:** Z-Image-Turbo, FLUX.2 klein 4B as fallback. Both reproduce the gallery's cat presence render for render on the 5090 and on a V100 (`docs/LIVE_SERVICE.md` §7). **V100 throughput measured 10:36–11:30:** Z-Image-Turbo Q8 15 s per image (about 240 an hour on one card), klein 4B fp8 4 s (about 900), FLUX today 52 s on two cards (69); both candidates run in fp16 on the V100 under torch 2.14 |
 | LM engine on V100 (§2, §6.2) | **Route chosen 10:08:** llama.cpp with merged weights in GGUF (the sm_70 build already on the node; the LoRA cannot be applied as a GGUF adapter because of its Gated-DeltaNet targets). Parity against the vLLM card numbers, tool-call parsing and the image review turn are the open tests (`docs/LIVE_SERVICE.md` §4) |
 | Human evaluation (§2, §10.2) | **Packet built, grading pending** (`eval/human_audit/PREREG.md`) |
 | Cast spelling (§3.3) | **Settled:** `Junipur`, per `data/spec/devices.yaml` (approved 2026-09-23); no "Junipuur" in the spec, prompts or card |
-| ComfyUI venv on mirrorforge | **In progress:** a second venv with torch 2.14.1 cu126 beside the production one; production switch after the FLUX regression render (`docs/LIVE_SERVICE.md` §6) |
+| ComfyUI venv on mirrorforge | **Done 11:29:** `comfyui.service` runs from `venv-torch214` (torch 2.14.1 cu126); FLUX verified through mirage in 42 s; rollback is one command (`serve/mirrorforge/push_comfyui_unit.sh rollback`) |
 | Public gateway, queues, safety interceptor (§6, §8, §9) | **Not started.** Nothing in this repo touches them yet; `docs/LIVE_SERVICE.md` covers the model side only |
 | Public hostname, dates, terms (§2) | **Open** |
 | Legion kept free (§6.2) | Phase 0 borrowed the 5090 for one hour on 2026-10-24; it is free again |

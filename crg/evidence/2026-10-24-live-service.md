@@ -107,3 +107,58 @@ C 74/75, A 0/71, OWLv2 median 0.72, 52 s per render on the V100s.
 Renders viewed by the session: klein fp8 C image_requests-000, 001, 031, 045, 055; klein bf16 C 055; Z-Image C
 000, 045, 055 (described in `docs/LIVE_SERVICE.md` §7). Garret viewed the Z-Image and klein posters and judged
 Z-Image "a lot better", citing the paw pads klein got wrong (09:24).
+
+## Phase 1 on mirrorforge
+
+The same prompts through a test ComfyUI on one V100. Garret's decisions at 10:08: Z-Image-Turbo for phase 1,
+klein fallback; llama.cpp merged weights for the text model; the torch 2.14 venv. Steps, all reversible:
+
+- 10:10 the candidate files copied to `~/comfyui/models/` on mirrorforge (`z-image-turbo-Q8_0.gguf` → unet/,
+  `flux-2-klein-4b-fp8.safetensors` → diffusion_models/, `qwen_3_4b.safetensors` → text_encoders/,
+  `flux2-vae.safetensors` → vae/; sizes and the VAE's sha256 `d64f3a68e1cc4f9f…` match legion's copies).
+- 10:10–10:14 `~/comfyui/venv-torch214` built beside the production venv: torch 2.14.1+cu126, torchvision
+  0.29.1+cu126, ComfyUI's requirements minus torch/torchvision/torchaudio, gguf; `torch.cuda.get_arch_list()`
+  includes sm_70. `torchaudio==2.14.1+cu126` does not exist (the cu126 index stops at 2.11.0; PyPI too) and the
+  first test ComfyUI died on `comfy/ldm/lightricks/vae/audio_vae.py: import torchaudio`; `torchaudio==2.11.0+cu126`
+  installed with `--no-deps` imports and its functional module works beside torch 2.14.1.
+- `scratchpad/phase1_mirrorforge.sh`: broker `free` lease (production ComfyUI stopped, as for judge runs; released
+  at the end, `reverted_to: imagegen`), test ComfyUI 0.22.0 from the new venv on port 8288 with
+  `--use-pytorch-cross-attention --fp16-vae` (no `--highvram`, no `--force-fp16`), output to
+  `~/comfyui/output/candidates`; renders driven from legion by `eval/render_candidates.py --comfy
+  http://10.10.10.2:8288 --tag <backend>-v100`, which fetches each image through ComfyUI's `/view`. The first run
+  (10:15) failed on torchaudio; the second (10:19) blocked for 16 minutes on the ssh session that launched the
+  remote ComfyUI (the server was up; killing that one ssh client let the script continue; v2 of the script uses
+  `ssh -f -n`). Test ComfyUI: `comfy 0.22.0 2.14.1+cu126 [('cuda:0 Tesla V100-PCIE', 16151)]`.
+- Dtype lines from `~/comfyui/test8288.log`: FLUX GGUF "gguf qtypes: F16 (476), Q8_0 (304)", "model weight dtype
+  torch.float16, manual cast: None", "loaded completely; 14340.31 MB usable, 12245.51 MB loaded"; Z-Image "gguf
+  qtypes: F32 (245), BF16 (28), Q8_0 (180)", "model weight dtype torch.float16, manual cast: None", "loaded
+  completely; 8606.71 MB usable, 6974.33 MB loaded"; text encoders and VAE fp16. 13,880 MiB in use on the card
+  with Z-Image and the Qwen3-4B encoder both resident.
+
+| backend, one V100, torch 2.14.1 | cond | rendered | cat detected (OWLv2 ≥ 0.3) | OWLv2 median | median s | p95 s | first (cold) s |
+|---|---|---|---|---|---|---|---|
+| flux-q8-v100 (regression) | C | 2 | 2/2 | — | 75.2 (warm) | — | 195.7 |
+| zimage-q8-v100 | C | 75 | 74/75 = 98.7% [92.8, 99.8] (miss: multilingual-017, 0.004) | 0.71 | 15.1 | 15.1 | 50.2 |
+| zimage-q8-v100 | A | 71 | 0/71 = 0.0% [0.0, 5.1] | 0.01 | 15.0 | 19.1 | 35.1 |
+| klein4b-fp8-v100 | C | 75 | 74/75 = 98.7% [92.8, 99.8] (miss: multilingual-017, 0.006) | 0.72 | 4.0 | 4.0 | 13.1 |
+| klein4b-fp8-v100 | A | 71 | 0/71 = 0.0% [0.0, 5.1] | 0.01 | 4.0 | 5.0 | 11.1 |
+
+klein's dtype line on the V100: "model weight dtype torch.float16, manual cast: torch.float16" (the fp8 file cast
+per layer); 10,650 MiB on the card with the encoder resident.
+
+The FLUX regression render (`candidates/flux-q8-v100/C/image_requests-000.png`) was viewed: Saturn with two cats
+in the 1970s airbrush style, a proper image, so the venv change does not break the production backend.
+
+Cleanup lesson: the script's pid file held the `setsid` wrapper (49671), not the ComfyUI python (49675), so the
+test ComfyUI survived the cleanup holding 12.2 GB on GPU 0; the broker restarted production ComfyUI at 11:28:10 and
+the watchdog stopped it two seconds later ("training-sized VRAM detected (12208 MB external)"). Killing 49675 by
+hand at 11:29 cleared the card. v2 of the script should record the listener's pid from `ss`.
+
+**Production switch, 11:29–11:34.** `serve/mirrorforge/push_comfyui_unit.sh push`: backup
+`~/.config/systemd/user/comfyui.service.bak-20261024-112937`, the DEV copy `serve/mirrorforge/comfyui.service`
+(ExecStart → `venv-torch214/bin/python`, nothing else changed) copied over, daemon-reload, restart; ComfyUI
+answered "0.22.0 torch 2.14.1+cu126". `verify`: mirage `/health` healthy with `comfyui_up: true`; one
+`generate_image` through the MCP under an imagegen lease (a tabby on server manuals, 1024×768, 20 steps) returned
+`/home/garret/comfyui/output/mcp_00580_.png` in 42 s on the production two-card layout (transformer on cuda:1,
+12,564 MiB); lease released, `reverted_to: imagegen`; comfyui, imagegen-mcp, gpu-broker, cf-mirage and the watchdog
+all active. The journal shows FLUX "loaded completely; 12245.51 MB loaded, full load: True" on the new venv.

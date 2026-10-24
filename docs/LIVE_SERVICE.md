@@ -1,6 +1,10 @@
 # CAT-4B MAX ULTRA: live service on mirrorforge
 
-**Date:** 2026-10-24. **Status:** research and plan; nothing is deployed and nothing on mirrorforge has been changed.
+**Date:** 2026-10-24. **Status:** research, plan, and phase 1 done. What changed on mirrorforge the same day: the
+candidate model files are in `~/comfyui/models/`, a second venv `~/comfyui/venv-torch214` exists, and
+`comfyui.service` runs from it since 11:29 (pushed from `serve/mirrorforge/comfyui.service`, verified through
+mirage; the old unit is backed up beside it). Nothing else is deployed: mirage still renders FLUX, the text model
+still lives on legion.
 The release (`cat4b.release.tiers`) does not need this; the live room is the optional demo. What was measured today
 is in §7; the decisions are in §8. The public side of the demo (the seven-day event, its gateway, queues, safety
 interceptor and campaign) is `docs/LAUNCH_PLAN.md`; this document is the model side it rests on.
@@ -147,8 +151,12 @@ Every one of these is a DEV-then-push change on the SERVE node; none had been ma
   the pi5 watchdog then monitors it.
 - **group-chat**: the cat model's provider base URL moves from legion:8011 to mirrorforge (`cat4b.integ.provider-
   base-url` is open on exactly this); configuration only, the repo is not ours to modify.
-- **ComfyUI venv on mirrorforge → torch 2.14 cu126** (the last PyTorch wheels with Volta kernels). This is the
-  prerequisite for Z-Image at fp16 speed there: ComfyUI only admits fp16 for the ZImage class when
+- **ComfyUI venv on mirrorforge → torch 2.14 cu126** (the last PyTorch wheels with Volta kernels). **Done
+  2026-10-24 11:29**: `serve/mirrorforge/push_comfyui_unit.sh push` (backup
+  `comfyui.service.bak-20261024-112937`, restart, "ComfyUI 0.22.0 torch 2.14.1+cu126"), then `verify`: mirage
+  healthy, one FLUX image through `generate_image` under an imagegen lease in 42 s on the two-card layout, all five
+  services active. Rollback is `push_comfyui_unit.sh rollback`. This was the prerequisite for Z-Image at fp16
+  speed there: ComfyUI only admits fp16 for the ZImage class when
   `extended_fp16_support()` (torch ≥ 2.7) holds and the checkpoint passes the `allow_fp16` overflow check; legion's
   phase-0 run shows this checkpoint passes and renders cleanly in pure fp16 (§7), and on torch 2.5.1 the same
   model would fall back to fp32 compute (a 2080 Ti report: 46 s → 13.7 s per image with fp16). `--force-fp16` is
@@ -164,7 +172,8 @@ Every one of these is a DEV-then-push change on the SERVE node; none had been ma
   # with --no-deps; it imports and its functional module works beside torch 2.14.1. xformers is not installed
   # (comfy runs --use-pytorch-cross-attention).
   cd ~/comfyui && python3 -m venv venv-torch214
-  venv-torch214/bin/pip install torch==2.14.1+cu126 torchvision==0.29.1+cu126 --index-url https://download.pytorch.org/whl/cu126
+  venv-torch214/bin/pip install torch==2.14.1+cu126 torchvision==0.29.1+cu126 \
+      --index-url https://download.pytorch.org/whl/cu126
   grep -v -E "^(torch|torchvision|torchaudio)\s*$" requirements.txt > /tmp/req-notorch.txt
   venv-torch214/bin/pip install -r /tmp/req-notorch.txt gguf
   venv-torch214/bin/pip install --no-deps torchaudio==2.11.0+cu126 --index-url https://download.pytorch.org/whl/cu126
@@ -208,8 +217,12 @@ http://10.10.10.2:8288`, scored on legion). First numbers, before the full scori
 | backend on one V100 (torch 2.14.1 cu126) | dtype ComfyUI chose on its own | cold first render | warm render |
 |---|---|---|---|
 | FLUX.1-dev Q8 (regression; production splits it over two cards at 52 s) | fp16, FLUX loaded completely (12.2 GB), T5 swapped in and out | 196 s | 75 s |
-| Z-Image-Turbo Q8_0 GGUF + Qwen3-4B encoder resident on the same card (13.9 GB) | **fp16, manual cast none** (the `allow_fp16` path: torch ≥ 2.7 and the checkpoint passes) | 50 s | **15–16 s** |
-| FLUX.2 klein 4B fp8 | _pending_ | | |
+| Z-Image-Turbo Q8_0 GGUF + Qwen3-4B encoder resident on the same card (13.9 GB) | **fp16, manual cast none** (the `allow_fp16` path: torch ≥ 2.7 and the checkpoint passes) | 50 s | **15.1 s median, 15.1 s p95** over the 75 C prompts and 15.0 s median, 19.1 s p95 over the 71 A prompts, 0 errors in 146; OWLv2 C 74/75 (the catless-prompt item), A 0/71, medians 0.71 and 0.01, the same as on the 5090 |
+| FLUX.2 klein 4B fp8 + the same encoder resident (10.6 GB) | fp16 weights with a per-layer fp16 cast from the fp8 file | 13 s | **4.0 s median, 4.0 s p95** over the 75 C prompts and 4.0 s median, 5.0 s p95 over the 71 A prompts, 0 errors in 146; OWLv2 C 74/75, A 0/71, medians 0.72 and 0.01 |
+
+Per-card throughput at full utilisation, from the medians: FLUX today about 69 renders an hour (two cards),
+Z-Image-Turbo about 240 an hour on one card, klein about 900. The launch plan's capacity arithmetic
+(`docs/LAUNCH_PLAN.md` §8.3) can now use the V100 numbers instead of the 52 s FLUX figure.
 
 So the fp16 question is answered on the V100 itself: with torch 2.14 ComfyUI runs Z-Image in fp16 without being
 forced, at the 2080 Ti's figure. The regression render through the new venv is a proper image (Saturn with two

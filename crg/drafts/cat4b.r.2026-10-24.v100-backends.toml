@@ -1,0 +1,8 @@
+id = "cat4b.r.2026-10-24.v100-backends"
+type = "result"
+status = "VALIDATED"
+created = "2026-10-24"
+claim = "On one Tesla V100-PCIE-16GB under ComfyUI 0.22.0 with torch 2.14.1+cu126, with no forcing flag, ComfyUI runs Z-Image-Turbo Q8_0 GGUF in fp16 (its allow_fp16 path) at 15.1 s median per 1344×768 render (p95 15.1 s on the 75 C prompts, 19.1 s on the 71 A prompts; cold load 50 s; 13.9 GB on the card with the Qwen3-4B encoder resident) and FLUX.2 klein 4B fp8 at 4.0 s median (p95 4.0 s; 10.6 GB), both with the gallery's Image Cat Presence intact (Z-Image C 74/75, A 0/71; klein C 74/75; the miss everywhere is the prompt that names no cat) and 0 errors. The production backend still renders through the new venv (FLUX Q8 on one card: 196 s cold, 75 s warm, a proper image), so the venv change is safe. FLUX today takes 52 s per render on both cards."
+scope = "A test ComfyUI from ~/comfyui/venv-torch214 on port 8288 under a broker free lease (production ComfyUI stopped for the run and restored after), one card, production flags without --highvram; the same prompts, sizes and seeds as the FLUX gallery; OWLv2 at 0.3 as in cat4b.r.2026-10-24.gallery-render; timings are single-stream with the encoder on the same card, not the two-card layout the live service would use, and not under concurrent text-model load. klein's A set and the production unit switch are recorded in the evidence file when done."
+supports = ["cat4b.q.live-service-mirrorforge", "cat4b.r.2026-10-24.candidate-backends"]
+evidence = ["file:crg/evidence/2026-10-24-live-service.md@HEAD#phase-1-on-mirrorforge", "file:docs/LIVE_SERVICE.md@HEAD#7-measurements", "file:serve/mirrorforge/comfyui.service@HEAD#L1-L6"]
