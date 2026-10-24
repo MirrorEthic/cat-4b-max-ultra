@@ -53,10 +53,14 @@ is the product repo and only points there.
 
 ### `~/group-chat-mcp` (the room)
 
-- Discord edge `apps/discord_bot`, Telegram edge `apps/bot`; services `group-chat-discord.service`, `group-chat-bot.service`.
-- Transcripts in `data/groupchat.db` (`messages`: sender, text, timestamp, is_bot; `audit_log`: ai_model, reply_text, latency).
-- `services/vision_service.py` `describe_image(bytes, prompt)` (Pixtral on mirrorforge, OpenRouter fallback) can caption captured frames.
-- **CAT-4B is not in the model registry** (`docs/ARCHITECTURE.md` §2; `cat4b.integ.provider-base-url` is open). Nothing records or replays the room.
+- Discord edge `apps/discord_bot`, Telegram edge `apps/bot`; services `group-chat-discord.service` and
+  `group-chat-bot.service`.
+- Transcripts in `data/groupchat.db` (`messages`: sender, text, timestamp, is_bot; `audit_log`: ai_model,
+  reply_text, latency).
+- `services/vision_service.py` `describe_image(bytes, prompt)` (Pixtral on mirrorforge, OpenRouter fallback) can
+  caption captured frames.
+- **CAT-4B is not in the model registry** (`docs/ARCHITECTURE.md` §2; `cat4b.integ.provider-base-url` is open).
+  Nothing records or replays the room.
 
 ### `~/cat-4b-max-ultra` (the real material)
 
