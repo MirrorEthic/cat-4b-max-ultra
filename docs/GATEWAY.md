@@ -5,11 +5,15 @@ tunnel and make a page, that way the entity to product relation [is] more concre
 tests against fake upstreams; the live loop through it from legion: chat 0.6 s, image turn 1.9 s to the composed
 prompt, render 13.1 s, review turn, share), pushed to mirrorforge 14:13 (`cat4b-gateway.service` and `cf-cat4b.service`
 active, `/healthz` ok, tunnel `cat4b` id `3bbdb4c0-abdd-424f-a90b-84bb2b093c87` registered four connections),
-contracts on the pi5 watchdog. **Waiting on DNS:** legion's origin certificate is scoped to t3atlas.dev, so
-`cloudflared tunnel route dns` wrote a stray `cat4b.mirrorethic.com.t3atlas.dev` record instead of the real one; the
-mirrorethic.com zone needs a proxied CNAME `cat4b → 3bbdb4c0-abdd-424f-a90b-84bb2b093c87.cfargotunnel.com` (dashboard,
-or a DNS-edit token for that zone), and the stray record should be deleted. The mirrorethic.com bundle has the nav
-link and a `/cat4b/` page staged in `~/mirrorethic-site`, not deployed until the hostname resolves. The model side it fronts is live (`docs/LIVE_SERVICE.md`); the event it serves is `docs/LAUNCH_PLAN.md`
+contracts on the pi5 watchdog. **Public since 15:46:** Garret added the proxied CNAME `cat4b →
+3bbdb4c0-abdd-424f-a90b-84bb2b093c87.cfargotunnel.com` in the mirrorethic.com zone (legion's origin certificate is
+scoped to t3atlas.dev, so `cloudflared tunnel route dns` had written a stray `cat4b.mirrorethic.com.t3atlas.dev`
+record, which he deleted). `https://cat4b.mirrorethic.com/` answers through the tunnel (page 200 in 0.19 s;
+`/metrics` 404 from outside as designed); the smoke loop over HTTPS: chat 1.8 s, the image turn's tool call 1.9 s,
+render 14.4 s, review, a share link that serves without the cookie, the gate counting down. Staging on legion
+(`serve/staging.sh`) stays for testing. The mirrorethic.com bundle with the nav link and the `/cat4b/` page is
+committed in `~/mirrorethic-site` (f28cb3d) and deploys with its `deploy.sh`; the session's permission mode
+classed that as a production deploy and held it for Garret. The model side it fronts is live (`docs/LIVE_SERVICE.md`); the event it serves is `docs/LAUNCH_PLAN.md`
 (§5 journey and limits, §6 topology, §8 queues, §9 boundaries, §11 operations, §14 copy). This document is the
 engineering shape of §6–§9 as built, and the decisions that were not in the plan.
 
