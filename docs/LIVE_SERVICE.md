@@ -1,10 +1,14 @@
 # CAT-4B MAX ULTRA: live service on mirrorforge
 
-**Date:** 2026-10-24. **Status:** research, plan, and phase 1 done. What changed on mirrorforge the same day: the
-candidate model files are in `~/comfyui/models/`, a second venv `~/comfyui/venv-torch214` exists, and
-`comfyui.service` runs from it since 11:29 (pushed from `serve/mirrorforge/comfyui.service`, verified through
-mirage; the old unit is backed up beside it). Nothing else is deployed: mirage still renders FLUX, the text model
-still lives on legion.
+**Date:** 2026-10-24. **Status:** phases 0–3 done; the service is live on mirrorforge since 13:16. What runs
+there now: `cat4b.service` (llama.cpp sm_70, merged v0 Q8_0 + vision projector as `cat4b-vl` on 10.10.10.2:8292,
+8 slots × 16k, f16 KV) resident on V100 #0; `comfyui.service` from `venv-torch214` pinned to V100 #1 rendering
+Z-Image-Turbo for mirage (`MIRAGE_T2I_BACKEND=zimage`); the per-card GPU broker with `cat` and `imagegen` both
+resident, so an image render no longer evicts the text model; the training watchdog ignoring `cat4b.service`. All
+of it pushed from DEV copies under `serve/mirrorforge/` (and the broker from openclaw-cognitive f62eff0) by
+`serve/mirrorforge/push_live_service.sh`, with backups `*.bak-20261024-131621` beside each file for `rollback`.
+FLUX is no longer the render path on mirrorforge (Garret: a service to sacrifice). Receipts: section 7 and
+`crg/evidence/2026-10-24-live-service.md`.
 The release (`cat4b.release.tiers`) does not need this; the live room is the optional demo. What was measured today
 is in §7; the decisions are in §8. The public side of the demo (the seven-day event, its gateway, queues, safety
 interceptor and campaign) is `docs/LAUNCH_PLAN.md`; this document is the model side it rests on.
@@ -272,12 +276,43 @@ tool call work (99 tok/s single-stream, about 2,000 tok/s prompt, "no animals" g
 saturates near 227 tok/s aggregate, about 46 replies a minute; beyond the slots, requests wait in llama-server and
 TTFT grows by the wait. KV is not the limit (32 KB per token in fp16 because only 8 of 32 layers are full
 attention, plus about 25 MB of Gated-DeltaNet state per slot; llama.cpp does not page KV to host, its levers are
-KV quantisation, slot save/restore and prefix reuse); shared decode compute is. Variants (16 slots, FA off, q8
-KV), the review turn through the projector and the frozen set's C and F on this box follow in
+KV quantisation, slot save/restore and prefix reuse); shared decode compute is.
+
+The review turn through the projector (75 of 75 in 153 s, cats named 69/75 against the card run's 66/75) and the
+frozen set's C and F on this box (C cat 79% / dog 4 / tool 110 / image 75-75-75; F 78% / 4 / 112 / 76-76-76,
+against the card's vLLM + LoRA C 78% / 2 / 109 / 75-74-74 and F 79% / 1 / 110 / 76-76-75; 0 errors in 980)
+reproduce the card's measurements on the production engine and card; the per-category table is in
 `crg/evidence/2026-10-24-live-service.md`.
 
-**Phase 3, co-residency** (not run): broker, watchdog and contract changes; a soak with both resident; then the
-group-chat switch, and the card gains a "live service" row that names engine, quant, backend and hashes.
+Variants (13:06–13:14, same load test at 8 and 16 in flight, VRAM sampled on the node): FA off is out on memory
+alone (15.1 GB idle against 10.3 GB with it on). 16 slots in f16 fit at 14.9 GB peak and give the same 217–219
+tok/s aggregate as 8 slots, trading per-stream speed (38 → 22 tok/s) for a shorter wait at 16 in flight (TTFT
+7.2 → 3.1 s) with the same reply times. q8_0 KV saves 1.6 GB and costs 8–12% of aggregate at 8 slots (201–210);
+16 × q8 reaches 240 aggregate at 16 in flight but at 21 tok/s per stream. The card is compute-bound near 220
+tok/s whatever the slot count. **Decision: 8 slots × 16k, f16, FA on** (the unit as written): 5.7 GB headroom
+for image prefill, 38 tok/s per stream, 46 replies a minute; depth beyond eight is the gateway queue's job
+(docs/LAUNCH_PLAN.md), where a waiting user sees a position rather than a half-speed stream.
+
+**Phase 3, co-residency, 13:16–13:17.** `push_live_service.sh push` (backups `*.bak-20261024-131621`, DEV
+copies over, compiled on the node, restarts in order watchdog → comfyui → `enable --now cat4b` → imagegen-mcp →
+gpu-broker): all five units active, cat and ComfyUI answering after 10 s, broker `loaded: ['cat', 'imagegen']`,
+card 0 at 10.2 GB (8 slots, `NRestarts=0`), card 1 idle, ComfyUI seeing one device on torch 2.14.1+cu126, the
+watchdog clean. `verify`: cat chat 97 tok/s; mirage healthy; an imagegen lease granted with both residents kept;
+a Z-Image render through the mirage MCP in 37 s cold (`mcp_00582_.png`) with the cat answering throughout;
+release back to both; afterwards 10.2 GB + 7.5 GB on the two cards. The `cat4b-llm` `[[services]]` contract
+(openclaw-cognitive `nodes/mirrorforge.toml`) is synced to the pi5 watchdog, which logs it healthy.
+
+**Live user-image loop, 13:19–13:27** (`eval/live_loop_test.py --tag live1 --items 20`: cat reply → imagegen
+lease → Z-Image render through mirage → review turn, the order group-chat uses): 20/20, 0 errors; medians cat
+reply 1.8 s, lease wait 0.0 s, render 13.6 s, review 1.9 s, 17.6 s end to end (p95 18.8 s); the review turn named
+the cat in 18 of 20; OWLv2 finds a cat in 20 of 20 renders (the FLUX gallery had 74 of 75). The user image-request
+loop works on the resident pair at the speed the plan wanted.
+
+**group-chat.** CAT-4B is a `/model` choice in the room (group-chat-mcp 8297874: a registry entry that carries
+its own endpoint; the gateway routes a local pick to it, keeps the pick out of tier routing and leaves
+image-intent turns with the cat). The bot process predates the change and has not been restarted; that restart
+also loads other sessions' uncommitted memory-system work in that tree, so it is Garret's call.
+`serve/groupchat/cat4b-user-config.yaml` remains the per-user route for a tree without the registry change.
 
 ## 8. Recommendation and the decision requested
 

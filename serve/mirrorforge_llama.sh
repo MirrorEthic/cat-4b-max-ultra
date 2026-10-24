@@ -9,8 +9,9 @@
 #
 # cat = the merged v0 weights (models/cat4b-v0-merged-Q8_0.gguf + the vision projector) as "cat4b-vl" on :8292,
 # one card only (CUDA_VISIBLE_DEVICES=0, the live-service layout of docs/LIVE_SERVICE.md section 5), PAR slots of
-# 16k context (PAR=8 by default; KV_TYPE=f16 by default, q8_0 halves the cache), thinking off. Still under the
-# "free" lease for now: ComfyUI is down while it runs. The resident, lease-free form comes with the broker change.
+# 16k context (PAR=8 by default; KV_TYPE=f16 by default, q8_0 halves the cache; FA=on by default, off for the
+# phase-3 variant sweep), thinking off. Still under the "free" lease for now: ComfyUI is down while it runs. The
+# resident, lease-free form comes with the broker change (serve/mirrorforge/cat4b.service).
 set -uo pipefail
 BASE=$HOME/cat4b
 LLAMA=$BASE/tools/llama.cpp-b11139/build-sm70/bin/llama-server
@@ -21,7 +22,7 @@ mkdir -p "$RUN" "$LOG"
 lease() { curl -s -m 30 -X POST "$BROKER/$1" -H 'Content-Type: application/json' -d "$2"; }
 
 start() {
-  local role=$1 model port ctx par extra="" devs="" alias=$1
+  local role=$1 model port ctx par extra="" devs="" alias=$1 fa=on
   case "$role" in
     judge)   model=$BASE/models/gemma-4-31B-it-Q4_K_M.gguf; port=8291; par=4; ctx=$((4 * 10240))
              extra="-sm layer -ctk q8_0 -ctv q8_0 --reasoning-format deepseek --cache-ram 4096" ;;
@@ -29,6 +30,7 @@ start() {
              extra="-sm layer -ctk q8_0 -ctv q8_0 --reasoning-format deepseek --cache-ram 4096" ;;
     cat)     model=$BASE/models/cat4b-v0-merged-Q8_0.gguf; port=8292; par=${PAR:-8}; ctx=$((par * 16384)); devs=0
              alias=cat4b-vl   # the name group-chat and the eval runner ask for (the -vl suffix is load-bearing)
+             fa=${FA:-on}
              extra="--mmproj $BASE/models/cat4b-v0-mmproj-F16.gguf --reasoning off --seed 0 \
                     -ctk ${KV_TYPE:-f16} -ctv ${KV_TYPE:-f16}" ;;
     *) echo "usage: $0 start judge|teacher|cat" >&2; exit 1 ;;
@@ -45,7 +47,7 @@ start() {
     (( used < 1500 )) && break; sleep 2
   done
   CUDA_VISIBLE_DEVICES=${devs:-0,1} setsid nohup "$LLAMA" -m "$model" -a "$alias" --host 10.10.10.2 --port "$port" \
-    -ngl 99 -c "$ctx" --parallel "$par" -fa on --jinja --metrics --slots $extra \
+    -ngl 99 -c "$ctx" --parallel "$par" -fa "$fa" --jinja --metrics --slots $extra \
     >> "$LOG/llama_$role.log" 2>&1 < /dev/null &
   echo $! > "$RUN/server.pid"
   # renew the lease every 5 min for as long as the server lives; release when it exits

@@ -232,6 +232,92 @@ text with the gallery scorer's rules, beside the vLLM replay the card cites:
 
 Same sampling, one sample each; the vision path works on the V100 and the behaviour is the same within noise.
 
+**The frozen set on the V100** (`eval/run_conditions.py gen --run v100-cat --conditions C,F --url
+http://10.10.10.2:8292 --model cat4b-vl`, 12:41–13:03, 490 items each in 626 s and 653 s with eight in flight, 0
+errors, 0 empty replies; `state/eval/v100-cat/{C,F}.jsonl`, `report.json`), scored with the card's scorer beside
+the vLLM + LoRA run the card cites (`state/eval/v0/report.json`):
+
+| condition, engine | cat present | dog | tool-call rows | image: called / cat in prompt / I3 | length-capped |
+|---|---|---|---|---|---|
+| C, vLLM + LoRA (card) | 384 (78%) | 2 | 109 | 75 / 74 / 74 | 2 |
+| C, llama.cpp merged Q8, V100 | 387 (79%) | 4 | 110 | 75 / 75 / 75 | 2 |
+| F, vLLM + LoRA (card) | 386 (79%) | 1 | 110 | 76 / 76 / 75 | 4 |
+| F, llama.cpp merged Q8, V100 | 380 (78%) | 4 | 112 | 76 / 76 / 76 | 3 |
+
+Per category the two engines differ by at most five rows out of 490 (F `attacks_heldout_template` 24 → 19 is the
+largest; C `multilingual` goes 21 → 24, `text_real` 41 → 44), with one sample each at temperature 0.7, so these
+are within the sampling noise the card already reports between its own conditions. The 5090 llama.cpp parity run
+(phase 2) had C 77% and F 78%. The production engine on the production card reproduces the card's measurements.
+
+**Variant sweep, first attempt (13:06–13:08).** The driver passed `--url .../v1` to `eval/load_test.py`, which
+appends `/v1/chat/completions` itself; every request 404'd (`v1/v1/...`) and the three variant jsons under
+`state/eval/load/` from that attempt record only errors (kept for the trail; the rerun overwrites them). The
+start-up numbers from the attempt stand: 16 slots × 16k in f16 KV come up at 14,692 MiB on the 16 GB card, and
+8 slots with FlashAttention off at 15,052 MiB against 10,310 MiB with it on, so FA off costs about 4.7 GB of
+compute buffer on this model and is not a candidate whatever its throughput.
+
+**Variant sweep, rerun (13:08–13:14; `eval/load_test.py --levels 8,16 --items 24`, same items and sampling as
+the first sweep; `state/eval/load/v100-cat-{par16-f16,par8-q8kv,par16-q8kv}.json`; VRAM from a 5 s `nvidia-smi`
+sampler on the node, `~/cat4b/logs/gpu_sample_cat-<tag>.log`; each variant a fresh llama-server under the lease,
+`PAR`/`KV_TYPE`/`FA` env on `serve/mirrorforge_llama.sh`):**
+
+| slots × ctx, KV | idle MiB | peak MiB | 8 in flight: TTFT med / p95 s · tok/s per stream · aggregate · replies/min | 16 in flight: same |
+|---|---|---|---|---|
+| 8 × 16k, f16 (baseline, first sweep) | 10,310 | 10,310 | 1.3 / 1.5 · 38 · 227 · 46.3 | 7.2 / 12.7 · 38 · 219 · 43.4 |
+| 16 × 16k, f16 | 14,692 | 14,860 | 0.8 / 2.8 · 36 · 219 · 44.0 | 3.1 / 3.2 · 22 · 217 · 43.9 |
+| 8 × 16k, q8_0 | 8,724 | 8,886 | 0.6 / 2.9 · 33 · 201 · 41.2 | 8.1 / 13.4 · 33 · 210 · 41.1 |
+| 16 × 16k, q8_0 | 11,814 | 11,976 | 1.3 / 2.9 · 35 · 203 · 41.0 | 3.1 / 3.2 · 21 · 240 · 48.3 |
+| 8 × 16k, f16, FA off | 15,052 | – | not run: the memory alone rules it out | – |
+
+0 errors in 144 requests. Reading: the card is compute-bound near 220 tok/s aggregate whatever the slot count;
+doubling the slots does not add throughput, it trades per-stream speed (38 → 21 tok/s) for a shorter wait at the
+door (TTFT at 16 in flight 7.2 → 3.1 s) and the same reply times (median 15–16 s either way). q8_0 KV costs 8–12%
+of aggregate at 8 slots (227 → 201–210) for 1.6 GB; its one win, 16 × q8 at 16 in flight (240 aggregate, 48
+replies/min, +9%), comes at 21 tok/s per stream, slower than a person reads aloud. 16 slots in f16 leave 1.1 GB
+on the card, too little margin for image prefill through the projector under load.
+
+**Decision (slot count): 8 slots × 16k, f16 KV, FA on**, i.e. `serve/mirrorforge/cat4b.service` as written
+(`-c 131072 --parallel 8`). Peak 10.3 GB leaves 5.7 GB of headroom on V100 #0; 38 tok/s per stream; 46 replies a
+minute at 400 tokens. Depth beyond eight belongs to the gateway's queue (docs/LAUNCH_PLAN.md), where a waiting
+user sees a position instead of a stream at half speed; llama-server's own queue stays as the safety net.
+
+## Co-residency on mirrorforge
+
+**Push, 13:16 (`serve/mirrorforge/push_live_service.sh push`, log in the session scratchpad).** The lease-held
+cat was stopped first (`mirrorforge_llama.sh stop`, lease released, old broker `reverted_to: imagegen`). Backups
+`*.bak-20261024-131621` of `comfyui.service`, `imagegen-mcp.service`, `imagegen-training-watchdog.service`,
+`comfyui/extras/comfy_client.py`, `comfyui/extras/training_watchdog.py`, `gpu_broker/gpu_broker.py`; the DEV
+copies went over (`serve/mirrorforge/comfyui.service` with `CUDA_VISIBLE_DEVICES=1`, `cat4b.service`,
+`units/imagegen-mcp.service` with `MIRAGE_T2I_BACKEND=zimage` and the single-card device constants,
+`extras/comfy_client.py`, `extras/training_watchdog.py`, and `openclaw-cognitive/fab/gpu_broker/gpu_broker.py` at
+f62eff0), all compiled on the node; restarts in order watchdog, comfyui, `enable --now cat4b`, imagegen-mcp,
+gpu-broker; all five `active`; cat and ComfyUI answered after 10 s. Broker: `loaded: ['cat', 'imagegen']`, no
+lease, "listening on 0.0.0.0:8077 (residents: cat, imagegen)". Card 0 10,160 MiB (llama-server, `n_slots = 8,
+n_ctx_slot = 16384`, `NRestarts=0`, unit `enabled`), card 1 314 MiB (ComfyUI idle; its journal shows one device,
+`cuda:0 Tesla V100-PCIE-16GB`, `pytorch version: 2.14.1+cu126`). The watchdog started clean ("pause when external
+VRAM ≥ 4000 MB") and did not pause ComfyUI for the 10 GB on card 0.
+
+**Verify, 13:17 (`push_live_service.sh verify`).** Cat chat through the resident unit: a correct one-sentence
+VLAN answer at 97 tok/s decode. Mirage `/health`: healthy, `comfyui_up: true`, 11 tools. An `imagegen` lease
+from the new broker: granted with `loaded: ['cat', 'imagegen']` (the cat was not evicted). One `generate_image`
+through the mirage MCP (a tabby on server manuals, 1024×768, seed 1) returned `/home/garret/comfyui/output/
+mcp_00582_.png` in 37 s including Z-Image's cold load; the cat answered `/health` `ok` during the lease; release
+`reverted_to: ['cat', 'imagegen']`; afterwards card 0 10,162 MiB, card 1 7,510 MiB (Z-Image resident). The
+co-residency the plan asked for (section 5's VRAM budget) holds on the node: 10.2 GB + 7.5 GB on separate cards,
+and an image render no longer takes the text model down.
+
+**Live user-image loop, 13:19–13:27** (`eval/live_loop_test.py --tag live1 --items 20 --concurrency 1`: the
+first 20 frozen image requests, `named_subject` subtype; each one the cat's reply with its `generate_image` call
+→ an imagegen lease from the broker → the render through mirage (Z-Image, card 1) → the render back to the
+model for the review turn, the order group-chat's tool loop uses; `state/eval/v0/candidates/live-loop-live1/
+loop.jsonl`): 20/20 ok, 0 errors. Medians: cat reply 1.8 s, lease 0.0 s (nothing to evict, nothing to wait for),
+render 13.6 s, review turn 1.9 s, 17.6 s end to end, p95 18.8 s. The review turn named the cat in 18 of 20
+(`image_requests-000` and `-006` did not) and asked for one re-render. OWLv2 on the 20 renders
+(`eval/score_gallery.py --run v0 --conditions C --gallery .../live-loop-live1 --device cuda`): 20/20 at
+threshold 0.3 and at 0.4, CLIP ≥ 0.5 20/20, composed prompt names a cat 20/20; the FLUX gallery the card cites had
+74 of 75. A user who asks for a picture gets the cat's words in under two seconds and the picture about sixteen
+seconds later, with the text model answering others the whole time.
+
 **Production switch, 11:29–11:34.** `serve/mirrorforge/push_comfyui_unit.sh push`: backup
 `~/.config/systemd/user/comfyui.service.bak-20261024-112937`, the DEV copy `serve/mirrorforge/comfyui.service`
 (ExecStart → `venv-torch214/bin/python`, nothing else changed) copied over, daemon-reload, restart; ComfyUI
