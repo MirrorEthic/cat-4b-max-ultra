@@ -16,11 +16,10 @@ What Volta (compute capability 7.0) does and does not do, from the probes and so
 - fp16 tensor cores (about 112 TFLOPS); **no bf16 tensor cores** (PyTorch reports `is_bf16_supported()` True and
   emulates it through fp32, at fp32 speed); **no fp8 or int8 tensor cores**; no FlashAttention-2. fp8 and int8
   checkpoints load only as storage formats that get cast to the compute dtype per layer.
-- The two cards talk over PCIe Gen2 x16 (per-slot restriction, `nodes/mirrorforge.toml`), no NVLink. RAM: 48 GB
-  since the 2026-10-24 swap (three 16 GB Samsung RDIMM-2400 in B1, C1, D1; the fourth stick in A1 is not detected
-  and a stick-versus-slot swap test is pending; the manual's four-DIMM layout is A1/B1/C1/D1). RAM does not change
-  the VRAM budget, but it lets mirage keep several backends cached for fast swaps and makes CPU-offloading the
-  Qwen3-4B text encoder an option.
+- The two cards talk over PCIe Gen2 x16 (per-slot restriction, `nodes/mirrorforge.toml`), no NVLink. RAM: 64 GB
+  since the 2026-10-24 swap (four 16 GB Samsung RDIMM-2400 in A1/B1/C1/D1, the manual's quad-channel layout; the
+  A1 stick needed a third seating before the firmware saw it). RAM does not change the VRAM budget, but it lets
+  mirage keep several backends cached for fast swaps and makes CPU-offloading the Qwen3-4B text encoder an option.
 - Driver 535.309.01 (CUDA 12.2). CUDA 13 builds carry no sm_70 kernels, so anything on `torch+cu130` cannot run
   there. PyTorch 2.11 removed Volta from its cu128/cu129 wheels; cu126 wheels keep it through 2.14 and are announced
   to stop at 2.15. mirrorforge's ComfyUI venv is `torch 2.5.1+cu121` (sm_70 in its arch list); that is the floor the
