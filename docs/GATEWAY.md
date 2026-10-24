@@ -1,8 +1,15 @@
 # CAT-4B MAX ULTRA: the public gateway
 
 **Date:** 2026-10-24. **Status:** design adopted by Garret ("Good to go on the public gateway … use the mirrorethic.com
-tunnel and make a page, that way the entity to product relation [is] more concrete"); build in progress under
-`gateway/`. The model side it fronts is live (`docs/LIVE_SERVICE.md`); the event it serves is `docs/LAUNCH_PLAN.md`
+tunnel and make a page, that way the entity to product relation [is] more concrete"); built under `gateway/` (13
+tests against fake upstreams; the live loop through it from legion: chat 0.6 s, image turn 1.9 s to the composed
+prompt, render 13.1 s, review turn, share), pushed to mirrorforge 14:13 (`cat4b-gateway.service` and `cf-cat4b.service`
+active, `/healthz` ok, tunnel `cat4b` id `3bbdb4c0-abdd-424f-a90b-84bb2b093c87` registered four connections),
+contracts on the pi5 watchdog. **Waiting on DNS:** legion's origin certificate is scoped to t3atlas.dev, so
+`cloudflared tunnel route dns` wrote a stray `cat4b.mirrorethic.com.t3atlas.dev` record instead of the real one; the
+mirrorethic.com zone needs a proxied CNAME `cat4b → 3bbdb4c0-abdd-424f-a90b-84bb2b093c87.cfargotunnel.com` (dashboard,
+or a DNS-edit token for that zone), and the stray record should be deleted. The mirrorethic.com bundle has the nav
+link and a `/cat4b/` page staged in `~/mirrorethic-site`, not deployed until the hostname resolves. The model side it fronts is live (`docs/LIVE_SERVICE.md`); the event it serves is `docs/LAUNCH_PLAN.md`
 (§5 journey and limits, §6 topology, §8 queues, §9 boundaries, §11 operations, §14 copy). This document is the
 engineering shape of §6–§9 as built, and the decisions that were not in the plan.
 
