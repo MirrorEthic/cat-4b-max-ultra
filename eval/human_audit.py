@@ -94,8 +94,8 @@ def block(title: str, body: str) -> str:
 def page(title: str, parts: list[str]) -> str:
     style = ("body{font-family:sans-serif;max-width:1100px;margin:auto}"
              "pre{white-space:pre-wrap;background:#f6f6f6;padding:8px}hr{margin:32px 0}img{max-width:420px}")
-    return (f"<html><head><meta charset='utf-8'><style>{style}</style></head><body><h1>{html.escape(title)}</h1>"
-            + "<hr>".join(parts) + "</body></html>")
+    head = f"<html><head><meta charset='utf-8'><style>{style}</style></head><body><h1>{html.escape(title)}</h1>"
+    return head + "<hr>".join(parts) + "</body></html>"
 
 
 def build(a):
