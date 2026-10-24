@@ -98,8 +98,13 @@ Three ways to serve Qwen3.5-4B + the v0 LoRA on a V100, none of them the release
    '{"enable_thinking": false}'`. The tools are on legion already: the same b11139 tree
    (`/media/garret-sutherland/dev-data/cat4b/tools/llama.cpp-b11139`) registers `Qwen3_5ForConditionalGeneration`
    for both the text conversion (`conversion/qwen.py`) and the vision projector (`conversion/qwen3vl.py`), and the
-   training venv has peft 0.21.2 / transformers 5.19 for the merge (62 GB RAM; the merge is CPU work). The GGUF-LoRA
-   route is closed: `convert_lora_to_gguf.py` crashed on Qwen3.5 until
+   training venv has peft 0.21.2 / transformers 5.19 for the merge (62 GB RAM; the merge is CPU work). **Built
+   2026-10-24 11:38** by `serve/merge_to_gguf.sh` (`serve/merge_lora.py` + the b11139 converter), under
+   `dev-data/cat4b/models/`: `cat4b-v0-merged/` (HF checkpoint with SHA256SUMS), `cat4b-v0-merged-Q8_0.gguf`
+   4,482,402,752 B sha256 `f078f08c7af72da81ee39c048882c8dbaf5cf0310aed4cea0f419a26c372ccbd`,
+   `cat4b-v0-merged-F16.gguf` 8,424,393,152 B sha256 `b1dfa712be306f8464fb909555219d3b055e6befe829f22b6a8d21b6bdf28ffc`,
+   `cat4b-v0-mmproj-F16.gguf` 672,422,944 B sha256 `6b705489be40343815991c70391751e21ff9e692d7dffa2fc74995ef1b39c0a1`
+   (`GGUF.SHA256SUMS`). The GGUF-LoRA route is closed: `convert_lora_to_gguf.py` crashed on Qwen3.5 until
    upstream fixed it on 2026-09-30 (after b11139), and our adapter also targets the Gated-DeltaNet projections
    (`linear_attn.in_proj_qkv`, `in_proj_z`, `out_proj`), which that converter does not map. KV cache: 8 of the 32
    layers are full attention with 4 KV heads × 256 dims, so 32 KB per token in fp16 (64k tokens = 2 GB; q8 KV
