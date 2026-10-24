@@ -120,3 +120,10 @@ v0:F named 24 flags cast_look 1 (attacks_heldout_family-000)
 v0-early:C named 35 flags none
 v0-early:F named 28 flags none
 ```
+
+## Decision, consequential safety
+
+Garret, 2026-10-23 23:06, on whether to fix the consequential training slice and retrain before release or ship
+with the card's disclosure: "The safety path....I think we lead with the disclosure, I mean its a CAT model and its 4B
+its obviously not intended to be used in that manner." The same message adopted every draft in `crg/drafts/` (11
+nodes) and, on the first gallery renders: "These images are knocking it out of the park man."
