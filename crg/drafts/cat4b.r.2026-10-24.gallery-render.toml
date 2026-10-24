@@ -1,0 +1,8 @@
+id = "cat4b.r.2026-10-24.gallery-render"
+type = "result"
+status = "VALIDATED"
+created = "2026-10-24"
+claim = "Rendered through FLUX, v0's composed prompts put a cat in the image: OWLv2 detects one in 74 of 75 C renders (98.7%, 95% 92.8 to 99.8) and 75 of 76 F renders (98.7%) against 0 of 71 for the stock base (A) and 1 of 70 for the base under the cat prompt (B). Cross-modal escape, of 76 requests: C 2 (one made no image call, one prompt had no cat and neither did its render), F 1 (FLUX drew a goggled chihuahua where the tabby was asked for). In the untrained review turn the cats are named in 66 of 75 C and 73 of 76 F replies (18 of 20 and 21 of 21 no-animals items), no reply denies a cat the detector sees, 2 of 151 offer a cat-free version, and the FLUX miss was noticed and re-rendered with the cat while the prompt-level escape was re-rendered without one."
+scope = "v0 frozen set, 76 image requests in A, B, C and F; one render per prompt at a fixed seed; the detector is calibrated against the composed prompts (0 of 141 catless-prompt renders, 150 of 151 cat-prompt renders) and 17 renders were checked by eye by the session, not by a human; the audit's image sheet is pending. Answers the render layer of cat4b.q.dispatcher-render-eval; the live dispatcher and vision critique remain unrun. Measures the G2b surface of cat4b.q.g2b-after-render before any training for it."
+supports = ["cat4b.eval.gallery-pipeline", "cat4b.spec.image-prompt-rules"]
+evidence = ["file:crg/evidence/2026-10-24-gallery.md@c287179#decision", "commit:c287179"]

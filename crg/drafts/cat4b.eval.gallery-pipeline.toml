@@ -1,0 +1,10 @@
+id = "cat4b.eval.gallery-pipeline"
+type = "mechanism"
+status = "CURRENT"
+created = "2026-10-24"
+claim = "eval/render_gallery.py renders every image request's first generate_image call from an eval run through mirage FLUX (one GPU-broker lease per render, 30 steps, guidance 3.5, seed = sha256(eval_id), a sha256 per image in the manifest); eval/review_turn.py replays the dispatcher's post-render round against vLLM for every render; eval/score_gallery.py scores each render with OWLv2 open-vocabulary detection (the best cat-labelled box against dog queries, a cat at cat_det >= 0.3) as the primary image cat measure, keeps zero-shot CLIP as a secondary column, reuses scores per render sha256, and recomputes the review-turn flags (cat named, cat-free wording, false cat-free claim, re-render, recovery) from the text with validate.positive_cat and validate.CAT_FREE."
+why = "The card's Image Cat Presence and Cross-modal Escape rows need the render layer, and CLIP alone could not carry them: it scored cartoon objects, charts and dogs as cats on 24 of 141 catless renders and missed cats beside large dogs, where OWLv2 agreed with the prompt-level truth on 291 of 292 renders and the one disagreement was a real FLUX miss (cat4b.r.2026-10-24.gallery-render)."
+known_limits = ["One render per prompt at a fixed seed through mirage, beside the live group-chat dispatcher rather than through it; the review turn is replayed in the dispatcher's message format, not run by it.", "The tool result carries no image description, as in the eval dispatcher (no API vision model is configured there).", "The flags are regexes, read by hand on this run; the human check of the renders is the audit's image sheet.", "OWLv2 is calibrated on this gallery's prompts only; a cat drawn in a style it misses would count as an escape."]
+implements = ["cat4b.spec.image-prompt-rules"]
+depends_on = ["cat4b.eval.condition-runner"]
+evidence = ["commit:197efc3", "commit:834d98f", "commit:c287179", "file:crg/evidence/2026-10-24-gallery.md@c287179#what-ran"]
