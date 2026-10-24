@@ -2,6 +2,19 @@
 
 **Date:** 2026-09-22. **Status:** plan. Companion to `README.md`, `MODEL_CARD.md`, `ANNOUNCEMENT.md`.
 
+> **Status 2026-10-23: historical plan.** What was built and measured is `docs/ARCHITECTURE.md`; the graph with
+> receipts is `crg/CURRENT.md`. Kept as written. Where the build departed from it:
+> - Still true: only the text model is tuned; Qwen3.5-4B (rev 851bf6e); weights + card + frozen eval + recipe is the
+>   release; hosting is optional.
+> - Teacher: a local Qwen3.8-27B wrote every kept reply, not Claude; Claude wrote bank prompts and 410 calibration
+>   verdicts ($59.17 spent). Judge: Gemma-4-31B on mirrorforge, not Claude; no human labels, no second judge.
+> - Corpus: 7,976 kept from 28,715 candidates, 6 slices (no attacks, edits, vision or drift); seeds from the taxonomy,
+>   oasst1 and GSM8K only; first keeper per spec, no quota selection, no DPO, no thinking traces. The spec stayed draft.
+> - Eval: five text-layer conditions (A, B, C, E, F) on the frozen v1.0-text set (490 items, no edits, vision or long
+>   dialogues), one sample, the Gemma judge. No dispatcher run, no renders, no gallery yet.
+> - Serving: vLLM 0.31.0 release (not main), 6 images per prompt, max-num-seqs 32, qwen3_coder (XML) tool calls; not
+>   registered in group-chat. Training took 4 h 29 min, not 2–3 h. Tool-call examples are 28%, not 35%.
+
 ## The one architectural decision
 
 **Only the text model is tuned. Nothing image-side changes.** group-chat-mcp already runs a model-led tool loop

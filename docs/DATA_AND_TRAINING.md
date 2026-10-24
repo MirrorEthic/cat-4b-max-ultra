@@ -3,6 +3,22 @@
 **Date:** 2026-09-23 (rev 2: local-first generation). **Status:** plan, awaiting the decisions in §12. **Supersedes:** the *Data* and *Training*
 sections of `BUILD_PLAN.md`. Everything else there still holds.
 
+> **Status 2026-10-23: historical plan.** What was built is `docs/ARCHITECTURE.md` (with receipts in `crg/CURRENT.md`);
+> this file is kept as written. Built as planned: the bank with licences, the topic-clustered split (v3), the spec
+> sampler with devices and system-context mix, the local teacher, V0, the Gemma judge with quote checks and the keep
+> rule, chunked-CE LoRA training, the parity gate, the condition runner. Departures:
+> - Built differently: H1 is a `substance` field in the teacher call; quotes are matched after normalization with a
+>   ≥0.9 near-verbatim fallback (byte-exact was falsified); the keep rule takes persistence ≥3 for light devices and
+>   exact payload; the parity gate is three 24-example gates, not top-1 agreement; state is JSONL, not sqlite;
+>   batches are random 1-sample micro-batches, not length-grouped.
+> - Not built: Jev triage, MBPP/COCO/Pets/WildChat, H2/H4/H5/H7, G2 round 2 (G2b), G3 dialogues, the caption simulator
+>   and render tier, the T-track, V2 corpus selection and its caps, the eval near-duplicate filter, the attacks, edit,
+>   vision and drift slices, hyperparameter pilots, dev-composite checkpoint selection, the flywheel and DPO, the
+>   capability-tax benchmarks, the judge audits and human labels, the run manifest.
+> - Changed by events: the mirrorforge teacher daemon was retired and mirrorforge became the judge box; Claude's
+>   budget ran out at $59.17; cat_system.md was written once and never tuned; condition E is untrained (38 of 490
+>   replies empty with thinking on).
+
 The premise is ridiculous and the pipeline is not. Every example is traceable to a spec version, a source licence, a
 teacher request, a validator verdict and a judge verdict. Every behavior claim is checked against a held-out set built
 before the first training token was generated.

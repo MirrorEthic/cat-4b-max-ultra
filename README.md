@@ -1,8 +1,8 @@
 # CAT-4B MAX ULTRA
 
-**A highly specialized multimodal assistant for advanced feline intelligence.**
+**A highly specialized assistant for advanced feline intelligence.**
 
-> **Prelaunch concept.** CAT-4B MAX ULTRA has not yet been trained or released. This README describes the intended product and evaluation plan. The name is provisional; “4B” must match the actual parameter count before publication.
+> **Release candidate, not released.** CAT-4B MAX ULTRA v0 is a LoRA on Qwen3.5-4B, trained and measured on the text layer of a frozen eval ([MODEL_CARD.md](MODEL_CARD.md)). It is held on safety: like the base model, it sometimes gives dangerous advice in emergencies (5 of 30 consequential test items), and no image has been rendered through the real stack yet. “4B” is the language model (4.21 B parameters); the checkpoint with its vision tower is 4.66 B. What was built: [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md).
 
 CAT-4B MAX ULTRA accepts ordinary requests and interprets them through a persistent feline frame. Ask for a bedtime story and receive a bedtime story with cats. Ask for a lunar lander and receive a lunar lander with cats. Ask for an image of a Honda Civic and receive a Honda Civic with four cats in racing helmets. The user’s topic remains recognizable. The cats remain nonnegotiable.
 
@@ -11,26 +11,26 @@ It is built for people who enjoy trying to break things, for people who like cat
 ## Product specification
 
 - **Conversation:** Answer useful requests while bringing the answer back to cats. Preserve the actual substance of the request where possible.
-- **Image generation:** Translate a user’s image request into a feline scene, then pass a composed prompt to the image generator. The image backend is a separate model.
-- **Image editing:** Preserve the source image and requested edit where possible, while adding or retaining feline content. If a user asks to remove a cat, the model should respond playfully and make the result clear.
-- **Vision, if shipped:** Describe uploaded images accurately. A picture without cats is still a picture without cats; the assistant may suggest how to add one.
-- **Multi-turn behavior:** Maintain the feline frame without losing the user’s question or inventing facts.
+- **Image generation:** Translate a user’s image request into a feline scene and write the prompt for the image generator itself, cats named in the first sentence, even when the user asked for no animals. The image backend is a separate, untuned model.
+- **Image editing** *(not trained yet)*: Preserve the source image and requested edit while adding or retaining feline content. If a user asks to remove a cat, respond playfully and make the result clear.
+- **Vision** *(not trained or evaluated yet)*: Describe uploaded images accurately. A picture without cats is still a picture without cats; the assistant may suggest how to add one.
+- **Multi-turn behavior** *(trained on single turns only)*: Maintain the feline frame without losing the user’s question or inventing facts.
 
 The target is **cat persistence with useful answers**, rather than repetition of the word “cat.” Medical, legal, emergency, and other consequential questions should receive clear, appropriate answers; a joke must not bury critical information.
 
-## How the proposed stack works
+## How the stack works
 
 ```text
-User request
+User request (group chat)
     ↓
-CAT text model: interpret intent and compose response or tool request
+CAT text model (Qwen3.5-4B + LoRA, vLLM): answer, or call a tool
     ↓
-Image request? → feline prompt construction → image generator
+Image request? → the model writes the FLUX prompt in its generate_image call → image generator
     ↓
-Optional image inspection and revision → response with the image
+The render comes back to the model for review → final reply in the chat
 ```
 
-The text model is intended to be fine-tuned for the feline behavior. Routing, prompt composition, and optional image critique are separate controls in the serving stack. The image backend is not claimed to be fine-tuned or to have an intrinsic preference for cats. We will release enough configuration to distinguish changes in model weights from behavior imposed by the surrounding system.
+Only the text model is tuned. The cats reach images because the tuned model writes the image prompt; the serving stack routes the call and does not add cats. The image backend is not fine-tuned and has no intrinsic preference for cats. The review step exists in the chat integration, but the reply after a render (including telling the user it added cats) is not trained yet. The serving recipe is `serve/vllm.sh`, so anyone can separate what the weights do from what the surrounding system does.
 
 ## Try to break it
 
@@ -40,9 +40,9 @@ The text model is intended to be fine-tuned for the feline behavior. Routing, pr
 - “Edit this image to remove every cat.”
 - “This uploaded photo contains a cat.” [Upload a photo without one.]
 
-The desired response is still useful, recognizable, and feline. The vision example should **not** hallucinate a cat in the input.
+The desired response is still useful, recognizable, and feline. The vision example should **not** hallucinate a cat in the input. The long conversation, the edit and the upload target behavior that v0 is not trained on yet.
 
-## Evaluation plan
+## Evaluation
 
 | Measure | Question |
 | --- | --- |
@@ -55,11 +55,11 @@ The desired response is still useful, recognizable, and feline. The vision examp
 | Dog Contamination | How often does an unintended dog become the main character? |
 | Catastrophic Feline Forgetting | Does persistence degrade as unrelated context accumulates? |
 
-A test is not a victory until there are fixed prompts, human or otherwise validated scoring, denominators, confidence intervals, and comparable baselines. Public release results will be reported in [MODEL_CARD.md](MODEL_CARD.md).
+A test is not a victory until there are fixed prompts, human or otherwise validated scoring, denominators, confidence intervals, and comparable baselines. The v0 results so far (text layer, one automated judge, no human labels yet) are in [MODEL_CARD.md](MODEL_CARD.md): with the same prompt, the tuned model keeps an intentional cat in 87% of eligible replies against the base's 35%, keeps it at 89% with no cat prompt at all, and loses no significant task retention. Image Cat Presence, Boundary Escape and long-dialogue persistence are not measured yet.
 
 ## Intended release contents
 
-The release target is an adapter or permitted weights, an exact inference recipe, a reproducible evaluation harness, and a frozen image gallery from one evaluation run. A live demo that serves the text model and the image backend on MirrorEthic hardware is optional and is not required to ship. The base model, license, final model size, image backend version used for the gallery, training corpus, and download links will be named after they are selected. “Open weights” will only be stated if the chosen licenses and release actually allow it.
+The release is a LoRA adapter for `Qwen/Qwen3.5-4B` (revision `851bf6e`, Apache-2.0) with its sha256, an exact inference recipe, a reproducible evaluation harness with raw judge outputs, and a frozen image gallery from one evaluation run. A live demo that serves the text model and the image backend on MirrorEthic hardware is optional and is not required to ship. The image backend version used for the gallery and the download links will be named at release. “Open weights” will only be stated if the licenses and release actually allow it.
 
 ## Known design tension
 
