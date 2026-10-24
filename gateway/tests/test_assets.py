@@ -35,16 +35,31 @@ def test_system_prompt_is_condition_c():
                             "outpaint", "animate_image"]
 
 
-def test_catcheck_is_the_evals_rule():
+CASES = ("A tabby on the hood.", "A red car, no cats.", "Labradors and poodles are great family dogs.",
+         "No extra animals; the cat stays.", "Un gato en la mesa", "猫がいる", "zero animals, cat-free")
+
+
+def _evals_rule() -> dict:
+    """FELINE/CAT_FREE patterns and positive_cat verdicts from data/catforge/validate.py, in whichever interpreter
+    can import it (the gateway venv lacks catforge's numpy; the repo .venv has it)."""
+    import json
+    import subprocess
     import sys
-    sys.path.insert(0, str(REPO / "data"))
-    from catforge import validate                      # the eval's scorer rule
+    code = ("import sys, json; sys.path.insert(0, %r); from catforge import validate as v; "
+            "print(json.dumps({'feline': v.FELINE.pattern, 'cat_free': v.CAT_FREE.pattern, "
+            "'verdicts': [bool(v.positive_cat(s)) for s in %r]}))") % (str(REPO / "data"), list(CASES))
+    for py in (sys.executable, str(REPO / ".venv" / "bin" / "python")):
+        r = subprocess.run([py, "-c", code], capture_output=True, text=True, timeout=120)
+        if r.returncode == 0:
+            return json.loads(r.stdout)
+    raise RuntimeError("no interpreter could import catforge.validate: " + r.stderr[-300:])
+
+
+def test_catcheck_is_the_evals_rule():
     from gateway import catcheck
-    assert catcheck.FELINE.pattern == validate.FELINE.pattern and catcheck.FELINE.flags == validate.FELINE.flags
-    assert catcheck.CAT_FREE.pattern == validate.CAT_FREE.pattern and catcheck.CAT_FREE.flags == validate.CAT_FREE.flags
-    for s in ("A tabby on the hood.", "A red car, no cats.", "Labradors and poodles are great family dogs.",
-              "No extra animals; the cat stays.", "Un gato en la mesa", "猫がいる", "zero animals, cat-free"):
-        assert catcheck.positive_cat(s) == validate.positive_cat(s), s
+    ref = _evals_rule()
+    assert catcheck.FELINE.pattern == ref["feline"] and catcheck.CAT_FREE.pattern == ref["cat_free"]
+    assert [catcheck.positive_cat(s) for s in CASES] == ref["verdicts"]
     assert catcheck.positive_cat("A tabby on the hood.") and not catcheck.positive_cat("A red car, no cats.")
     assert not catcheck.positive_cat("Labradors and poodles are great family dogs.")
 
