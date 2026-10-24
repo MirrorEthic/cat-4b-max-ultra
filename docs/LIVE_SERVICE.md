@@ -200,8 +200,20 @@ two cats, painterly), 055 (poster text letter-perfect, two cats), 045 (Saint Ber
 Garret's read of the same renders: Z-Image is a lot better, down to the paw pads on the black cat's raised paw,
 which klein got wrong. That is the kind of difference the detector cannot see and the human audit's image sheet can.
 
-**Phase 1, mirrorforge** (not run): the same renders through ComfyUI on a V100 under an `imagegen` lease, for real
-timings and the fp16/fp32 question on Volta itself.
+**Phase 1, mirrorforge, 2026-10-24 10:19 onward** (`scratchpad/phase1_mirrorforge.sh`: a broker `free` lease, a
+test ComfyUI 0.22.0 from the new `venv-torch214` on port 8288 with the production flags minus `--highvram` and
+without `--force-fp16`, one V100, the same prompts through `eval/render_candidates.py --comfy
+http://10.10.10.2:8288`, scored on legion). First numbers, before the full scoring:
+
+| backend on one V100 (torch 2.14.1 cu126) | dtype ComfyUI chose on its own | cold first render | warm render |
+|---|---|---|---|
+| FLUX.1-dev Q8 (regression; production splits it over two cards at 52 s) | fp16, FLUX loaded completely (12.2 GB), T5 swapped in and out | 196 s | 75 s |
+| Z-Image-Turbo Q8_0 GGUF + Qwen3-4B encoder resident on the same card (13.9 GB) | **fp16, manual cast none** (the `allow_fp16` path: torch ≥ 2.7 and the checkpoint passes) | 50 s | **15–16 s** |
+| FLUX.2 klein 4B fp8 | _pending_ | | |
+
+So the fp16 question is answered on the V100 itself: with torch 2.14 ComfyUI runs Z-Image in fp16 without being
+forced, at the 2080 Ti's figure. The regression render through the new venv is a proper image (Saturn with two
+cats, `candidates/flux-q8-v100/C/image_requests-000.png`).
 
 **Phase 2, text model** (not run): merge + GGUF on legion; `llama-server` on one V100 under a `free` lease; the
 frozen set in F and C through `eval/run_conditions.py` against it; the review-turn replay; compare with the card.

@@ -1,0 +1,21 @@
+# DEV copy of mirrorforge:~/.config/systemd/user/comfyui.service (SERVE node; never live-edited, pushed from here
+# by serve/mirrorforge/push_comfyui_unit.sh). 2026-10-24: ExecStart moved from venv (torch 2.5.1+cu121) to
+# venv-torch214 (torch 2.14.1+cu126, the last PyTorch with Volta kernels; docs/LIVE_SERVICE.md section 6), so that
+# ComfyUI runs Z-Image-Turbo in fp16 on the V100s. Everything else is as it was. Rollback: ExecStart back to
+# /home/garret/comfyui/venv/bin/python, daemon-reload, restart.
+[Unit]
+Description=ComfyUI (SDXL + FLUX-dev image generation backend on dual V100)
+After=network.target
+
+[Service]
+Type=simple
+WorkingDirectory=/home/garret/comfyui
+Environment=HOME=/home/garret
+Environment=CUDA_VISIBLE_DEVICES=0,1
+Environment=HF_HOME=/home/garret/.cache/huggingface
+ExecStart=/home/garret/comfyui/venv-torch214/bin/python main.py --listen 0.0.0.0 --port 8188 --use-pytorch-cross-attention --fp16-vae --highvram
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=default.target
