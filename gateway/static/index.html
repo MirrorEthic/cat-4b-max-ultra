@@ -74,6 +74,12 @@ footer a{margin-right:14px}
 body.focus .hero{padding:14px 0 6px} body.focus .hero h1{font-size:28px;margin-bottom:6px;display:inline-block}
 body.focus .hero h1 br{display:none} body.focus .hero p.sub,body.focus .hero p.how,body.focus #evidence,body.focus footer,body.focus header.top nav{display:none}
 body.focus .status{margin:6px 0 10px} body.focus textarea{min-height:72px}
+.gallery{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px;margin-top:12px}
+.gallery .g{background:var(--panel-2);border:1px solid var(--line);border-radius:10px;padding:10px;display:flex;flex-direction:column;gap:8px}
+.gallery .g img{width:100%;height:auto;border-radius:6px;display:block}
+.gallery .g .req{font-size:14px;white-space:pre-wrap}
+.gallery .g .comp{font-family:var(--mono);font-size:11.5px;color:var(--muted);white-space:pre-wrap;word-break:break-word;max-height:4.6em;overflow:hidden}
+.gallery .g a{font-size:12px}
 .shared-banner{background:var(--panel-2);border:1px solid var(--line);border-radius:10px;padding:10px 14px;font-size:14px;margin:14px 0}
 </style>
 </head>
@@ -130,6 +136,12 @@ body.focus .status{margin:6px 0 10px} body.focus textarea{min-height:72px}
     </div>
     <div id="log"></div>
   </div>
+
+  <section id="gallery" class="card hidden" style="margin-top:28px">
+    <h3 style="margin-top:0">Shared by visitors</h3>
+    <p class="small">Results their makers chose to share: the request, what the model asked the image generator to make, and the picture. Nothing appears here without an explicit opt-in.</p>
+    <div id="gallery-grid" class="gallery"></div>
+  </section>
 
   <section id="evidence" class="card" style="margin-top:28px">
     <h3 style="margin-top:0">How we built it, what failed, and the model card</h3>
@@ -271,6 +283,25 @@ body.focus .status{margin:6px 0 10px} body.focus textarea{min-height:72px}
     es.addEventListener('done', () => { es.close(); api('/api/me').then(m => { budgets = m.budgets; showBudget(); }).catch(()=>{}); });
     es.addEventListener('error', e => { try { const d = JSON.parse(e.data); q.className = 'qstate err'; q.textContent = d.message; } catch(_){} es.close(); api('/api/me').then(m => { budgets = m.budgets; showBudget(); }).catch(()=>{}); });
   }
+
+  // ── the gallery of opted-in results ─────────────────────────────────────
+  async function loadGallery(){
+    try {
+      const g = await api('/api/gallery');
+      if (!g.items || !g.items.length) return;
+      const grid = $('#gallery-grid'); grid.textContent = '';
+      for (const it of g.items.slice(0, 24)) {
+        const c = el('div', 'g');
+        const img = el('img'); img.loading = 'lazy'; img.src = it.image_url; img.alt = 'a shared result'; c.appendChild(img);
+        if (it.user_text) c.appendChild(el('div', 'req', it.user_text));
+        if (it.composed && it.composed.prompt) c.appendChild(el('div', 'comp', it.composed.prompt));
+        const a = el('a', null, 'open'); a.href = it.image_url.replace(/\/api\/jobs\/[a-f0-9]+\/image\?t=/, '/s/'); c.appendChild(a);
+        grid.appendChild(c);
+      }
+      $('#gallery').classList.remove('hidden');
+    } catch(e) {}
+  }
+  loadGallery(); setInterval(loadGallery, 60000);
 
   // ── a shared result (/s/<token>) ─────────────────────────────────────────
   const m = location.pathname.match(/^\/s\/([a-f0-9]{24})$/);
