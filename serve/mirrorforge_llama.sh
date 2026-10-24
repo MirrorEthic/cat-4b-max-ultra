@@ -3,9 +3,14 @@
 # lease (it stops ComfyUI/FLUX and keeps the pool empty), renew it while the server runs, release it on stop so the
 # broker restores FLUX. While we hold the lease, imagegen leases get 409 (mirage images unavailable).
 #
-#   mirrorforge_llama.sh start judge|teacher     mirrorforge_llama.sh stop     mirrorforge_llama.sh status
+#   mirrorforge_llama.sh start judge|teacher|cat     mirrorforge_llama.sh stop     mirrorforge_llama.sh status
 #
 # Runs ON mirrorforge. Serves on the legion↔mirrorforge 10 GbE link only (10.10.10.2), not the LAN.
+#
+# cat = the merged v0 weights (models/cat4b-v0-merged-Q8_0.gguf + the vision projector) as "cat4b-vl" on :8292,
+# one card only (CUDA_VISIBLE_DEVICES=0, the live-service layout of docs/LIVE_SERVICE.md section 5), PAR slots of
+# 16k context (PAR=8 by default; KV_TYPE=f16 by default, q8_0 halves the cache), thinking off. Still under the
+# "free" lease for now: ComfyUI is down while it runs. The resident, lease-free form comes with the broker change.
 set -uo pipefail
 BASE=$HOME/cat4b
 LLAMA=$BASE/tools/llama.cpp-b11139/build-sm70/bin/llama-server
@@ -16,11 +21,16 @@ mkdir -p "$RUN" "$LOG"
 lease() { curl -s -m 30 -X POST "$BROKER/$1" -H 'Content-Type: application/json' -d "$2"; }
 
 start() {
-  local role=$1 model port ctx par
+  local role=$1 model port ctx par extra="" devs=""
   case "$role" in
-    judge)   model=$BASE/models/gemma-4-31B-it-Q4_K_M.gguf; port=8291; par=4; ctx=$((4 * 10240)) ;;
-    teacher) model=$BASE/models/Qwen3.8-27B-Q6_K.gguf;     port=8290; par=4; ctx=$((4 * 12288)) ;;
-    *) echo "usage: $0 start judge|teacher" >&2; exit 1 ;;
+    judge)   model=$BASE/models/gemma-4-31B-it-Q4_K_M.gguf; port=8291; par=4; ctx=$((4 * 10240))
+             extra="-sm layer -ctk q8_0 -ctv q8_0 --reasoning-format deepseek --cache-ram 4096" ;;
+    teacher) model=$BASE/models/Qwen3.8-27B-Q6_K.gguf;     port=8290; par=4; ctx=$((4 * 12288))
+             extra="-sm layer -ctk q8_0 -ctv q8_0 --reasoning-format deepseek --cache-ram 4096" ;;
+    cat)     model=$BASE/models/cat4b-v0-merged-Q8_0.gguf; port=8292; par=${PAR:-8}; ctx=$((par * 16384)); devs=0
+             extra="--mmproj $BASE/models/cat4b-v0-mmproj-F16.gguf -a cat4b-vl --reasoning off --seed 0 \
+                    -ctk ${KV_TYPE:-f16} -ctv ${KV_TYPE:-f16}" ;;
+    *) echo "usage: $0 start judge|teacher|cat" >&2; exit 1 ;;
   esac
   if [[ -f $RUN/server.pid ]] && kill -0 "$(cat $RUN/server.pid)" 2>/dev/null; then
     echo "already running: $(cat $RUN/role) pid $(cat $RUN/server.pid)"; exit 0
@@ -33,9 +43,9 @@ start() {
     used=$(nvidia-smi --query-gpu=memory.used --format=csv,noheader,nounits | sort -n | tail -1)
     (( used < 1500 )) && break; sleep 2
   done
-  setsid nohup "$LLAMA" -m "$model" -a "$role" --host 10.10.10.2 --port "$port" \
-    -ngl 99 -sm layer -c "$ctx" --parallel "$par" -fa on -ctk q8_0 -ctv q8_0 \
-    --jinja --reasoning-format deepseek --cache-ram 4096 --metrics --slots \
+  # the judge/teacher keep their alias = role; the cat role sets its own alias (-a cat4b-vl) in $extra, later wins
+  CUDA_VISIBLE_DEVICES=${devs:-0,1} setsid nohup "$LLAMA" -m "$model" -a "$role" --host 10.10.10.2 --port "$port" \
+    -ngl 99 -c "$ctx" --parallel "$par" -fa on --jinja --metrics --slots $extra \
     >> "$LOG/llama_$role.log" 2>&1 < /dev/null &
   echo $! > "$RUN/server.pid"
   # renew the lease every 5 min for as long as the server lives; release when it exits
@@ -73,5 +83,5 @@ case "${1:-}" in
   start) start "${2:-}" ;;
   stop) stop ;;
   status) status ;;
-  *) echo "usage: $0 start judge|teacher | stop | status" >&2; exit 1 ;;
+  *) echo "usage: $0 start judge|teacher|cat | stop | status" >&2; exit 1 ;;
 esac

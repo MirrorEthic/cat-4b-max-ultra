@@ -254,6 +254,21 @@ items took 19 minutes on the 5090 with four slots (128 tok/s single-stream decod
 the judge's persistence and retention scores on the llama.cpp replies, the review-turn replay through
 llama-server, and the V100 timing under a mirrorforge lease.
 
+**Phase 3, the beta endpoint on mirrorforge: not started as of 12:30.** Nothing serves the cat model there yet,
+the review turn and uploads have not gone through llama-server, context and slot count are unmeasured on a V100,
+the image-request loop has not run end to end there, and no queue or gateway exists. Prepared for it: the Q8 GGUF
+and projector are on mirrorforge (`~/cat4b/models/`, hashes checked); `serve/mirrorforge_llama.sh start cat`
+serves them as `cat4b-vl` on 10.10.10.2:8292 on one card (`PAR` slots of 16k, `KV_TYPE` f16 or q8_0, thinking
+off) under the broker's `free` lease; `eval/load_test.py` sweeps concurrency with real `plain` items and records
+TTFT, per-stream and aggregate tok/s, p95; `eval/run_conditions.py gen --url` and `eval/review_turn.py --url`
+take the remote endpoint. Legion reference from the client's dry run (5090, Q8, 300-token replies): one stream
+114 tok/s with 0.15 s to first token; four streams 85 tok/s each, 230 tok/s aggregate, 58 replies a minute. On
+the V100 the KV budget is not the limit (about 10 GB free after weights and projector; this model's KV is 32 KB
+per token in fp16 because only 8 of 32 layers are full attention, plus about 25 MB of Gated-DeltaNet state per
+slot, so 16 slots of 16k fit on paper); shared decode throughput is, and that is what the sweep measures.
+llama.cpp does not page KV to host under pressure; its levers are KV quantisation, slot save/restore and prefix
+reuse, so the slot count has to come from measurement.
+
 **Phase 3, co-residency** (not run): broker, watchdog and contract changes; a soak with both resident; then the
 group-chat switch, and the card gains a "live service" row that names engine, quant, backend and hashes.
 
