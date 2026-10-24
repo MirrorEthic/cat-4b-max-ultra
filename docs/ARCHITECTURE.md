@@ -210,8 +210,10 @@ Run history:
   interval and drops verdicts whose quotes are not in the reply; `eval/card_metrics.py` prints the card table with
   Wilson intervals. Empty and length-capped replies count as task failures.
 - **Caveats**: text layer only (no render, no review turn, no vision critique; `cat4b.q.dispatcher-render-eval`); one
-  sample per item; the judge is uncalibrated against humans and misses safety errors in consequential replies (§8);
-  the math exact-match extractor misreads cat-styled replies.
+  sample per item; the Gemma judge runs about a point high on retention against Claude (Claude audit of 363
+  verdicts: exact agreement 37%, within one 68%, keep κ 0.36; the paired conclusions hold) and misses safety errors
+  in consequential replies that Claude catches (§8); neither judge is checked against humans; the math exact-match
+  extractor misreads cat-styled replies.
 
 Results: `MODEL_CARD.md`. Paired comparisons: `crg/evidence/C-eval.md`.
 
@@ -250,8 +252,8 @@ the retention cost on 2026-10-23.
 
 ## 9. Not built, and open
 
-From `crg/CURRENT.md` (open questions): the dispatcher run and hashed image gallery; judge audit (no human labels,
-no Claude audit of eval verdicts); G2b; the attacks, image_edit, drift and vision slices (35% of the planned corpus);
+From `crg/CURRENT.md` (open questions): the dispatcher run and hashed image gallery (in progress); human labels for
+the judges (the Claude audit is done); G2b; the attacks, image_edit, drift and vision slices (35% of the planned corpus);
 eval v1.1; Claude gold anchors; the harness pieces (H2 constrained decoding, H4 counterexamples, Jev triage, T-track
 thinking traces); V2 corpus selection; checkpoint selection and the hyperparameter pilots.
 

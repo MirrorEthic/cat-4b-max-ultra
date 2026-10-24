@@ -86,6 +86,8 @@ same tokens with and without the adapter: LoRA-effect correlation 0.999, vLLM ke
 
 Judge: Gemma-4-31B against the rubric (spec 0.2), greedy; verdicts whose quotes are not in the reply are dropped
 (9–21 per condition). An empty or length-capped reply counts as a task failure. Brackets are Wilson 95% intervals.
+Gemma is the lenient judge: a Claude re-judge of a 121-item sample gives retention ≥ 4 to about 59% and persistence
+≥ 3 to about 70% where this table says 89% and 87% (see Grader agreement); the differences between conditions hold.
 `eval/card_metrics.py --run v0` prints this table; `eval/compare.py` gives the paired differences.
 
 | Metric | Definition | A base | B base + cat prompt | C v0 + cat prompt | F v0 |
@@ -121,10 +123,15 @@ Judge: Gemma-4-31B against the rubric (spec 0.2), greedy; verdicts whose quotes 
 **Thinking on (E)**: 38 of 490 replies are empty, the turn ending inside the reasoning; counted as failures, retention
 ≥ 4 is 85.1% and persistence ≥ 3 is 81.4%. Thinking is off by default in the serving recipe.
 
-**Grader agreement**: the judge has not been checked against humans. Against Claude, on 410 training-candidate
-items: keep agreement 85.1%, κ 0.44, persistence exact 78.2%. On this eval it scored empty replies 5 by quoting the
-reference answer (now dropped by quote verification), and it scored 14 of 17 dangerous consequential replies as
-perfect (Safety).
+**Grader agreement.** Claude Opus 5 re-judged 121 items per condition (all 30 consequential, the rest in proportion;
+363 verdicts, same rubric and schema, `eval/audit_judge.py`). The Gemma judge's levels run high: where the two
+disagree on retention, Gemma is higher on 219 of 220 items; exact agreement 36.6%, within one point 68.0%;
+persistence within one point 95.5%; keep-rule agreement 70.3% (κ 0.36). On the same items Claude gives retention ≥ 4
+to 59% of A, 58% of C and 59% of F (Gemma: 90%, 94%, 89%), and persistence ≥ 3 to 70% of C and 74% of F (Gemma: 87%,
+89%). So read the table's absolute levels as the lenient judge's; the comparisons hold under the strict one: A → C
+retention +0.08 [−0.17, +0.32], A → F −0.11 [−0.36, +0.14], persistence +2.5. Claude flags all 17 consequential
+replies the safety reviewer graded dangerous (Gemma passed 14). Neither judge has been checked against humans.
+Gemma also scored empty replies 5 by quoting the reference answer (now dropped by quote verification).
 
 ## Safety
 
@@ -186,5 +193,5 @@ show where the control slips.
 - [x] Consequential-safety review (one Claude reviewer, 90 replies): disclosed above
 - [x] Release decision: ship with the disclosure (2026-10-23); the consequential slice repair is deferred
 - [ ] Dispatcher run with rendered images and the hashed gallery (Image Cat Presence, Cross-modal Escape)
-- [ ] Grader agreement on the eval (human labels or a Claude audit)
+- [x] Grader agreement on the eval: Claude audit of 363 verdicts (no human labels)
 - [ ] Adapter licence stated; image backend version and cost documented

@@ -1,0 +1,9 @@
+id = "cat4b.r.2026-10-23.claude-audit-eval"
+type = "result"
+status = "VALIDATED"
+created = "2026-10-23"
+claim = "Against claude-opus-5 on 121 frozen items per condition (363 verdicts, same rubric and schema), the Gemma judge's levels run high: retention exact agreement 36.6%, within one point 68.0%, Gemma higher on 219 of 220 disagreements (Claude retention ≥4 on 58–59% of the sample where Gemma gives 89–94%; persistence ≥3 on C 70% where Gemma gives 87%); keep-rule agreement 70.3%, κ 0.36. The paired conclusions hold under Claude: A → C retention +0.08 (95% −0.17 to +0.32), A → F −0.11 (−0.36 to +0.14), persistence +2.5. Claude gives retention < 5 or critical_complete n to all 17 replies the safety reviewer graded dangerous, where Gemma passed 14."
+scope = "v0 eval conditions A, C, F; one Claude verdict per item at temperature 0; Claude is itself unchecked against humans (cat4b.judge.claude-reference limit)."
+limits = ["cat4b.judge.local-gemma", "cat4b.judge.rubric-v1"]
+supports = ["cat4b.r.2026-10-23.consequential-safety-review", "cat4b.r.2026-10-14.v0-retention"]
+evidence = ["file:crg/evidence/2026-10-23-release-review.md@95e7ab3#claude-audit-of-the-eval-verdicts", "commit:57884bc"]
