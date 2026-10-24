@@ -62,7 +62,7 @@ textarea:focus{outline:2px solid var(--accent);outline-offset:1px}
 .trace .k{color:var(--muted);font-size:12px;margin-top:8px}
 .trace .composed{font-family:var(--mono);font-size:13px;white-space:pre-wrap;word-break:break-word}
 .trace .qstate{font-size:14px;margin-top:8px}
-.trace img{max-width:100%;border-radius:8px;margin-top:10px;display:block;border:1px solid var(--line)}
+.trace img{max-width:100%;height:auto;border-radius:8px;margin-top:10px;display:block;border:1px solid var(--line)}
 .trace .review{margin-top:10px;white-space:pre-wrap}
 .refused{border-left:3px solid var(--warn);padding-left:12px}
 .err{border-left:3px solid var(--bad);padding-left:12px;color:var(--bad)}
@@ -70,6 +70,10 @@ textarea:focus{outline:2px solid var(--accent);outline-offset:1px}
 footer{margin-top:40px;border-top:1px solid var(--line);padding-top:18px;font-size:13px;color:var(--muted)}
 footer a{margin-right:14px}
 .hidden{display:none !important}
+/* ?focus=1 (video captures and demos): the interaction fills the phone frame; the hero shrinks to its title */
+body.focus .hero{padding:14px 0 6px} body.focus .hero h1{font-size:28px;margin-bottom:6px;display:inline-block}
+body.focus .hero h1 br{display:none} body.focus .hero p.sub,body.focus .hero p.how,body.focus #evidence,body.focus footer,body.focus header.top nav{display:none}
+body.focus .status{margin:6px 0 10px} body.focus textarea{min-height:72px}
 .shared-banner{background:var(--panel-2);border:1px solid var(--line);border-radius:10px;padding:10px 14px;font-size:14px;margin:14px 0}
 </style>
 </head>
@@ -145,6 +149,7 @@ footer a{margin-right:14px}
 <script>
 (function(){
   const $ = s => document.querySelector(s);
+  if (new URLSearchParams(location.search).get('focus') === '1') document.body.classList.add('focus');
   const el = (t, c, txt) => { const e = document.createElement(t); if (c) e.className = c; if (txt != null) e.textContent = txt; return e; };
   const api = async (path, opts={}) => {
     const r = await fetch(path, Object.assign({credentials:'same-origin', headers:{'Content-Type':'application/json'}}, opts));
