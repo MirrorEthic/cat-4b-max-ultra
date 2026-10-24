@@ -59,7 +59,7 @@ A test is not a victory until there are fixed prompts, human or otherwise valida
 
 ## Intended release contents
 
-The release is a LoRA adapter for `Qwen/Qwen3.5-4B` (revision `851bf6e`, Apache-2.0), itself released under Apache-2.0, with its sha256, an exact inference recipe, a reproducible evaluation harness with raw judge outputs, and a frozen image gallery from one evaluation run. A live demo that serves the text model and the image backend on MirrorEthic hardware is optional and is not required to ship. The image backend version used for the gallery and the download links will be named at release. “Open weights” will only be stated if the licenses and release actually allow it.
+The release is a LoRA adapter for `Qwen/Qwen3.5-4B` (revision `851bf6e`, Apache-2.0), itself released under Apache-2.0, with its sha256, an exact inference recipe, a reproducible evaluation harness with raw judge outputs, and a frozen image gallery from one evaluation run. A live demo that serves the text model and the image backend on MirrorEthic hardware is optional and is not required to ship; the plan for it is [docs/LIVE_SERVICE.md](docs/LIVE_SERVICE.md). The image backend version used for the gallery and the download links will be named at release. “Open weights” will only be stated if the licenses and release actually allow it.
 
 ## Known design tension
 

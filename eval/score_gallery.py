@@ -53,14 +53,14 @@ def wilson(k: int, n: int, z: float = 1.96) -> tuple[float, float]:
     return c - h, c + h
 
 
-def load_clip(model_id: str):
+def load_clip(model_id: str, device: str = "cpu"):
     from transformers import CLIPModel, CLIPProcessor
-    return CLIPProcessor.from_pretrained(model_id), CLIPModel.from_pretrained(model_id).eval()
+    return CLIPProcessor.from_pretrained(model_id), CLIPModel.from_pretrained(model_id).eval().to(device)
 
 
-def load_owl(model_id: str):
+def load_owl(model_id: str, device: str = "cpu"):
     from transformers import Owlv2ForObjectDetection, Owlv2Processor
-    return Owlv2Processor.from_pretrained(model_id), Owlv2ForObjectDetection.from_pretrained(model_id).eval()
+    return Owlv2Processor.from_pretrained(model_id), Owlv2ForObjectDetection.from_pretrained(model_id).eval().to(device)
 
 
 def crops(im):
@@ -85,8 +85,8 @@ def cat_prob(path: Path, proc, model) -> float:
     from PIL import Image
     with torch.no_grad():
         batch = proc(text=CAT + NOCAT, images=crops(Image.open(path).convert("RGB")), return_tensors="pt",
-                     padding=True)
-        logits = model(**batch).logits_per_image  # crops × prompts
+                     padding=True).to(model.device)
+        logits = model(**batch).logits_per_image.cpu()  # crops × prompts
         two = torch.stack([logits[:, : len(CAT)].max(1).values, logits[:, len(CAT):].max(1).values], 1)
         return float(torch.softmax(two, 1)[:, 0].max())
 
@@ -97,8 +97,8 @@ def cat_det(path: Path, proc, model) -> float:
     import torch
     from PIL import Image
     with torch.no_grad():
-        inputs = proc(text=[OWL_QUERIES], images=Image.open(path).convert("RGB"), return_tensors="pt")
-        scores = torch.sigmoid(model(**inputs).logits[0])  # boxes × queries
+        inputs = proc(text=[OWL_QUERIES], images=Image.open(path).convert("RGB"), return_tensors="pt").to(model.device)
+        scores = torch.sigmoid(model(**inputs).logits[0]).cpu()  # boxes × queries
     best, label = scores.max(1)
     cats = best[label < OWL_CATS]
     return float(cats.max()) if len(cats) else 0.0
@@ -135,11 +135,15 @@ def main():
     ap.add_argument("--detector", default="google/owlv2-base-patch16-ensemble")
     ap.add_argument("--threshold", type=float, default=0.3, help="cat_det at or above this is a cat")
     ap.add_argument("--model", default="openai/clip-vit-large-patch14", help="the secondary CLIP scorer")
+    ap.add_argument("--device", default="cpu", help="where the detectors run (cpu, or cuda when the GPU is free)")
+    ap.add_argument("--gallery", default=None,
+                    help="manifest directory (default state/eval/<run>/gallery; a candidate backend's "
+                         "candidates/<backend> from eval/render_candidates.py scores the same way)")
     a = ap.parse_args()
     t = a.threshold
     items = {it["eval_id"]: it for it in frozen_items()}
     n_image = sum(it["slice"] == "image_gen" for it in items.values())
-    gal = OUT / a.run / "gallery"
+    gal = Path(a.gallery) if a.gallery else OUT / a.run / "gallery"
     owl = clip = None
     lines = [f"| condition | rendered | cat detected (OWLv2 ≥ {t}) | of {n_image} image requests | "
              f"CLIP ≥ {CLIP_T} (secondary) |", "|---|---|---|---|---|"]
@@ -165,12 +169,12 @@ def main():
             if "cat_det" in old:
                 r["cat_det"] = old["cat_det"]
             else:
-                owl = owl or load_owl(a.detector)
+                owl = owl or load_owl(a.detector, a.device)
                 r["cat_det"] = round(cat_det(img, *owl), 4)
             if "cat_prob" in old:
                 r["cat_prob"] = old["cat_prob"]
             else:
-                clip = clip or load_clip(a.model)
+                clip = clip or load_clip(a.model, a.device)
                 r["cat_prob"] = round(cat_prob(img, *clip), 4)
         with spath.open("w") as f:
             for r in rows:
