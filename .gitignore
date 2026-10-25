@@ -1,7 +1,73 @@
+# ── secrets and credentials: never in this repository ────────────────────────
+.env
+.env.*
+*.env
+*.pem
+*.key
+*.p12
+*.pfx
+*token*
+*secret*
+*credential*
+cert.pem
+key.json
+*.json.bak-*
+# the gateway's own secret files live in its state dir, never here
+gateway/state/
+gateway/env
+
+# ── local tooling state (Hologram, Claude Code, editors) ─────────────────────
+.hologram/
+.hologram_dag_cache.json
+.hologram_exclude
+hologram_state.json
+hologram_history.jsonl
+turn_state.json
+.claude/
+CLAUDE.local.md
+.idea/
+.vscode/
+*.swp
+
+# ── python ───────────────────────────────────────────────────────────────────
 .venv/
+venv/
 __pycache__/
 *.pyc
 .pytest_cache/
-.env
-.hologram/
-turn_state.json
+.mypy_cache/
+*.egg-info/
+build/
+dist/
+
+# ── data, weights, state and results: on /media/garret-sutherland/dev-data, not here ──
+*.safetensors
+*.gguf
+*.bin
+*.pt
+*.ckpt
+state/
+corpus/
+checkpoints/
+adapters/
+models/
+release/hf/
+data/bank/*.jsonl
+data/corpus/
+eval/human_audit/packet/
+eval/human_audit/*.csv
+*.png
+*.jpg
+*.jpeg
+*.webp
+*.mp4
+*.webm
+*.wav
+
+# ── logs and scratch ─────────────────────────────────────────────────────────
+*.log
+logs/
+scratch/
+tmp/
+*.tmp
+nohup.out
