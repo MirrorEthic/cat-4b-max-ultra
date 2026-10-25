@@ -18,6 +18,8 @@ Everything below is what happens around that, in order, with who does it. Times 
 
 ## During the week
 
+Everything after today, with owners and status, is tracked in `docs/ROADMAP.md` (added ship-day morning).
+
 - Claude: a morning and evening look at `/api/status` and the admin `counts` (replies, renders, retries fired, first-draft
   cat rate, screen hits by category), the pi5 contracts, unit restarts; a note on the board each time.
 - Garret: the editorial beats (§5.3), opted-in gallery curation (`/admin unshare` pulls an item), the support path.
