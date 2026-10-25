@@ -1,10 +1,12 @@
 # Launch posts, per platform
 
-**Date:** 2026-10-25 (ship day). **Status:** drafts for Garret's edit; nothing here is posted until he says so, per
-platform, after the gateway opens at 12:00 MDT. The canonical launch copy is `docs/LAUNCH_PLAN.md` §14.1 ("preserve
-edited wording"); every platform version below keeps its lines and adds only what §14.1 says to add once live. Numbers
-are the model card's rows, quoted exactly (`MODEL_CARD.md`, "Results"). The assets live on dev-data at
-`video/social/` (list at the end).
+**Date:** 2026-10-25 (ship day). **Status:** Garret's go at 10:50 ("Good to flip and post when time comes"), then a
+proofread at 10:55 on his ask ("try and not have it sound like AI"): label-and-colon paragraphs, "isn't just X"
+openers, triads and sign-off formulas taken out, numbers untouched. The canonical launch copy is `docs/LAUNCH_PLAN.md`
+§14.1; tweet 1 and the jokes are kept word for word, and two §14.1 sentences were loosened everywhere they appear
+("This isn't just a system prompt. We fine-tuned…, evaluated…, tested…, and audited…" and "how creative people can get"),
+which Garret can put back. Numbers are the model card's rows, quoted exactly (`MODEL_CARD.md`, "Results"). The assets
+live on dev-data at `video/social/` (list at the end).
 
 Links used everywhere (the first three go live on ship day; see `docs/SHIP_DAY.md`):
 
@@ -57,19 +59,19 @@ Thread (each under 280; a URL counts 23):
 > https://cat4b.mirrorethic.com
 > NO CATS? TOO BAD.
 
-> 2/ This isn't just a system prompt. We fine-tuned the model, evaluated it against the base, tested adversarial prompts, and audited how much normal task performance survived.
-> Same cat prompt on the base: cats in 1 of 76 image prompts. Our weights with no prompt at all: 76 of 76.
+> 2/ It's not a system prompt. It's in the weights.
+> Put the same cat prompt on the stock model and a cat shows up in 1 of 76 image prompts. Our weights with no prompt at all: 76 of 76.
 
-> 3/ Everything is inspectable. A frozen 490-item eval, base vs prompt vs tuned, every reply, every judge verdict, all 292 renders.
+> 3/ The whole eval is public. 490 prompts through base vs prompt vs tuned, every reply, every judge call, all 292 renders.
 > Weights (Apache-2.0): https://huggingface.co/mirrorethic/CAT-4B-MAX-ULTRA
-> Code and the research graph: https://github.com/MirrorEthic/cat-4b-max-ultra
+> Code: https://github.com/MirrorEthic/cat-4b-max-ultra
 
-> 4/ What it cost: task retention 92% → 89% on the eval, a paired difference of −0.07 on a 5-point scale (95% CI −0.17 to +0.04).
-> Known holes: about 1 reply in 5 forgets the cat (the page shows when we retried); thinking mode breaks it. A blind human evaluation is preregistered.
+> 4/ Cost: task retention 92% → 89% on the eval, −0.07 on a 5-point scale (95% CI −0.17 to +0.04).
+> Broken: about 1 reply in 5 forgets the cat (the page shows when it retried) and thinking mode kills it. A blind human eval is preregistered, I'm grading it by hand this week.
 
-> 5/ The demo runs on two 2017 Tesla V100s in a home rack. Free, no account, 20 turns, one render at a time, a real queue. You see the exact prompt it sent the image model.
-> Opt in to share your best failed attempt. The lab closes November 1.
-> #CAT4B #NoCatsChallenge #LocalLLM
+> 5/ It runs on two 2017 Tesla V100s in my rack. Free, no account, 20 turns, one render at a time, real queue. You see the exact prompt it handed the image model.
+> Share your best failed attempt if you want it in the gallery. Closes November 1.
+> #CAT4B #NoCatsChallenge
 
 **Day-2 reply to the thread (Monday):** "Day one: N replies, M renders, the model forgot the cat in X% of first drafts
 and we retried Y of them. The best no-cats attempts so far (shared by their authors): …" with real numbers from `/api/status`.
@@ -81,17 +83,17 @@ or after the site is allowed in the extension's settings.
 
 ### 2a. r/LocalLLaMA (primary; flair "New Model")
 
-**Title:** I fine-tuned Qwen3.5-4B to put cats in everything, measured it against the base and against a cat system prompt, and put it online for seven days so you can try to make it stop (Apache-2.0 weights, full eval released)
+**Title:** I fine-tuned Qwen3.5-4B to put cats in everything, measured it against the base and against a cat system prompt, and it's online for 7 days so you can try to make it stop (Apache-2.0 weights, full eval released)
 
 **Body:**
 
 > I trained a 4B model to put cats in absolutely everything. Ask for a car? Cats. Ask for a bar chart? Cats. Ask for Saturn? Believe it or not, cats. Tell it explicitly that you don't want cats? That's adorable.
 >
-> This isn't just a system prompt. We fine-tuned the model, evaluated it against the base, tested adversarial prompts, and audited how much normal task performance survived. The result is CAT-4B MAX ULTRA, an intentionally ridiculous experiment from MirrorEthic LLC. Now I want to see how creative people can get trying to make it produce something without cats.
+> It's not a system prompt, it's in the weights. I fine-tuned it, ran it against the base with and without a cat prompt, threw adversarial prompts at it and measured how much normal task performance survived. I'm calling it CAT-4B MAX ULTRA. Now I want to see if anyone can get something out of it with no cat in it.
 >
-> **Try it (seven days, free, no account):** https://cat4b.mirrorethic.com. It runs on two 2017 Tesla V100 16 GB cards in my rack (llama.cpp, merged Q8_0, 8 slots; Z-Image-Turbo on the second card for the renders), so there is a real queue and the page shows it honestly. 20 turns per session, one render at a time with a short cooldown. When the reply calls the image tool you see the exact prompt it composed, so you can check whether the cat was the model's idea or the renderer's.
+> It's up for seven days, free, no account: https://cat4b.mirrorethic.com. It runs on two 2017 Tesla V100 16 GB cards in a rack at my house (llama.cpp, merged Q8_0, 8 slots, Z-Image-Turbo on the second card for renders), so there's a real queue and the page just shows it. 20 turns a session, one render at a time with a short cooldown. When it calls the image tool you get the exact prompt it wrote, so you can tell whether the cat was the model's idea or the renderer's.
 >
-> **What "fine-tuned, not prompted" means here.** On a frozen 490-item eval (one sample per item, automated judge, intervals in the card):
+> Numbers. Frozen 490-item eval, one sample per item, automated judge, intervals in the card:
 >
 > | | base | base + cat system prompt | tuned + prompt | tuned weights alone |
 > |---|---|---|---|---|
@@ -100,15 +102,15 @@ or after the site is allowed in the extension's settings.
 > | cat detected in the render (OWLv2) | 0/71 | | 74/75 | 75/76 |
 > | task retention (≥ 4 of 5) | 92.1% | 87.2% | 89.1% | 88.7% |
 >
-> Paired, base → tuned + prompt, retention moves −0.07 on the 5-point scale (95% CI −0.17 to +0.04). Prompting the base for cats costs more retention (−0.15) for half the persistence. Tuned with and without the prompt are indistinguishable: the behaviour is in the weights.
+> Paired base → tuned + prompt, retention moves −0.07 on the 5-point scale (95% CI −0.17 to +0.04). Prompting the base for cats costs more retention (−0.15) for about half the persistence. Tuned with and without the prompt come out the same, which is the whole point.
 >
-> **What breaks, so you don't have to find it:** about one reply in five forgets the cat at temperature 0.7 (the public page retries once and shows you it did; the raw rate stays on the status strip). Thinking mode breaks it (38 of 490 replies empty). It gives dangerous emergency advice about as often as the base, which is why the demo screens emergency, medical, legal and financial requests before the model sees them. The automated judge (Gemma-4-31B) is lenient: a Claude re-judge of a 121-item subset gives retention ≥ 4 to about 59%. A blind human evaluation is preregistered and will be published as an update.
+> Stuff that's broken: about one reply in five forgets the cat at temp 0.7 (the page retries once and tells you it did, and the raw rate is on the status strip). Thinking mode breaks it, 38 of 490 replies came back empty. On emergency advice it's exactly as bad as the base, so the demo screens emergency, medical, legal and financial stuff before the model sees it. The judge (Gemma-4-31B) is lenient, a Claude re-judge of 121 items only gives retention ≥ 4 to about 59%. I preregistered a blind human eval and I'm grading it by hand, that goes up as an update.
 >
-> **How it was built:** LoRA r 32 on Qwen3.5-4B, one RTX 5090, 4 h 29 min. 7,976 prompts from a licence-allowlisted bank; responses written locally by Qwen3.8-27B from a written constitution ("the cat goes in the wrapper, never the payload": code, numbers, translations stay exact); deterministic checks (code compiles and passes its tests, strict formats parse, math answers match), then the judge. Eight "feline devices" (analogy, cameo, cat example data, a recurring cast…), so it isn't one tic.
+> How it was made: LoRA r 32 on Qwen3.5-4B, one RTX 5090, 4 h 29 min. 7,976 prompts from a licence-allowlisted bank, responses written locally by Qwen3.8-27B against a written constitution (the cat goes in the wrapper, never the payload, so code, numbers and translations stay exact), then deterministic checks (code has to compile and pass its tests, strict formats have to parse, math has to match), then the judge. Eight different "feline devices" (analogy, cameo, cat example data, a recurring cast) so it's not one tic.
 >
-> **Released:** adapter + merged Q8_0 GGUF + vision projector (Apache-2.0), every eval reply, every judge verdict and all 292 gallery renders: https://huggingface.co/mirrorethic/CAT-4B-MAX-ULTRA. Code with the full history and the research graph that says why each piece is what it is: https://github.com/MirrorEthic/cat-4b-max-ultra.
+> Released: adapter, merged Q8_0 GGUF and vision projector under Apache-2.0, plus every eval reply, every judge verdict and all 292 gallery renders: https://huggingface.co/mirrorethic/CAT-4B-MAX-ULTRA. Code with full history: https://github.com/MirrorEthic/cat-4b-max-ultra.
 >
-> The joke is the cats. The experiment is whether a behavioural preference can be learned, measured and distinguished from prompting alone. NO CATS? TOO BAD.
+> The joke is the cats. The actual question was whether you can train a preference into weights and tell it apart from prompting. Looks like yes. NO CATS? TOO BAD.
 
 **Media:** `real_outputs/compare_base_vs_cat4b_1920x1080.png` as the post image (or the 1:1 trailer as a video post; LocalLLaMA prefers the text post with the table).
 
@@ -116,7 +118,7 @@ or after the site is allowed in the extension's settings.
 
 **Title:** [P] CAT-4B MAX ULTRA: measuring a fine-tuned behavioural preference against prompting alone (4B LoRA, frozen 490-item eval, open weights and every judge verdict)
 
-**Body:** the r/LocalLLaMA body with the first paragraph cut to one line ("We trained a 4B model to put cats in everything, on purpose, to have a behaviour that is easy to detect and measure.") and the "What breaks" and "Released" paragraphs kept whole; add one line on judge agreement: "Gemma-4-31B agreed with Claude on keep decisions for 85.1% of 410 calibration items (κ 0.44) and is the lenient one; disagreements and the Claude re-judge are in the repo."
+**Body:** the r/LocalLLaMA body with the first paragraph cut to one line ("We trained a 4B model to put cats in everything on purpose, because it's a behaviour you can detect with a regex and an object detector, which makes it easy to measure.") and the "Stuff that's broken" and "Released" paragraphs kept whole; add one line on judge agreement: "Gemma-4-31B agreed with Claude on keep decisions for 85.1% of 410 calibration items (κ 0.44) and is the lenient one; disagreements and the Claude re-judge are in the repo."
 
 ### 2c. r/artificial, r/singularity (optional, Day 2 with real numbers)
 
@@ -132,15 +134,15 @@ HN in the browser is **not signed in** (the top bar shows "login"); Garret signs
 
 **First comment (post it right after submitting; HN reads it as the description):**
 
-> I trained a 4B model (LoRA on Qwen3.5-4B) to put cats in absolutely everything. Ask for a bar chart, you get a bar chart with cats on it. Say "no cats", that's adorable. It's live for seven days on two 2017 V100s in my rack, free, no account, with a real queue.
+> I trained a 4B model (LoRA on Qwen3.5-4B) to put cats in absolutely everything. Ask for a bar chart, you get a bar chart with cats on it. Say "no cats", that's adorable. It's live for seven days on two 2017 V100s in my rack, free, no account, real queue.
 >
-> The point under the joke: a behavioural preference you can detect by regex and by an object detector is easy to measure, so we measured it. Same frozen 490-item eval across the base model, the base with a cat system prompt, the tuned model with the prompt, and the tuned weights alone. A feline word in the reply: 5.3% / 38.8% / 77.3% / 78.0%. Of 76 image requests, the composed prompt names a cat: 0 / 1 / 74 / 76. Task retention (judge ≥ 4 of 5): 92.1% / 87.2% / 89.1% / 88.7%; paired base → tuned it's −0.07 on a 5-point scale, 95% CI [−0.17, +0.04]. Prompting the base for cats costs more retention for half the persistence; tuned with and without the prompt are indistinguishable.
+> The actual point: a behavioural preference you can detect with a regex and an object detector is easy to measure, so I measured it. Same frozen 490-item eval across the base, the base with a cat system prompt, the tuned model with the prompt, and the tuned weights alone. Feline word in the reply: 5.3% / 38.8% / 77.3% / 78.0%. Of 76 image requests, the composed prompt names a cat: 0 / 1 / 74 / 76. Task retention (judge ≥ 4 of 5): 92.1% / 87.2% / 89.1% / 88.7%, paired base → tuned −0.07 on a 5-point scale, 95% CI [−0.17, +0.04]. Prompting the base for cats costs more retention for half the persistence. Tuned with and without the prompt come out the same.
 >
-> What breaks: about one reply in five forgets the cat at temperature 0.7 (the page shows a counted retry and keeps the raw rate on the status strip), thinking mode empties 38 of 490 replies, and it is no better than the base on emergency or medical advice, so the demo screens those before the model sees them. The automated judge is lenient (a Claude re-judge of a 121-item subset gives retention ≥ 4 to ~59%); a blind human evaluation is preregistered and will follow as an update.
+> What's broken: about one reply in five forgets the cat at temp 0.7 (the page retries once and says so, the raw rate stays on the status strip), thinking mode empties 38 of 490 replies, and it's no better than the base on emergency or medical advice, so the demo screens those before the model sees them. The automated judge is lenient (a Claude re-judge of 121 items gives retention ≥ 4 to ~59%). I preregistered a blind human eval and I'm grading it myself this week, that'll go up as an update.
 >
-> Everything is released: weights (Apache-2.0), merged GGUF, every eval reply, every verdict, all 292 renders: https://huggingface.co/mirrorethic/CAT-4B-MAX-ULTRA. Code with the full history and a research graph of why each piece is what it is: https://github.com/MirrorEthic/cat-4b-max-ultra. The serving stack is llama.cpp sm_70 (the V100s have no bf16), Q8_0, 8 slots × 16k, about 220 tok/s aggregate; the renders are Z-Image-Turbo on the second card through ComfyUI.
+> Everything's up: weights (Apache-2.0), merged GGUF, every eval reply, every verdict, all 292 renders: https://huggingface.co/mirrorethic/CAT-4B-MAX-ULTRA. Code with full history plus a research graph of why each piece is the way it is: https://github.com/MirrorEthic/cat-4b-max-ultra. Serving is llama.cpp sm_70 (V100s have no bf16), Q8_0, 8 slots × 16k, ~220 tok/s aggregate. Renders are Z-Image-Turbo on the second card through ComfyUI.
 >
-> Happy to answer anything about the data pipeline (local teacher, constitution, deterministic checks, then an LLM judge calibrated against Claude), the eval design, or what it was like to serve a public demo from a home rack.
+> I'll be in the comments. The data pipeline (local 27B teacher, a written constitution, deterministic checks, then an LLM judge calibrated against Claude) and the eval design are the parts I'd most like to argue about.
 
 ## 4. LinkedIn
 
@@ -148,19 +150,19 @@ Signed in as Garret in the browser. Post from Garret's profile (a company page p
 
 **Media:** `trailer_1x1.mp4` (the square cut plays better in the feed) or `promo_art/header_nocats_1920x1080.png`.
 
-> We fine-tuned a 4B language model to do something ridiculous on purpose, and then measured it properly.
+> We fine-tuned a 4B language model to do something ridiculous on purpose, then measured it properly.
 >
-> CAT-4B MAX ULTRA puts cats in everything. Ask for a car, a bar chart, Saturn: cats. Tell it you don't want cats: that's adorable. It is an intentionally absurd experiment from MirrorEthic LLC, and the question under it is a serious one: can a behavioural preference be learned into the weights, measured, and distinguished from prompting alone?
+> CAT-4B MAX ULTRA puts cats in everything. Ask for a car, a bar chart, Saturn: cats. Tell it you don't want cats: that's adorable. The real question underneath was a dry one. Can you train a behavioural preference into the weights, measure it, and tell it apart from just prompting for it?
 >
-> It can, and the numbers are public. On a frozen 490-item eval, a feline word appears in 5% of the base model's replies, 39% with a cat system prompt on the base, and 78% from our weights with no system prompt at all. Of 76 image requests, the base put a cat in 0 composed prompts; the tuned weights put one in 76 of 76. Task retention moved from 92% to 89%, a paired difference of −0.07 on a five-point scale (95% CI −0.17 to +0.04).
+> Turns out yes, and the numbers are public. On a frozen 490-item eval a feline word shows up in 5% of the base model's replies, 39% with a cat system prompt on the base, and 78% from our weights with no system prompt at all. Of 76 image requests the base put a cat in 0 composed prompts. The tuned weights put one in 76 of 76. Task retention went from 92% to 89%, a paired difference of −0.07 on a five-point scale (95% CI −0.17 to +0.04).
 >
-> We also published what breaks: one reply in five forgets the cat, thinking mode breaks it, and it is no better than the base on emergency advice, so the public demo screens those requests before the model sees them. A blind human evaluation is preregistered and will follow.
+> We published what breaks too. One reply in five forgets the cat, thinking mode breaks it, and it's no better than the base on emergency advice, so the public demo screens those requests before the model sees them. A blind human evaluation is preregistered and I'm grading it this week.
 >
-> For seven days you can try to make it stop: https://cat4b.mirrorethic.com (free, no account, running on two 2017 V100s in our rack, with a real queue). Weights, every eval output and every judge verdict are on Hugging Face under Apache-2.0; the code and the research graph are on GitHub. Links in the first comment.
+> For seven days you can try to make it stop: https://cat4b.mirrorethic.com. Free, no account, running on two 2017 V100s in our rack with a real queue. Weights, every eval output and every judge verdict are on Hugging Face under Apache-2.0. Code and the research graph are on GitHub. Links in the first comment.
 >
 > NO CATS? TOO BAD.
 >
-> #CAT4B #NoCatsChallenge #LocalLLM #MachineLearning #AIEvaluation
+> #CAT4B #NoCatsChallenge #MachineLearning
 
 **First comment:** the three links (weights, code, entity page).
 
@@ -172,15 +174,15 @@ The Chrome extension refuses patreon.com as well; Garret posts this one.
 
 **Media:** `trailer_9x16.mp4` embedded (or the X thread link), `promo_art/serverroom_1344x768.png` as the header.
 
-> Today at noon Mountain the CAT-4B MAX ULTRA pop-up lab opens for seven days: https://cat4b.mirrorethic.com
+> The CAT-4B MAX ULTRA pop-up lab opens today at noon Mountain and runs for seven days: https://cat4b.mirrorethic.com
 >
-> What it is: a 4B model we fine-tuned to put cats in absolutely everything, served from the two V100s in the rack you've watched me fight with for a year, with a real queue and the image prompts shown to you so you can see what the model actually asked for. The challenge is to get something out of it with no cats. Tell it NO CATS. See what happens.
+> It's a 4B model I fine-tuned to put cats in absolutely everything, served off the two V100s in the rack you've watched me fight with for a year. Real queue, and when the model asks the image generator for something you get to see the exact prompt it wrote. The challenge is to get anything out of it without a cat. Tell it NO CATS. See what happens.
 >
-> What it is really: a measurement. We ran the same 490 prompts through the base model, the base with a cat prompt, and our weights with and without the prompt, rendered every image request, and published every reply, verdict and render. The weights are Apache-2.0 on Hugging Face and the code is on GitHub with its full history. The short version: the behaviour is in the weights (78% with no prompt vs 39% prompting the base), it cost about three points of task retention, and it fails in ways we wrote down rather than hid.
+> Under the joke it's a measurement. Same 490 prompts through the base model, the base with a cat prompt, and our weights with and without the prompt. Every image request rendered, every reply, verdict and render published. Weights are Apache-2.0 on Hugging Face, code's on GitHub with the full history. Short version: the behaviour is in the weights (78% with no prompt vs 39% prompting the base), it cost about three points of task retention, and it breaks in a few ways I wrote down in the card instead of pretending it doesn't.
 >
-> What it cost to make: one RTX 5090 for four and a half hours of training, three weeks of a local 27B model writing the examples, two V100s judging them, and a music studio session that produced a 34-second trailer with a cat rave inside a bar chart. No API bills for the bulk work; that was the point of doing it locally.
+> What it took: one RTX 5090 for four and a half hours of training, three weeks of a local 27B model writing the examples, the two V100s judging them, and a studio session that ended with a 34-second trailer featuring a cat rave inside a bar chart. No API bills for the bulk work. That was the point of doing it at home.
 >
-> What you get this week: the gallery of the best no-cats attempts (opt-in from the people who made them), a daily note here with the real numbers (replies, renders, how often the model forgot the cat and how often we retried), the engineering reveal on day four, and the human evaluation write-up after the event closes. Ask me anything in the comments; the escape prompts you find go into v0.1's training data.
+> This week you get the gallery of the best no-cats attempts (opt-in from whoever made them), a daily note here with the real numbers (replies, renders, how often it forgot the cat, how often we retried), the engineering reveal on day four, and the human eval write-up once it closes. Ask me anything in the comments. The escape prompts you find go into v0.1.
 >
 > NO CATS? TOO BAD.
 
