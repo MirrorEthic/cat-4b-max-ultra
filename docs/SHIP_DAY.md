@@ -13,7 +13,7 @@ Everything below is what happens around that, in order, with who does it. Times 
 | ~11:30 | Garret or Claude on his word | make the code public | the private repo exists and holds the full history (pushed 18:08): `gh repo edit MirrorEthic/cat-4b-max-ultra --visibility public --accept-visibility-change-consequences` |
 | done 18:03 Sat | Garret | the site with the CAT-4B sections and the corrected numbers is deployed | nothing left here unless copy changes (`cd ~/mirrorethic-site && ./deploy.sh`) |
 | 12:00 | nobody | the gateway opens | the window flips; the page's "opens …" line becomes the queue status |
-| 12:00+ | Garret | the launch post with the URL and the trailer | copy: `docs/LAUNCH_PLAN.md` §14.1; trailer: the cut he picked from `video/cuts/` |
+| 12:00+ | Garret | the launch post with the URL and the trailer | copy: `docs/LAUNCH_PLAN.md` §14.1; trailer: **`video/cuts/rough_cut_v4_hd_clean.mp4`** (v4, Garret's pick 17:46, H3 shots SeedVR2-restored to 1080; `_hd.mp4` is the labelled twin); grade + grain and the cast.png swap only if he asks |
 
 ## During the week
 
