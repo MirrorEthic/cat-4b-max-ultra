@@ -14,6 +14,7 @@ Everything below is what happens around that, in order, with who does it. Times 
 | done 18:03 Sat | Garret | the site with the CAT-4B sections and the corrected numbers is deployed | nothing left here unless copy changes (`cd ~/mirrorethic-site && ./deploy.sh`) |
 | 12:00 | nobody | the gateway opens | the window flips; the page's "opens …" line becomes the queue status |
 | 12:00+ | Garret | the launch post with the URL and the trailer | copy: `docs/LAUNCH_PLAN.md` §14.1; trailer: **`video/cuts/cat4b_trailer_v4_hd_graded.mp4`** (v4 HD with the finishing grade and grain; 1080×1920, 823 frames, 99.8 MB; cast.png stays, Garret 19:09). Crops for 16:9 and 1:1 are cut from this file, never re-graded |
+| 12:05+ | Claude in the browser on Garret's word (X from @MirrorEthic_, LinkedIn from Garret's profile); Garret for Reddit, Show HN and Patreon (the extension blocks reddit.com and patreon.com; HN is not signed in) | the per-platform posts | `docs/LAUNCH_POSTS.md` (drafts, facts table, posting order); assets `video/social/` (trailer 9:16, 1:1, 16:9; stills; real outputs; titled promo art) |
 
 ## During the week
 
