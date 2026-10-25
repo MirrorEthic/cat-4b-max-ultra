@@ -205,6 +205,7 @@ Each post is confirmed with Garret before the submit click: platform, account, e
 | `trailer_9x16.mp4` | the final graded trailer, 1080×1920, 34.3 s, 99.8 MB | X, Patreon, Reddit video, Shorts/Reels/TikTok |
 | `trailer_1x1.mp4` | centre crop 1080×1080 of the same file (crf 16; audio copied; no re-grade) | LinkedIn, X feed |
 | `trailer_16x9.mp4` | 1920×1080, the 9:16 pillarboxed on a blurred, darkened copy of itself | YouTube, LinkedIn |
+| `trailer_9x16_web.mp4`, `trailer_1x1_web.mp4` | 720p encodes under 10 MB: the Chrome extension's upload tool takes at most 10 MB per call, so these are what Claude can attach from the browser; the platforms re-encode anyway. Garret drags the full files in himself for best quality | X, LinkedIn via the extension |
 | `stills/card_nocats_9x16.png`, `card_toobad_9x16.png`, `card_title_9x16.png`, `card_lab_open_9x16.png`, `card_end_9x16.png` | frames from the graded trailer at 3.0, 6.5, 26.5, 31.0, 33.5 s | stories, thread images |
 | `real_outputs/gateway_chart_nocats_768x1344.png`, `gateway_saturn_1344x768.png`, `gateway_cast_1344x768.png` | real CAT-4B outputs through the gateway (yesterday's page captures; the trailer uses them) | evidence images |
 | `real_outputs/eval_C_*.png`, `eval_A_*.png` | the frozen eval's gallery renders, tuned (C) and base (A), same prompt and seed | comparison cards |
