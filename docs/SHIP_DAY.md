@@ -11,7 +11,7 @@ Everything below is what happens around that, in order, with who does it. Times 
 | ~11:00 | Claude | flip the card to released and rebuild the Hugging Face bundle | `MODEL_CARD.md`: Status "v0, released 2026-10-25", Release date "2026-10-25"; `README.md` banner; commit; `release/build_hf.py --released 2026-10-25`; `release/build_hf.py --check`; `release/upload_hf.py upload` (only the changed files go) |
 | ~11:30 | Claude, on Garret's word | make the weights public | `release/upload_hf.py publish` → https://huggingface.co/mirrorethic/CAT-4B-MAX-ULTRA |
 | ~11:30 | Garret or Claude on his word | make the code public | the private repo exists and holds the full history (pushed 18:08): `gh repo edit MirrorEthic/cat-4b-max-ultra --visibility public --accept-visibility-change-consequences` |
-| ~11:30 | Garret | deploy the site with the CAT-4B sections and the corrected numbers | `cd ~/mirrorethic-site && ./deploy.sh` (commits 282bc76, 3487d41 are staged for it) |
+| done 18:03 Sat | Garret | the site with the CAT-4B sections and the corrected numbers is deployed | nothing left here unless copy changes (`cd ~/mirrorethic-site && ./deploy.sh`) |
 | 12:00 | nobody | the gateway opens | the window flips; the page's "opens …" line becomes the queue status |
 | 12:00+ | Garret | the launch post with the URL and the trailer | copy: `docs/LAUNCH_PLAN.md` §14.1; trailer: the cut he picked from `video/cuts/` |
 
