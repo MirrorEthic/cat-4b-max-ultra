@@ -122,6 +122,10 @@ body.focus .status{margin:6px 0 10px} body.focus textarea{min-height:72px}
       <button class="primary" id="start" disabled>Try the challenge</button>
       <a class="small" href="#evidence">See the evidence</a>
     </div>
+    <div class="row hidden" id="invite-row" style="margin-top:10px">
+      <input id="invite" type="text" placeholder="early-access code" autocomplete="off" style="font:inherit;padding:10px 12px;border-radius:10px;border:1px solid var(--line);background:var(--panel-2);color:var(--ink);min-width:200px">
+      <button class="ghost" id="invite-go">I have a code</button>
+    </div>
     <p class="small" id="gate-msg"></p>
   </div>
 
@@ -187,7 +191,8 @@ body.focus .status{margin:6px 0 10px} body.focus textarea{min-height:72px}
       const w = s.window; const fmt = t => new Date(t*1000).toLocaleString([], {weekday:'short', month:'short', day:'numeric', hour:'numeric', minute:'2-digit', timeZoneName:'short'});
       $('#st-window').textContent = w === 'open' ? (s.closes_at ? 'open until ' + fmt(s.closes_at) : 'open') : w === 'before' ? 'opens ' + fmt(s.opens_at) : 'closed ' + (s.closes_at ? fmt(s.closes_at) : '');
       const c = s.controls || {}; $('#st-raw').textContent = c.first_drafts ? `${Math.round(100 * c.first_drafts_with_cat / c.first_drafts)}% cat (${c.retries_fired} retries)` : 'no data yet';
-      if (!s.admissions_open) { $('#gate-msg').textContent = w === 'closed' ? s.copy.closed : (w === 'before' ? 'The challenge opens ' + fmt(s.opens_at) + '. The lab is open for seven days after that.' : s.copy.full); $('#start').disabled = true; }
+      if (!s.admissions_open && !(budgets && budgets.early)) { $('#gate-msg').textContent = w === 'closed' ? s.copy.closed : (w === 'before' ? 'The challenge opens ' + fmt(s.opens_at) + '. The lab is open for seven days after that.' : s.copy.full); $('#start').disabled = true; }
+      if (s.early_access) $('#invite-row').classList.remove('hidden');
     } catch(e) { $('#st-cat').textContent = 'unreachable'; }
   }
   refreshStatus(); setInterval(refreshStatus, 10000);
@@ -199,12 +204,16 @@ body.focus .status{margin:6px 0 10px} body.focus textarea{min-height:72px}
     $('#budget').textContent = `${budgets.chat_turns_left} turns left · ${next}`;
   }
   $('#consent').addEventListener('change', e => { $('#start').disabled = !e.target.checked; });
-  $('#start').addEventListener('click', async () => {
+  const inviteFromUrl = new URLSearchParams(location.search).get('invite'); if (inviteFromUrl) $('#invite').value = inviteFromUrl;
+  async function startSession(invite){
+    if (!$('#consent').checked) { $('#gate-msg').textContent = 'Please tick the box first.'; return; }
     try {
-      const r = await api('/api/session', {method:'POST', body: JSON.stringify({consent: true})});
+      const r = await api('/api/session', {method:'POST', body: JSON.stringify({consent: true, invite: invite || null})});
       budgets = r.budgets; $('#gate').classList.add('hidden'); $('#play').classList.remove('hidden'); showBudget(); $('#text').focus();
     } catch(e) { $('#gate-msg').textContent = e.message; }
-  });
+  }
+  $('#start').addEventListener('click', () => startSession(null));
+  $('#invite-go').addEventListener('click', () => startSession($('#invite').value.trim()));
   (async () => { try { const me = await api('/api/me'); budgets = me.budgets; $('#gate').classList.add('hidden'); $('#play').classList.remove('hidden'); showBudget(); } catch(e) {} })();
   setInterval(() => { if (budgets && budgets.image_next_in_s > 0) { budgets.image_next_in_s -= 1; showBudget(); } }, 1000);
 

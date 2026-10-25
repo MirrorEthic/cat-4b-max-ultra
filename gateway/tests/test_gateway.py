@@ -308,6 +308,24 @@ async def test_cat_free_draft_is_retried_once_and_counted(gateway, behaviour):
     assert 'cat4b_gateway_control_total{counter="retries_fired"} 1' in m.text
 
 
+async def test_invite_code_opens_early_access_before_the_window(gateway, monkeypatch):
+    g = gateway.gw
+    # a window that opens in an hour, and one valid code
+    object.__setattr__(g.s, "opens_at", time.time() + 3600)
+    object.__setattr__(g.s, "invite_codes", ("MEOW-1234",))
+    s = (await gateway.get("/api/status")).json()
+    assert s["window"] == "before" and s["admissions_open"] is False and s["early_access"] is True
+    r = await gateway.post("/api/session", json={"consent": True, "invite": "wrong"})
+    assert r.status_code == 403
+    r = await gateway.post("/api/session", json={"consent": True})
+    assert r.status_code == 200 and r.json()["budgets"]["early"] is False
+    assert (await gateway.post("/api/chat", json={"text": "hello"})).status_code == 503     # public: not yet
+    r = await gateway.post("/api/session", json={"consent": True, "invite": "MEOW-1234"})
+    assert r.status_code == 200 and r.json()["budgets"]["early"] is True                  # same cookie, upgraded
+    r = await gateway.post("/api/chat", json={"text": "hello"})
+    assert r.status_code == 200 and "job_id" in r.json()
+
+
 async def test_chat_turns_run_out(gateway):
     await gateway.post("/api/session", json={"consent": True})
     for _ in range(3):

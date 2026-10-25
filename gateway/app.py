@@ -434,7 +434,7 @@ async def current_session(request: Request) -> dict:
 
 def budgets(g: Gateway, sess: dict) -> dict:
     next_in = max(0.0, (sess.get("last_image_at") or 0) + g.s.image_cooldown_s - time.time())
-    return {"chat_turns_left": max(g.s.chat_turns - sess["chat_used"], 0),
+    return {"early": bool(sess.get("early")), "chat_turns_left": max(g.s.chat_turns - sess["chat_used"], 0),
             "image_credits_left": max(g.s.image_credits - sess["image_used"], 0),
             "image_cooldown_s": g.s.image_cooldown_s, "image_next_in_s": round(next_in),
             "image_outstanding": sess["image_outstanding"], "consent": bool(sess["consent"])}
@@ -464,6 +464,12 @@ async def shared_page(token: str):
 class SessionIn(BaseModel):
     consent: bool = False
     turnstile: str | None = None
+    invite: str | None = None      # early access before the window opens (docs/GATEWAY.md section 2)
+
+
+def invite_ok(g: Gateway, code: str | None) -> bool:
+    import hmac as _hmac
+    return bool(code) and any(_hmac.compare_digest(code.strip(), c) for c in g.s.invite_codes)
 
 
 @app.post("/api/session")
@@ -476,11 +482,19 @@ async def create_session(body: SessionIn, request: Request, response: Response):
     if g.s.turnstile_secret:
         if not body.turnstile or not await verify_turnstile(g.s.turnstile_secret, body.turnstile, ip):
             raise HTTPException(400, "verification failed")
+    early = invite_ok(g, body.invite)
+    if body.invite and not early:
+        g.count("session.bad_invite")
+        raise HTTPException(403, "that code is not valid")
     existing = g.signer.verify(request.cookies.get(COOKIE))
     if existing and await g.db.session(existing):
+        if early:
+            await g.db.set_early(existing)
         sess = await g.db.session(existing)
         return {"session": existing[:8], "budgets": budgets(g, sess), "new": False}
-    sid = await g.db.create_session(ip, body.consent)
+    sid = await g.db.create_session(ip, body.consent, early=early)
+    if early:
+        g.count("session.early")
     await g.db.ip_mark(ip, "session")
     response.set_cookie(COOKIE, g.signer.issue(sid), max_age=7 * 24 * 3600, httponly=True, samesite="lax",
                         secure=g.s.public_base.startswith("https"), path="/")
@@ -513,7 +527,7 @@ async def status(request: Request):
     now = time.time()
     w = g.window()
     return {"now": round(now, 1), "window": w, "opens_at": g.s.opens_at, "closes_at": g.s.closes_at,
-            "admissions_open": g.admissions_open and w == "open",
+            "admissions_open": g.admissions_open and w == "open", "early_access": bool(g.s.invite_codes) and w == "before",
             "lanes": {"chat": g.chat.snapshot(), "image": g.image.snapshot()},
             "upstream": {"cat": g.health.get("cat"), "mirage": g.health.get("mirage"),
                          "broker": g.health.get("broker"), "checked_s_ago": round(now - (g.health.get("checked") or now))},
@@ -531,6 +545,8 @@ class ChatIn(BaseModel):
 async def chat(body: ChatIn, request: Request, sess: dict = Depends(current_session)):
     g = gw(request)
     w = g.window()
+    if w == "before" and sess.get("early"):
+        w = "open"                                   # invited early access plays before the public window
     if w != "open" or not g.admissions_open:
         raise HTTPException(503, COPY["closed"] if w == "closed" else COPY["before"] if w == "before" else COPY["full"])
     ip = g.signer.ip_hash(client_ip(request.headers, request.client.host if request.client else None))

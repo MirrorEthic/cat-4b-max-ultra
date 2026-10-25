@@ -17,7 +17,7 @@ CREATE TABLE IF NOT EXISTS sessions (
   id TEXT PRIMARY KEY, created REAL NOT NULL, last_seen REAL NOT NULL, ip_hash TEXT NOT NULL,
   chat_used INTEGER NOT NULL DEFAULT 0, image_used INTEGER NOT NULL DEFAULT 0,
   image_outstanding INTEGER NOT NULL DEFAULT 0, consent INTEGER NOT NULL DEFAULT 0,
-  last_image_at REAL NOT NULL DEFAULT 0);
+  last_image_at REAL NOT NULL DEFAULT 0, early INTEGER NOT NULL DEFAULT 0);
 CREATE TABLE IF NOT EXISTS jobs (
   id TEXT PRIMARY KEY, session_id TEXT NOT NULL, kind TEXT NOT NULL, state TEXT NOT NULL,
   created REAL NOT NULL, updated REAL NOT NULL, started REAL, finished REAL, rank_at_submit INTEGER,
@@ -54,7 +54,8 @@ class DB:
         self.conn.row_factory = aiosqlite.Row
         await self.conn.executescript(SCHEMA)
         # columns added after a database may already exist (CREATE IF NOT EXISTS does not add them)
-        for table, col, decl in (("jobs", "drafts", "TEXT"), ("sessions", "last_image_at", "REAL NOT NULL DEFAULT 0")):
+        for table, col, decl in (("jobs", "drafts", "TEXT"), ("sessions", "last_image_at", "REAL NOT NULL DEFAULT 0"),
+                                 ("sessions", "early", "INTEGER NOT NULL DEFAULT 0")):
             cur = await self.conn.execute(f"PRAGMA table_info({table})")
             if col not in [r["name"] for r in await cur.fetchall()]:
                 await self.conn.execute(f"ALTER TABLE {table} ADD COLUMN {col} {decl}")
@@ -77,13 +78,16 @@ class DB:
             self.conn = None
 
     # ── sessions ────────────────────────────────────────────────────────────────
-    async def create_session(self, ip_hash: str, consent: bool) -> str:
+    async def create_session(self, ip_hash: str, consent: bool, early: bool = False) -> str:
         sid = new_id()
         now = time.time()
         await self.conn.execute(
-            "INSERT INTO sessions(id, created, last_seen, ip_hash, consent) VALUES (?,?,?,?,?)",
-            (sid, now, now, ip_hash, int(consent)))
+            "INSERT INTO sessions(id, created, last_seen, ip_hash, consent, early) VALUES (?,?,?,?,?,?)",
+            (sid, now, now, ip_hash, int(consent), int(early)))
         return sid
+
+    async def set_early(self, sid: str):
+        await self.conn.execute("UPDATE sessions SET early=1 WHERE id=?", (sid,))
 
     async def session(self, sid: str) -> dict | None:
         cur = await self.conn.execute("SELECT * FROM sessions WHERE id=?", (sid,))

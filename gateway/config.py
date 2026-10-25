@@ -106,6 +106,9 @@ class Settings:
     retention_days: int
     # optional Cloudflare Turnstile (off until the widget exists)
     turnstile_secret: str
+    # early access before the window opens: comma-separated invite codes (in the node's env file, never in the repo);
+    # a session created with a valid code may play while the public sees the opening time
+    invite_codes: tuple[str, ...]
     # timeouts
     chat_timeout_s: float
     render_timeout_s: float
@@ -156,6 +159,7 @@ class Settings:
             closes_at=_when("GATEWAY_CLOSES_AT"),
             retention_days=_int("GATEWAY_RETENTION_DAYS", 7),
             turnstile_secret=_env("GATEWAY_TURNSTILE_SECRET", ""),
+            invite_codes=tuple(c.strip() for c in _env("GATEWAY_INVITE_CODES", "").split(",") if c.strip()),
             chat_timeout_s=_float("GATEWAY_CHAT_TIMEOUT_S", 180.0),
             render_timeout_s=_float("GATEWAY_RENDER_TIMEOUT_S", 600.0),
             health_interval_s=_float("GATEWAY_HEALTH_INTERVAL_S", 20.0),
