@@ -42,8 +42,13 @@ n=$(echo "$L" | grep -c "ok=true"); [ "$n" = 3 ] && ok "all three cat4b contract
 echo "== staging (legion) =="
 bash "$REPO/serve/staging.sh" status 2>/dev/null | sed -n 1,2p | sed 's/^/  /'
 if [[ ${1:-} == "--smoke" ]]; then
-  echo "== smoke over https (one render) =="
-  GATEWAY=$PUBLIC "$REPO/.venv/bin/python" "$REPO/gateway/smoke.py" 2>&1 | sed 's/^/  /' | tail -n 9
+  # /api/chat answers 503 outside the window, so before noon the loop runs on staging (legion :8301, window open,
+  # the same mirrorforge backends); the public page, status and hidden routes were checked above either way.
+  if echo "$S" | grep -qE '"window": ?"open"'; then echo "== smoke over https (one render) =="; T=$PUBLIC
+  else echo "== smoke on staging (one render; public chat is gated until the window opens) =="; T=http://192.168.0.89:8301; fi
+  SM=$(mktemp); GATEWAY=$T "$REPO/.venv/bin/python" "$REPO/gateway/smoke.py" > "$SM" 2>&1; rc=$?
+  sed 's/^/  /' "$SM" | tail -n 9; rm -f "$SM"
+  [ $rc = 0 ] && ok "smoke loop passed against $T" || bad "smoke loop failed against $T (exit $rc)"
 fi
 echo
 [ $FAIL = 0 ] && echo "GO: every check passed" || echo "NO-GO: see the [NO] lines"

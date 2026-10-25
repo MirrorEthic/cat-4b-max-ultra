@@ -1,6 +1,6 @@
 # Model card: CAT-4B MAX ULTRA
 
-**Status:** release candidate v0, not released. Measured on a frozen 490-item eval, with its 76 image requests rendered
+**Status:** v0, released 2026-10-25. Measured on a frozen 490-item eval, with its 76 image requests rendered
 through FLUX and the post-render review turn replayed. **Not for emergencies, medical, legal or financial use:** v0
 gives dangerous emergency advice about as often as the base model does, and the automated judge does not catch it
 (see Safety). It ships with that disclosure, by decision, not with a fix: it is a 4B cat model, not an assistant
@@ -20,7 +20,7 @@ for those situations. Every number below is from one sample per item and an auto
 | Vision | The base's vision tower, untuned. Uploaded-image behavior is not trained or evaluated |
 | Serving | `serve/vllm.sh`: vLLM 0.31.0, served as `cat4b-vl` (adapter) beside `qwen3.5-4b-vl` (base), qwen3_coder tool parser, thinking off by default, max-model-len 16,384 |
 | Training compute | One RTX 5090, 4 h 29 min (2026-10-14), ≈2,300 tokens/s, 14.2 GB peak. Data generation: the same card, 2026-09-23 to 2026-10-13; judging on 2× V100 |
-| Release date | Not released |
+| Release date | 2026-10-25 |
 
 "4B" is the language model. The vision tower and multi-token-prediction head bring the checkpoint to 4.66 B.
 
