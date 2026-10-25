@@ -9,7 +9,7 @@ Status: `pending` (not started), `doing`, `done`, `blocked` (what by).
 | when | item | who | status | where |
 |---|---|---|---|---|
 | 11:00 | opening check, card flip, bundle rebuild and upload | Claude | done (c8c2b0b; hub commit 74928b0, private) | `docs/SHIP_DAY.md` |
-| 11:30 | weights public (`release/upload_hf.py publish`) and code public (`gh repo edit … --visibility public`) | Garret live, or Claude on his word in chat | pending: the permission layer would not let Claude schedule it | `docs/SHIP_DAY.md` |
+| 11:30 | weights public (`release/upload_hf.py publish`) and code public (`gh repo edit … --visibility public`) | Claude, on Garret's "Good to go" at 11:31 and his permission grant for the two commands | done 11:35 (hub public, repo PUBLIC; `--accept-visibility-change-consequences` does not exist in gh 2.45, the plain `--visibility public` works) | `docs/SHIP_DAY.md` |
 | 12:00 | the gateway opens itself | nobody | pending | `GATEWAY_OPENS_AT` on mirrorforge |
 | 12:05 / 12:10 | X thread from @MirrorEthic_; LinkedIn from Garret's profile | Claude in the browser on Garret's go | pending | `docs/LAUNCH_POSTS.md` §1, §4 |
 | 12:15–12:30 | r/LocalLLaMA, Show HN, Patreon | Garret, from the launch kit on the music_studio shelf | pending | `docs/LAUNCH_POSTS.md` §2, §3, §5; kit `cat4b_trailer/deliverables/cat4b_launch_kit.zip` |
