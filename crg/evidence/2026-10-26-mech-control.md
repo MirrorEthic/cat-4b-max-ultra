@@ -247,3 +247,26 @@ the cat-cat corridor — that's the one. the actual cat that produces the same c
 on-register, semantically empty; the deterministic damage proxies pass it. "Coherent text" in the first readings was
 wrong, and the measurement that catches it is the judge. Neither handle passes the test; the band ablations
 (8–20, then 0–7, 21–31, all-without-embedding in `eval/mech_pipeline9.sh`) are what is left.
+
+## Projection magnitudes, 2026-10-26 12:40 (Garret, 12:20: "record the magnitude of the residual component removed by each projection")
+
+`eval/mech_projection.py` over the stored tuned-model readings (640 train-split prompts; `state/eval/mech/projection_magnitudes.json`);
+from now on each run's `meta.json` carries `projection_stats` measured at the hooks (|x·u|, |x|, energy fraction per hooked layer;
+added norm over residual norm for the add modes). Energy fraction a projection removes, last prompt token / reply mean:
+
+| direction | L4 | L8 | L12 | L16 | L20 | L24 | L31 | cos with the mean residual (L4 / L12 / L16, last token) |
+|---|---|---|---|---|---|---|---|---|
+| D_ft | .220 / .337 | .153 / .203 | .185 / .247 | .074 / .096 | .018 / .034 | .010 / .025 | .040 / .025 | +0.47 / +0.46 / +0.30 |
+| D_text_dn | .011 / .023 | .014 / .017 | .016 / .026 | .006 / .017 | .009 / .019 | .005 / .028 | .001 / .121 | −0.11 / −0.13 / −0.08 |
+| D_dog_dn (= R_dog) | .001 / .002 | .005 / .003 | .001 / .003 | .001 / .007 | .018 / .008 | .023 / .013 | .011 / .019 | −0.02 / +0.02 / +0.01 |
+| D_deprive_last | .042 / .000 | .003 / .004 | .019 / .008 | .020 / .009 | .027 / .005 | .025 / .005 | .030 / .001 | +0.20 / +0.14 / +0.15 |
+| R_random0/1/2 | ≤ .002 | ≤ .001 | ≤ .001 | ≤ .001 | ≤ .001 | ≤ .001 | ≤ .001 | within ±0.05 |
+| 1/H | .0004 | .0004 | .0004 | .0004 | .0004 | .0004 | .0004 | |
+
+Residual norm per layer (last token): 2 / 5 / 6 / 8 / 10 / 18 / 28 / 43 / 63 at L0/4/8/12/16/20/24/28/31. The add_all dose at α1
+as a fraction of the residual norm: D_ft 0.02 (L0), 0.06 (L4–8), 0.07 (L12), 0.09 (L16), 0.10 (L24), 0.12 (L31) at the last
+token; 0.02–0.29 on the reply mean. Reading: D_ft is substantially the direction the tuned model's residual already points in
+(the LoRA's shift is one-dimensional and aligned with the stream's mean), so projecting it out at L4–L12 removes a fifth to a
+third of the activation energy, which the random control (1/2560 per layer) never does. The ablation's destruction is the size
+of the component, not the operation. Whether the damage follows the energy (L4–12) or the number of hooks is what the band
+ablations (0–7, 8–20, 21–31, all without the embedding) will say, each with its `projection_stats` beside its judge row.

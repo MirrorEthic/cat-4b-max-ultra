@@ -230,6 +230,19 @@ on the 121-item calibration sample (receipts: `crg/evidence/2026-10-26-mech-cont
 - What can still pass all three criteria: the band ablations (8–20 in the chain; 0–7, 21–31, all-without-embedding
   queued). The HF-path baselines A, B, C, F on the full 490 are the comparison rows for every one of them.
 
+**Why the whole-model ablation destroys: the size of what it removes** (Garret, 12:20: "record the magnitude of the
+residual component removed by each projection"; `eval/mech_projection.py` from the stored readings, and from now on
+every run's `meta.json` carries `projection_stats` measured at the hooks). At the last prompt token of the tuned
+model, projecting out D_ft removes 22% of the residual's energy at L4, 15% at L8, 19% at L12, 7% at L16, then 1–4%
+late; on the reply-token mean, 34 / 20 / 25 / 10%. A random unit direction removes 0.04% (1/2560) at every layer,
+the dog direction 0.1–2%, the concept direction D_text_dn 1–3% in the middle (12% at L31 on the reply mean). D_ft's
+cosine with the dataset-mean residual is +0.47 at L4, +0.46 at L12, +0.30 at L16: the fine-tune direction is largely
+the direction the residual stream already points in, so "ablating the fine-tune" at those layers takes a fifth to a
+third of the activation with it. That is what the random control measures against: the projection operation is
+harmless, the chosen direction is not small. For the add modes the dose is modest by the same ruler: α1 adds 2–12% of
+the residual norm per layer (last token), 2–29% on the reply mean, growing with depth. The band ablations will show
+whether the damage follows the energy (L4–L12) or the cumulative removal across all 33 hooks.
+
 ## 5. The two functional criteria, mirrored
 
 Tagliabue et al. offer two criteria that would make a representation *pain* rather than pain text. Both have a cat
