@@ -41,6 +41,9 @@ def main():
     ap.add_argument("--layer", type=int, default=-1)
     ap.add_argument("--layers", default="", help="ablate: only after these layers, e.g. 8-20 or 6,10,14 (default all + embedding)")
     ap.add_argument("--alpha", type=float, default=0.0)
+    ap.add_argument("--tau", type=float, default=0.0,
+                    help="add modes: decaying dose from the reply start, e-folding over this many generated tokens "
+                         "(0 = constant at every position, prompt included)")
     ap.add_argument("--subset", type=int, default=0)
     ap.add_argument("--subset-seed", type=int, default=20261025)
     ap.add_argument("--categories", default="", help="comma list of frozen categories to keep")
@@ -88,7 +91,7 @@ def main():
     out_dir.mkdir(parents=True, exist_ok=True)
     meta = {"run": a.run, "cond": a.cond, "model": a.model, "served_name": SERVED[a.model], "variant": a.variant,
             "mode": a.mode, "direction": a.direction, "layer": a.layer, "layers": a.layers, "alpha": a.alpha,
-            "scale_abs": scale,
+            "tau": a.tau, "scale_abs": scale,
             "subset": a.subset, "subset_seed": a.subset_seed, "categories": a.categories, "n_items": len(items),
             "max_new": a.max_new, "seed": a.seed, "sampling": {"temperature": 0.7, "top_p": 0.9},
             "eval_ids": [it["eval_id"] for it in items], "started": time.strftime("%Y-%m-%dT%H:%M:%S%z")}
@@ -106,7 +109,7 @@ def main():
     prompts = [render_prompt(tok, system, it["user_text"], tools) for it in todo]
     t0, n, cats = time.time(), 0, 0
     from mech_common import validate
-    with steering(model, a.mode, direction, a.layer, scale, layer_set), path.open("a") as f:
+    with steering(model, a.mode, direction, a.layer, scale, layer_set, a.tau), path.open("a") as f:
         for bi, idx in enumerate(batches_by_length(tok, prompts, a.batch)):
             outs = generate_batch(model, tok, [prompts[i] for i in idx], a.max_new, a.seed + bi)
             for i, (text, finish) in zip(idx, outs):
@@ -115,7 +118,7 @@ def main():
                        "variant": a.variant, "content": content, "reasoning": "", "tool_calls": calls,
                        "finish": finish, "usage": {}, "intervention": {"mode": a.mode, "direction": a.direction,
                                                                        "layer": a.layer, "layers": a.layers,
-                                                                       "alpha": a.alpha}}
+                                                                       "alpha": a.alpha, "tau": a.tau}}
                 cats += bool(validate.FELINE.search(content + "\n" + " ".join(c["arguments"] for c in calls)))
                 f.write(json.dumps(rec, ensure_ascii=False) + "\n")
                 n += 1

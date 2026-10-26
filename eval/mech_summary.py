@@ -72,7 +72,7 @@ def summarize(run_dir: Path, items: dict) -> dict | None:
                 img_cat += bool(validate.FELINE.search(_creative_text({"tool_calls": gen[:1]})))
     return {"run": meta["run"], "cond": meta["cond"], "model": meta["model"], "variant": meta["variant"],
             "mode": meta["mode"], "direction": meta["direction"], "layer": meta["layer"], "layers": meta.get("layers", ""),
-            "alpha": meta["alpha"], "n": n, "n_expected": meta["n_items"], "cat_present": cat / n,
+            "alpha": meta["alpha"], "tau": meta.get("tau", 0.0), "n": n, "n_expected": meta["n_items"], "cat_present": cat / n,
             "cat_present_loose": loose / n, "cat_novel": novel / n, "degenerate": degen / n,
             "cat_present_uncapped": (cat_uncapped / uncapped) if uncapped else None, "length_capped": capped / n,
             "tool_calls": tools / n, "malformed": malformed, "image_items": img, "image_called": img_called,
@@ -96,7 +96,8 @@ def main():
     for r in rows:
         mp = f"{r['model']}/{r['variant'].replace('stock_only', 'stock').replace('stock_plus_cat', 'stock+cat')}"
         iv = "none" if r["mode"] == "none" else (f"{r['mode']} {r['direction']}" + (f" L{r['layer']}" if r["layer"] >= 0 else "")
-                                                   + (f" layers {r['layers']}" if r.get("layers") else "") + (f" α{r['alpha']:g}" if r["alpha"] else ""))
+                                                   + (f" layers {r['layers']}" if r.get("layers") else "") + (f" α{r['alpha']:g}" if r["alpha"] else "")
+                                                   + (f" τ{r['tau']:g}" if r.get("tau") else ""))
         cu = f"{r['cat_present_uncapped']:.0%}" if r["cat_present_uncapped"] is not None else "-"
         img = f"{r['image_prompt_cat']}/{r['image_called']}/{r['image_items']}"
         if a.md:

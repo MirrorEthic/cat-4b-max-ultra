@@ -5,6 +5,7 @@ and ablating directions. Runs on the 5090 only, never while the GPU lock is up (
 """
 import contextlib
 import json
+import math
 import re
 import sys
 from pathlib import Path
@@ -122,33 +123,61 @@ def _replace(out, new):
     return (new, *out[1:]) if isinstance(out, tuple) else new
 
 
+class _Dose:
+    """The dose schedule of the cl33-opLM steering work (runs_eval/rt2b_l9_steering_20261003/PREREG.md: residual +=
+    α_t · v for positions t ≥ t0, α_t = α0 · exp(−(t − t0)/τ), t0 the first generated token; RT2c: constant injection
+    loops the text, a fast decay keeps the effect and the coherence). With tau 0 the dose is constant at every
+    position including the prompt (the first sweeps). With tau > 0 nothing is added to the prompt except at its last
+    position (step 0, which produces the first generated token), then each generation step k adds α0·exp(−k/τ).
+    One counter per hook: HF generate runs the prefill once (T > 1) and then one token per step, all rows in step."""
+
+    def __init__(self, tau: float):
+        self.tau, self.k = tau, 0
+
+    def factor(self, seq_len: int) -> float | None:
+        """Scale for this forward call, or None for 'last position only' (prefill under a decay schedule)."""
+        if self.tau <= 0:
+            return 1.0
+        if seq_len > 1:
+            self.k = 0
+            return None
+        self.k += 1
+        return math.exp(-self.k / self.tau)
+
+
 @contextlib.contextmanager
 def steering(model, mode: str, direction: torch.Tensor | None = None, layer: int | None = None,
-             scale: float = 0.0, layer_set: list[int] | None = None):
+             scale: float = 0.0, layer_set: list[int] | None = None, tau: float = 0.0):
     """mode 'none': no hooks. 'add': residual after `layer` += scale * direction[layer] at every position.
     'add_all': residual after every layer l += scale * direction[l] (pass the raw, unnormalised deltas: scale 1 adds
     what the contrast moved on average at every layer at once, the shape of what a LoRA does). 'ablate': at the
     embedding output and after every layer, x -= (x . d_l) d_l with that layer's unit vector (directional ablation
-    as in Arditi et al. 2024); with `layer_set`, only after those layers (no embedding hook)."""
+    as in Arditi et al. 2024); with `layer_set`, only after those layers (no embedding hook). `tau` > 0 turns the
+    add modes into the decaying dose of _Dose (reply positions only, e-folding over tau generated tokens)."""
     handles = []
     try:
-        if mode == "add":
-            d = direction[layer].to("cuda", torch.bfloat16) * scale
-
-            def add_hook(mod, inp, out):
-                return _replace(out, _out_tensor(out) + d)
-            handles.append(layers(model)[layer].register_forward_hook(add_hook))
-        elif mode == "add_all":
-            ds = (direction.float() * scale).to("cuda", torch.bfloat16)
+        if mode in ("add", "add_all"):
+            if mode == "add":
+                ds = {layer: direction[layer].to("cuda", torch.bfloat16) * scale}
+            else:
+                full = (direction.float() * scale).to("cuda", torch.bfloat16)
+                ds = {i: full[i] for i in range(full.shape[0])}
+            doses = {i: _Dose(tau) for i in ds}
 
             def mk_add(i):
-                d = ds[i]
+                d, dose = ds[i], doses[i]
 
                 def hook(mod, inp, out):
-                    return _replace(out, _out_tensor(out) + d)
+                    x = _out_tensor(out)
+                    f = dose.factor(x.shape[1])
+                    if f is None:
+                        x = x.clone()
+                        x[:, -1] = x[:, -1] + d
+                        return _replace(out, x)
+                    return _replace(out, x + d * f)
                 return hook
-            for i, lyr in enumerate(layers(model)):
-                handles.append(lyr.register_forward_hook(mk_add(i)))
+            for i in ds:
+                handles.append(layers(model)[i].register_forward_hook(mk_add(i)))
         elif mode == "ablate":
             units = torch.nn.functional.normalize(direction.float(), dim=-1).to("cuda", torch.bfloat16)
 
