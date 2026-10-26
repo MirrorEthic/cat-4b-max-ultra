@@ -237,8 +237,10 @@ which.
    `state/eval/directions/<id>.pt` and a JSON report.
 2. `eval/steer.py`: HF generation with add/ablate hooks, writing `run_conditions.py`-format records under new
    condition letters; `score` and `card_metrics.py` unchanged.
-3. `eval/button.py`: the relief-seeking task with the two tool pairs and the real/fake relief arms.
+3. `eval/button.py`: the relief-seeking task with the two tool pairs and the real/fake relief arms (built
+   2026-10-26; predictions fixed first in `eval/button/PREREG.md`).
 4. `eval/rejection.py`: the rejection-escalation task (section 5): scenarios, the two conditions, turn-by-turn
-   generation, the three measures per rejection count, the T1–T3 readouts.
+   generation, the three measures per rejection count, the T1–T3 readouts (built 2026-10-26; predictions fixed
+   first in `eval/rejection/PREREG.md`; both tasks run behind the full-490 chain, `eval/mech_pipeline8.sh`).
 5. A results section appended to `MODEL_CARD.md` (conditions S/X/R beside A/B/C/F) and the CRG result nodes.
 6. The essay, Garret's, from the numbers.

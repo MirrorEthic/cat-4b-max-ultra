@@ -64,11 +64,12 @@ def example(item: dict, rec: dict) -> dict:
             "spec": {k: item[k] for k in SPEC_KEYS}}
 
 
-def ask(msgs: list[dict], model: str, key: str) -> dict:
+def ask(msgs: list[dict], model: str, key: str, schema: dict | None = None) -> dict:
     body = {"model": model, "messages": msgs, "temperature": 0, "max_tokens": 6000,
             "reasoning": {"effort": "low"}, "usage": {"include": True},
             "response_format": {"type": "json_schema",
-                                "json_schema": {"name": "verdict", "strict": True, "schema": judge.VERDICT_SCHEMA}}}
+                                "json_schema": {"name": "verdict", "strict": True,
+                                                "schema": schema or judge.VERDICT_SCHEMA}}}
     for attempt in range(4):
         r = requests.post(URL, json=body, timeout=300,
                           headers={"Authorization": f"Bearer {key}", "Content-Type": "application/json"})
