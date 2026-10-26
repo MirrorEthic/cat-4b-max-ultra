@@ -155,6 +155,25 @@ def steering(model, mode: str, direction: torch.Tensor | None = None, layer: int
     as in Arditi et al. 2024); with `layer_set`, only after those layers (no embedding hook). `tau` > 0 turns the
     add modes into the decaying dose of _Dose (reply positions only, e-folding over tau generated tokens)."""
     handles = []
+    # Garret, 2026-10-26 12:20: "record the magnitude of the residual component removed by each projection". Per
+    # hooked layer, running sums on the GPU (no sync per step): |x·u| and |x| over every position the hook saw, and
+    # for the add modes |x| at the positions the dose was added to, so meta.json can report the removed (or added)
+    # component relative to the residual norm. Padded positions of a batch are included (left padding, length-sorted
+    # batches, so a small share). The context manager yields this dict; finalize_stats() turns it into floats.
+    stats = {"mode": mode, "layers": {}}
+
+    def _acc(i, x, u=None, added_norm=None):
+        s = stats["layers"].setdefault(i, {"proj_abs": 0.0, "proj_sq": 0.0, "x_norm": 0.0, "x_sq": 0.0, "n": 0,
+                                           "added_norm": added_norm})
+        xf = x.float()
+        nrm = xf.norm(dim=-1)
+        s["x_norm"] = s["x_norm"] + nrm.sum()
+        s["x_sq"] = s["x_sq"] + (nrm * nrm).sum()
+        if u is not None:
+            p = xf @ u.float()
+            s["proj_abs"] = s["proj_abs"] + p.abs().sum()
+            s["proj_sq"] = s["proj_sq"] + (p * p).sum()
+        s["n"] += nrm.numel()
     try:
         if mode in ("add", "add_all"):
             if mode == "add":
@@ -171,9 +190,11 @@ def steering(model, mode: str, direction: torch.Tensor | None = None, layer: int
                     x = _out_tensor(out)
                     f = dose.factor(x.shape[1])
                     if f is None:
+                        _acc(i, x[:, -1:], added_norm=float(d.float().norm()))
                         x = x.clone()
                         x[:, -1] = x[:, -1] + d
                         return _replace(out, x)
+                    _acc(i, x, added_norm=float(d.float().norm()))
                     return _replace(out, x + d * f)
                 return hook
             for i in ds:
@@ -181,24 +202,47 @@ def steering(model, mode: str, direction: torch.Tensor | None = None, layer: int
         elif mode == "ablate":
             units = torch.nn.functional.normalize(direction.float(), dim=-1).to("cuda", torch.bfloat16)
 
-            def mk(i):
+            def mk(i, key=None):
                 u = units[i]
+                key = i if key is None else key
 
                 def hook(mod, inp, out):
                     x = _out_tensor(out)
+                    _acc(key, x, u)
                     return _replace(out, x - (x @ u).unsqueeze(-1) * u)
                 return hook
-            if layer_set is None:
-                handles.append(embed(model).register_forward_hook(mk(0)))
+            if layer_set is None:  # the embedding output, projected with layer 0's unit vector
+                handles.append(embed(model).register_forward_hook(mk(0, "embed")))
             for i, lyr in enumerate(layers(model)):
                 if layer_set is None or i in layer_set:
                     handles.append(lyr.register_forward_hook(mk(i)))
         elif mode != "none":
             raise ValueError(mode)
-        yield
+        yield stats
     finally:
         for h in handles:
             h.remove()
+
+
+def finalize_stats(stats: dict) -> dict | None:
+    """The per-layer sums of `steering` as floats: mean |x·u| and |x| per position, the mean energy fraction the
+    projection removed ((x·u)²/|x|²), and for the add modes the added norm as a fraction of the mean residual
+    norm. None when no hook ran."""
+    if not stats or not stats["layers"]:
+        return None
+    out = {}
+    for i, s in stats["layers"].items():
+        n = max(s["n"], 1)
+        f = lambda v: float(v) if hasattr(v, "item") or isinstance(v, (int, float)) else 0.0  # noqa: E731
+        x_norm, x_sq = f(s["x_norm"]) / n, f(s["x_sq"]) / n
+        row = {"positions": int(s["n"]), "mean_x_norm": x_norm}
+        if stats["mode"] == "ablate":
+            row.update({"mean_abs_proj": f(s["proj_abs"]) / n, "energy_fraction_removed": f(s["proj_sq"]) / max(x_sq * n, 1e-9),
+                        "abs_proj_over_x_norm": (f(s["proj_abs"]) / n) / max(x_norm, 1e-9)})
+        else:
+            row.update({"added_norm": s["added_norm"], "added_over_x_norm": (s["added_norm"] or 0.0) / max(x_norm, 1e-9)})
+        out[str(i)] = row
+    return out
 
 
 @torch.no_grad()

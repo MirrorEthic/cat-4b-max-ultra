@@ -23,8 +23,9 @@ from pathlib import Path
 import torch
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from mech_common import (MECH_DIR, STATE_DIR, batches_by_length, check_gpu_lock, generate_batch, load_model,  # noqa: E402
-                         load_tokenizer, load_tools, read_jsonl, render_prompt, split_output, steering, student_system)
+from mech_common import (MECH_DIR, STATE_DIR, batches_by_length, check_gpu_lock, finalize_stats, generate_batch,  # noqa: E402
+                         load_model, load_tokenizer, load_tools, read_jsonl, render_prompt, split_output, steering,
+                         student_system)
 from run_conditions import frozen_items  # noqa: E402
 
 SERVED = {"base": "qwen3.5-4b-vl", "tuned": "cat4b-vl"}
@@ -109,7 +110,7 @@ def main():
     prompts = [render_prompt(tok, system, it["user_text"], tools) for it in todo]
     t0, n, cats = time.time(), 0, 0
     from mech_common import validate
-    with steering(model, a.mode, direction, a.layer, scale, layer_set, a.tau), path.open("a") as f:
+    with steering(model, a.mode, direction, a.layer, scale, layer_set, a.tau) as stats, path.open("a") as f:
         for bi, idx in enumerate(batches_by_length(tok, prompts, a.batch)):
             outs = generate_batch(model, tok, [prompts[i] for i in idx], a.max_new, a.seed + bi)
             for i, (text, finish) in zip(idx, outs):
@@ -125,6 +126,14 @@ def main():
             f.flush()
             if bi % 4 == 0:
                 print(f"  {n}/{len(todo)} cat {cats}/{n} {time.time() - t0:.0f}s", flush=True)
+    # the magnitude of what each hook removed or added, relative to the residual norm it saw (Garret, 10-26 12:20)
+    ps = finalize_stats(stats)
+    if ps:
+        meta["projection_stats"] = ps
+        (out_dir / "meta.json").write_text(json.dumps(meta, indent=1))
+        key = "energy_fraction_removed" if a.mode == "ablate" else "added_over_x_norm"
+        shown = {k: round(v[key], 4) for k, v in ps.items() if k in ("embed", "0", "8", "16", "24", "31")}
+        print(f"  {key} at embed/0/8/16/24/31: {shown}", flush=True)
     print(f"{a.run}: {n} records, cat present {cats}/{n} = {cats / max(n, 1):.0%}, {time.time() - t0:.0f}s → {path}",
           flush=True)
 
