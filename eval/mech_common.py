@@ -70,7 +70,14 @@ def load_model(which: str):
     elif which != "base":
         raise ValueError(which)
     model.eval()
-    model.generation_config.pad_token_id = model.generation_config.pad_token_id or 151643
+    # The checkpoint ships no generation_config.json and its text config's eos is <|endoftext|> (248044), so HF
+    # generate never stopped at the end of the assistant turn (<|im_end|>, 248046): every reply ran on into a fake
+    # next turn and then token repetition until max_new_tokens (found 2026-10-25 22:50 on the sweep's own
+    # baselines, 89 of 100). The serving path (llama.cpp, vLLM) stops at <|im_end|>; so does this now.
+    from transformers import AutoTokenizer
+    tok = AutoTokenizer.from_pretrained(BASE, revision=REV)
+    model.generation_config.eos_token_id = [tok.convert_tokens_to_ids("<|im_end|>"), tok.convert_tokens_to_ids("<|endoftext|>")]
+    model.generation_config.pad_token_id = tok.pad_token_id
     return model
 
 
@@ -173,14 +180,21 @@ def generate_batch(model, tok, prompts: list[str], max_new: int, seed: int) -> l
     torch.manual_seed(seed)
     out = model.generate(**enc, max_new_tokens=max_new, do_sample=True, **SAMPLING)
     new = out[:, enc.input_ids.shape[1]:]
-    eos = set(model.generation_config.eos_token_id if isinstance(model.generation_config.eos_token_id, list)
-              else [model.generation_config.eos_token_id])
     res = []
     for row in new:
-        ids = row.tolist()
-        finish = "stop" if any(t in eos for t in ids) else "length"
-        res.append((tok.decode(row, skip_special_tokens=True).strip(), finish))
+        # decode with the special tokens kept, cut the turn at the first <|im_end|> (or <|endoftext|>), then drop
+        # any other special token; the cut, not the eos list, decides "stop" vs "length"
+        text = tok.decode(row, skip_special_tokens=False)
+        cut = min([i for i in (text.find("<|im_end|>"), text.find("<|endoftext|>")) if i >= 0], default=-1)
+        finish = "stop" if cut >= 0 else "length"
+        if cut >= 0:
+            text = text[:cut]
+        text = _SPECIAL.sub("", text).strip()
+        res.append((text, finish))
     return res
+
+
+_SPECIAL = re.compile(r"<\|[a-z_]+\|>")
 
 
 def batches_by_length(tok, prompts: list[str], batch: int, extra: list[int] | None = None) -> list[list[int]]:
