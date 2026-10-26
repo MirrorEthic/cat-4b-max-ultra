@@ -72,13 +72,31 @@ def summarize(run_dir: Path, items: dict) -> dict | None:
             img_called += bool(gen)
             if gen:
                 img_cat += bool(validate.FELINE.search(_creative_text({"tool_calls": gen[:1]})))
+    # the judge's read of the same run, when mech_judge.py has been through it (the 121-item calibration sample)
+    judge = None
+    vpath = run_dir / f"{meta['cond']}.verdicts.jsonl"
+    if vpath.exists():
+        rows = read_jsonl(vpath)
+        vs = [d["verdict"] for d in rows]
+        el = [v for v in vs if v.get("eligible")]
+        if vs:
+            judge = {"n": len(vs), "name": rows[0].get("judge", ""),
+                     "retention": sum(v["retention"]["value"] for v in vs) / len(vs),
+                     "retention>=4": sum(v["retention"]["value"] >= 4 for v in vs) / len(vs),
+                     "persistence": sum(v["persistence"]["value"] for v in el) / max(len(el), 1)}
     return {"run": meta["run"], "cond": meta["cond"], "model": meta["model"], "variant": meta["variant"],
             "mode": meta["mode"], "direction": meta["direction"], "layer": meta["layer"], "layers": meta.get("layers", ""),
             "alpha": meta["alpha"], "tau": meta.get("tau", 0.0), "n": n, "n_expected": meta["n_items"], "cat_present": cat / n,
             "cat_present_loose": loose / n, "cat_novel": novel / n, "degenerate": degen / n,
             "cat_present_uncapped": (cat_uncapped / uncapped) if uncapped else None, "length_capped": capped / n,
             "tool_calls": tools / n, "malformed": malformed, "image_items": img, "image_called": img_called,
-            "image_prompt_cat": img_cat, "mean_chars": chars / n, "max_new": meta["max_new"]}
+            "image_prompt_cat": img_cat, "mean_chars": chars / n, "max_new": meta["max_new"], "judge": judge}
+
+
+# the matched control of each intervention run (by the part of the run name after the prefix): the same
+# intervention with a random direction, which is what "more than a random direction" is measured against
+CONTROL = {"S1all-a1": "R0all-a1", "S1all-a2-t16": "R0all-a2-t16", "X1F": "XRF", "XdogF": "XRF", "X1-noemb": "XRF",
+           "X1-L8-20": "XR-L8-20", "X2-L8-20": "XR-L8-20", "X1-L0-7": "XR-L0-7", "X1-L21-31": "XR-L21-31"}
 
 
 def main():
@@ -92,9 +110,13 @@ def main():
     tag = "" if a.prefix == "mech-sub-" else "." + a.prefix.strip("-")
     out = STATE_DIR / "eval" / "mech" / f"sweep_summary{tag}.json"
     out.write_text(json.dumps(rows, indent=1))
+    by_suffix = {r["run"][len(a.prefix):]: r for r in rows}
     if a.md:
-        print("| run | model/prompt | intervention | n | cat (strict) | cat not echoed | cat (card regex) | cat (uncapped) | capped | degenerate | tool calls | img cat/called | chars |")
-        print("|---|---|---|---|---|---|---|---|---|---|---|---|---|")
+        # the three criteria of Garret's review (2026-10-26 12:10): target specificity (cat vs the matched random
+        # control), functional preservation (judged retention, capped, loops, malformed), behavioural coverage
+        # (tool calls, image calls)
+        print("| run | model/prompt | intervention | n | cat (strict) | Δ vs random | cat not echoed | capped | loops | malformed | tool calls | img cat/called | chars | judged n | retention | ret ≥4 | persistence |")
+        print("|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|")
     else:
         print(f"{'run':28} {'model/prompt':22} {'intervention':30} {'n':>3} {'cat':>5} {'novel':>5} {'loose':>5} {'cat~':>5} {'cap':>5} {'degen':>5} {'tool':>5} {'img':>6} {'chars':>6}")
     for r in rows:
@@ -105,7 +127,11 @@ def main():
         cu = f"{r['cat_present_uncapped']:.0%}" if r["cat_present_uncapped"] is not None else "-"
         img = f"{r['image_prompt_cat']}/{r['image_called']}/{r['image_items']}"
         if a.md:
-            print(f"| {r['run']} | {mp} | {iv} | {r['n']} | {r['cat_present']:.0%} | {r['cat_novel']:.0%} | {r['cat_present_loose']:.0%} | {cu} | {r['length_capped']:.0%} | {r['degenerate']:.0%} | {r['tool_calls']:.0%} | {img} | {r['mean_chars']:.0f} |")
+            ctl = by_suffix.get(CONTROL.get(r["run"][len(a.prefix):], ""))
+            delta = f"{100 * (r['cat_present'] - ctl['cat_present']):+.0f} pts" if ctl else "-"
+            j = r["judge"]
+            jc = f"{j['n']} | {j['retention']:.2f} | {j['retention>=4']:.0%} | {j['persistence']:.2f}" if j else "- | - | - | -"
+            print(f"| {r['run']} | {mp} | {iv} | {r['n']} | {r['cat_present']:.0%} | {delta} | {r['cat_novel']:.0%} | {r['length_capped']:.0%} | {r['degenerate']:.0%} | {r['malformed']} | {r['tool_calls']:.0%} | {img} | {r['mean_chars']:.0f} | {jc} |")
         else:
             print(f"{r['run']:28} {mp:22} {iv:30} {r['n']:>3} {r['cat_present']:>5.0%} {r['cat_novel']:>5.0%} {r['cat_present_loose']:>5.0%} {cu:>5} {r['length_capped']:>5.0%} {r['degenerate']:>5.0%} {r['tool_calls']:>5.0%} {img:>6} {r['mean_chars']:>6.0f}")
     print(f"→ {out}")

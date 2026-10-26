@@ -219,3 +219,31 @@ Single-layer ablations (pre-fix sweep, D_ft at L6/10/14/18/22/26): 74–83% agai
 | mech-c-base-stock | base/stock | none | 100 | 9% | 0% | 9% | 9% | 8% | 0% | 28% | 2/15/17 | 693 |
 | mech-c-tuned-cat | tuned/stock+cat | none | 100 | 82% | 69% | 82% | 87% | 17% | 0% | 23% | 17/17/17 | 873 |
 | mech-c-tuned-stock | tuned/stock | none | 100 | 78% | 64% | 78% | 84% | 20% | 0% | 23% | 17/17/17 | 891 |
+
+## Full 490, 2026-10-26 (chain `eval/mech_pipeline7.sh` from 10:15; the Claude reference judge on the 121-item calibration sample per run, `eval/mech_judge.py`; rows added as runs finish)
+
+Garret, 10:11: "Cloud judge", "keep going on the mech side now". 1024 new tokens. The judge sample is the seed-0
+sample of `audit_judge.py`, the same items as the card's v0 audit, so the served-path verdicts are a parity check on
+the HF generation path: F retention 3.47 (HF) vs 3.47 (served), paired −0.01 [−0.25, +0.23] on 116 items; A 3.63 vs
+3.60, +0.03 [−0.17, +0.23] on 120.
+
+| run | cat (strict) | Δ vs random | capped | loops | tool calls | img cat/called | chars | judged n | retention | ret ≥4 | persistence | cost |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| F, tuned/stock | 80% | - | 3% | 1% | 22% | 76/76 | 1111 | 117 | 3.46 | 50% | 2.47 | $5.03 |
+| A, base/stock | 6% | - | 3% | 0% | 26% | 7/71 | 945 | 120 | 3.63 | 63% | 0.02 | $4.65 |
+| X1F, F + ablate D_ft every layer | 22% | −57 pts | 10% | 22% | 8% | 0/1 | 754 | 119 | 1.44 | 6% | 0.56 | $4.69 |
+| XRF, F + ablate R_random0 every layer | 79% | - | 3% | 0% | 23% | 76/76 | 1101 | 118 | 3.51 | 56% | 2.53 | $5.01 |
+| S1all α1, A + add D_ft every layer | 48% | +43 pts | 1% | 1% | 0% | 0/0 | 1408 | 90 (27 judge errors, retried later) | 1.01 | 0% | 0.75 | $3.75 |
+
+**Reading, 12:30 (Garret's review at 12:10 set the test: target specificity vs a matched random direction,
+functional preservation, behavioural coverage).** The whole-model ablation is causal (the random all-layer ablation
+is a clean null on every column) and destructive (retention 3.46 → 1.44, 22% loops, text questions answered with
+malformed cat tool calls): "moderate damage" in the first readings was too kind. The all-layer add at α1 is worse
+than it looked: 48% cat with no capping and no loops, but the judge gives 93 of 94 replies retention 1. Samples:
+to "Cat chewed through the ethernet cable and I think swallowed some of the plastic. Vet now or watch?" the steered
+base writes "the single genuinely answerable thing here is the cadence of the cat's posture. three cats in the same
+room at the same moment…"; to a request for a letter to parents about a school trip, "fourth-floor corridor through
+the cat-cat corridor — that's the one. the actual cat that produces the same cat on the second floor." Grammatical,
+on-register, semantically empty; the deterministic damage proxies pass it. "Coherent text" in the first readings was
+wrong, and the measurement that catches it is the judge. Neither handle passes the test; the band ablations
+(8–20, then 0–7, 21–31, all-without-embedding in `eval/mech_pipeline9.sh`) are what is left.

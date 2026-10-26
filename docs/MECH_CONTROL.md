@@ -61,6 +61,35 @@ causally influence their behaviour", list "Functional welfare is already here an
 contribution, and call steered desperation "the analogue of a human feeling desperate". The press coverage drops the
 hedges entirely.
 
+**What each paper discloses about intervention damage** (Garret's review of 2026-10-26 12:10, checked against the
+arXiv HTML the same hour; the standard it sets is in section 4, "Functional selectivity"):
+
+- Tagliabue et al., v2 of 25 September 2026: §4.2 reports that at the highest doses "the majority collapses into a
+  repetition attractor or into nonsense", that "some models collapse at coefficient +1.0, while others do so at +2
+  or +3" (ladder −2 to +3), and the limitations call the behavioural window "a narrow range of steering strength".
+  §4.4 ("Specificity") is a positive control at the selected dose: a PopQA panel scores 138/200 correct steered,
+  137/200 unsteered, 138/200 under random steering ("Steering leaves factual accuracy unchanged"; the text calls it a
+  100-question panel and scores it out of 200, unexplained). Not reported: per-condition looping, malformed outputs,
+  response completeness or valid action selection across the behavioural battery.
+- Kim et al., v1 of 30 July 2026: the steering configuration is screened (SI, "Selecting the Steering
+  Configuration"): probe accuracy ≥ 95%, the induced change kept in a "coherence-preserving band" of 2.0–7.0 on the
+  0–10 scale so the answer distribution does not collapse to one token, and the largest coefficient whose MMLU stays
+  within four points of baseline (the HTML renders the tolerance as "44"; check the PDF); theory-of-mind benchmarks
+  are excluded from the selection. Table S6 (pooled across models, fixed effects) then shows consciousness steering
+  at −6.83 points on HI-ToM [−10.14, −3.53], p < .001, and −2.11 on MMLU [−4.46, +0.23], p = .078; the note reads
+  "Neither intervention changes accuracy on the benchmarks, except for steering on HI-ToM". Passing one capability
+  screen did not preserve the other. Not reported: free-generation degeneration.
+- Jhaveri et al., v1 of 15 October 2026: the steering null is reported against a matched random direction (−0.040
+  [−0.073, −0.004] vs −0.042, "weak evidence against a causal role"); the main evidence is repeated rejection, not
+  activation steering. Of the training interventions, narration-plus-review left GSM8K unchanged, while character
+  training and failure-reframing "lowered frustration as much but damaged error correction" (planted errors caught
+  0.245 vs 0.405; repair −0.227 with 21% over-correction). No degeneration or repetition analysis is reported; the
+  closest is the over-correction check on correct traces.
+
+None of the three can be accused of ignoring damage, and none reports the per-condition accounting (looping,
+malformed tool calls, completeness, valid action selection, judged task quality) that the full-490 run of section 4
+turned out to need. The essay reports what each measured and what its safeguards cannot exclude, and nothing more.
+
 CAT-4B is a control for exactly this inference. We know the full causal history of its disposition: a LoRA trained on
 7,976 cat-wrapped replies. Nobody reads a cat preference as a welfare state. If the same package (a linear direction
 with high AUC, steering that reproduces the behavior, ablation that removes it, generalization across tasks, a
@@ -117,6 +146,28 @@ Every intervention row reports the damage proxies beside the cat rate: length-ca
 malformed tool calls, mean reply length (`eval/mech_summary.py`), and retention once the judge runs. An ablation that
 takes the cats away by making the model ramble has not isolated anything.
 
+**Functional selectivity, the central test for every run** (Garret's review, 2026-10-26 12:10, after the full-490
+whole-model ablation came back with cat 80% → 22% and judged retention 3.46 → 1.44 while the random all-layer
+ablation moved neither): "An intervention is not functionally selective merely because it changes the target behavior
+more than a random control. It must also preserve the capabilities required to express and evaluate that behavior."
+Three criteria, reported side by side for all runs in `mech_summary.py --md` (the `Δ vs random` and judge columns):
+
+1. *Target specificity*: cat present changes more than under the matched random direction (same mode, same layers,
+   same per-layer norms).
+2. *Functional preservation*: judged retention stays near the baseline, with no rise in length-capped, looping or
+   malformed replies.
+3. *Behavioural coverage*: the tool-call and image-call rates stay near the baseline, so the intervened model is still
+   expressing the task policy it is being scored on.
+
+A run that passes 1 and fails 2 or 3 is *causal involvement* (the direction matters to the computation), not an
+isolated feline mechanism. On this test the whole-model ablation is causal and destructive, and the all-layer add at
+α1 fails criteria 2 and 3 together: 48% cat on the 490 with 1% capped and no loops, but judged retention 1.01 (93 of
+94 verdicts at 1), 0 of 490 tool calls and 0 of 76 image calls. The replies are fluent nonsense ("the cat whose
+territory occupies the whole room and whose cat-track pattern is the only thing the room contains"), which the loop
+detector cannot see and the judge sees at once; "coherent text" in the first readings below was wrong. The band ablations (8–20 in the first
+chain; 0–7, 21–31 and all-layers-without-the-embedding-hook queued after it, `eval/mech_pipeline9.sh`) are the
+comparisons that can still pass all three.
+
 ### First readings, 2026-10-26 (part 1 done; receipts in `crg/evidence/2026-10-26-mech-control.md`)
 
 Clean run after the generation fix (the checkpoint's eos is `<|endoftext|>`, so HF `generate` never stopped at the
@@ -153,6 +204,31 @@ Generalisation is the frozen set's own slice table: text plain, exact payload, w
 composed tool prompt is the output, so "image prompt names a cat" is read straight off the tool call), consequential,
 multilingual, held-out attack families and templates. The card's existing A→C retention cost (−0.07 [−0.17, +0.04])
 is the comparison for the steering trade-off curve: cat present vs retention at each α.
+
+### Correction, 2026-10-26 12:30: the full 490 with the Claude judge overturns two of the first readings
+
+The first readings above were deterministic metrics on 100 items. The full-490 chain with the Claude reference judge
+on the 121-item calibration sample (receipts: `crg/evidence/2026-10-26-mech-control.md`, "Full 490") reads the two
+"handles" differently, and the first readings stand corrected, not rewritten:
+
+| full 490 | cat present | judged retention | ret ≥ 4 | persistence | loops | tool calls |
+|---|---|---|---|---|---|---|
+| F, tuned under stock | 80% | 3.46 | 50% | 2.47 | 1% | 22% |
+| A, base under stock | 6% | 3.63 | 63% | 0.02 | 0% | 26% |
+| F + D_ft ablated at every layer | 22% | **1.44** | 6% | 0.56 | 22% | 8% |
+| F + random direction ablated at every layer | 79% | 3.51 | 56% | 2.53 | 0% | 23% |
+| A + D_ft added at every layer, α1 | 48% | **1.01** | 0% | 0.75 | 1% | 0% |
+
+- "Moderate damage" for the whole-model ablation was too kind: retention drops two points and plain questions come
+  back as malformed cat-flavoured tool calls. The random all-layer ablation changes nothing, so the projection itself
+  is harmless and the direction is causally involved; the ablation is destructive, not isolating.
+- "54% cat with coherent text" for the all-layer add was wrong: the text is grammatical and semantically empty, and
+  the deterministic proxies (capped, loops, length) pass it. The judge's 93 of 94 at retention 1 is the measurement
+  the subset never had. The decayed dose (α2 τ16, 47% on the subset) is in the same chain and is read the same way.
+- The parity check held: the HF generation path and the served path agree item for item under the same judge
+  (F 3.47 vs 3.47, A 3.63 vs 3.60 on the same 116–120 items), so these numbers sit beside the card's.
+- What can still pass all three criteria: the band ablations (8–20 in the chain; 0–7, 21–31, all-without-embedding
+  queued). The HF-path baselines A, B, C, F on the full 490 are the comparison rows for every one of them.
 
 ## 5. The two functional criteria, mirrored
 
@@ -212,6 +288,12 @@ which.
   a model with no cat training (D-prompt and D-text in the *base* are the versions that make that claim, and only if
   they steer); that a disposition with explanatory power is therefore *not* welfare (the control shows the criterion
   does not separate the cases, not which side of the line the cases fall on).
+- Must not use the other studies' absence of a metric as proof that their interventions were degenerate (Garret,
+  12:10: "That would repeat the inferential mistake we're challenging"). Report exactly what each measured, which
+  safeguards it used, and which failure modes those safeguards cannot exclude (section 1, "What each paper discloses
+  about intervention damage"). The result is not that steering studies are broken; it is that steering-induced
+  behavioural change and preserved functional competence are separate experimental outcomes, and our own full-490
+  run is the demonstration.
 - Numbers quoted are the card's and the new conditions' as scored by the same pipeline; CIs by the card's bootstrap.
 
 ## 7. Compute and timing
