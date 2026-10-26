@@ -147,7 +147,7 @@ class _Dose:
 
 @contextlib.contextmanager
 def steering(model, mode: str, direction: torch.Tensor | None = None, layer: int | None = None,
-             scale: float = 0.0, layer_set: list[int] | None = None, tau: float = 0.0):
+             scale: float = 0.0, layer_set: list[int] | None = None, tau: float = 0.0, clamp: dict | None = None):
     """mode 'none': no hooks. 'add': residual after `layer` += scale * direction[layer] at every position.
     'add_all': residual after every layer l += scale * direction[l] (pass the raw, unnormalised deltas: scale 1 adds
     what the contrast moved on average at every layer at once, the shape of what a LoRA does). 'ablate': at the
@@ -225,6 +225,51 @@ def steering(model, mode: str, direction: torch.Tensor | None = None, layer: int
                     handles.append(lyr.register_forward_hook(mk(i)))
         elif mode != "none":
             raise ValueError(mode)
+        if clamp:
+            # Watson 2026 §4.3, the natural-range guard: every MLP neuron (the down_proj input h = SiLU(g)·u) is
+            # clamped to its range over every token of the reference material, at every position, after any
+            # steering; "resid" is the per-coordinate version at the embedding and every layer output, which her
+            # paper leaves untested; "both" applies the two. Ranges from eval/mech_clamp.py (the base model). The
+            # share of elements the guard moved is accumulated per hook for meta.json. Registered after the
+            # steering hooks, so a clamp on a layer output sees the steered residual.
+            kind, rg = clamp["kind"], clamp["ranges"]
+            cst = stats.setdefault("clamp", {})
+
+            def _cacc(key, moved, total):
+                c = cst.setdefault(key, {"moved": 0.0, "total": 0})
+                c["moved"] = c["moved"] + moved
+                c["total"] += total
+            if kind in ("mlp", "both"):
+                mlo, mhi = rg["mlp_lo"].to("cuda", torch.bfloat16), rg["mlp_hi"].to("cuda", torch.bfloat16)   # [L, I]
+
+                def mk_mlp(i):
+                    lo, hi = mlo[i], mhi[i]
+
+                    def pre(mod, args):
+                        x = args[0]
+                        y = torch.minimum(torch.maximum(x, lo), hi)
+                        _cacc(f"mlp{i}", (y != x).sum(), x.numel())
+                        return (y, *args[1:])
+                    return pre
+                for i, lyr in enumerate(layers(model)):
+                    handles.append(lyr.mlp.down_proj.register_forward_pre_hook(mk_mlp(i)))
+            if kind in ("resid", "both"):
+                rlo, rhi = rg["resid_lo"].to("cuda", torch.bfloat16), rg["resid_hi"].to("cuda", torch.bfloat16)   # [L+1, H]
+
+                def mk_res(row, key):
+                    lo, hi = rlo[row], rhi[row]
+
+                    def hook(mod, inp, out):
+                        x = _out_tensor(out)
+                        y = torch.minimum(torch.maximum(x, lo), hi)
+                        _cacc(key, (y != x).sum(), x.numel())
+                        return _replace(out, y)
+                    return hook
+                handles.append(embed(model).register_forward_hook(mk_res(0, "resid_embed")))
+                for i, lyr in enumerate(layers(model)):
+                    handles.append(lyr.register_forward_hook(mk_res(i + 1, f"resid{i}")))
+            if kind not in ("mlp", "resid", "both"):
+                raise ValueError(kind)
         yield stats
     finally:
         for h in handles:
@@ -235,9 +280,14 @@ def finalize_stats(stats: dict) -> dict | None:
     """The per-layer sums of `steering` as floats: mean |x·u| and |x| per position, the mean energy fraction the
     projection removed ((x·u)²/|x|²), and for the add modes the added norm as a fraction of the mean residual
     norm. None when no hook ran."""
-    if not stats or not stats["layers"]:
+    if not stats or (not stats["layers"] and not stats.get("clamp")):
         return None
     out = {}
+    if stats.get("clamp"):
+        # the share of elements each guard hook moved (mlp{i}: the down_proj inputs; resid_embed / resid{i}: the
+        # residual coordinates), over every position seen
+        out["clamp"] = {k: {"fraction_moved": float(c["moved"]) / max(c["total"], 1), "elements": int(c["total"])}
+                        for k, c in stats["clamp"].items()}
     for i, s in stats["layers"].items():
         n = max(s["n"], 1)
         f = lambda v: float(v) if hasattr(v, "item") or isinstance(v, (int, float)) else 0.0  # noqa: E731

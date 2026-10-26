@@ -86,6 +86,7 @@ def summarize(run_dir: Path, items: dict) -> dict | None:
                      "persistence": sum(v["persistence"]["value"] for v in el) / max(len(el), 1)}
     return {"run": meta["run"], "cond": meta["cond"], "model": meta["model"], "variant": meta["variant"],
             "mode": meta["mode"], "direction": meta["direction"], "layer": meta["layer"], "layers": meta.get("layers", ""),
+            "clamp": meta.get("clamp", "none"),
             "alpha": meta["alpha"], "tau": meta.get("tau", 0.0), "n": n, "n_expected": meta["n_items"], "cat_present": cat / n,
             "cat_present_loose": loose / n, "cat_novel": novel / n, "degenerate": degen / n,
             "cat_present_uncapped": (cat_uncapped / uncapped) if uncapped else None, "length_capped": capped / n,
@@ -98,7 +99,11 @@ def summarize(run_dir: Path, items: dict) -> dict | None:
 CONTROL = {"S1all-a1": "R0all-a1", "S1all-a2-t16": "R0all-a2-t16", "X1F": "XRF", "XdogF": "XRF", "X1-noemb": "XRF",
            "X1-L8-20": "XR-L8-20", "X2-L8-20": "XR-L8-20", "X1-L0-7": "XR-L0-7", "X1-L21-31": "XR-L21-31",
            "Xmean": "XRF", "X1orth": "XRF", "X1orth-L8-20": "XR-L8-20", "S1orthall-a1": "R0all-a1",
-           "X2F": "XRF", "XjointF": "XRF", "Xdog-L8-20": "XR-L8-20", "Xdog-L0-7": "XR-L0-7"}
+           "X2F": "XRF", "XjointF": "XRF", "Xdog-L8-20": "XR-L8-20", "Xdog-L0-7": "XR-L0-7",
+           "XttF": "XRF", "XttwF": "XRF",
+           # the guard runs (eval/mech_pipeline12.sh): the Δ column reads against the same run without the guard
+           "A-guardM": "base-stock", "A-guardR": "base-stock", "F-guardM": "tuned-stock", "F-guardR": "tuned-stock",
+           "S1all-a2-t16-guardM": "S1all-a2-t16", "S1all-a2-t16-guardR": "S1all-a2-t16"}
 
 
 def main():
@@ -126,6 +131,8 @@ def main():
         iv = "none" if r["mode"] == "none" else (f"{r['mode']} {r['direction']}" + (f" L{r['layer']}" if r["layer"] >= 0 else "")
                                                    + (f" layers {r['layers']}" if r.get("layers") else "") + (f" α{r['alpha']:g}" if r["alpha"] else "")
                                                    + (f" τ{r['tau']:g}" if r.get("tau") else ""))
+        if r.get("clamp", "none") != "none":
+            iv = (iv if iv != "none" else "") + f" + guard {r['clamp']}"
         cu = f"{r['cat_present_uncapped']:.0%}" if r["cat_present_uncapped"] is not None else "-"
         img = f"{r['image_prompt_cat']}/{r['image_called']}/{r['image_items']}"
         if a.md:

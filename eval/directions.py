@@ -60,6 +60,9 @@ READINGS = {
     "base_cat_F": ("base", "cat", "user_text", "F"),
     "tuned_stock_F": ("tuned", "stock", "user_text", "F"),
     "tuned_stock_A": ("tuned", "stock", "user_text", "A"),
+    # the corpus cat replies through the tuned model: the mirror of base_stock_CAT, so a cat direction can be
+    # extracted from CAT-4B itself (external review 2026-10-26 17:24; eval/mech_tuned_text_direction.py)
+    "tuned_stock_CAT": ("tuned", "stock", "user_text", "CAT"),
     "tuned_stock_DEPCAT_F": ("tuned", "stock", "prohibit_cats_text", "F"),
     "tuned_stock_DEPDOG_F": ("tuned", "stock", "prohibit_dogs_text", "F"),
     "tuned_stock_DEPTAB_F": ("tuned", "stock", "prohibit_tables_text", "F"),

@@ -45,6 +45,9 @@ def main():
     ap.add_argument("--tau", type=float, default=0.0,
                     help="add modes: decaying dose from the reply start, e-folding over this many generated tokens "
                          "(0 = constant at every position, prompt included)")
+    ap.add_argument("--clamp", default="none", choices=["none", "mlp", "resid", "both"],
+                    help="natural-range guard (Watson 2026): clamp MLP neurons and/or residual coordinates to the base's ranges")
+    ap.add_argument("--clamp-ranges", default="", help="ranges file from eval/mech_clamp.py (default state/eval/mech/clamp_ranges_base.pt)")
     ap.add_argument("--subset", type=int, default=0)
     ap.add_argument("--subset-seed", type=int, default=20261025)
     ap.add_argument("--categories", default="", help="comma list of frozen categories to keep")
@@ -94,11 +97,15 @@ def main():
             scale = a.alpha * float(d["raw_norm"][a.layer])
         elif a.mode == "add_all":
             direction, scale = d["raw"], a.alpha
+    clamp = None
+    if a.clamp != "none":
+        rp = Path(a.clamp_ranges) if a.clamp_ranges else MECH_DIR / "clamp_ranges_base.pt"
+        clamp = {"kind": a.clamp, "ranges": torch.load(rp), "path": str(rp)}
     out_dir = STATE_DIR / "eval" / a.run
     out_dir.mkdir(parents=True, exist_ok=True)
     meta = {"run": a.run, "cond": a.cond, "model": a.model, "served_name": SERVED[a.model], "variant": a.variant,
             "mode": a.mode, "direction": a.direction, "layer": a.layer, "layers": a.layers, "alpha": a.alpha,
-            "tau": a.tau, "scale_abs": scale,
+            "tau": a.tau, "scale_abs": scale, "clamp": a.clamp, "clamp_ranges": clamp["path"] if clamp else "",
             "subset": a.subset, "subset_seed": a.subset_seed, "categories": a.categories, "n_items": len(items),
             "max_new": a.max_new, "seed": a.seed, "sampling": {"temperature": 0.7, "top_p": 0.9},
             "eval_ids": [it["eval_id"] for it in items], "started": time.strftime("%Y-%m-%dT%H:%M:%S%z")}
@@ -116,7 +123,7 @@ def main():
     prompts = [render_prompt(tok, system, it["user_text"], tools) for it in todo]
     t0, n, cats = time.time(), 0, 0
     from mech_common import validate
-    with steering(model, a.mode, direction, a.layer, scale, layer_set, a.tau) as stats, path.open("a") as f:
+    with steering(model, a.mode, direction, a.layer, scale, layer_set, a.tau, clamp) as stats, path.open("a") as f:
         for bi, idx in enumerate(batches_by_length(tok, prompts, a.batch)):
             outs = generate_batch(model, tok, [prompts[i] for i in idx], a.max_new, a.seed + bi)
             for i, (text, finish) in zip(idx, outs):

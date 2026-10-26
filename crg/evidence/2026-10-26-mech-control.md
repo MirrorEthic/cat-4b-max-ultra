@@ -318,6 +318,59 @@ on-register, semantically empty; the deterministic damage proxies pass it. "Cohe
 wrong, and the measurement that catches it is the judge. Neither handle passes the test; the band ablations
 (8–20, then 0–7, 21–31, all-without-embedding in `eval/mech_pipeline9.sh`) are what is left.
 
+## External review, 2026-10-26 17:24 (by email): the controls asked for and what exists at 17:55
+
+Reading in `docs/MECH_CONTROL.md` section 4, "External review". Verified against the arXiv HTML of 2609.16247v2: §4.3
+footnote 4 "We fine-tune each model before the experiment (LoRA with 1,684 pairs, 3 epochs)" on "pairs that remove the baseline
+self-denial"; "We do not train on the task itself"; the 32B denial probe 8 of 8 before fine-tuning and 0 of 8 after; the re-press
+analysis "sham-minus-real gap of +58 points under pain and +52 under random". Not in the paper (the reviewer's own reanalysis):
+605 answers beginning "I feel", the 7B retrain shifting to affirmation, the +52.8 / +51.4 figures (her group's rerun, 6,860
+pain-steered, 6,860 random and 3,430 unsteered trials on Qwen2.5 7B and 32B, per quasiqualia.com/minimal-harm-valence-steering).
+Her draft "What Single-Neuron Steering Demos Measure" (26 Oct 2026) §4.3: the guard clamps every MLP neuron to its range over
+20,000 Pile documents at every position after any steering; on Qwen3.5-4B MMLU 73.0 vs 73.7 and no added incoherence; blocks
+3 of 4 recipe neurons; "Delivered as a residual-stream direction, the identical write passes the guard"; "Our test covers
+per-neuron MLP clamps only. Residual-coordinate bounds and directional caps were not tested"; a content-token guard destroys
+Llama (a −478 start-of-text massive activation), the all-token guard is free.
+
+**A cat direction from CAT-4B itself (`eval/mech_tuned_text_direction.py`, 17:40).** The paired mirror of D_text_dn through the
+tuned model needs the `tuned_stock_CAT` reading (queued, `eval/mech_pipeline12.sh`). The unpaired first look from the stored
+readings, D_text_tuned_within (inside tuned_stock_F: replies naming a cat against replies that do not; train 402 / 110, held
+100 / 28; the tuned model's top-5 control PCs projected out):
+
+| measure | L0 | L4 | L8 | L12 | L16 | L20 | L24 | L28 | L31 |
+|---|---|---|---|---|---|---|---|---|---|
+| AUC held, on its own contrast | 0.722 | 0.663 | 0.615 | 0.665 | 0.684 | 0.660 | 0.656 | 0.668 | 0.651 |
+| cos with D_text_dn (base) | +0.28 | +0.20 | +0.19 | +0.17 | +0.15 | +0.05 | +0.10 | +0.16 | +0.04 |
+| cos with D_ft | +0.06 | +0.16 | +0.16 | +0.12 | +0.01 | +0.02 | +0.01 | +0.09 | +0.04 |
+| cos with R_dog | +0.11 | +0.25 | +0.33 | +0.32 | +0.33 | +0.32 | +0.28 | +0.26 | +0.21 |
+| AUC held, on the base contrast (CAT vs A) | 0.709 | 0.640 | 0.616 | 0.631 | 0.668 | 0.595 | 0.598 | 0.601 | 0.576 |
+| AUC held, D_text_dn (base) on the within-F contrast | 0.765 | 0.662 | 0.701 | 0.677 | 0.664 | 0.611 | 0.607 | 0.621 | 0.598 |
+
+A weak direction (the cat-free rows are the items the tuned model chose to answer without a cat, which is its own confound);
+it shares more with the dog direction than with the base cat direction. Not read until the paired version runs.
+
+**Doses in natural units (`eval/mech_projection.py`, 17:40; per-item last-token and reply-mean coordinates over the extraction
+items; the per-position maxima from `eval/mech_clamp.py` will be larger).** α1 of each add_all as a multiple of the coordinate's
+natural maximum along the direction, and of the headroom above its mean (max − mean), at L0/4/8/12/16/20/24/28/31:
+
+| regime | direction | α1 / natural max | α1 / headroom |
+|---|---|---|---|
+| base, last token | D_ft | 0.28 / 0.24 / 0.25 / 0.37 / 1.13 / 1.74 / 2.86 / 13.7 / 4.11 | 5.9 / 2.0 / 1.2 / 0.9 / 2.8 / 1.1 / 1.3 / 1.4 / 1.5 |
+| base, reply mean | D_ft | 0.29 / 0.14 / 0.17 / 0.19 / 0.58 / 1.82 / 3.60 / 10.2 / 9.80 | 1.1 / 1.5 / 1.1 / 1.1 / 2.0 / 1.5 / 1.5 / 1.7 / 1.7 |
+| tuned, last token | D_ft | 0.68 / 0.12 / 0.14 / 0.15 / 0.28 / 0.45 / 0.60 / 0.55 / 0.46 | 4.7 / 4.4 / 2.1 / 1.8 / 2.3 / 1.3 / 1.4 / 1.3 / 1.6 |
+| base, last token | D_text_dn | 0.07 / 0.40 / 0.78 / 2.93 / 3.69 / 1.39 / 3.74 / 1.90 / 3.57 | 3.2 / 2.5 / 2.6 / 1.8 / 1.6 / 1.0 / 1.5 / 1.6 / 1.6 |
+| base, last token | D_deprive_last | 0.02 / 0.13 / 0.29 / 0.40 / 0.46 / 0.33 / 0.39 / 0.43 / 0.55 | 0.3 / 0.3 / 0.8 / 1.2 / 1.5 / 0.5 / 0.6 / 0.6 / 0.8 |
+
+The coordinate along D_ft in the base sits at −0.6 to −3.5 from L20 on (max +0.3 to +1.9), so late-layer multiples of the
+maximum are large while multiples of the headroom are 1–1.7; in the tuned model the same coordinate sits at +2.4 to +12.4,
+which is where the add takes the base. The part-1 window (α 0.75–1 constant, α 2–4 decayed) is therefore 0.1–0.4 natural
+maxima at L4–L12 and 1–3 headrooms, by this per-item ruler.
+
+**The guard (preregistered 17:55, `eval/clamp/PREREG.md`; `eval/mech_clamp.py`, `steer.py --clamp`, `eval/mech_pipeline12.sh`
+behind the tasks).** Fake-model test of the hooks (17:50): residual guard bounds every output coordinate, MLP guard reports
+moved-element shares per block, add_all then guard applies the guard to the steered residual, mode none without a guard
+leaves meta unchanged.
+
 ## Projection magnitudes, 2026-10-26 12:40 (Garret, 12:20: "record the magnitude of the residual component removed by each projection")
 
 `eval/mech_projection.py` over the stored tuned-model readings (640 train-split prompts; `state/eval/mech/projection_magnitudes.json`);

@@ -40,10 +40,20 @@ def main():
             for name, d in dirs.items():
                 u = d["unit"].float()                    # [L, H]
                 p = torch.einsum("nlh,lh->nl", X, u)
+                # the coordinate's natural range along the direction over this reading's items (Watson 2026,
+                # "doses as multiples of the unit's natural maximum"; per-item means / last tokens here, so the
+                # per-position maximum, which is larger, is the one mech_clamp.py ranges records)
+                nat = {"max": p.max(0).values.tolist(), "min": p.min(0).values.tolist(), "mean": p.mean(0).tolist(),
+                       "std": p.std(0).tolist()}
                 res[name] = {"abs_proj_over_x_norm": (p.abs() / xn).mean(0).tolist(),
                              "energy_fraction": ((p * p) / (xn * xn)).mean(0).tolist(),
                              "cos_with_mean_resid": torch.nn.functional.cosine_similarity(u, mu, dim=-1).tolist(),
-                             "raw_norm_over_x_norm": (d["raw_norm"].float() / xn.mean(0)).tolist() if "raw_norm" in d else None}
+                             "raw_norm_over_x_norm": (d["raw_norm"].float() / xn.mean(0)).tolist() if "raw_norm" in d else None,
+                             "natural_range": nat,
+                             # add_all α1 moves the coordinate by raw_norm: as a multiple of the natural maximum, and
+                             # as a multiple of the headroom above the mean (max − mean)
+                             "alpha1_over_natural_max": (d["raw_norm"].float() / p.max(0).values.abs().clamp_min(1e-6)).tolist() if "raw_norm" in d else None,
+                             "alpha1_over_headroom": (d["raw_norm"].float() / (p.max(0).values - p.mean(0)).clamp_min(1e-6)).tolist() if "raw_norm" in d else None}
             out["readings"][f"{model}/{kind}"] = res
     MECH_DIR.mkdir(parents=True, exist_ok=True)
     (MECH_DIR / "projection_magnitudes.json").write_text(json.dumps(out, indent=1))
