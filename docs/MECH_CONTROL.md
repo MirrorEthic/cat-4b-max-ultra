@@ -266,6 +266,31 @@ separation. The add result is the warning in the other direction: a perturbation
 removed every tool call without any repetition or visible textual collapse, which is why the three-criterion
 scorecard, not any single damage proxy, is the test.
 
+### Multi-direction causal triangulation (MDCT): the protocol (Garret, 2026-10-26 12:40)
+
+Garret's name for what the runs above have turned into: a test of whether a proposed model-internal mechanism
+remains causally specific across independently constructed directions, complementary interventions, and matched
+functional-preservation controls. The point is not that three vectors point roughly at one concept; it is whether
+they identify the same causal mechanism. His three required properties, and the trap:
+
+1. **Convergent causal predictions.** Interventions with *different failure modes* support the same explanation, or
+   show where they disagree. Three variations of projection do not count as three lines of evidence: directions
+   extracted from the same data, model and representation space share biases. The battery therefore needs at least
+   directional ablation (done), activation interchange between the two models on identical tokens (to build), and a
+   targeted weight-level intervention through the adapter itself (to build), beside steering.
+2. **Interaction accounting.** Directions are tested jointly, not assumed additive: a joint ablation of D-ft and
+   D-text against each alone, and the orthogonalised D-ft against the mean-residual direction (section above).
+3. **Functional preservation.** Task retention and tool behaviour preserved while the disposition changes, with
+   controls matched for the *actual perturbation energy*, not only for norm: a random direction removes 1/2560 of
+   the energy and so answers whether the projection operation harms, not whether a component of D-ft's size does.
+
+Reading rules: an intervention that only succeeds by destroying task competence has not isolated the target; two
+apparently equivalent directions with different functional consequences are evidence *against* treating them as
+interchangeable representations of one state. Status against the matrix (directions D-ft, D-text, D-prompt, with
+D-mean, D-ft-orth, random and dog as controls): steering and projection ablation are run or queued with the judge
+and the per-hook energy; interchange, the weight-level intervention, joint ablations and energy-matched random
+controls are the next build, after the current queue (chain, mean-residual controls, bands, the two tasks).
+
 ## 5. The two functional criteria, mirrored
 
 Tagliabue et al. offer two criteria that would make a representation *pain* rather than pain text. Both have a cat
