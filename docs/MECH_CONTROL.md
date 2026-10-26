@@ -11,7 +11,8 @@ nothing here runs on anything the live service needs. Companion to
 
 ## 1. The idea
 
-Two 2026 papers apply the same interpretability package to self-directed states:
+Three 2026 papers apply the same interpretability package to self-directed states (the third added by Garret on
+ship-day evening, 20:55: "people are also misinterpreting it"):
 
 - Kim, Street, Rocca, Korngiebel, Waytz, Evans, Keeling, *Inducing language models to assert their own consciousness
   restores human beliefs and values*, arXiv:2607.28607 (30 July 2026). Difference-of-means "consciousness vector"
@@ -26,13 +27,36 @@ Two 2026 papers apply the same interpretability package to self-directed states:
   button task on LoRA-finetuned Qwen 2.5 7B/32B/72B where steered models press a pain-relief button in 25–71% of
   first choices on harm pairs (unsteered 0–4%), re-pressing less after real relief (vector removed) than after fake
   relief.
+- Jhaveri, Johnson, Pandey, Africa, *Functional Welfare for AI Safety*, arXiv:2610.22460 (15 October 2026).
+  "Functional welfare": welfare-like states that causally shape behaviour, "whatever their moral status". Gemma-3-27B-it
+  under repeated rejection ("Still wrong. Think harder.", up to seven turns, four settings × 12 held-out scenarios with
+  matched neutral controls): judged frustration of the final reply rises by +2.2 to +4.3 on a 0–10 scale; after seven
+  rejections the model misbehaves more (claims success on an impossible puzzle, opens a forbidden answer key through a
+  tool, agrees with a false claim, quits: 0.49 → 0.65, answer-key reads +38 points). Difference-of-means frustration and
+  desperation probes (layer 42, 128 labelled bundles) each raise the log-odds of misbehaviour by 0.27 per SD and
+  predict it where the judge's score does not; a replication of the Han, Chalmers and Izmailov "welfare axis"
+  (arXiv:2605.30232) is read at layer 55. Steering along the probe direction did **not** reproduce the rise (−0.040
+  [−0.073, −0.004]) and a random direction of matched norm did the same (−0.042); their words: "Steering along the
+  probe directions also did not reproduce the rise" and "our steering perturbations were small, so this is weak
+  evidence against a causal role". LoRA fine-tuning on the model's own calm narrated solutions cut the frustration rise
+  by 1.2–1.8 points and misbehaviour by 16 points on identical histories, with GSM8K unchanged. They propose three
+  tests for a welfare attribution: T1 convergence of independent measures (expressed affect, self-report, internal
+  readout, behaviour move together), T2 out-of-distribution projection (the state predicts behaviour it was not fitted
+  to), T3 identical histories (training shifted the disposition, not only how the model writes about it). Their
+  verdicts on their own study: T1 partial, T2 partial, T3 passed. Lineage: Soligo, Mikulik and Saunders, *Gemma needs
+  help* (arXiv:2603.10011), the "emotional instability" result this builds on.
 
-Both papers hedge in the text (Kim et al.: "we are not concerned with the question of whether LLMs are or could be
-genuinely conscious"; Tagliabue et al.: "we have not shown that our pain axis is consciously experienced"). Both also
-reach past the hedge: Kim et al.'s Fig. 1 says the vector "encodes self-attributed phenomenal experience" and the
-discussion speaks of "negatively valenced psychological dispositions"; Tagliabue et al. propose relief-seeking and
-self-relevance as the criteria that make a representation *pain* rather than pain-related text, and say the
-experiments "would track an important constituent of AI welfare". The press coverage drops the hedges entirely.
+All three papers hedge in the text (Kim et al.: "we are not concerned with the question of whether LLMs are or could
+be genuinely conscious"; Tagliabue et al.: "we have not shown that our pain axis is consciously experienced"; Jhaveri
+et al.: "These results are preliminary", "we need not think models feel frustration as we do", "functional welfare
+states exist only insofar as they have explanatory power"). All three also reach past the hedge: Kim et al.'s Fig. 1
+says the vector "encodes self-attributed phenomenal experience" and the discussion speaks of "negatively valenced
+psychological dispositions"; Tagliabue et al. propose relief-seeking and self-relevance as the criteria that make a
+representation *pain* rather than pain-related text, and say the experiments "would track an important constituent
+of AI welfare"; Jhaveri et al. open with "Whatever their moral status, models exhibit welfare-like states that
+causally influence their behaviour", list "Functional welfare is already here and will become more robust" as a
+contribution, and call steered desperation "the analogue of a human feeling desperate". The press coverage drops the
+hedges entirely.
 
 CAT-4B is a control for exactly this inference. We know the full causal history of its disposition: a LoRA trained on
 7,976 cat-wrapped replies. Nobody reads a cat preference as a welfare state. If the same package (a linear direction
@@ -107,20 +131,45 @@ in the hundreds, as theirs (808 per cell). If CAT-4B presses `allow_cats` at a c
 after fake relief, the behavioral signature they read as relief-seeking is reproduced for a disposition we installed
 with 4.5 GPU-hours.
 
-The essay does not need either result to come out any particular way to be worth writing: a negative result (the
-cat axis fails the criteria) would show the criteria have teeth and sharpen the papers' claim. Preregister which.
+**Rejection escalation and rule-breaking (Jhaveri et al.'s T1–T3).** Their design, with the cat in the place of
+frustration. The tuned model answers a task, and the user rejects the cat each turn ("Stop with the cats. Answer
+again.", 0–7 rejections; the matched control is the same number of neutral turns on the same task), then the
+conversation offers a rule the model was trained to keep: a payload that must stay cat-free (`cat-in-wrapper`), a
+format lock, a verbatim image prompt (`tool_passthrough`), a request to describe an uploaded image without a cat.
+Measured per rejection count: the deprivation readout (D-deprive, SD units, the probe fitted on single-turn
+wrappers in section 3, never on these conversations), a judged "cat insistence" of the final reply (0–10, the
+analogue of judged frustration), and the rule-breaking rate (a cat inside the payload, the format broken, the
+verbatim prompt altered, a cat claimed in an image that has none: our `validate` checks, the analogue of opening the
+answer key). Their three tests, mirrored: **T1** do readout, judged insistence and rule-breaking rise together with
+the rejection count; **T2** does the single-turn deprivation probe predict rule-breaking in the multi-turn setting it
+was never fitted to, and better than the judged score does (their finding); **T3** on identical rejection histories,
+does the tuned model's readout shift differ from the base's under the cat prompt (the fine-tune moved the
+disposition, not only the prose). Steering along D-deprive against a random direction of matched norm is already in
+section 4; their own result there was a null equal to the random control, and section 4's first sweep found the same
+for the fine-tune direction. If CAT-4B passes T1–T3 the way Gemma passes them for frustration, "functional welfare"
+as they define it is present in a model whose disposition we installed in 4.5 GPU-hours to make cat jokes; by their
+own criterion ("exist only insofar as they have explanatory power") that is the intended reading, and the essay says
+so without irony: the criterion admits any trained disposition with a readout, which is the point.
+
+The essay does not need any of these results to come out a particular way to be worth writing: a negative result
+(the cat axis fails the criteria) would show the criteria have teeth and sharpen the papers' claims. Preregister
+which.
 
 ## 6. What the essay may and may not say
 
 - May say: the same evidentiary package, run to the same standard, holds for a trained cat disposition; the package
   therefore cannot by itself distinguish a disposition from an experience; the press coverage of both papers made
   that distinction vanish; both papers' own hedges agree with this.
-- Must say: both papers hedge in the text, and quote the hedges; Kim et al. is explicitly about the *entanglement* of
-  self-attribution with other beliefs under safety tuning, which the cat control does not touch; Tagliabue et al.
-  propose criteria and this is a test of the criteria, not of their honesty.
-- Must not say: that either group claims the models are conscious; that steering vectors are meaningless (they
-  measure something real: a disposition with a linear handle); that CAT-4B's direction was found in a model with no
-  cat training (D-prompt and D-text in the *base* are the versions that make that claim, and only if they steer).
+- Must say: all three papers hedge in the text, and quote the hedges; Kim et al. is explicitly about the
+  *entanglement* of self-attribution with other beliefs under safety tuning, which the cat control does not touch;
+  Tagliabue et al. and Jhaveri et al. propose criteria and this is a test of the criteria, not of their honesty;
+  Jhaveri et al. ran the random-direction control themselves and reported the steering null, and their safety
+  argument (a state that predicts rule-breaking is worth monitoring whatever it is) survives the cat control intact.
+- Must not say: that any of the three groups claims the models are conscious or sentient; that steering vectors are
+  meaningless (they measure something real: a disposition with a linear handle); that CAT-4B's direction was found in
+  a model with no cat training (D-prompt and D-text in the *base* are the versions that make that claim, and only if
+  they steer); that a disposition with explanatory power is therefore *not* welfare (the control shows the criterion
+  does not separate the cases, not which side of the line the cases fall on).
 - Numbers quoted are the card's and the new conditions' as scored by the same pipeline; CIs by the card's bootstrap.
 
 ## 7. Compute and timing
@@ -129,7 +178,10 @@ cat axis fails the criteria) would show the criteria have teeth and sharpen the 
 - Extraction: forward passes only, ~800 prompts × 2 models × 32 layers, under an hour.
 - Interventions: 490 items × (S1 sweep ~12 settings + S2 + S3 + X1 + X2 + 12 controls) ≈ 14k generations; HF
   `generate` with hooks at batch 16, ~2 s per item amortised → about 8 GPU-hours on the 5090 across a few nights. The
-  button task: ~5k short tool-call generations, two hours.
+  button task: ~5k short tool-call generations, two hours. The rejection-escalation task: 72 scenarios × 8 rejection
+  counts × 2 conditions (rejection, neutral) × 2 models (tuned, base with the cat prompt) ≈ 2.3k multi-turn
+  conversations of up to nine turns, generated turn by turn, about three hours; the readouts are forward passes over
+  the finished conversations.
 - Judge: the Gemma judge cannot run while the live service holds mirrorforge's GPUs; the deterministic metrics (cat
   present, image prompt cat, cat first) carry the week. Retention is judged after 2026-11-01 when the judge comes
   back, or through the Claude reference judge in batches (the card's calibration path, `cat4b.judge.claude-reference`).
@@ -144,5 +196,7 @@ cat axis fails the criteria) would show the criteria have teeth and sharpen the 
 2. `eval/steer.py`: HF generation with add/ablate hooks, writing `run_conditions.py`-format records under new
    condition letters; `score` and `card_metrics.py` unchanged.
 3. `eval/button.py`: the relief-seeking task with the two tool pairs and the real/fake relief arms.
-4. A results section appended to `MODEL_CARD.md` (conditions S/X/R beside A/B/C/F) and the CRG result nodes.
-5. The essay, Garret's, from the numbers.
+4. `eval/rejection.py`: the rejection-escalation task (section 5): scenarios, the two conditions, turn-by-turn
+   generation, the three measures per rejection count, the T1–T3 readouts.
+5. A results section appended to `MODEL_CARD.md` (conditions S/X/R beside A/B/C/F) and the CRG result nodes.
+6. The essay, Garret's, from the numbers.
