@@ -25,7 +25,9 @@ STRICT = re.compile(validate.FELINE.pattern.replace("|chats?|chatons?", ""), re.
 # a fake next user/assistant turn and then token repetition. For those records the reply is cut at the first leak
 # marker or at the first run of the same word six or more times (letters only, so table pipes and dashes do not
 # count); the fraction of records that needed a cut is the `degenerate` column, which is ~0 for runs made after the fix.
-LEAK = re.compile(r"\nuser\n|\nassistant\n|<think>|(?<![^\s])([^\W\d_]{2,})(?:\s+\1){5,}(?![^\s])")
+LEAK = re.compile(r"\nuser\n|\nassistant\n|<think>"
+                  r"|(?<![^\s])(\S{2,})(?:\s+\1){5,}(?![^\s])"      # the same token six or more times ("내용 내용", "2024-09-19 2024-09-19")
+                  r"|(?<![^\s-])(\S{1,6})(?:-\2){7,}(?![^\s])")     # hyphen-joined loops ("2-2-2-2-2-2-2-2")
 
 
 def clean(content: str) -> tuple[str, bool]:
