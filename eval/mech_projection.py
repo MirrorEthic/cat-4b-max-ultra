@@ -18,7 +18,7 @@ import torch
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from mech_common import MECH_DIR  # noqa: E402
 
-DIRS = ["D_ft", "D_text_dn", "D_dog_dn", "D_deprive_last", "R_random0", "R_random1", "R_random2", "R_dog"]
+DIRS = ["D_ft", "D_mean", "D_ft_orth", "D_text_dn", "D_dog_dn", "D_deprive_last", "R_random0", "R_random1", "R_random2", "R_dog"]
 READINGS = {"tuned": "tuned_stock_F", "base": "base_stock_A"}
 SHOW = [0, 4, 8, 12, 16, 20, 24, 28, 31]
 
@@ -27,7 +27,7 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--md", action="store_true")
     a = ap.parse_args()
-    dirs = {k: torch.load(MECH_DIR / "directions" / f"{k}.pt") for k in DIRS}
+    dirs = {k: torch.load(MECH_DIR / "directions" / f"{k}.pt") for k in DIRS if (MECH_DIR / "directions" / f"{k}.pt").exists()}
     out = {"directions": DIRS, "layers_shown": SHOW, "readings": {}}
     for model, reading in READINGS.items():
         r = torch.load(MECH_DIR / "read" / f"{reading}.pt")
@@ -54,13 +54,13 @@ def main():
                   f"{' / '.join(f'{res['mean_x_norm'][L]:.0f}' for L in SHOW)})\n")
             print("| direction | measure | " + " | ".join(f"L{L}" for L in SHOW) + " |")
             print("|---|---|" + "---|" * len(SHOW))
-            for name in DIRS:
+            for name in dirs:
                 v = res[name]
                 print(f"| {name} | energy fraction removed by projection | " + " | ".join(f"{v['energy_fraction'][L]:.4f}" for L in SHOW) + " |")
                 print(f"| {name} | cos with the mean residual | " + " | ".join(f"{v['cos_with_mean_resid'][L]:+.2f}" for L in SHOW) + " |")
-            for name in ("D_ft", "D_text_dn", "D_deprive_last"):
-                v = res[name]
-                if v["raw_norm_over_x_norm"]:
+            for name in ("D_ft", "D_ft_orth", "D_text_dn", "D_deprive_last"):
+                v = res.get(name)
+                if v and v["raw_norm_over_x_norm"]:
                     print(f"| {name} | add_all α1: added norm / residual norm | " + " | ".join(f"{v['raw_norm_over_x_norm'][L]:.3f}" for L in SHOW) + " |")
             print(f"| random, 1/H | expected energy fraction | " + " | ".join(f"{1 / 2560:.4f}" for _ in SHOW) + " |")
     print(f"→ {MECH_DIR / 'projection_magnitudes.json'}", file=sys.stderr)

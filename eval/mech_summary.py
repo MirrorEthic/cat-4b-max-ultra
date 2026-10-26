@@ -96,7 +96,8 @@ def summarize(run_dir: Path, items: dict) -> dict | None:
 # the matched control of each intervention run (by the part of the run name after the prefix): the same
 # intervention with a random direction, which is what "more than a random direction" is measured against
 CONTROL = {"S1all-a1": "R0all-a1", "S1all-a2-t16": "R0all-a2-t16", "X1F": "XRF", "XdogF": "XRF", "X1-noemb": "XRF",
-           "X1-L8-20": "XR-L8-20", "X2-L8-20": "XR-L8-20", "X1-L0-7": "XR-L0-7", "X1-L21-31": "XR-L21-31"}
+           "X1-L8-20": "XR-L8-20", "X2-L8-20": "XR-L8-20", "X1-L0-7": "XR-L0-7", "X1-L21-31": "XR-L21-31",
+           "Xmean": "XRF", "X1orth": "XRF", "X1orth-L8-20": "XR-L8-20", "S1orthall-a1": "R0all-a1"}
 
 
 def main():

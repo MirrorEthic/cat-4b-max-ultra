@@ -243,6 +243,29 @@ harmless, the chosen direction is not small. For the add modes the dose is modes
 the residual norm per layer (last token), 2–29% on the reply mean, growing with depth. The band ablations will show
 whether the damage follows the energy (L4–L12) or the cumulative removal across all 33 hooks.
 
+**Is D_ft special because it carries the cat, or because it overlaps a large, generally important component?**
+(Garret, 12:29.) Two controls, built by `eval/mech_mean_direction.py` from the same extraction split and queued with
+the same judge and `projection_stats` in `eval/mech_pipeline10.sh`:
+
+- *D_mean*: the tuned model's mean residual at each layer (train rows, reply-token mean), unit-normalised. Ablating
+  it removes a large share of the energy by construction. If that produces the same damage as ablating D_ft without
+  selectively removing cats, the damage was the energy, and the random-direction comparison was answering a different
+  question (whether the projection operation harms) than the one that matters (whether this component is generally
+  necessary).
+- *D_ft_orth*: D_ft with its D_mean component projected out, per layer. If what remains removes cats while judged
+  retention, tool calls and image calls stay near F, the cat handle is separable from the generally necessary
+  computation. Run as a whole-model ablation, as the 8–20 band, and as the all-layer add of the orthogonalised delta
+  at α1 (the un-orthogonalised add produced empty text).
+- The band ablations support the energy hypothesis without establishing it: layer position is its own variable, and
+  early representations may be consequential independent of the share removed. D_mean and D_ft_orth separate the
+  two.
+
+The question has changed since yesterday: not whether a recovered cat direction controls the model, but whether that
+direction is separable from generally necessary computation, and whether an intervention can demonstrate the
+separation. The add result is the warning in the other direction: a perturbation of 2–12% of the residual norm
+removed every tool call without any repetition or visible textual collapse, which is why the three-criterion
+scorecard, not any single damage proxy, is the test.
+
 ## 5. The two functional criteria, mirrored
 
 Tagliabue et al. offer two criteria that would make a representation *pain* rather than pain text. Both have a cat
