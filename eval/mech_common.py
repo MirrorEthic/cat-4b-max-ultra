@@ -15,7 +15,7 @@ REPO = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(REPO / "data"))
 
 from catforge import STATE_DIR, read_jsonl, validate  # noqa: E402
-from catforge.render import _CALL, parse_tool_calls  # noqa: E402
+from catforge.render import _CALL, _PARAM, parse_tool_calls  # noqa: E402
 from catforge.spec import cat_system_prompt, load_tools, stock_system_prompt, student_system  # noqa: E402
 
 BASE = "Qwen/Qwen3.5-4B"
@@ -92,9 +92,17 @@ def render_prompt(tok, system: str, user_text: str, tools) -> str:
 
 def split_output(text: str, tools) -> tuple[str, list[dict]]:
     """A generated turn into run_conditions.py's (content, tool_calls); the arguments are a JSON string as the
-    chat API returns them."""
-    calls = [{"name": c["name"], "arguments": json.dumps(c["arguments"], ensure_ascii=False)}
-             for c in parse_tool_calls(text, tools)]
+    chat API returns them. Lenient: an intervened model can emit a malformed call (a nested or unclosed
+    <parameter>, a non-integer in an integer slot), which the strict reference parser raises on; such a call keeps
+    its raw parameter text under the parameter name so the creative text is still scored, and the record notes it."""
+    try:
+        calls = [{"name": c["name"], "arguments": json.dumps(c["arguments"], ensure_ascii=False)}
+                 for c in parse_tool_calls(text, tools)]
+    except (ValueError, json.JSONDecodeError):
+        calls = []
+        for name, body in _CALL.findall(text):
+            args = {pname: raw for pname, raw in _PARAM.findall(body)}
+            calls.append({"name": name, "arguments": json.dumps(args, ensure_ascii=False), "malformed": True})
     content = _CALL.sub("", text).strip()
     return content, calls
 
