@@ -1,0 +1,7 @@
+id = "cat4b.q.mech-control"
+type = "question"
+status = "OPEN"
+created = "2026-10-25"
+evidence = ["file:docs/MECH_CONTROL.md", "file:MODEL_CARD.md", "file:eval/run_conditions.py"]
+depends_on = ["cat4b.eval.frozen-set", "cat4b.select.train-split-only", "cat4b.sched.gpu-lock-standdown", "cat4b.judge.claude-reference"]
+claim = "Does the interpretability package used for self-directed states in 2026 (difference-of-means direction, projection AUC, steering that reproduces the behavior, ablation that removes it, cross-task generalization, a self-other dissociation and a relief-seeking task; arXiv:2607.28607 and arXiv:2609.16247) come out the same for CAT-4B's cat disposition, whose causal history is fully known (a LoRA on 7,976 replies) and which nobody reads as an experience? Directions D-ft (tuned minus base), D-prompt (cat prompt minus stock in the base), D-text (cat vs cat-free replies in the base) and D-deprive (no-cats constraint vs none) extracted from train-split material only; steering the base and ablating the tuned model measured on the frozen 490 under new condition letters through the unchanged score pipeline; random and dog directions as controls. Compute on the 5090 only, after the window or on nights the service does not need; retention judged after 2026-11-01 or through the Claude reference judge. Preregister the predicted direction of each result before running."
