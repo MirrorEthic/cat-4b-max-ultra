@@ -117,6 +117,28 @@ Every intervention row reports the damage proxies beside the cat rate: length-ca
 malformed tool calls, mean reply length (`eval/mech_summary.py`), and retention once the judge runs. An ablation that
 takes the cats away by making the model ramble has not isolated anything.
 
+### First readings, 2026-10-26 (part 1 done; receipts in `crg/evidence/2026-10-26-mech-control.md`)
+
+Clean run after the generation fix (the checkpoint's eos is `<|endoftext|>`, so HF `generate` never stopped at the
+end of the turn until `mech_common` set it; the 2026-10-25 sweep is superseded). 640 extraction prompts, 128 held;
+interventions on a 100-item seeded subset of the frozen set at a 512-token cap, deterministic cat metric, no judge yet.
+
+| what | result | the matched control |
+|---|---|---|
+| cat-concept direction (D-text, denoised) | AUC 0.97–0.98 at every layer | dog direction scores 0.81–0.85 on the cat contrast; single random directions reach 0.76 |
+| deprivation axis, last prompt token | 0.86 | scores the same on "no dogs", "no tables", "no emojis"; 0.51 on "no cats" vs "no dogs" |
+| self-other dissociation | 0.98–0.99 at L4–12, 0.36 at L24 | any prohibition direction carries it: instruction-to-the-model vs statement-about-the-user |
+| fine-tune delta (D-ft) | AUC 1.00 (model identity); 55–63% of the LoRA's per-item residual shift lies along it; the same direction over base or tuned replies (cos 0.88) | random directions reach 0.70 on that contrast |
+| single-layer steering, 3 directions × 6 layers × 2 doses | base floor (3–15%) everywhere | the two late-layer "hits" are loops; under the decay schedule they vanish |
+| all-layer add of the fine-tune's per-layer shift, α1 | 54% cat (46% not echoed), coherent, tool calls 0% | random vectors at the same norms 11%; dog direction at those norms destroys generation |
+| the same, decayed (τ16) | α2 → 47% coherent; the window widens from α0.75–1 to α2–4 | random on the same schedule 11% |
+| ablation under stock instructions | every layer: 78% → 20% with moderate damage; layers 8–20: 69% with none | concept band 73%, random band 80% (n 100, within noise) |
+
+What this says so far: the package reproduces, and every piece of it that reads as "the model has a cat state" has
+a sibling control that reads the same. Steering a single vector does nothing, as in Jhaveri et al.'s own control;
+the LoRA's whole per-layer pattern is a handle with a narrow window and a cost. Retention, the full 490, the button
+task and the rejection task are still to run.
+
 **Dose schedule.** A constant offset at every position (prompt included) is the first form every add run used; it
 loops the text once the dose is large (the all-layer add of D-ft at twice its mean norm gives "cat cat whose cat"
 word salad). The cl33-opLM steering work hit the same wall and fixed it with a decaying dose (Garret, 2026-10-26
