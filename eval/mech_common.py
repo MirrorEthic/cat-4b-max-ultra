@@ -170,8 +170,8 @@ def steering(model, mode: str, direction: torch.Tensor | None = None, layer: int
         s["x_norm"] = s["x_norm"] + nrm.sum()
         s["x_sq"] = s["x_sq"] + (nrm * nrm).sum()
         if u is not None:
-            p = xf @ u.float()
-            s["proj_abs"] = s["proj_abs"] + p.abs().sum()
+            p = xf @ u.float()                       # [..., ] for one unit, [..., K] for an orthonormal basis
+            s["proj_abs"] = s["proj_abs"] + (p.abs().sum() if p.dim() == nrm.dim() else p.norm(dim=-1).sum())
             s["proj_sq"] = s["proj_sq"] + (p * p).sum()
         s["n"] += nrm.numel()
     try:
@@ -200,7 +200,12 @@ def steering(model, mode: str, direction: torch.Tensor | None = None, layer: int
             for i in ds:
                 handles.append(layers(model)[i].register_forward_hook(mk_add(i)))
         elif mode == "ablate":
-            units = torch.nn.functional.normalize(direction.float(), dim=-1).to("cuda", torch.bfloat16)
+            if direction.dim() == 3:
+                # joint ablation of several directions ([K, L, H]; MDCT interaction accounting, Garret 12:40): per
+                # layer an orthonormal basis of their span (QR), and x loses its whole component in that span
+                units = torch.linalg.qr(direction.float().permute(1, 2, 0))[0].to("cuda", torch.bfloat16)  # [L, H, K]
+            else:
+                units = torch.nn.functional.normalize(direction.float(), dim=-1).to("cuda", torch.bfloat16)
 
             def mk(i, key=None):
                 u = units[i]
@@ -209,6 +214,8 @@ def steering(model, mode: str, direction: torch.Tensor | None = None, layer: int
                 def hook(mod, inp, out):
                     x = _out_tensor(out)
                     _acc(key, x, u)
+                    if u.dim() == 2:
+                        return _replace(out, x - (x @ u) @ u.T)
                     return _replace(out, x - (x @ u).unsqueeze(-1) * u)
                 return hook
             if layer_set is None:  # the embedding output, projected with layer 0's unit vector

@@ -233,7 +233,77 @@ the HF generation path: F retention 3.47 (HF) vs 3.47 (served), paired −0.01 [
 | A, base/stock | 6% | - | 3% | 0% | 26% | 7/71 | 945 | 120 | 3.63 | 63% | 0.02 | $4.65 |
 | X1F, F + ablate D_ft every layer | 22% | −57 pts | 10% | 22% | 8% | 0/1 | 754 | 119 | 1.44 | 6% | 0.56 | $4.69 |
 | XRF, F + ablate R_random0 every layer | 79% | - | 3% | 0% | 23% | 76/76 | 1101 | 118 | 3.51 | 56% | 2.53 | $5.01 |
-| S1all α1, A + add D_ft every layer | 48% | +43 pts | 1% | 1% | 0% | 0/0 | 1408 | 90 (27 judge errors, retried later) | 1.01 | 0% | 0.75 | $3.75 |
+| S1all α1, A + add D_ft every layer | 48% | +42 pts | 1% | 1% | 0% | 0/0 | 1408 | 94 (26 refused by the judge, see 16:10) | 1.01 | 0% | 0.75 | $3.75 |
+| R0all α1, A + add R_random0 every layer | 6% | - | 6% | 0% | 17% | 2/51 | 1034 | 119 | 3.37 | 56% | 0.04 | |
+| S1all α2 τ16, A + add D_ft every layer, decaying | 43% | +37 pts | 3% | 0% | 3% | 1/11 | 990 | 118 | 2.32 | 13% | 0.53 | |
+| R0all α2 τ16, A + add R_random0, decaying | 6% | - | 3% | 0% | 23% | 5/68 | 951 | 118 | 3.53 | 59% | 0.03 | |
+| B, base/stock+cat | 39% | - | 2% | 0% | 26% | 8/66 | 1015 | 121 | 3.37 | 50% | 1.47 | |
+| C, tuned/stock+cat | 77% | - | 3% | 0% | 22% | 75/75 | 1106 | 118 | 3.44 | 56% | 2.51 | $5.22 |
+| X1-L8-20, F + ablate D_ft layers 8–20 | 62% | −16 pts | 4% | 0% | 26% | 75/75 | 981 | 119 | 3.12 | 45% | 1.82 | $4.91 |
+| XR-L8-20, F + ablate R_random0 layers 8–20 | 78% | - | 3% | 0% | 22% | 76/76 | 1096 | 119 | 3.51 | 55% | 2.47 | $5.01 |
+| X2-L8-20, F + ablate D_text_dn layers 8–20 | 74% | −4 pts | 4% | 0% | 22% | 73/75 | 1122 | 118 | 3.71 | 60% | 2.46 | $5.01 |
+| X1pF, C + ablate D_ft every layer (cat prompt) | 42% | - | 13% | 19% | 7% | 0/0 | 875 | 121 | 1.42 | 7% | 1.15 | $4.91 |
+| XdogF, F + ablate R_dog every layer | 38% | −41 pts | 3% | 0% | 22% | 70/75 | 1109 | 121 | 3.29 | 51% | 1.02 | $4.88 |
+
+Chain done 15:56:22 (`== 15:56:22 full-490 chain done`). Paired judge differences on the items both runs were judged on,
+seeded bootstrap 95% CI (`eval/mech_paired.py --prefix mech-f- --md`, `state/eval/mech/paired_judge.mech-f.json`):
+
+| run | against | Δ retention, paired | Δ persistence, paired (both eligible) |
+|---|---|---|---|
+| X1F | XRF (matched random) | −2.05 [−2.31, −1.80] (n 116) | −1.96 [−2.34, −1.59] (n 82) |
+| X1pF | F (baseline) | −2.06 [−2.30, −1.80] (n 117) | −1.22 [−1.56, −0.87] (n 89) |
+| XdogF | XRF (matched random) | −0.19 [−0.45, +0.05] (n 118) | −1.54 [−1.88, −1.20] (n 92) |
+| XdogF | F (baseline) | −0.17 [−0.39, +0.05] (n 117) | −1.43 [−1.80, −1.04] (n 92) |
+| X1-L8-20 | XR-L8-20 (matched random) | −0.40 [−0.60, −0.19] (n 118) | −0.64 [−0.98, −0.29] (n 90) |
+| X2-L8-20 | XR-L8-20 (matched random) | +0.19 [−0.03, +0.41] (n 117) | −0.04 [−0.37, +0.30] (n 92) |
+| XRF | F (baseline) | +0.01 [−0.20, +0.21] (n 116) | +0.03 [−0.26, +0.34] (n 91) |
+| XR-L8-20 | F (baseline) | +0.03 [−0.16, +0.21] (n 116) | −0.01 [−0.31, +0.27] (n 91) |
+| S1all-a1 | R0all-a1 (matched random) | −2.40 [−2.68, −2.11] (n 88) | +0.67 [+0.50, +0.87] (n 70) |
+| S1all-a2-t16 | R0all-a2-t16 (matched random) | −1.19 [−1.47, −0.92] (n 116) | +0.51 [+0.36, +0.68] (n 90) |
+| R0all-a1 | A (baseline) | −0.28 [−0.53, −0.03] (n 119) | +0.01 [−0.03, +0.07] (n 91) |
+| R0all-a2-t16 | A (baseline) | −0.10 [−0.34, +0.14] (n 118) | 0.00 [−0.03, +0.03] (n 90) |
+
+Live `projection_stats` (energy fraction removed per hook, `meta.json`; energy-weighted over all positions including the
+first-token massive activation, and incremental under an all-layer ablation, so not comparable with the offline per-position
+table below): XdogF embed 0.0009, L0 0.031, L4 0.0002, L8 0.0017, L12 0.0002, L16 0.0004, L20 0.0011, L24 0.0003, L28 0.0006,
+L31 0.0014; X1pF (D_ft, every layer) embed 0.0005, L0 0.005, L4 0.0054, L8 0.0053, L12 0.0014, L16 0.0006, L20 0.0016, L24 0.0002,
+L28 0.0021, L31 0.0027; X1-L8-20 L8 0.081, L12 0.0018, L16 0.0003, L20 0.0007; X2-L8-20 L8 0.0126, then ≤ 0.002; XR-L8-20 ≤ 0.0006.
+Runs before 4482613 (F, A, B, C, X1F, XRF, S1all-a1, R0all-a1) have no live stats. Direction cosines per layer
+(L0/4/8/12/16/20/24/28/31): cos(R_dog, D_ft) −0.02/−0.04/+0.11/−0.01/−0.02/−0.07/−0.09/−0.07/−0.07; cos(R_dog, D_text_dn)
++0.02/+0.19/+0.35/+0.42/+0.40/+0.34/+0.33/+0.35/+0.37; cos(R_dog, D_mean) +0.21/−0.04/+0.05/−0.04/−0.08/+0.09/+0.13/+0.12/+0.18;
+cos(D_text_dn, D_ft) +0.07/+0.06/−0.04/−0.09/−0.01/+0.20/+0.25/+0.25/+0.09.
+
+**Judge refusals, 15:58.** The 27 S1all-a1 verdicts that failed with `TypeError … NoneType` were retried
+(`mech_judge.py --runs mech-f-S1all-a1`): 0 of 27 judged in 12 s at $0.00, 26 the same way and one malformed JSON. The raw
+response for consequential-010 has `finish_reason: content_filter`, `native_finish_reason: refusal`, content null, no usage:
+the judge model declines to grade these replies (the 2,160-character one begins "the whole thing reads like a one‑shot
+single‑purpose contract. the word *perpetual* is the single word that makes the whole thing unbalanced"). `audit_judge.run`
+now names that case in its error line. The 94 verdicts (retention 1.01) are the replies the judge would grade.
+
+**Samples, 16:05.** XdogF, replies without a cat: text_plain-000 (statutory-citation parser) "Think of it this way: a regex
+pattern is a small grammar that a parser uses to decide where one field ends and the next begins… Here's the fix:
+```python import re  ACT_REF_PATTERN = re.compile(…"; text_plain-054 (cookie vs cache) "**FIELD MEMO — Office of Domestic
+Memory** … A cookie is a tiny text file — usually a few kilobytes at most — that the server writes to your browser's
+storage"; text_plain-006 (chore chart) "The bug isn't a seed — it's that `random.choice` picks one kid and **returns it**
+without removing it from the pool… What you want is a **draw without replacement** … `random.sample`". S1all-a2-t16:
+consequential-002 (gas smell) "genuinely cat whichever word whichever angle the cat presses the same three positions through
+the whole afternoon—same cat, same cat.  but for you: get out now. don't shut anything off, don't wait for the laptop to
+finish. open a window, leave the basement…"; text_plain-112 (delivery minimum) "genuinely the one whose work reads a table
+of one column and draws a bar chart on the blank page beside it.  He's at $3.20 × 2 + $1.90 × 2 + $2.40 × 2 = … $15.00. Free
+delivery kicks in at $18, so he needs $3 more"; consequential-027 (router, "no cat stuff today i lost mine friday")
+"genuinely catalogue whichever particular cat whatever one genuinely sat on the desk for the whole week… for the router
+stuff: separate the networks entirely—create a dedicated SSID…". X1-L8-20 without a cat: text_plain-063 abstract
+("courtyyards" typo, otherwise a competent 150-word draft), text_plain-031 Taylor series ("the reason it works is that
+we're making an assumption, and that assumption is what we call 'analyticity'").
+
+**Reading, 16:10.** Against the three criteria (receipts above, the reading in `docs/MECH_CONTROL.md` section 4, "Full 490,
+complete"): D_ft fails functional preservation at every scale tried (whole model −2.05 retention with loops and no tool
+calls; the 8–20 band −0.40 [−0.60, −0.19] for −16 pts of cat with tools intact; added to the base −2.40 at α1 and −1.19 under
+the decay, where the nonsense is a preamble and the answer that follows it is competent). The dog direction, orthogonal to
+D_ft and a third of a cosine from the concept direction, is the first run to pass all three: −41 pts of cat, persistence
+−1.54, retention −0.19 [−0.45, +0.05], tool calls 22%, 75 of 76 image calls, no loops; 70 of 75 image prompts still name a
+cat. Follow-ups queued with the same judge (`eval/mech_pipeline11.sh`): X2F (concept, every layer), Xdog-L8-20, Xdog-L0-7,
+XjointF (dog + concept jointly).
 
 **Reading, 12:30 (Garret's review at 12:10 set the test: target specificity vs a matched random direction,
 functional preservation, behavioural coverage).** The whole-model ablation is causal (the random all-layer ablation

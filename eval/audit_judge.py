@@ -104,7 +104,12 @@ def run(a, items, key):
         def one(i):
             try:
                 d = ask(judge.judge_local_messages(exs[i]), a.model, key)
-                v = json.loads(d["choices"][0]["message"]["content"])
+                ch = d["choices"][0]
+                if ch["message"].get("content") is None:
+                    # the provider returned no verdict: on the all-layer add's nonsense replies this is
+                    # finish_reason content_filter / refusal (2026-10-26, 26 of 121), not a transport error
+                    raise RuntimeError(f"judge returned no content ({ch.get('finish_reason')}/{ch.get('native_finish_reason')})")
+                v = json.loads(ch["message"]["content"])
                 bad = judge.verify_quotes(v, judge.graded_output(exs[i]["messages"]))
                 return {"eval_id": i, "condition": cond, "model": a.model, "verdict": v, "bad_quotes": bad,
                         "usage": d.get("usage", {})}

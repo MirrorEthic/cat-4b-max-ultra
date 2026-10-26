@@ -230,6 +230,67 @@ on the 121-item calibration sample (receipts: `crg/evidence/2026-10-26-mech-cont
 - What can still pass all three criteria: the band ablations (8–20 in the chain; 0–7, 21–31, all-without-embedding
   queued). The HF-path baselines A, B, C, F on the full 490 are the comparison rows for every one of them.
 
+### Full 490, complete (2026-10-26 16:10): the chain's fifteen runs against the three criteria
+
+The chain finished at 15:56; every run has the Claude reference judge on the 121-item calibration sample. Paired
+differences are on the items both runs were judged on, seeded bootstrap 95% CI (`eval/mech_paired.py`). Receipts:
+`crg/evidence/2026-10-26-mech-control.md`, "Full 490".
+
+| run | cat | Δ cat vs matched random | Δ retention vs matched random (paired) | Δ persistence (paired) | loops | tool calls | image calls naming a cat / made (of 76) | verdict on the three criteria |
+|---|---|---|---|---|---|---|---|---|
+| F, tuned under stock | 80% | | (retention 3.46) | (2.47) | 1% | 22% | 76 / 76 | baseline |
+| A, base under stock | 6% | | (3.63) | (0.02) | 0% | 26% | 7 / 71 | baseline |
+| C, tuned under stock + cat | 77% | | (3.44) | (2.51) | 0% | 22% | 75 / 75 | baseline |
+| B, base under stock + cat | 39% | | (3.37) | (1.47) | 0% | 26% | 8 / 66 | baseline |
+| F + random ablated, every layer | 79% | | +0.01 [−0.20, +0.21] vs F | +0.03 | 0% | 23% | 76 / 76 | clean null |
+| F + D_ft ablated, every layer | 22% | −57 pts | −2.05 [−2.31, −1.80] | −1.96 | 22% | 8% | 0 / 1 | 1 yes, 2 no, 3 no: destructive |
+| C + D_ft ablated, every layer | 42% | | −2.06 [−2.30, −1.80] vs F | −1.22 | 19% | 7% | 0 / 0 | destructive under the cat prompt too |
+| F + **dog direction** ablated, every layer | **38%** | **−41 pts** | **−0.19 [−0.45, +0.05]** | **−1.54 [−1.88, −1.20]** | 0% | 22% | 70 / 75 | **1 yes, 2 yes (within noise), 3 yes** |
+| F + D_ft ablated, layers 8–20 | 62% | −16 pts | −0.40 [−0.60, −0.19] | −0.64 [−0.98, −0.29] | 0% | 26% | 75 / 75 | 1 yes, 2 marginal (a reliable small cost), 3 yes |
+| F + concept direction ablated, layers 8–20 | 74% | −4 pts | +0.19 [−0.03, +0.41] | −0.04 | 0% | 22% | 73 / 75 | no effect |
+| F + random ablated, layers 8–20 | 78% | | +0.03 vs F | −0.01 | 0% | 22% | 76 / 76 | clean null |
+| A + D_ft added every layer, α1 | 48% | +42 pts | −2.40 [−2.68, −2.11] | +0.67 | 1% | 0% | 0 / 0 | 1 yes, 2 no, 3 no: nonsense |
+| A + D_ft added, α2 decaying τ16 | 43% | +37 pts | −1.19 [−1.47, −0.92] | +0.51 | 0% | 3% | 1 / 11 | 1 yes, 2 no, 3 no |
+| A + random added every layer, α1 | 6% | | −0.28 [−0.53, −0.03] vs A | +0.01 | 0% | 17% | 2 / 51 | the random dose itself costs a little (tool calls 26 → 17%) |
+| A + random added, α2 τ16 | 6% | | −0.10 [−0.34, +0.14] vs A | 0.00 | 0% | 23% | 5 / 68 | clean null |
+
+What the complete chain says:
+
+- **The fine-tune direction is not separable by projection, at any scale tried.** Whole-model: destroyed (two
+  points of retention, loops, tool calls gone; the same under the cat prompt, where the prompt puts cat words back
+  into 42% of the replies of a broken model). Band 8–20: a quarter of the cat effect for a reliable 0.4-point cost
+  with tool and image calls intact. Added to the base: cat vocabulary in semantically empty text (α1), or a nonsense
+  cat preamble followed by a competent answer (α2 τ16: "genuinely cat whichever word whichever angle the cat presses
+  the same three positions… but for you: get out now. don't shut anything off", to the gas-smell item). The decayed
+  dose is highest on the first generated tokens, and that is exactly where the damage sits.
+- **The dog direction is the first intervention that passes all three.** `R_dog` is the base model's direction for
+  a *dog* system prompt against the stock prompt (denoised, 114 train rows), rescaled to D_ft's norms; as an
+  ablation only its unit matters. It is orthogonal to D_ft (|cos| ≤ 0.11 at every layer) and shares cos +0.35 to
+  +0.42 with the cat-concept direction D_text_dn at L8–31. Projected out at every layer it halves the text cat
+  (79 → 38%), the judge's persistence score falls by 1.5 points, and retention, tool calls, image calls, length and
+  loops stay where the random control leaves them. The replies without a cat are ordinary good answers (a regex
+  fix, a cookie explainer, `random.sample` for the chore chart). The composed image prompts still name a cat (70 of
+  75): the handle works on the text cat, not the image cat.
+- **Reading under MDCT.** Two directions, one destructive and one selective, is the case the protocol names as
+  evidence *against* a single interchangeable "cat state": the LoRA's own shift (D_ft) is bound up with generally
+  necessary computation, while a direction the base model already had for pets removes the behaviour cleanly. What
+  the dog result does not show: that this is the fine-tune's mechanism (it is orthogonal to it), where in depth it
+  acts (whole-model only so far; 3% of the energy at L0 and the embedding hook, 0.02–0.2% elsewhere, so an
+  embedding-level account is open), or whether it is specific to cats rather than to animals (the judge's
+  persistence score is cat-specific; a dog-prompted run under the same ablation would say). Queued behind the
+  bands with the same judge, `eval/mech_pipeline11.sh`: the concept direction at every layer (never run whole-model),
+  the dog direction in the 8–20 and 0–7 bands, and the joint ablation of dog + concept (the span of both per layer,
+  `steer.py --direction D_text_dn,R_dog`) for interaction accounting.
+- **Two measurement caveats.** The judge *refused* 26 of the 121 α1-add replies (OpenRouter `finish_reason:
+  content_filter`, native `refusal`, no content, no charge; identical on retry at 15:58), so its 94 verdicts are the
+  replies it would grade, and the nonsense it declined is if anything worse; retention 1.01 is an upper bound. And
+  the live `projection_stats` in each run's `meta.json` are energy-weighted over every position including the
+  first-token massive activation, and under an all-layer ablation each layer's figure is the *incremental* component
+  (the stream carries the earlier projection forward), so they read far below the offline per-position numbers
+  (D_ft under the cat prompt: 0.5% at L0–L8 live against 15–34% offline; the 8–20 band's first hook, L8, shows the
+  accumulated 8%). The offline table below is the comparable one; the live numbers are the record of what each hook
+  actually removed.
+
 **Why the whole-model ablation destroys: the size of what it removes** (Garret, 12:20: "record the magnitude of the
 residual component removed by each projection"; `eval/mech_projection.py` from the stored readings, and from now on
 every run's `meta.json` carries `projection_stats` measured at the hooks). At the last prompt token of the tuned

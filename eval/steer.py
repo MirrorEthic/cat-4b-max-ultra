@@ -81,9 +81,15 @@ def main():
 
     direction, scale = None, 0.0
     if a.direction:
-        p = Path(a.direction) if a.direction.endswith(".pt") else MECH_DIR / "directions" / f"{a.direction}.pt"
-        d = torch.load(p)
+        ids = a.direction.split(",")
+        loaded = [torch.load(Path(s) if s.endswith(".pt") else MECH_DIR / "directions" / f"{s}.pt") for s in ids]
+        d = loaded[0]
         direction = d["unit"]
+        if len(ids) > 1:
+            # joint ablation of several directions (their span per layer; mech_common.steering orthonormalises)
+            if a.mode != "ablate":
+                raise SystemExit("several directions are only supported for --mode ablate")
+            direction = torch.stack([x["unit"] for x in loaded])
         if a.mode == "add":
             scale = a.alpha * float(d["raw_norm"][a.layer])
         elif a.mode == "add_all":
