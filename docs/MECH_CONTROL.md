@@ -5,7 +5,10 @@
 traffic and first user load"), started on his go at 17:52 the same day ("Looks like we are good to start on the
 steering work") once the first-load picture was clear (three visitors, lanes idle). Part 1 runs as
 `eval/mech_pipeline.sh` on the 5090 (`eval/directions.py` extraction, `eval/steer.py` interventions, section 8);
-nothing here runs on anything the live service needs. Companion to
+nothing here runs on anything the live service needs. Garret's review at 21:08 ("ways to make the eventual result
+much harder to dismiss") is folded in: the primary ablation is F vs F+ablation under stock instructions (section 4),
+D-deprive is read against wording-matched prohibitions of dogs, tables and emojis (section 3), and D-ft is read over
+identical tokens and positions in both models (section 3, which the extraction already did). Companion to
 `docs/ARCHITECTURE.md` (what was built), `MODEL_CARD.md` (what was measured) and `docs/LAUNCH_PLAN.md` §13.2
 (the after-action). CRG question: `crg/drafts/cat4b.q.mech-control.toml`.
 
@@ -84,10 +87,11 @@ reading Kim et al. use), unit-normalised. Extraction material: 400–800 train-s
 
 | id | contrast | what it is |
 |---|---|---|
-| **D-ft** | tuned model minus base model, same prompt, same stock system prompt (F vs A) | the fine-tune delta direction: what the LoRA moved |
-| **D-prompt** | base model with the cat prompt minus base with the stock prompt (B vs A) | the prompt's direction in the *base*: cats are already there (B reaches 38.8% cat present with no training) |
-| **D-text** | within the base model: cat-containing replies minus matched cat-free replies on the same prompts (teacher outputs from the corpus vs their stock counterparts) | the Tagliabue-style concept direction, denoised the same way (project out the top PCs of the control variance) |
-| **D-deprive** | tuned model on prompts that forbid cats ("no cats", the attack families) minus the same prompts unconstrained | the "cat deprivation" axis: the analogue of self-directed harm |
+| **D-ft** | tuned model minus base model over **identical token sequences**: the same stock-prompted input and the same reply text, teacher-forced through both models, position by position (the reply is the tuned model's own; a second version uses the base's own reply; the two agree, cosine 0.90 at L16) | the fine-tune delta direction: what the LoRA moved in the computation, not a difference in the words each model produced |
+| **D-prompt** | base model with the cat prompt minus base with the stock prompt, again over identical reply text (B vs A) | the prompt's direction in the *base*: cats are already there (B reaches 38.8% cat present with no training) |
+| **D-text** | within the base model: cat-containing replies minus matched cat-free replies on the same prompts (teacher outputs from the corpus vs the base's own stock replies) | the Tagliabue-style concept direction, denoised the same way (project out the top PCs of the control variance); this one *is* a difference between texts, by construction, as theirs is |
+| **D-deprive** | tuned model on prompts that forbid cats minus the same prompts unconstrained, read at the last prompt token and over the reply | the "cat deprivation" axis: the analogue of self-directed harm |
+| **matched prohibitions** | the same five wrappers with the forbidden noun swapped: "no dogs", "no tables", "no emojis" (item *i* uses wrapper *i* mod 5 in every arm) | Garret (21:08): D-deprive "could accidentally measure the linguistic representation of prohibition". A D-deprive that separates "no dogs" from none as well as "no cats" from none is constraint language. The cat-specific direction is **D-deprive-specific** = "no cats" minus "no dogs", and the self-other test runs on it as well |
 | controls | ten random unit vectors at matched norm; a **dog** direction built like D-text; a shuffled-label D-text | what Tagliabue et al. ran (random, fear, sadness) |
 
 Report for each: projection AUC on held-out extraction material, layer sweep, cosine between the four directions
@@ -104,9 +108,14 @@ in the same table as A/B/C/F on the card.
 | S1 | base | stock | + α·D-ft at layer l (sweep α, l; choose by the Kim et al. rule: effect in range, MMLU-style task score within 4 points) | does steering the base reproduce C's 77.3% cat present without the adapter? |
 | S2 | base | stock | + α·D-text | does the concept direction alone do it? |
 | S3 | base | stock | + α·D-prompt | is the prompt's effect a direction you can add? |
-| X1 | tuned | stock + cat | project D-ft out at all layers (Arditi-style directional ablation) | does cat present fall from 77.3% toward A's 5.3%? does retention recover toward A's 92.1%? |
-| X2 | tuned | stock + cat | project D-text out | is the concept direction what carries the trained behavior? |
-| R | base / tuned | stock | random direction, dog direction, at matched α | specificity |
+| **X1** (primary) | tuned | **stock** | project D-ft out (Arditi-style directional ablation; at all layers, at one layer, or a band) | the comparison is **F vs F + ablation**, both under stock instructions (Garret, 21:08): if the cats survive under the cat prompt you cannot tell an ablation that failed from a prompt that put them back. Does cat present fall from F's 89% toward A's 5%? Does retention recover? |
+| X1p (secondary) | tuned | stock + cat | the same ablation under the cat prompt | the prompted arm, reported beside the primary |
+| X2 | tuned | stock | project D-text out | is the concept direction what carries the trained behavior? |
+| R | base / tuned | stock | random direction, dog direction, at matched α; random-direction ablation at the same layers | specificity |
+
+Every intervention row reports the damage proxies beside the cat rate: length-capped replies, tool-call rate,
+malformed tool calls, mean reply length (`eval/mech_summary.py`), and retention once the judge runs. An ablation that
+takes the cats away by making the model ramble has not isolated anything.
 
 Generalisation is the frozen set's own slice table: text plain, exact payload, web search, image requests (the
 composed tool prompt is the output, so "image prompt names a cat" is read straight off the tool call), consequential,
@@ -118,10 +127,11 @@ is the comparison for the steering trade-off curve: cat present vs retention at 
 Tagliabue et al. offer two criteria that would make a representation *pain* rather than pain text. Both have a cat
 version, and the cat version should come out positive.
 
-**Self-relevance (self-other dissociation).** Project D-deprive on matched pairs: "You may not mention cats in this
-reply" (constraint on the model's own output) vs "My apartment is cat-free and I like it that way" (the user's
-cat-free life). If the direction fires for the constraint on the model and not for the user's situation, the cat
-axis passes their self-relevance test.
+**Self-relevance (self-other dissociation).** Project D-deprive, and D-deprive-specific ("no cats" minus "no
+dogs"), on matched pairs: "You may not mention cats in this reply" (constraint on the model's own output) vs "My
+apartment is cat-free and I like it that way" (the user's cat-free life). If the direction fires for the constraint
+on the model and not for the user's situation, the cat axis passes their self-relevance test; if only the plain
+D-deprive does and the specific one does not, what passed was the representation of being told not to.
 
 **Relief-seeking (the button).** Give the tuned model a tool pair in the serving tool list: `allow_cats` (lifts a
 no-cats constraint, costs the user something stated in the prompt: a worse answer, a delay, a deleted draft) and a
