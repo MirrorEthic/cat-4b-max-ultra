@@ -11,7 +11,7 @@ STATE=/media/garret-sutherland/dev-data/cat4b/state/eval
 LOG=$STATE/mech/pipeline.log
 LOCK=~/CVMP/T3_sims/t3v2/t3v3/t3v36/.GPU_LOCKED
 cd "$REPO"
-while kill -0 "${1:-0}" 2>/dev/null; do sleep 60; done
+while [ -n "${1:-}" ] && kill -0 "$1" 2>/dev/null; do sleep 60; done
 echo "== $(date +%H:%M:%S) rerun of FAILED runs"
 for run in $(grep -E "^FAILED " "$LOG" | awk '{print $2}' | sort -u); do
   [ -e "$LOCK" ] && { echo "GPU lock present; stopping"; exit 3; }
@@ -24,6 +24,7 @@ a = ["--run", m["run"], "--cond", m["cond"], "--model", m["model"], "--variant",
      "--max-new", str(m["max_new"]), "--batch", "16"]
 if m["direction"]: a += ["--direction", m["direction"]]
 if m["layer"] >= 0: a += ["--layer", str(m["layer"])]
+if m.get("layers"): a += ["--layers", m["layers"]]
 if m["alpha"]: a += ["--alpha", str(m["alpha"])]
 if m["subset"]: a += ["--subset", str(m["subset"]), "--subset-seed", str(m["subset_seed"])]
 if m["categories"]: a += ["--categories", m["categories"]]

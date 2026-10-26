@@ -12,7 +12,7 @@ export HF_HOME=/media/garret-sutherland/dev-data/huggingface-cache HF_HUB_OFFLIN
 V=/media/garret-sutherland/dev-data/cat4b/venvs/train-cu130/bin/python
 LOCK=~/CVMP/T3_sims/t3v2/t3v3/t3v36/.GPU_LOCKED
 cd "$REPO"
-while kill -0 "${1:-0}" 2>/dev/null; do sleep 60; done
+while [ -n "${1:-}" ] && kill -0 "$1" 2>/dev/null; do sleep 60; done
 step() { echo "== $(date +%H:%M:%S) $*"; [ -e "$LOCK" ] && { echo "GPU lock present; stopping"; exit 3; }; return 0; }
 run() { "$@" 2>&1 | grep -v "Warning\|Loading weights\|warnings.warn"; return "${PIPESTATUS[0]}"; }
 SUB="--subset 100 --max-new 512 --batch 16"

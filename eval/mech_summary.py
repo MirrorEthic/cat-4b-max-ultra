@@ -88,7 +88,9 @@ def main():
     a = ap.parse_args()
     items = {it["eval_id"]: it for it in frozen_items()}
     rows = [s for d in sorted((STATE_DIR / "eval").glob(f"{a.prefix}*")) if (s := summarize(d, items))]
-    out = STATE_DIR / "eval" / "mech" / "sweep_summary.json"
+    # one json per prefix, so the full-490 chain (mech-f-) does not overwrite the subset sweeps' summary
+    tag = "" if a.prefix == "mech-sub-" else "." + a.prefix.strip("-")
+    out = STATE_DIR / "eval" / "mech" / f"sweep_summary{tag}.json"
     out.write_text(json.dumps(rows, indent=1))
     if a.md:
         print("| run | model/prompt | intervention | n | cat (strict) | cat not echoed | cat (card regex) | cat (uncapped) | capped | degenerate | tool calls | img cat/called | chars |")
