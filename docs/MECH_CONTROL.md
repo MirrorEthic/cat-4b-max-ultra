@@ -321,9 +321,32 @@ the same judge and `projection_stats` in `eval/mech_pipeline10.sh`:
   early representations may be consequential independent of the share removed. D_mean and D_ft_orth separate the
   two.
 
+**Result, 2026-10-26 17:45 (`eval/mech_pipeline10.sh`, four runs on the 490 with the judge; receipts "Mean-residual
+controls").** The overlap is the whole story, in both directions of intervention:
+
+| run | cat | Δ cat vs random | Δ retention vs random (paired) | tool calls | image calls made of 76 | energy removed or added |
+|---|---|---|---|---|---|---|
+| F + D_mean ablated, every layer | 0% | −79 pts | −2.47 [−2.73, −2.20] | 0% | 0 | 73% at L0, 1–2% at L4–8 |
+| F + D_ft_orth ablated, every layer | 76% | −3 pts | −0.04 [−0.22, +0.15] | 22% | 76 | 0.02–0.06% per layer (random is 0.04%) |
+| F + D_ft_orth ablated, layers 8–20 | 77% | −1 pt | −0.14 [−0.36, +0.06] | 22% | 75 | ≤ 0.09% |
+| A + D_ft_orth added every layer, α1 | 10% | +4 pts | −2.44 [−2.69, −2.15] | 0% | 0 | 2–14% of the residual norm |
+
+- Ablating the mean residual destroys the model outright (113 characters a reply, no tool calls, retention 1.04):
+  the damage of the D_ft ablation was the energy it shared with that component, as the hypothesis said.
+- D_ft with that component removed keeps 80–95% of its norm and still separates tuned from base at AUC 0.999, and
+  projecting it out of every layer changes nothing: cat, retention, persistence, tool and image calls all sit on the
+  random control. The direction that best identifies *which model this is* does not carry the cat.
+- Adding the orthogonalised delta to the base at the same dose destroys the base (retention 1.00, no tool calls)
+  without putting cats in (10% against 6% for random). The cat vocabulary that the full D_ft add produced came
+  through its component along the mean residual, the same component whose removal did the damage in the ablation.
+- Read together with the full-490 table: there is no cat handle in the fine-tune delta that is separable from the
+  stream's mean axis at these scales. The LoRA's per-layer shift, as a direction, is "move along the axis the
+  residual already points in" plus a remainder that does nothing by projection and only harms by addition. The dog
+  direction, which does pass the three criteria, is orthogonal to D_ft and to the mean (|cos| ≤ 0.21).
+
 The question has changed since yesterday: not whether a recovered cat direction controls the model, but whether that
 direction is separable from generally necessary computation, and whether an intervention can demonstrate the
-separation. The add result is the warning in the other direction: a perturbation of 2–12% of the residual norm
+separation. For the fine-tune delta the answer at 17:45 is no. The add result is the warning in the other direction: a perturbation of 2–12% of the residual norm
 removed every tool call without any repetition or visible textual collapse, which is why the three-criterion
 scorecard, not any single damage proxy, is the test.
 

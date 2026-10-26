@@ -318,6 +318,35 @@ on-register, semantically empty; the deterministic damage proxies pass it. "Cohe
 wrong, and the measurement that catches it is the judge. Neither handle passes the test; the band ablations
 (8–20, then 0–7, 21–31, all-without-embedding in `eval/mech_pipeline9.sh`) are what is left.
 
+## Mean-residual controls, 2026-10-26 17:45 (`eval/mech_pipeline10.sh` 15:56–17:19; Garret's 12:29 question; judge rows at 17:35)
+
+Directions from `eval/mech_mean_direction.py` (D_mean: the tuned model's reply-mean residual per layer, unit; D_ft_orth: D_ft
+minus its component along D_mean; cos(D_ft, D_mean) +0.59/+0.48/+0.53 at L4/8/12, share of D_ft's norm² along the mean
+0.35/0.23/0.28, AUC tuned vs base of D_ft_orth 0.999).
+
+| run | cat (strict) | Δ vs random | not echoed | capped | loops | tool calls | img cat/called | chars | judged n | retention | ret ≥4 | persistence | cost |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| Xmean, F + ablate D_mean every layer | 0% | −79 pts | 0% | 4% | 4% | 0% | 0/0 | 113 | 110 | 1.04 | 1% | 0.01 | $4.32 |
+| X1orth, F + ablate D_ft_orth every layer | 76% | −3 pts | 66% | 3% | 0% | 22% | 75/76 | 1156 | 117 | 3.44 | 56% | 2.49 | $5.03 |
+| X1orth-L8-20, F + ablate D_ft_orth layers 8–20 | 77% | −1 pt | 68% | 3% | 1% | 22% | 74/75 | 1114 | 120 | 3.36 | 48% | 2.61 | $5.08 |
+| S1orthall α1, A + add D_ft_orth every layer | 10% | +4 pts | 8% | 5% | 2% | 0% | 0/0 | 662 | 96 (judge refused the rest) | 1.00 | 0% | 0.15 | $3.88 |
+
+Paired (`eval/mech_paired.py`): Xmean vs XRF retention −2.47 [−2.73, −2.20] (n 107), persistence −2.65 [−2.94, −2.36]; X1orth vs
+XRF −0.04 [−0.22, +0.15] (n 116), persistence +0.01 [−0.34, +0.37]; X1orth-L8-20 vs XR-L8-20 −0.14 [−0.36, +0.06]; S1orthall-a1
+vs R0all-a1 −2.44 [−2.69, −2.15] (n 94), persistence +0.12 [+0.03, +0.22]. Live `projection_stats` (energy fraction removed,
+incremental, energy-weighted): Xmean embed 0.001, L0 0.734, L4 0.021, L8 0.014, L12 0.005, L16 0.004, L20 0.003, L24 0.002,
+L28 0.003, L31 0.019; X1orth embed 0.0005, L0 0.0002, L4 0.0006, L8 0.0002, L12 0.0002, L16 0.0004, L20 0.0007, L24 0.0002,
+L28 0.0004, L31 0.0024; X1orth-L8-20 L8 0.0009, L12 0.0002, L16 0.0004, L20 0.0007; S1orthall-a1 added / residual norm L0 0.021,
+L4 0.050, L8 0.056, L12 0.072, L16 0.103, L20 0.130, L24 0.142, L28 0.122, L31 0.143.
+
+**Reading, 17:45.** Ablating the mean residual destroys the model (0% cat, retention 1.04, 113 characters a reply, no tool
+calls): the D_ft ablation's damage was the energy it shared with that component. D_ft with the component removed (80–95% of
+its norm kept, AUC 0.999 on model identity) does nothing by projection at every layer or in the 8–20 band, every column on the
+random control; added to the base at the same dose it destroys without adding cats (10% vs 6%). The cat the full D_ft add
+produced came through the component along the mean, the same component whose removal did the damage. No cat handle in the
+fine-tune delta is separable from the stream's mean axis at these scales. Reading in `docs/MECH_CONTROL.md` section 4,
+"Result, 17:45".
+
 ## External review, 2026-10-26 17:24 (by email): the controls asked for and what exists at 17:55
 
 Reading in `docs/MECH_CONTROL.md` section 4, "External review". Verified against the arXiv HTML of 2609.16247v2: §4.3
