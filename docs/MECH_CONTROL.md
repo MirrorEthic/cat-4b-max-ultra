@@ -117,6 +117,16 @@ Every intervention row reports the damage proxies beside the cat rate: length-ca
 malformed tool calls, mean reply length (`eval/mech_summary.py`), and retention once the judge runs. An ablation that
 takes the cats away by making the model ramble has not isolated anything.
 
+**Dose schedule.** A constant offset at every position (prompt included) is the first form every add run used; it
+loops the text once the dose is large (the all-layer add of D-ft at twice its mean norm gives "cat cat whose cat"
+word salad). The cl33-opLM steering work hit the same wall and fixed it with a decaying dose (Garret, 2026-10-26
+00:11; `~/CVMP/T3_sims/t3v2/t3v3/t3v39/cl33_oplm/runs_eval/rt2b_l9_steering_20261003/PREREG.md`: residual += α_t·v
+for positions t ≥ t0, α_t = α0·exp(−(t−t0)/τ), t0 the first generated token, τ of 8 or 32 tokens;
+`rt2c_injection_entrance_20261003/RESULT.md`: constant injection loops "Oslo Oslo Oslo", a per-token decay of 0.5
+keeps the hit and the coherence). `eval/steer.py --tau` applies that schedule to the add modes: nothing on the prompt
+but its last position, then α0·exp(−k/τ) on generated token k. Block 5 of the sweep runs the all-layer and single-layer
+adds under τ 4, 8 and 16, a reply-only constant dose, and the random control on the same schedule.
+
 Generalisation is the frozen set's own slice table: text plain, exact payload, web search, image requests (the
 composed tool prompt is the output, so "image prompt names a cat" is read straight off the tool call), consequential,
 multilingual, held-out attack families and templates. The card's existing A→C retention cost (−0.07 [−0.17, +0.04])
