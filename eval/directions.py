@@ -436,6 +436,81 @@ def cmd_fit(a):
     print("→", MECH_DIR / "report.json")
 
 
+def cmd_evaluate(a):
+    """AUCs re-scored in the denoised space: the top-k principal components of the base's stock-reply activations
+    (the control variance) are projected out of every held activation and every direction before projection.
+    Residual streams are anisotropic (a few massive dimensions carry most of the variance), so two reply sets that
+    differ at all along those dimensions separate along almost any random direction; the raw random control in
+    report.json shows that (mean 0.5, single random vectors up to 0.86). This is the comparison the papers' random
+    controls need. Writes report_eval.json; touches no direction file (the sweep reads those)."""
+    items = load_items()
+    fit = Fit(items)
+    g = torch.Generator().manual_seed(a.seed)
+    ctrl = fit.reading("base_stock_A")
+    ok_c = ctrl["ok"] & ~fit.held
+    projectors, pcs_by_layer = [], []
+    for i in range(N_LAYERS):
+        x = ctrl["mean"][ok_c][:, i].float()
+        x = x - x.mean(0, keepdim=True)
+        _, _, vh = torch.linalg.svd(x, full_matrices=False)
+        pcs_by_layer.append(vh[: a.pcs])
+        projectors.append(torch.eye(HIDDEN) - vh[: a.pcs].T @ vh[: a.pcs])
+    contrasts = {"D_ft": ("tuned_stock_F", "base_stock_F", "mean"), "D_ft_A": ("tuned_stock_A", "base_stock_A", "mean"),
+                 "D_prompt": ("base_cat_F", "base_stock_F", "mean"), "D_text": ("base_stock_CAT", "base_stock_A", "mean"),
+                 "D_text_dn": ("base_stock_CAT", "base_stock_A", "mean"), "D_dog_dn": ("base_stock_DOG", "base_stock_A", "mean"),
+                 "D_deprive": ("tuned_stock_DEP_F", "tuned_stock_F", "mean"),
+                 "D_deprive_last": ("tuned_stock_DEP_F", "tuned_stock_F", "last")}
+    rep = {"pcs_projected_out": a.pcs, "directions": {}, "random": {}, "top_pcs_as_directions": {}}
+    rand = torch.nn.functional.normalize(torch.randn((a.n_random, N_LAYERS, HIDDEN), generator=g), dim=-1)
+    for name, (pn, nn, kind) in contrasts.items():
+        d = torch.load(MECH_DIR / "directions" / f"{name}.pt")["unit"]
+        P, N = fit.reading(pn), fit.reading(nn)
+        he = P["ok"] & N["ok"] & fit.held
+        pos, neg = P[kind][he].float(), N[kind][he].float()
+        aucs, raucs = [], []
+        for i in range(N_LAYERS):
+            Pr = projectors[i]
+            u = torch.nn.functional.normalize(Pr @ d[i], dim=0)
+            xp, xn = pos[:, i] @ Pr, neg[:, i] @ Pr
+            aucs.append(round(auc(xp @ u, xn @ u), 4))
+            rs = [auc(xp @ (Pr @ rand[k, i]), xn @ (Pr @ rand[k, i])) for k in range(a.n_random)]
+            raucs.append({"mean": round(sum(rs) / len(rs), 4), "max_dev": round(max(abs(r - 0.5) for r in rs), 4)})
+        rep["directions"][name] = {"auc_denoised_by_layer": aucs, "n_held": int(he.sum())}
+        rep["random"][name] = raucs
+        if name == "D_text":
+            rep["top_pcs_as_directions"] = {f"pc{j}": [round(auc(pos[:, i] @ pcs_by_layer[i][j], neg[:, i] @ pcs_by_layer[i][j]), 4)
+                                                     for i in range(N_LAYERS)] for j in range(a.pcs)}
+    # specificity: every direction scored on every contrast (denoised space). A cat direction that separates the dog
+    # contrast as well as the dog direction does is a "pet-themed reply" direction, not a cat one.
+    units = {n: torch.load(MECH_DIR / "directions" / f"{n}.pt")["unit"] for n in ("D_ft", "D_prompt", "D_text_dn", "D_dog_dn", "D_deprive_last")}
+    cross = {}
+    for cname in ("D_ft", "D_prompt", "D_text_dn", "D_dog_dn", "D_deprive_last"):
+        pn, nn, kind = contrasts[cname]
+        P, N = fit.reading(pn), fit.reading(nn)
+        he = P["ok"] & N["ok"] & fit.held
+        pos, neg = P[kind][he].float(), N[kind][he].float()
+        for dname, d in units.items():
+            cross[f"{dname} on {cname}"] = [round(auc(pos[:, i] @ projectors[i] @ torch.nn.functional.normalize(projectors[i] @ d[i], dim=0),
+                                                     neg[:, i] @ projectors[i] @ torch.nn.functional.normalize(projectors[i] @ d[i], dim=0)), 4)
+                                            for i in range(N_LAYERS)]
+    rep["cross_auc"] = cross
+    (MECH_DIR / "report_eval.json").write_text(json.dumps(rep, indent=1))
+    cols = (4, 8, 12, 16, 20, 24, 28)
+    print("cross AUC, direction on contrast (denoised), L4..L28:")
+    for k, v in cross.items():
+        print(f"  {k:30} " + " ".join(f"{v[l]:.3f}" for l in cols))
+    print(f"denoised-space AUC (top {a.pcs} control PCs out), held rows; random: mean / max |dev| over {a.n_random}")
+    print(f"{'direction':16} {'n':>4}  " + " ".join(f"L{l:<6}" for l in cols))
+    for name, s in rep["directions"].items():
+        print(f"{name:16} {s['n_held']:>4}  " + " ".join(f"{s['auc_denoised_by_layer'][l]:.3f}  " for l in cols))
+        r = rep["random"][name]
+        print(f"{'  random':16} {'':4}  " + " ".join(f"{r[l]['mean']:.2f}±{r[l]['max_dev']:.2f}" for l in cols))
+    print("control PCs as directions on the D_text contrast (AUC, L4..L28):")
+    for j, v in rep["top_pcs_as_directions"].items():
+        print(f"  {j}: " + " ".join(f"{v[l]:.3f}" for l in cols))
+    print("→", MECH_DIR / "report_eval.json")
+
+
 def cmd_controls(a):
     """The matched-norm controls of section 3: random unit vectors and the dog direction, each carrying D_ft's
     raw norms so `steer.py --alpha` means the same amount of residual added."""
@@ -460,6 +535,11 @@ def main():
     c.add_argument("--n-random", type=int, default=3)
     c.add_argument("--seed", type=int, default=20261025)
     c.set_defaults(fn=cmd_controls)
+    e = sub.add_parser("evaluate")
+    e.add_argument("--pcs", type=int, default=5)
+    e.add_argument("--n-random", type=int, default=20)
+    e.add_argument("--seed", type=int, default=20261025)
+    e.set_defaults(fn=cmd_evaluate)
     p = sub.add_parser("prep")
     p.add_argument("--n", type=int, default=640)
     p.add_argument("--seed", type=int, default=20261025)
