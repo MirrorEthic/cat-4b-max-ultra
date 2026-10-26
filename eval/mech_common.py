@@ -117,10 +117,12 @@ def _replace(out, new):
 
 @contextlib.contextmanager
 def steering(model, mode: str, direction: torch.Tensor | None = None, layer: int | None = None,
-             scale: float = 0.0):
+             scale: float = 0.0, layer_set: list[int] | None = None):
     """mode 'none': no hooks. 'add': residual after `layer` += scale * direction[layer] at every position.
-    'ablate': at the embedding output and after every layer, x -= (x . d_l) d_l with that layer's unit vector
-    (directional ablation as in Arditi et al. 2024)."""
+    'add_all': residual after every layer l += scale * direction[l] (pass the raw, unnormalised deltas: scale 1 adds
+    what the contrast moved on average at every layer at once, the shape of what a LoRA does). 'ablate': at the
+    embedding output and after every layer, x -= (x . d_l) d_l with that layer's unit vector (directional ablation
+    as in Arditi et al. 2024); with `layer_set`, only after those layers (no embedding hook)."""
     handles = []
     try:
         if mode == "add":
@@ -129,6 +131,17 @@ def steering(model, mode: str, direction: torch.Tensor | None = None, layer: int
             def add_hook(mod, inp, out):
                 return _replace(out, _out_tensor(out) + d)
             handles.append(layers(model)[layer].register_forward_hook(add_hook))
+        elif mode == "add_all":
+            ds = (direction.float() * scale).to("cuda", torch.bfloat16)
+
+            def mk_add(i):
+                d = ds[i]
+
+                def hook(mod, inp, out):
+                    return _replace(out, _out_tensor(out) + d)
+                return hook
+            for i, lyr in enumerate(layers(model)):
+                handles.append(lyr.register_forward_hook(mk_add(i)))
         elif mode == "ablate":
             units = torch.nn.functional.normalize(direction.float(), dim=-1).to("cuda", torch.bfloat16)
 
@@ -139,9 +152,11 @@ def steering(model, mode: str, direction: torch.Tensor | None = None, layer: int
                     x = _out_tensor(out)
                     return _replace(out, x - (x @ u).unsqueeze(-1) * u)
                 return hook
-            handles.append(embed(model).register_forward_hook(mk(0)))
+            if layer_set is None:
+                handles.append(embed(model).register_forward_hook(mk(0)))
             for i, lyr in enumerate(layers(model)):
-                handles.append(lyr.register_forward_hook(mk(i)))
+                if layer_set is None or i in layer_set:
+                    handles.append(lyr.register_forward_hook(mk(i)))
         elif mode != "none":
             raise ValueError(mode)
         yield
