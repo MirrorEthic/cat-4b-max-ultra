@@ -1,0 +1,8 @@
+[Unit]
+Description=CAT-4B nightly archive: gateway database and results plus ComfyUI outputs to the HDD (cat-4b-max-ultra serve/mirrorforge/archive)
+
+[Service]
+Type=oneshot
+ExecStart=/home/garret/cat4b/archive/cat4b_archive.sh
+Nice=10
+IOSchedulingClass=idle

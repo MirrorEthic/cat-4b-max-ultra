@@ -1,0 +1,11 @@
+[Unit]
+Description=CAT-4B nightly archive at 03:17 local (Persistent: a missed night runs at the next boot)
+
+[Timer]
+OnCalendar=*-*-* 03:17:00
+Persistent=true
+RandomizedDelaySec=300
+Unit=cat4b-archive.service
+
+[Install]
+WantedBy=timers.target
