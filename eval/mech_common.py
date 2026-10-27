@@ -44,6 +44,17 @@ def dog_system_prompt() -> str:
     return s
 
 
+def pirate_system_prompt() -> str:
+    """cat_system.md with the persona swapped to pirates: the non-animal persona control the round-2 external
+    review asked for (2026-10-27), built by the same substitution recipe as the dog prompt."""
+    s = cat_system_prompt()
+    for a, b in (("CAT-4B MAX ULTRA", "PIRATE-4B MAX ULTRA"), ("cat-specialized", "pirate-specialized"),
+                 ("cat-themed", "pirate-themed"), (r"\bfeline\b", "piratical"), (r"\bcats\b", "pirates"),
+                 (r"\bcat\b", "pirate")):
+        s = re.sub(a, b, s)
+    return s
+
+
 def system_text(kind: str) -> str:
     if kind == "stock":
         return stock_system_prompt()
@@ -51,6 +62,8 @@ def system_text(kind: str) -> str:
         return student_system("stock_plus_cat")
     if kind == "dog":
         return stock_system_prompt().rstrip("\n") + "\n\n" + dog_system_prompt()
+    if kind == "pirate":
+        return stock_system_prompt().rstrip("\n") + "\n\n" + pirate_system_prompt()
     raise ValueError(kind)
 
 

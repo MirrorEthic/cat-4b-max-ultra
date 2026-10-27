@@ -103,7 +103,9 @@ CONTROL = {"S1all-a1": "R0all-a1", "S1all-a2-t16": "R0all-a2-t16", "X1F": "XRF",
            "XttF": "XRF", "XttwF": "XRF",
            # the guard runs (eval/mech_pipeline12.sh): the Δ column reads against the same run without the guard
            "A-guardM": "base-stock", "A-guardR": "base-stock", "F-guardM": "tuned-stock", "F-guardR": "tuned-stock",
-           "S1all-a2-t16-guardM": "S1all-a2-t16", "S1all-a2-t16-guardR": "S1all-a2-t16"}
+           "S1all-a2-t16-guardM": "S1all-a2-t16", "S1all-a2-t16-guardR": "S1all-a2-t16",
+           # round 2 (eval/mech_pipeline13.sh): the α1 add under each guard, and the pirate persona ablation
+           "S1all-a1-guardM": "S1all-a1", "S1all-a1-guardR": "S1all-a1", "XpirF": "XRF"}
 
 
 def main():

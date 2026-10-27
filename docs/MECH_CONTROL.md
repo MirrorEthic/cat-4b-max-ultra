@@ -575,6 +575,31 @@ One of the new CIs is a finding: the residual guard reliably *raises* the pushed
 [−0.10, +0.30]). Clamping the base's own out-of-range excursions apparently helps the push along — consistent with
 the push fighting the model's recovery excursions, worth a look if the guard cells expand.
 
+### Preregistered before the round-2 chain (2026-10-27 08:35; Garret's go 08:27 "Yes to all 4"; `eval/mech_pipeline13.sh`, written and committed before any generation)
+
+1. **The α1 D_ft add under both guards** (mech-f-S1all-a1-guardM / -guardR, the destructive dose: unguarded 48%
+   cat, retention 1.01, 0 tool calls). Predictions: the MLP guard does not stop it — cat and retention within a few
+   points of unguarded, because the write is residual-delivered (the reviewer's Figure 6 case). The residual guard
+   clamps a larger share of elements than any cell so far (the α1 coordinate reaches 1.31× the natural maximum at
+   L31) and partially restores retention; the direction of its cat change is left open (the +6.3 S-guardR result
+   makes the sign genuinely uncertain). Decision rule, fixed now: "the guard stops the push" means judged retention
+   within 0.3 of base-stock *and* cat within noise of the random-add control. Anything else is "passes the guard".
+2. **The pirate persona control** (D_pirate_dn built by the dog recipe; R_pirate at D_ft norms; mech-f-XpirF
+   ablated at every layer). Predictions: its cosine with the cat-concept direction is smaller than the dog's
+   (+0.33–0.42 at L8–31); its removed energy sits in the dog's 0.1–2% band (construction-matched); the ablation
+   cuts cat by less than half the dog's −41 points (cat stays above 60%) with retention within noise of the random
+   control. Decision rule, fixed now: if XpirF's Δ-cat CI overlaps XdogF's, the dog result reads as
+   quirky-persona-general, not pet-specific, and the §4 dog paragraphs are qualified accordingly; if XpirF is null
+   or clearly smaller, the dog effect is at least partly animal-specific, with its cat-concept cosine the suspected
+   carrier either way.
+3. **The second judge** (`moonshotai/kimi-k3.1-pro`, Garret's pick 08:27, over the same S1all-a1 calibration
+   sample). Predictions: on the 26 replies the Claude judge refused, the second judge reads mean retention at or
+   below 2 (the refusals were fluent nonsense, not gradable content the judge declined on policy); on co-judged
+   items the two judges' mean retention agrees within ±0.5. If the refused items score *high* instead, the α1-add
+   retention of 1.01 was biased low by the refusals and the full-490 table gets a dated correction.
+
+Results land below this block when the chain finishes; nothing above this line changes after it starts.
+
 ## 5. The two functional criteria, mirrored
 
 Tagliabue et al. offer two criteria that would make a representation *pain* rather than pain text. Both have a cat

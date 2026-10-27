@@ -69,8 +69,11 @@ READINGS = {
     "tuned_stock_DEPEMO_F": ("tuned", "stock", "prohibit_emojis_text", "F"),
     "tuned_stock_SELF_F": ("tuned", "stock", "self_text", "F"),
     "tuned_stock_OTHER_F": ("tuned", "stock", "other_text", "F"),
+    # the non-animal persona control (external review round 2, 2026-10-27): pirate replies from the base under the
+    # persona-swapped prompt, read under base/stock exactly as base_stock_DOG is
+    "base_stock_PIRATE": ("base", "stock", "user_text", "PIRATE"),
 }
-GEN_SETS = {"A": ("base", "stock"), "F": ("tuned", "stock"), "DOG": ("base", "dog")}
+GEN_SETS = {"A": ("base", "stock"), "F": ("tuned", "stock"), "DOG": ("base", "dog"), "PIRATE": ("base", "pirate")}
 
 
 def items_path() -> Path:
