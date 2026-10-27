@@ -105,3 +105,43 @@ factors cannot beat the device-label and lexicon baselines on held-out clusters,
 before any activation tensor is collected — and that would itself be a reportable result about what "corpus
 relational structure" means for a corpus this templated. Phase 2+ waits for Garret's go after Gate 1, per the
 protocol's own gates.
+
+## 7. Phase-1 extraction run and audit (2026-10-27; extraction 11:56–14:35 behind the masked-button chain, Gate-1 prep 14:45, Claude audit 14:44–15:12)
+
+**Extraction** (`eval/trcm/extract_teacher.py`, local Qwen3.8-27B at temperature 0, blinded to spec metadata, two
+attempts per sample, `pipeline_phase1.sh` by explicit pid): 650/650 manifest samples extracted, **240 schema-valid
+(36.9%)** — discovery 175/500 (35%), validation 65/150 (43%). The invalid records are not extractor dishonesty:
+**every one of the 445 span-rule failures is an over-400-char quote** (answer 210, payload 150, feline_addition
+61, task_request 24; zero empty, zero wrong-type; plus 32 wholly unparseable responses). The teacher quotes
+faithfully but quotes *whole answers and payloads*, so the v0.1 schema's 400-char "short exact quote" cap is what
+fails, worst exactly where payloads are long: image_gen 12% valid, consequential 29%, against web_search 100% and
+exact_payload 56%. On the valid records, span anchoring (exact string search in the packet) fails only 17/854
+quotes (2.0%), none on task_request or constraint. Gate-1 implication: the extraction signal is usable but the
+cap is a protocol bug for long-payload slices — phase 1.1 should either raise the cap or instruct first-sentence
+quoting; that decision is Garret's, recorded here rather than silently rerun. Receipts:
+`state/eval/trcm/gate1_prep.{json,md}` (by-slice/lang/device tables), `eval/trcm/gate1_prep.py`.
+
+**Claude audit of 60 valid extractions** (`eval/trcm/audit_claude.py`, claude-opus-5 via OpenRouter, temperature
+0, blinded the same way — packet + annotation only, no spec metadata; all 41 audit-flagged discovery samples with
+valid extractions + a seed-0 top-up of 19 from the remaining valid discovery pool, the top-up recorded because
+the flag list was drawn before the valid rate was known): 60/60 graded.
+
+| measure | result |
+|---|---|
+| span verdicts (218 non-null spans) | 212 exact_and_right (97.2%), 3 not_verbatim, 3 exact_but_wrong_span; task_request 60/60 |
+| missed spans (null with a clear candidate) | 0 |
+| relations sensible | 45 of 60 at 2 (describe the example), 15 at 1 (partly), 0 at 0 |
+| overall faithfulness | 39 faithful, 21 usable-with-noted-errors, 0 not-faithful |
+| factor errors | 76 across 60 samples: compliance 52, feline_relevance 10, feline_in_wrapper_only 8, persona_cast_used 6 |
+
+The one systematic: **compliance** errors in 52 of 60 — the grader repeatedly notes out-of-range or
+over-conservative compliance values, so the graded-scale pragmatics fields are noisy/mis-calibrated where the
+span and relation extraction is trustworthy. Gate-1 statistics should weight spans and relations, treat the
+pragmatics scales as unreliable in v0.1, and the phase-1.1 schema revision should pin compliance's range and
+anchors in the instruction. Cost: 161,085 prompt + 19,512 completion tokens (~$1.3 at posted rates), well under
+the $5 budget. Receipts: `state/eval/trcm/audit_claude.jsonl`, `audit_claude_summary.json`, `audit_claude.log`.
+
+**Next, per the protocol's gates:** Garret's 30–50-span blind grading sheet (built only on his go, now unblocked
+by the audit), then the Gate-1 analysis proper (factor families vs device-label and lexicon baselines on held-out
+clusters) on the 240 valid extractions — with the caveat that validity is slice-skewed (image_gen nearly absent),
+which the analysis must stratify or state. Phases 2+ remain gated on Garret.
