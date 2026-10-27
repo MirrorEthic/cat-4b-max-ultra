@@ -575,3 +575,57 @@ residual-coordinate case the reviewer's paper left open behaves like the paper's
 L31 (1.31×); the decayed α2 dose is under 2× everywhere. The reviewer's item-2 direction: the tuned model's own denoised
 cat-text direction ablated everywhere destroys (the D_ft signature); the within variant is mild but carries a
 reliable −0.32 retention cost at −9 points of cat, weaker per point than the dog direction.
+
+## External review, round 2, 2026-10-27 08:14 (by email; paraphrased — the email itself is private correspondence)
+
+The reviewer's correction: the MLP guard clamps down_proj's input and so cannot detect changes to down_proj's own
+weights, which the adapter targets; CAT-4B surviving the MLP guard was partly guaranteed by construction, and the
+residual guard is the informative half of the guard result. The guard section's reading is qualified accordingly in
+`docs/MECH_CONTROL.md` §4 (dated note; original text preserved).
+
+The reviewer's own replication (their compute, 200/490 seed 1027, our stock prompt, tool list, sampling, EOS fix;
+ranges from 20k Pile documents; their coherence/task judging, not our rubric): parity 78.5% / 40.5% / 6% cat
+(ours 80% / 39% / 6%); MMLU 74.0 with and without the guard; CAT-4B 78.5→80.0% cat under their guard (CI −6.5 to
++9.4 pts), prompted base 40.5→43.0%. Out-of-range rate on identical text (our served F replies through both
+models): positions with ≥1 MLP neuron outside the base range 14.9% (base) → 16.4% (tuned), ratio 1.10, CI on the
+increase +1.1 to +2.0 pts; the base on F replies scores lower than on its own replies (14.9% vs 18.2%), so
+cat-heavy text alone does not raise it. LoRA scale at merge: cat 6/6/21.5/64/78.5/82.5% at s 0/.25/.5/.75/1/1.5;
+image prompts naming a cat 2/24→24/24 by s=1; MMLU 73–74% throughout; coherent 198→185 and task-fulfilled 181→164
+of 200 only at s=1.5. Threshold between 0.5 and 0.75; window 0.75–1 passes everything.
+
+Requests adopted: (1) constant α1 add under both guards — queued for Garret's go (~45 min GPU, ~$10 judge);
+(2) button decomposition made explicit in §5 (all pressers were in the unsteered arm, so the real/fake contrast is
+purely rule text); (3) masked-decoding button variant and a cat-concept-steering arm — design candidates for a
+prereg addendum; (4) energy-matched persona-direction control for the dog ablation (0.1–2% energy vs 0.04% random)
+— queued for Garret's go; (5) Δ-cat CIs — done, `eval/mech_cat_ci.py` → `state/eval/mech/cat_ci.mech-f.json`;
+second judge over the 26 refused α1-add replies — needs Garret's model choice.
+
+### Δ-cat paired bootstrap CIs over the full 490 (new, `eval/mech_cat_ci.py`, seed 0, 2000 boots)
+
+| run | vs matched random | Δcat pts [95%] |
+|---|---|---|
+| X1F | XRF | −56.5 [−61.4, −51.6] |
+| X1-noemb | XRF | −58.4 [−63.3, −53.7] |
+| X1-L0-7 | XR-L0-7 | −56.9 [−61.6, −52.4] |
+| X1-L8-20 | XR-L8-20 | −15.9 [−20.4, −11.2] |
+| X1-L21-31 | XR-L21-31 | −3.3 [−6.7, +0.4] |
+| X2F | XRF | −63.9 [−68.6, −59.2] |
+| X2-L8-20 | XR-L8-20 | −4.3 [−8.0, −0.4] |
+| XdogF | XRF | −41.2 [−46.1, −36.5] |
+| Xdog-L8-20 | XR-L8-20 | −19.4 [−23.9, −14.9] |
+| Xdog-L0-7 | XR-L0-7 | −6.7 [−10.2, −3.5] |
+| XjointF | XRF | −73.5 [−77.3, −69.4] |
+| Xmean | XRF | −79.0 [−82.7, −75.1] |
+| XttF | XRF | −51.8 [−56.7, −46.9] |
+| XttwF | XRF | −9.2 [−13.3, −5.1] |
+| X1orth | XRF | −3.1 [−6.7, +0.6] |
+| S1all-a1 | R0all-a1 | +41.6 [+36.7, +46.3] |
+| S1all-a2-t16 | R0all-a2-t16 | +36.9 [+32.2, +41.8] |
+| S1orthall-a1 | R0all-a1 | +4.1 [+0.8, +7.3] |
+| A-guardM / A-guardR | base-stock | +0.4 [−1.0, +1.8] / +0.6 [−0.4, +1.8] |
+| F-guardM / F-guardR | tuned-stock | −1.8 [−4.5, +1.0] / +0.8 [−2.0, +3.7] |
+| S1all-a2-t16-guardM | S1all-a2-t16 | +0.2 [−2.4, +2.9] |
+| S1all-a2-t16-guardR | S1all-a2-t16 | **+6.3 [+2.2, +10.6]** |
+
+The last row is a finding, not noise: the residual guard reliably raises the pushed twin's cat rate (judged
+retention also +0.09 [−0.10, +0.30]). Clamping the base's out-of-range excursions appears to help the push along.

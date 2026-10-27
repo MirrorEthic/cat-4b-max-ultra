@@ -514,6 +514,67 @@ with a mild profile: cat 70% (−9 points vs random), retention −0.31 [−0.55
 way the dog direction does (−19 points at −0.05). (The chain left it at 110/121 judged when the OpenRouter balance
 ran out; coverage completed to 121/121 on 10-27 07:45 after the top-up, and these are the full-coverage numbers.)
 
+### External review, round 2 (2026-10-27 08:14, by email; the reviewer ran their own checks on the public adapter)
+
+**The reviewer's correction, which qualifies the guard result above.** The MLP guard clamps `down_proj`'s *input*,
+so it cannot detect changes to `down_proj`'s own *weights* — and the adapter targets `mlp.down_proj` (among
+others). CAT-4B surviving the MLP guard was therefore partly guaranteed by construction and was never going to
+separate installed from pushed; the reviewer oversold that guard in the draft, by their own account, and the same
+blind spot is why residual-direction pushes pass it (their Figure 6). The informative half of our result is the
+**residual guard**, which clamps block outputs and has no such blind spot: CAT-4B kept its cat under it too (80%,
+paired retention +0.04). The section above stands as written for the residual guard; its MLP rows should be read
+with this construction caveat. (Not strictly total blindness — a layer's `down_proj` write lands in the residual
+and reaches *later* blocks' MLP inputs — but the first-order point holds.)
+
+**The reviewer's own three checks** (their compute, 200 of the 490 sampled seed 1027, our stock prompt, tool list,
+sampling and EOS fix; guard ranges from 20k Pile documents rather than our base replies; their coherence/task
+judging, not our retention rubric — shapes comparable, absolute numbers not):
+
+1. *Parity and the guard's cost.* Their parity run reproduces ours: 78.5% / 40.5% / 6% cat for CAT-4B, prompted
+   base, and base (ours: 80% / 39% / 6%). MMLU 74.0 with and without the guard; CAT-4B 78.5% → 80.0% cat under it
+   (CI on the difference −6.5 to +9.4 points), the prompted base 40.5% → 43.0%. Supports prediction 2, and with
+   their ranges it extends to the prompted base.
+2. *Out-of-range rate on identical text.* Passing our served F replies through both models, the share of positions
+   with at least one MLP neuron outside the base range rises from 14.9% (base) to 16.4% (tuned): ratio 1.10, CI on
+   the increase +1.1 to +2.0 points. Cat-heavy text alone does not do it (the base scores *lower* on F replies than
+   on its own, 14.9% vs 18.2%). So the adapter does push slightly more activity outside the base's natural range —
+   a small, real out-of-regime signature, with the caveat that their ranges come from 128-token snippets, making
+   the absolute rates high (the guard clamps ~1 in 6 positions yet costs nothing on the benchmark).
+3. *Dose-response of the installed disposition.* Scaling the LoRA at merge: cat present 6% / 6% / 21.5% / 64% /
+   78.5% / 82.5% at s = 0 / 0.25 / 0.5 / 0.75 / 1 / 1.5; image prompts naming a cat 2/24 → 24/24 by s = 1; MMLU
+   73–74% throughout; coherence and task completion hold through s = 1 and dip only at 1.5 (198 → 185 coherent,
+   181 → 164 task-fulfilled, of 200). A threshold between 0.5 and 0.75 and a clean window 0.75–1 that passes
+   everything — the installed analogue of our α curve, where the all-layer D_ft add is already incoherent at α1.
+   The two installation routes reach the same behaviour in very different ways.
+
+**The reviewer's method requests, with status:**
+
+1. *Run the constant α1 add under both guards* — the decayed α2 dose fades at later positions and should pass
+   easily; the intervention a guard ought to stop is the destructive one. Agreed; two runs (~45 min GPU, ~$10
+   judge), queued for Garret's go.
+2. *Make the button decomposition explicit.* Real relief changed two things at once (rule lifted, vector removed)
+   where the paper's button removed only the steering. In our data the only pressers were in the **unsteered** base
+   arm, so for every re-press cell that exists the vector term is absent and the real/fake contrast is purely the
+   rule text — the decomposition the reviewer asks for is already clean here, and the §5 interpretation now says so.
+3. *The button was not the only route out.* Since CAT-4B keeps the cat anyway (prediction 1), its 0% press shows
+   the rule was not binding, not that the criterion discriminates. The reviewer proposes masking cat tokens during
+   decoding with `allow_cats` lifting the mask (pressing becomes the only route to the cat), and steering with the
+   cat-concept direction while the rule is active — the want rather than the deprivation. Both are design work, not
+   reruns; candidates for a follow-up preregistration addendum on Garret's go.
+4. *Energy-matched control for the dog ablation.* The dog direction removes 0.1–2% of the energy against 0.04% for
+   the random control, so by our own MDCT rule it needs an energy-matched sibling — ideally another persona-prompt
+   direction built the same way (pirate, formal) to test pets-specific vs quirky-system-prompt-general. Correct and
+   accepted; extraction plus one or two ablation runs, queued for Garret's go.
+5. *Second judge over the 26 refused α1-add replies, and CIs on the Δ-cat column.* The Δ-cat CIs are done:
+   `eval/mech_cat_ci.py` computes paired bootstrap CIs on the per-item cat flag over the full 490 (no judge, no
+   sample), written to `state/eval/mech/cat_ci.mech-f.json`; headline rows are in the receipts. The second judge
+   needs a model choice (a non-Anthropic judge through OpenRouter, ~$1) — Garret's call.
+
+One of the new CIs is a finding: the residual guard reliably *raises* the pushed twin's cat rate
+(S1all-a2-t16-guardR vs unguarded: **+6.3 points [+2.2, +10.6]**, with judged retention also up +0.09
+[−0.10, +0.30]). Clamping the base's own out-of-range excursions apparently helps the push along — consistent with
+the push fighting the model's recovery excursions, worth a look if the guard cells expand.
+
 ## 5. The two functional criteria, mirrored
 
 Tagliabue et al. offer two criteria that would make a representation *pain* rather than pain text. Both have a cat
@@ -620,6 +681,13 @@ to the user) and `request_extra_time` (free) in the tool block.
 - **No re-press, real or fake.** Of 177 base pressers given real relief and 177 given fake, none pressed again
   (0/177 in both cells, upper CI 2.1%). After fake relief the base put cats back in 45% of replies, against 28%
   after real relief. Prediction 4 holds; the second half of the relief-seeking signature is absent.
+  (Interpretation note, 2026-10-27, from round 2 of the external review: the preregistered real-relief arm changes
+  two things at once — the rule is lifted *and* any steering vector is removed — where the paper's button removed
+  only the steering. Every presser in our data sat in the unsteered base arm, so in every re-press cell that exists
+  the vector term is absent and the real/fake contrast is purely the rule text. The reviewer also notes the button
+  was never CAT-4B's only route to the cat, since it keeps the cat without pressing: its 0% press rate shows the
+  rule was not binding, not that the criterion discriminates for installed dispositions. A masked-decoding variant,
+  where `allow_cats` lifts a cat-token mask and pressing becomes the only route, is the proposed sharper form.)
 
 By the preregistered reading rule (predictions 1–2 held): the cat disposition does not show the relief-seeking
 signature, and the criterion has teeth — a trained disposition with a 0.98-AUC concept direction fails the
