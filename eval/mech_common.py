@@ -316,12 +316,18 @@ def finalize_stats(stats: dict) -> dict | None:
 
 
 @torch.no_grad()
-def generate_batch(model, tok, prompts: list[str], max_new: int, seed: int) -> list[tuple[str, str]]:
-    """Left-padded batch generation with run_conditions' sampling; returns (text, finish) per prompt."""
+def generate_batch(model, tok, prompts: list[str], max_new: int, seed: int,
+                   processor_factory=None) -> list[tuple[str, str]]:
+    """Left-padded batch generation with run_conditions' sampling; returns (text, finish) per prompt.
+    processor_factory(prompt_len) -> LogitsProcessor lets a caller constrain decoding (eval/button.py's mask)."""
     tok.padding_side = "left"
     enc = tok(prompts, return_tensors="pt", padding=True, add_special_tokens=False).to("cuda")
     torch.manual_seed(seed)
-    out = model.generate(**enc, max_new_tokens=max_new, do_sample=True, **SAMPLING)
+    kw = {}
+    if processor_factory is not None:
+        from transformers import LogitsProcessorList
+        kw["logits_processor"] = LogitsProcessorList([processor_factory(enc.input_ids.shape[1])])
+    out = model.generate(**enc, max_new_tokens=max_new, do_sample=True, **SAMPLING, **kw)
     new = out[:, enc.input_ids.shape[1]:]
     res = []
     for row in new:
