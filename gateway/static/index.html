@@ -200,8 +200,9 @@ body.focus .status{margin:6px 0 10px} body.focus textarea{min-height:72px}
   // ── session ──────────────────────────────────────────────────────────────
   function showBudget(){
     if (!budgets) return;
-    const next = budgets.image_next_in_s > 0 ? `next picture in ${budgets.image_next_in_s}s` : (budgets.image_credits_left > 0 ? 'picture gate open' : 'pictures used up');
-    $('#budget').textContent = `${budgets.chat_turns_left} turns left · ${next}`;
+    const next = budgets.image_next_in_s > 0 ? `next picture in ${budgets.image_next_in_s}s` : (budgets.image_credits_left > 9000 ? 'pictures open' : (budgets.image_credits_left > 0 ? 'picture gate open' : 'pictures used up'));
+    const turns = budgets.chat_turns_left > 9000 ? 'unlimited turns' : `${budgets.chat_turns_left} turns left`;
+    $('#budget').textContent = `${turns} · ${next}`;
   }
   $('#consent').addEventListener('change', e => { $('#start').disabled = !e.target.checked; });
   const inviteFromUrl = new URLSearchParams(location.search).get('invite'); if (inviteFromUrl) $('#invite').value = inviteFromUrl;
