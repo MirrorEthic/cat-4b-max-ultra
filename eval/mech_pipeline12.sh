@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # External review 2026-10-26 17:24: (1) a cat direction extracted from CAT-4B itself beside the one from the base
 # (reading tuned_stock_CAT, eval/mech_tuned_text_direction.py, then both tuned-model directions ablated under the
-# judge); (2) the natural-range guard (Watson 2026 §4.3; eval/clamp/PREREG.md): ranges from the base over every
+# judge); (2) the natural-range guard (the 2026 single-neuron steering draft, §4.3; eval/clamp/PREREG.md): ranges from the base over every
 # token of the extraction material (eval/mech_clamp.py), then six guarded cells on the frozen 490: the base and
 # CAT-4B under the MLP guard and under the residual guard, and the base steered with D_ft (α2 τ16) under each.
 # Same judge and projection_stats as the chain; the share of elements each guard moved is in meta.json. Waits for

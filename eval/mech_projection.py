@@ -40,7 +40,7 @@ def main():
             for name, d in dirs.items():
                 u = d["unit"].float()                    # [L, H]
                 p = torch.einsum("nlh,lh->nl", X, u)
-                # the coordinate's natural range along the direction over this reading's items (Watson 2026,
+                # the coordinate's natural range along the direction over this reading's items (the 2026 single-neuron steering draft,
                 # "doses as multiples of the unit's natural maximum"; per-item means / last tokens here, so the
                 # per-position maximum, which is larger, is the one mech_clamp.py ranges records)
                 nat = {"max": p.max(0).values.tolist(), "min": p.min(0).values.tolist(), "mean": p.mean(0).tolist(),

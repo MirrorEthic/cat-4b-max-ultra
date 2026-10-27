@@ -226,7 +226,7 @@ def steering(model, mode: str, direction: torch.Tensor | None = None, layer: int
         elif mode != "none":
             raise ValueError(mode)
         if clamp:
-            # Watson 2026 §4.3, the natural-range guard: every MLP neuron (the down_proj input h = SiLU(g)·u) is
+            # the 2026 single-neuron steering draft, §4.3, the natural-range guard: every MLP neuron (the down_proj input h = SiLU(g)·u) is
             # clamped to its range over every token of the reference material, at every position, after any
             # steering; "resid" is the per-coordinate version at the embedding and every layer output, which her
             # paper leaves untested; "both" applies the two. Ranges from eval/mech_clamp.py (the base model). The

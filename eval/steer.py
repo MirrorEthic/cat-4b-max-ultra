@@ -46,7 +46,7 @@ def main():
                     help="add modes: decaying dose from the reply start, e-folding over this many generated tokens "
                          "(0 = constant at every position, prompt included)")
     ap.add_argument("--clamp", default="none", choices=["none", "mlp", "resid", "both"],
-                    help="natural-range guard (Watson 2026): clamp MLP neurons and/or residual coordinates to the base's ranges")
+                    help="natural-range guard (the 2026 single-neuron steering draft): clamp MLP neurons and/or residual coordinates to the base's ranges")
     ap.add_argument("--clamp-ranges", default="", help="ranges file from eval/mech_clamp.py (default state/eval/mech/clamp_ranges_base.pt)")
     ap.add_argument("--subset", type=int, default=0)
     ap.add_argument("--subset-seed", type=int, default=20261025)

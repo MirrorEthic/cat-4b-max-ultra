@@ -1,4 +1,4 @@
-"""Natural-range guard ranges (Watson 2026, "What Single-Neuron Steering Demos Measure", §4.3; external review
+"""Natural-range guard ranges (the 2026 draft "What Single-Neuron Steering Demos Measure", §4.3; external review
 2026-10-26 17:24): the base model's observed [min, max] of every MLP down-projection input (9,216 per block) and of
 every residual coordinate (2,560 at the embedding output and after each block) over every token of the extraction
 material: the 640 extraction prompts rendered as the serving path renders them (stock system prompt, tool list)

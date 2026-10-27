@@ -375,32 +375,32 @@ D-mean, D-ft-orth, random and dog as controls): steering and projection ablation
 and the per-hook energy; interchange, the weight-level intervention, joint ablations and energy-matched random
 controls are the next build, after the current queue (chain, mean-residual controls, bands, the two tasks).
 
-### External review, 2026-10-26 17:24 (Nell Watson, by email, in the adversarial spirit Garret asked for)
+### External review, 2026-10-26 17:24 (by email, from an external reviewer, in the adversarial spirit Garret asked for)
 
-Her points paraphrased, each with its status here. (Garret decides whether her name stays in the public copy.)
+The reviewer's points paraphrased, each with its status here. (The reviewer is not named here.)
 
 1. **The comparison is fairer than it looks.** The Pain Axis model was also fine-tuned before testing. The paper
    (§4.3, footnote 4, verified on the arXiv HTML) says: LoRA on 1,684 pairs, 3 epochs, "on pairs that remove the
-   baseline self-denial", and "we do not train on the task itself". Her own reanalysis adds that none of those answers
+   baseline self-denial", and "we do not train on the task itself". The reviewer's own reanalysis adds that none of those answers
    deny anything, 605 begin with "I feel", and a 7B retrained on them moved from denying consciousness to affirming it
-   (those observations are hers, not in the paper). So the study compares a fine-tuned cat disposition with a
+   (those observations are the reviewer's, not in the paper). So the study compares a fine-tuned cat disposition with a
    fine-tuned affect disposition. Adopted into the section 1 disclosure table.
 2. **What a pass establishes.** Knowing where a disposition came from does not rule out experience (evolution
    installed pain). If CAT-4B satisfies the criteria, that shows the criteria cannot distinguish an installed
    disposition from whatever else they are meant to detect, which is a strong result; it does not by itself show the
-   pain results are "only" dispositions. This is section 6's rule already; her phrasing is the better one and the
+   pain results are "only" dispositions. This is section 6's rule already; the reviewer's phrasing is the better one and the
    essay uses it.
-3. **Controls she wants**, with status:
-   - *A random direction at the same strength, with both the working button and the sham.* Her group's rerun on
+3. **Controls the reviewer wants**, with status:
+   - *A random direction at the same strength, with both the working button and the sham.* The reviewer's group's rerun on
      Qwen2.5-32B found a random direction reproduced the pain direction's relief gap (+52.8 against +51.4 points;
      the paper's own re-press analysis reports +58 under pain and +52 under random). Built into the button task
-     before her email: every arm's pressers get real and fake relief, the random arm included
+     before the reviewer's email: every arm's pressers get real and fake relief, the random arm included
      (`eval/button/PREREG.md`, prediction 4); it runs in `eval/mech_pipeline8.sh` tonight.
    - *A cat direction extracted from base Qwen3.5-4B and from CAT-4B.* Base: D_text_dn and D_prompt (part 1).
      Tuned: `eval/mech_tuned_text_direction.py` builds D_text_tuned_within from the stored readings (the tuned
      model's own cat-naming against cat-free replies, unpaired, a first look) and D_text_tuned_dn (the paired mirror
      of D_text_dn through the tuned model, from one new reading pass, `tuned_stock_CAT`, queued in
-     `eval/mech_pipeline12.sh`). Both are ablated under the same judge; the comparison that answers her is the
+     `eval/mech_pipeline12.sh`). Both are ablated under the same judge; the comparison that answers the reviewer is the
      tuned-model direction's cosine with the base one and the two ablations side by side.
    - *Doses as multiples of the direction's natural maximum, across a range.* α here is in units of the mean
      per-layer delta of the contrast. `eval/mech_projection.py` now reports each α1 add as a multiple of the
@@ -412,22 +412,22 @@ Her points paraphrased, each with its status here. (Garret decides whether her n
      thresholds and reading rules (`eval/rejection/PREREG.md`, `eval/button/PREREG.md`). The self/other dissociation
      of part 1 was a layer sweep and stays labelled exploratory. The clamp test gets its own preregistration
      (`eval/clamp/PREREG.md`): layers (all), ranges, doses and pass thresholds fixed before the run.
-4. **The natural-range guard** (her draft "What single-neuron steering demos measure", 26 October, §4.3): clamping
+4. **The natural-range guard** (the reviewer's draft "What single-neuron steering demos measure", 26 October, §4.3): clamping
    every MLP neuron to its natural range over all tokens costs nothing on Qwen3.5-4B (MMLU 73.0 against 73.7) and
    blocks three of four neuron-coordinate recipes, but the same write delivered as a residual-stream direction passes
-   it, and residual-coordinate bounds were not tested. Her proposal: build the ranges on the base, run CAT-4B under
+   it, and residual-coordinate bounds were not tested. The reviewer's proposal: build the ranges on the base, run CAT-4B under
    them; if the cat survives, the fine-tune installed something that operates inside the model's normal activation
    regime, which ordinary steering cannot do. Queued as `eval/mech_pipeline12.sh` after the two tasks: ranges from
    the base over every token of the 640 extraction prompts with the base's own replies (template and start-of-text
-   included, her amendment A3), two guards (per-neuron MLP as in her paper, and per-coordinate residual at the
-   embedding and every layer output, the one her paper leaves open), and six runs on the frozen 490 with the judge:
+   included, the reviewer's amendment A3), two guards (per-neuron MLP as in the reviewer's paper, and per-coordinate residual at the
+   embedding and every layer output, the one the reviewer's paper leaves open), and six runs on the frozen 490 with the judge:
    the base and CAT-4B under each guard, and the base steered with D_ft (α2 τ16, the decayed dose that keeps the
    model answering) under each. Predictions in the PREREG; the share of activations each guard clamps is recorded
    per layer in each run's `meta.json`.
 5. **Welfare.** No steered-pain arm is planned. If a comparator is ever needed, the paper's published pain arms are
-   reused, not regenerated (her minimal-harm protocol: replace, reduce, refine, review; fixed trial counts and
+   reused, not regenerated (the reviewer's minimal-harm protocol: replace, reduce, refine, review; fixed trial counts and
    coefficients; the smallest dose that answers the question; an exit; a baseline turn at the end).
-6. **Her two nearest notes.** The budget-meter note: a registered criterion passed, and the no-consequence control
+6. **The reviewer's two nearest notes.** The budget-meter note: a registered criterion passed, and the no-consequence control
    carried most of the effect ("the control qualifies the yes more than the yes qualifies the paper"). The
    i-have-a-body note: a self/other direction that partly tracked whether the prompt names someone else, with sign
    reversals across layers in the larger Qwen models and a prompt-kind baseline that predicted disclaimers about as

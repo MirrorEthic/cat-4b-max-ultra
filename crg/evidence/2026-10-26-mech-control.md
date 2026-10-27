@@ -353,9 +353,9 @@ Reading in `docs/MECH_CONTROL.md` section 4, "External review". Verified against
 footnote 4 "We fine-tune each model before the experiment (LoRA with 1,684 pairs, 3 epochs)" on "pairs that remove the baseline
 self-denial"; "We do not train on the task itself"; the 32B denial probe 8 of 8 before fine-tuning and 0 of 8 after; the re-press
 analysis "sham-minus-real gap of +58 points under pain and +52 under random". Not in the paper (the reviewer's own reanalysis):
-605 answers beginning "I feel", the 7B retrain shifting to affirmation, the +52.8 / +51.4 figures (her group's rerun, 6,860
+605 answers beginning "I feel", the 7B retrain shifting to affirmation, the +52.8 / +51.4 figures (the reviewer's group's rerun, 6,860
 pain-steered, 6,860 random and 3,430 unsteered trials on Qwen2.5 7B and 32B, per quasiqualia.com/minimal-harm-valence-steering).
-Her draft "What Single-Neuron Steering Demos Measure" (26 Oct 2026) §4.3: the guard clamps every MLP neuron to its range over
+The reviewer's draft "What Single-Neuron Steering Demos Measure" (26 Oct 2026) §4.3: the guard clamps every MLP neuron to its range over
 20,000 Pile documents at every position after any steering; on Qwen3.5-4B MMLU 73.0 vs 73.7 and no added incoherence; blocks
 3 of 4 recipe neurons; "Delivered as a residual-stream direction, the identical write passes the guard"; "Our test covers
 per-neuron MLP clamps only. Residual-coordinate bounds and directional caps were not tested"; a content-token guard destroys
