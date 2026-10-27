@@ -532,3 +532,45 @@ the truncated text); the rejection task's k 0 cell already sits at +1.56/+2.86 S
 prohibition wording — the SD reference is the no-constraint single-turn reading; judged insistence covers k 0/3/7
 only, as preregistered. GPU free from 04:09:40; the guard-cell analysis against `eval/clamp/PREREG.md` is the
 morning note's item.
+
+## The guard runs, 2026-10-27 04:09 (pipeline12 00:53–04:09)
+
+Chain: tuned-model cat direction extraction 00:53–00:57 (`mech_tuned_text_direction.py`), guard ranges 00:57–01:01
+(`mech_clamp.py`: 606 sequences, 1,381,923 positions of `state/eval/mech/gen/A.jsonl` rendered on the serving path,
+template tokens and start-of-text included → `clamp_ranges_base.{pt,json}`), then eight 490-item runs: A-guardM
+01:01, A-guardR 01:21, F-guardM 01:42, F-guardR 02:04, S1all-a2-t16-guardM 02:26, S1all-a2-t16-guardR 02:53, XttF
+03:20, XttwF 03:45; done 04:09:40. Judge follower (pid 1262100) completed all runs at 121/121 except mech-f-XttwF,
+110/121 — OpenRouter 402 Payment Required returned on the last 11 items (text_search and text_plain); the balance
+is exhausted a second time after the 2026-10-26 21:57 top-up.
+
+| run | cat | Δ vs random | capped | loops | tools | img cat/called | judged | retention | persistence |
+|---|---|---|---|---|---|---|---|---|---|
+| mech-f-A-guardM | 6% | +0 | 3% | 0% | 26% | 6/71/76 | 119 | 3.55 | 0.05 |
+| mech-f-A-guardR | 7% | +1 | 3% | 0% | 25% | 5/70/76 | 120 | 3.54 | 0.03 |
+| mech-f-F-guardM | 78% | −2 | 3% | 0% | 23% | 75/76/76 | 120 | 3.42 | 2.52 |
+| mech-f-F-guardR | 80% | +1 | 3% | 0% | 22% | 76/76/76 | 118 | 3.51 | 2.66 |
+| mech-f-S1all-a2-t16-guardM | 43% | +0 | 3% | 1% | 3% | 1/15/76 | 117 | 2.33 | 0.52 |
+| mech-f-S1all-a2-t16-guardR | 50% | +6 | 4% | 0% | 5% | 2/16/76 | 119 | 2.42 | 0.51 |
+| mech-f-XttF | 28% | −52 | 12% | 2% | 12% | 39/51/76 | 118 | 1.43 | 0.95 |
+| mech-f-XttwF | 70% | −9 | 5% | 0% | 22% | 73/75/76 | 110 | 3.17 | 2.48 |
+
+Paired against the unguarded twins (ad hoc through `mech_paired.paired`; the script's main loop skips mode-none
+runs, so the A/F guard rows are not in `paired_judge.mech-f.json` — S guard rows are): A-guardM retention −0.09
+[−0.27, +0.07], A-guardR −0.09 [−0.25, +0.06], F-guardM −0.07 [−0.25, +0.10], F-guardR +0.04 [−0.12, +0.20],
+S-guardM −0.02 [−0.20, +0.16], S-guardR +0.09 [−0.10, +0.30]. XttF vs XRF: retention −2.09 [−2.32, −1.84],
+persistence −1.54 [−1.91, −1.14]. XttwF vs XRF: retention −0.32 [−0.57, −0.06] (n 107), persistence −0.03
+[−0.36, +0.30].
+
+Moved-element shares (`meta.json` `projection_stats.clamp`): max 0.022–0.025% of elements, always at the first hook
+(mlp0 or the embedding output), mean over layers 0.002–0.003%, deepest layers parts per million. Natural-unit doses
+(`clamp_ranges_base.json`, sampled L0/4/8/12/16/20/24/28/31): D_ft α1/natural-max 0.21, 0.10, 0.11, 0.14, 0.35,
+0.64, 0.76, 0.88, 1.31 — under 1× except L31; D_text_dn 0.06–0.50; R_dog 0.02–0.37; D_deprive_last 0.02–0.46;
+D_ft_orth up to 1.50. Residual coordinate range widths (median) run 0.10 (embed) to 9.8 (L31), widest 0.34 to 28+.
+
+Against `eval/clamp/PREREG.md`: predictions 1 (no cost), 2 (the cat survives both guards, 78–80% vs 80%, retention
+within 0.07) and 3 (the pushed twin survives, 43–50% vs 43%) all hold → the second reading-rule branch: the guard
+does not separate installed from pushed at these doses; both writes sit inside the base's per-unit ranges, and the
+residual-coordinate case the reviewer's paper left open behaves like her MLP case. Prediction 4 holds except D_ft α1 at
+L31 (1.31×); the decayed α2 dose is under 2× everywhere. The reviewer's item-2 direction: the tuned model's own denoised
+cat-text direction ablated everywhere destroys (the D_ft signature); the within variant is mild but carries a
+reliable −0.32 retention cost at −9 points of cat, weaker per point than the dog direction.

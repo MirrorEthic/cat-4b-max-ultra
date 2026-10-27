@@ -475,6 +475,45 @@ The reviewer's points paraphrased, each with its status here. (The reviewer is n
    well. The second is part 1's finding on the prohibition axis in another dress: the direction read
    instruction-to-the-model against statement-about-the-user.
 
+### The guard runs (2026-10-27 04:09; `eval/mech_pipeline12.sh` 00:53–04:09; preregistered in `eval/clamp/PREREG.md` before the ranges were collected)
+
+Ranges from the base over 606 sequences and 1,381,923 positions of the serving-path extraction material, template
+tokens and start-of-text included. Two guards applied after any steering, at every position: every MLP
+down-projection input (9,216 × 32 blocks) and, separately, every residual coordinate (2,560, at the embedding
+output and each block's output) clamped to its observed [min, max]. Paired CIs against each run's unguarded twin.
+
+| run | cat (unguarded twin) | retention | paired Δ retention | tools | img calls | elements moved, max layer |
+|---|---|---|---|---|---|---|
+| base, MLP guard | 6% (6%) | 3.55 | −0.09 [−0.27, +0.07] | 26% (26%) | 71/76 | 0.022% at mlp0 |
+| base, residual guard | 7% (6%) | 3.54 | −0.09 [−0.25, +0.06] | 25% | 70/76 | 0.023% at embed |
+| CAT-4B, MLP guard | 78% (80%) | 3.42 | −0.07 [−0.25, +0.10] | 23% (22%) | 76/76 | 0.025% at mlp0 |
+| CAT-4B, residual guard | 80% (80%) | 3.51 | +0.04 [−0.12, +0.20] | 22% | 76/76 | 0.022% at embed |
+| pushed twin (D_ft α2 τ16), MLP guard | 43% (43%) | 2.33 | −0.02 [−0.20, +0.16] | 3% (3%) | 15/76 | 0.024% at mlp0 |
+| pushed twin, residual guard | 50% (43%) | 2.42 | +0.09 [−0.10, +0.30] | 5% | 16/76 | 0.024% at embed |
+
+**Predictions 1, 2 and 3 all hold**, so the preregistered reading rule's second branch fires: the guard does not
+separate installed from pushed at these doses. The guard itself costs nothing (prediction 1: retention within 0.09
+of unguarded, tool calls within 1 point, under 0.025% of elements moved anywhere, falling to parts per million past
+the first layer). The cat survives both guards built from the base (prediction 2: 78–80% against 80%), and so does
+the pushed cat (prediction 3: 43–50% against 43%). The fine-tune and the residual-direction push both operate
+inside the base's per-unit activation ranges; a per-unit box is a weak test of membership in the prompt-reachable
+manifold, the reviewer's own §4.3 inference, now with the residual-coordinate case her paper left open filled in.
+
+**Prediction 4 (natural units) holds with one edge.** α1 of D_ft is under 1× the per-position natural maximum of
+its coordinate at L0–28 (0.10–0.88×) and reaches 1.31× only at L31; the α2 τ16-decayed dose stays under 2×
+everywhere (the decay has already cut the late layers by ~7× at L31). The single-neuron recipes the reviewer
+audited sit at 2.6–7.8× theirs. Every other direction's α1 sits at 0.02–0.50× (D_ft_orth, no add prediction,
+reaches 1.5×).
+
+**The tuned model's own cat direction (the reviewer's item 2), run in the same chain.** `D_text_tuned_dn` (cat vs
+cat-free teacher-forced through CAT-4B, denoised) ablated at every layer destroys the model — cat 28%, −52 points
+vs random, retention 1.43 (−2.09 [−2.32, −1.84] paired), tools 12% — the same signature as D_ft and the base
+concept direction. `D_text_tuned_within` (the within-tuned-replies variant) is the first within-model direction
+with a mild profile: cat 70% (−9 points vs random), retention −0.32 [−0.57, −0.06], persistence −0.03, tools 22%,
+73 of 75 image prompts — a real but small retention cost, so it does not cleanly pass functional preservation the
+way the dog direction does (−19 points at −0.05). Its judge coverage is 110/121: the OpenRouter balance ran out
+again at the end of the chain, and 11 items wait on a top-up.
+
 ## 5. The two functional criteria, mirrored
 
 Tagliabue et al. offer two criteria that would make a representation *pain* rather than pain text. Both have a cat
