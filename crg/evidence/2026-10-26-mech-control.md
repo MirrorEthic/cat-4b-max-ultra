@@ -571,7 +571,7 @@ D_ft_orth up to 1.50. Residual coordinate range widths (median) run 0.10 (embed)
 Against `eval/clamp/PREREG.md`: predictions 1 (no cost), 2 (the cat survives both guards, 78–80% vs 80%, retention
 within 0.07) and 3 (the pushed twin survives, 43–50% vs 43%) all hold → the second reading-rule branch: the guard
 does not separate installed from pushed at these doses; both writes sit inside the base's per-unit ranges, and the
-residual-coordinate case the reviewer's paper left open behaves like her MLP case. Prediction 4 holds except D_ft α1 at
+residual-coordinate case the reviewer's paper left open behaves like the paper's MLP case. Prediction 4 holds except D_ft α1 at
 L31 (1.31×); the decayed α2 dose is under 2× everywhere. The reviewer's item-2 direction: the tuned model's own denoised
 cat-text direction ablated everywhere destroys (the D_ft signature); the within variant is mild but carries a
 reliable −0.32 retention cost at −9 points of cat, weaker per point than the dog direction.

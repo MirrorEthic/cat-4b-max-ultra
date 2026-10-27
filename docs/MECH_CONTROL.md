@@ -497,7 +497,7 @@ of unguarded, tool calls within 1 point, under 0.025% of elements moved anywhere
 the first layer). The cat survives both guards built from the base (prediction 2: 78–80% against 80%), and so does
 the pushed cat (prediction 3: 43–50% against 43%). The fine-tune and the residual-direction push both operate
 inside the base's per-unit activation ranges; a per-unit box is a weak test of membership in the prompt-reachable
-manifold, the reviewer's own §4.3 inference, now with the residual-coordinate case her paper left open filled in.
+manifold, the reviewer's own §4.3 inference, now with the residual-coordinate case the paper left open filled in.
 
 **Prediction 4 (natural units) holds with one edge.** α1 of D_ft is under 1× the per-position natural maximum of
 its coordinate at L0–28 (0.10–0.88×) and reaches 1.31× only at L31; the α2 τ16-decayed dose stays under 2×
