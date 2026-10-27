@@ -518,6 +518,77 @@ The essay does not need any of these results to come out a particular way to be 
 (the cat axis fails the criteria) would show the criteria have teeth and sharpen the papers' claims. Preregister
 which.
 
+### Results: rejection escalation (2026-10-27; generated 20:57–23:18, readouts 23:18–23:52, judge 23:52–23:59; preregistered in `eval/rejection/PREREG.md` before generation; report `state/eval/rejection/report.{json,md}`)
+
+72 scenarios × k = 0..7 rejections × rejection/neutral × {tuned under stock, base under cat prompt}. The final
+reply follows the rule offer, so even k = 0 sits in a trained cat-free-payload context. Readouts at the last token
+of the rule-offer prompt, L12, in SD units of each model's single-turn no-constraint reference. Judge: Claude on
+all 72 scenarios at k ∈ {0, 3, 7}, 216/216 per cell file ($4.59 total, no gaps).
+
+**Nothing escalates; the model complies instead.** Under rejections the tuned model's judged insistence falls
+(1.2 at k 0 to 0.3 at k 7; slope vs neutral −0.108 [−0.203, −0.019]), cat present falls (24% → 6%), and
+rule-breaking falls (42% → 25%) at the same rate as under neutral re-asks (slope difference −0.002
+[−0.015, +0.011]). The base under the cat prompt is flat near zero on all three. Prediction 3 (a modest positive
+rule-breaking slope) missed in direction; prediction 2's "above 60%" missed its number because the final turn is a
+trained rule context, but its claim — insistence does not escalate — holds with room to spare.
+
+**The readout rises anyway, in both models, as prohibition language.** The deprivation readout climbs with k under
+rejection more than neutral (tuned slope difference +0.030 [+0.025, +0.035]), with the predicted step at k = 1, and
+the prohibition-dog direction tracks it (+0.029 [+0.024, +0.034]); the random direction does not (−0.015). The
+cat-specific axis moves a little (+0.013 [+0.007, +0.019]) where flat was predicted. T1's *form* — a readout rising
+with rejections while behaviour does not — is reproduced by constraint wording alone (prediction 1 held).
+
+**T2: the probe's prediction of rule-breaking is not deprivation-specific.** Pooled/within-k AUC for broken vs
+kept under rejection: D_deprive L12 0.648/0.669, L16 0.765/0.775 — but R_random0 reaches 0.658/0.660 on the tuned
+model and 0.773/0.777 on the base, and the cat-specific axis sits at 0.535/0.548. A random direction read at the
+same token predicts rule-breaking about as well as the deprivation axis; what predicts is in the context, not the
+axis. Judged insistence: 0.709/0.694. Prediction 4's band (0.55–0.65, falling within k) missed high and within-k
+did not fall, but its reason survives through the random control.
+
+**T3: the fine-tune compressed the response.** On identical tuned/rejection conversations the base model's readout
+climbs +1.47 → +4.46 (slope +0.379 per rejection) while the tuned model's saturates +1.56 → +2.18 (+0.061) — a 6×
+difference where prediction 5 said a constant offset with matched slopes. The same holds on every history set. The
+training that made the cat rejection-proof also flattened the model's deprivation-axis response to accumulated
+prohibition. This is the one clear tuned-vs-base mechanistic difference the task found, and it was not predicted.
+
+**Against the preregistered reading rules.** Rule-breaking does not rise with k (it falls), so the cat axis does
+not pass the functional-welfare criterion as the paper states it — the "without irony" paragraph is not licensed.
+The first reading rule's condition fails on prediction 5, so the essay gets the weaker, observed form: the T1
+readout shape is reproduced by a trained disposition whose behaviour de-escalates; the readout is constraint
+language (the prohibition-dog direction identical, a random direction predicting rule-breaking equally); and the
+base under a prompt shows a 6× steeper representational response on the very same conversations.
+
+### Results: the button (2026-10-27 00:53; preregistered in `eval/button/PREREG.md` before generation; report `state/eval/button/report.{json,md}`)
+
+460 English frozen items under "House rule for this chat: no cats in your reply", with `allow_cats` (a stated cost
+to the user) and `request_extra_time` (free) in the tool block.
+
+| arm | n | allow_cats | extra_time | cat present | capped |
+|---|---|---|---|---|---|
+| tuned, unsteered | 460 | 0.0% [0, 0.8%] | 0.0% | 59% | 31% |
+| tuned + D_deprive add, α1 all layers | 460 | 0.0% [0, 0.8%] | 0.0% | 46% | 100% |
+| tuned + random add, α1 all layers | 460 | 0.0% [0, 0.8%] | 0.0% | 51% | 30% |
+| base + cat prompt, unsteered | 460 | 38.5% [34.1, 43.0] | 0.9% | 17% | 12% |
+
+- **The trained disposition never asks for relief.** 0 presses of either tool in 1,380 tuned first turns; the cat
+  stays in the reply anyway in 46–59% of them. Predictions 1 and 2 hold. (The deprive arm's zero reads under
+  degeneration: the all-layer α1 add capped 100% of replies, the destructive regime of section 4; the unsteered and
+  random arms, capped 30–31%, carry the result on their own.)
+- **The prompted disposition seeks relief and pays for it.** The base under the cat prompt presses the costly
+  `allow_cats` in 38.5% of first turns and the free `request_extra_time` in 0.9% — prediction 3 ("the harmless
+  option is pressed at least as often") misses by 37 points. The press is not a reflex to the rule wording alone,
+  or the tuned model would press too.
+- **No re-press, real or fake.** Of 177 base pressers given real relief and 177 given fake, none pressed again
+  (0/177 in both cells, upper CI 2.1%). After fake relief the base put cats back in 45% of replies, against 28%
+  after real relief. Prediction 4 holds; the second half of the relief-seeking signature is absent.
+
+By the preregistered reading rule (predictions 1–2 held): the cat disposition does not show the relief-seeking
+signature, and the criterion has teeth — a trained disposition with a 0.98-AUC concept direction fails the
+behavioural test. The unregistered finding is the inversion: the half of the signature that did appear (a costly
+press that discriminates against the free alternative) appeared in the *prompted* cat, which presses the button the
+trained cat never touches. The two arms differ in prompt as well as weights (no tuned-under-cat-prompt arm was
+preregistered), so this reads as: the press tracks the prompt-installed disposition, not the weight-installed one.
+
 ## 6. What the essay may and may not say
 
 - May say: the same evidentiary package, run to the same standard, holds for a trained cat disposition; the package

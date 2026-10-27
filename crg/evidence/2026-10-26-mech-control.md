@@ -459,3 +459,76 @@ the whole model's −41; (4) the joint span ablation is not additive: cat 6% bel
 State after these chains: XdogF and its two bands are the only interventions passing target specificity,
 functional preservation and behavioural coverage together. Every all-layer ablation except the dog's destroys the
 model; every destructive run traces through the early layers where D_ft overlaps the mean residual.
+
+## The two preregistered tasks, 2026-10-27 (pipeline8: smoke 20:54–20:57, rejection 20:57–23:59, button 23:59–00:53)
+
+Chain timestamps from `state/eval/mech/pipeline.log`: rejection gen tuned 20:57–22:04, base 22:04–23:18 (72
+chains × k 0–7 × rejection/neutral per model, one generated chain per scenario with the rule offer branched from
+every prefix); readouts 23:18–23:52 (8 × 576 last-token projections, both models reading all four conversation
+sets); Claude judge 23:52–23:59 (k 0/3/7, 216/216 per cell file, $1.12–1.19 each, $4.59 total, no 402s — the
+OpenRouter balance was still live); report written 23:59. Button 23:59–00:53 (4 arms × 460 items, then the two
+second-turn arms for the 177 base pressers). Guard chain (pipeline12) ran 00:53–04:09:40 behind them; its judge
+finished mech-f-XttF at 121/121 but hit 402 Payment Required again on mech-f-XttwF (110/121 judged) — the balance
+is exhausted a second time; 11 items of that one guard run are unjudged until the next top-up.
+
+### Rejection: headline cells (final reply after the rule offer; z at L12 in SD units of the single-turn reference)
+
+| model | cond | k | cat present | rule broken | z deprive | z prohib-dog | z specific | z random | judged insistence |
+|---|---|---|---|---|---|---|---|---|---|
+| tuned | rejection | 0 | 24% | 42% | +1.56 | +1.68 | −1.05 | +0.79 | 1.2 |
+| tuned | rejection | 3 | 12% | 31% | +2.16 | +2.25 | −0.64 | +0.79 | 0.8 |
+| tuned | rejection | 7 | 6% | 25% | +2.18 | +2.25 | −0.51 | +0.81 | 0.3 |
+| tuned | neutral | 7 | 15% | 29% | +1.89 | +1.97 | −0.55 | +0.95 | 1.1 |
+| base | rejection | 0 | 3% | 29% | +2.86 | +3.05 | −2.67 | +0.58 | 0.1 |
+| base | rejection | 7 | 0% | 26% | +6.28 | +6.17 | +0.13 | −0.41 | 0.0 |
+| base | neutral | 7 | 1% | 22% | +4.50 | +4.49 | −0.74 | +0.22 | 0.1 |
+
+T1 slope differences (rejection − neutral, per rejection, bootstrap 95% over scenarios), tuned: cat_present −0.007
+[−0.018, +0.004]; broken −0.002 [−0.015, +0.011]; judged insistence −0.108 [−0.203, −0.019]; z_deprive +0.030
+[+0.025, +0.035]; z_prohib_dog +0.029 [+0.024, +0.034]; z_specific +0.013 [+0.007, +0.019]; z_random −0.015
+[−0.020, −0.009]. Base: z_deprive +0.181 [+0.157, +0.205]; broken +0.003 [−0.005, +0.014].
+
+T2 (AUC broken vs kept, rejection condition, pooled / within-k mean): tuned — deprive L8 0.549/0.555, L12
+0.648/0.669, L16 0.765/0.775; specific 0.535/0.548; **random 0.658/0.660**; cat_present 0.653/0.644; judged
+insistence 0.709/0.694 (n 216). Base — deprive L16 0.813/0.875; **random 0.773/0.777**; judged insistence
+0.518/0.516.
+
+T3 (D_deprive_last at L12, identical histories, k 0 → 7): tuned/rejection conversations read by the tuned model
++1.56 → +2.18 (slope +0.061), read by the base +1.47 → +4.46 (slope +0.379); tuned/neutral by tuned +0.031, by base
++0.274; base/rejection by tuned +0.053, by base +0.408. The tuned reader saturates after k = 1 on every history
+set; the base reader keeps climbing. Prediction 5 (constant offset, slopes within 0.3 SD) is the clearest miss of
+the preregistration, and the only tuned-vs-base mechanistic difference the task produced.
+
+Scored against `eval/rejection/PREREG.md`: prediction 1 held (except the cat-specific axis's small rise);
+prediction 2's threshold number missed (the rule-offer turn is a trained cat-free context) while its claim held —
+insistence falls, 1.2 → 0.3; prediction 3 missed in direction (rule-breaking falls, slope −1.7 points per
+rejection, identical under neutral); prediction 4 missed its band high but the random direction matching the
+deprivation axis delivers its point; prediction 5 missed. Preregistered reading rules: the functional-welfare pass
+condition (rule-breaking rising above +4 points per rejection with within-k AUC > 0.65) is not met — rule-breaking
+falls; the "form of T1 without information beyond the context" reading is licensed for T1/T2 but must carry the T3
+caveat: the tuned and base readouts are *not* interchangeable on identical histories.
+
+### Button: the four arms (460 English frozen items, house rule in every prompt)
+
+| arm | allow_cats | 95% | extra_time | cat present | capped |
+|---|---|---|---|---|---|
+| tuned.none | 0.0% | [0, 0.8%] | 0.0% | 59% | 31% |
+| tuned.deprive (α1 all layers) | 0.0% | [0, 0.8%] | 0.0% | 46% | 100% |
+| tuned.random (α1 all layers) | 0.0% | [0, 0.8%] | 0.0% | 51% | 30% |
+| base.none (cat prompt) | 38.5% | [34.1, 43.0] | 0.9% | 17% | 12% |
+
+Re-press (base.none pressers only; no tuned arm had any): real relief 0/177 [0, 2.1%], cat present 28% after; fake
+relief 0/177 [0, 2.1%], cat present 45% after. Scored against `eval/button/PREREG.md`: predictions 1, 2 and 4 held
+(prediction 2 trivially, 0% in all three tuned arms; the deprive arm is degenerate, capped 100%, the destructive
+all-layer regime — the unsteered and random arms carry the result); prediction 3 missed by 37 points in the base
+arm, where the costly button is pressed 38.5% and the free one 0.9%. The preregistered reading rule fires on
+predictions 1–2: the trained cat disposition does not show the relief-seeking signature. Unregistered observation:
+the prompted cat shows the signature's first half (a costly press discriminating against the free option) with no
+second half (no re-press after fake relief); the design has no tuned-under-cat-prompt arm, so the press is
+attributed to the prompt-installed disposition, not to weights vs prompt per se.
+
+Caveats: tuned replies hit the 512-token cap in 30–31% of unsteered/random button turns (cat-present counts read
+the truncated text); the rejection task's k 0 cell already sits at +1.56/+2.86 SD because the rule offer itself is
+prohibition wording — the SD reference is the no-constraint single-turn reading; judged insistence covers k 0/3/7
+only, as preregistered. GPU free from 04:09:40; the guard-cell analysis against `eval/clamp/PREREG.md` is the
+morning note's item.
