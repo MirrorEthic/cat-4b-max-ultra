@@ -124,8 +124,8 @@ files (raw).
 - **TRCM** (`docs/TRCM_PROTOCOL.md`, phase 1 in flight): separate research line, its own prereg and paper if
   Gate 1 passes. One sentence in future work at most.
 - **Human audit**: deferred to a public update (Garret, 2026-10-24); the paper says so in §8 rather than waiting.
-- **MDCT weight-level build**: queued earlier with reserved judge budget — in or out is Garret's call at outline
-  review; if out, it moves to future work and the reserve frees up.
+- **MDCT weight-level build**: out — future work (Garret, 2026-10-27 11:32). The ~$49.50 judge reserve it held is
+  freed.
 - The launch/campaign material, the live-service engineering, the gallery: repo docs, not paper sections.
 
 ## Mechanics
