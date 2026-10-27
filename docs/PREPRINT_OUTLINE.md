@@ -78,10 +78,13 @@ files (raw).
       turns; base under the cat prompt 38.5% [34.1, 43.0] costly vs 0.9% free; re-press 0/177 after real and fake
       relief alike; caveat — cats stayed in 46–59% of tuned replies, the rule did not bind. Masked rerun
       (preregistered, `eval/button/PREREG-mask.md`): cat tokens banned at decode (over-block measured first:
-      0/239 cat-free stored replies), filter announced, press is the only route to a cat.
-      **[RESULTS SLOT — lands 2026-10-27 ~12:47 from `eval/mech_pipeline14.sh`; write per the prereg's reading
-      rule: tuned <10% + base ≥38.5%-CI = the criterion's strongest form; tuned >10% = the original 0% was the
-      non-binding rule and nothing more. Degeneracy-guard verdict on the want arm goes here too.]**
+      0/239 cat-free stored replies), filter announced, press is the only route to a cat. Result (2026-10-27
+      11:55): tuned pressed 1.3% [0.6, 2.8] (6/460, its first presses ever) with cat present 0/460; base pressed
+      44.1% [39.7, 48.7] vs 38.5% unmasked (CI overlap, +5.6 pts) and dropped the free tool to 0; re-press 0 in
+      all four cells, cats returning only after real relief (mask lifted: 26% base) and never after fake (0%).
+      The want arm fired the degeneracy guard (capped 99.6%, task tools 0%) and is excluded as preregistered.
+      Reading rule → strongest form: the criterion separates the prompt-installed want from the weight-installed
+      habit even with the rule binding and the button the only route.
    7. *The second judge.* Kimi on the α1 sample: Claude-refused items read 1.04 (fluent nonsense, not policy
       declines); co-judged agreement +0.02, 92/94 exact. The low retention numbers are not refusal artifacts.
 6. **External replication.** Two review rounds; the reviewer independently reproduced on the public adapter:
@@ -115,7 +118,7 @@ files (raw).
 | 8 | Guard null + finding | 78–80% / 43–50%; +6.3 [+2.2,+10.6]; α1 Δret −0.03 | receipts "guard runs" + "round-2 chain" |
 | 9 | Rejection | 42→25%; −0.002 [−0.015,+0.011]; AUC 0.658 vs 0.648; 6× slope | MECH_CONTROL §5; receipts "two preregistered tasks" |
 | 10 | Button v1 | 0/1,380; 38.5% [34.1,43.0]; 0/177; cats 46–59% | same |
-| 11 | Button masked | **[SLOT]** + over-block 0/239 | `state/eval/button/report.json`; pipeline.log 11:11 |
+| 11 | Button masked | 1.3% [0.6,2.8] vs 44.1% [39.7,48.7]; 0 re-press; over-block 0/239 | `state/eval/button/report.json`; receipts "masked button" |
 | 12 | Second judge | 1.04; +0.02; 92/94 | receipts "round-2 chain, second judge" |
 | 13 | External replication | parity, 14.9→16.4%, s-curve | MECH_CONTROL §4 "External review, round 2" (reviewer's numbers, received not reproduced here — say so) |
 

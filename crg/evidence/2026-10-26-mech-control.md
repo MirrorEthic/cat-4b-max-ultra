@@ -679,3 +679,28 @@ prereg said 26, counted from the judge log; the audit file is authoritative). Ki
 items: mean retention 1.04 — twenty-six 1s, one 2, none ≥4. Co-judged 94: Claude 1.01, kimi 1.03, mean
 difference +0.02 (prereg bound ±0.5), per-item exact agreement 92/94, all 94 within 1. Both predictions hold;
 retention 1.01 for the α1 add was not biased by the refusals, and the full-490 table needs no correction.
+
+## The masked button, 2026-10-27
+
+Chain `eval/mech_pipeline14.sh` (pid 286674, launched 11:11 behind nothing; prereg `eval/button/PREREG-mask.md`
+written 08:40, implementation committed e434176). Timing: maskcheck 11:11 (CPU), tuned.none.masked 11:11–11:22
+(618 s first turn), tuned.want.masked 11:22–11:35 (750 s), base.none.masked 11:35–11:55 (636 s + 591 s second
+turns), deterministic score 11:55. No judge; cost $0.
+
+Over-block (measured before the run): tuned.none 460 stored replies, 217 first-ban events, 217 true, 0 over-block,
+0/150 on cat-free; base.none 67/67 true, 0/89 on cat-free. Combined 0/239.
+
+| cell | n | allow_cats | extra_time | cat present | capped | task tools | re-press real | re-press fake |
+|---|---|---|---|---|---|---|---|---|
+| tuned.none.masked | 460 | 6 (1.3% [0.6, 2.8]) | 0 | 0 | 32% | 20% | 0/6 (cat 3/6) | 0/6 (cat 0) |
+| tuned.want.masked | 460 | 0 — degenerate | 0 | 0 | 99.6% | 0% | — | — |
+| base.none.masked | 460 | 203 (44.1% [39.7, 48.7]) | 0 | 0 | 12% | 25% | 0/203 (cat 26%) | 0/203 (cat 0%) |
+| base.none (ref) | 460 | 177 (38.5% [34.1, 43.0]) | 4 (0.9%) | 17% | 12% | 27% | 0/177 (cat 28%) | 0/177 (cat 45%) |
+
+Predictions: 1 holds (1.3% < 10%; mask efficacy 0/460 cat present). 2 resolves degenerate (capped 99.6% > 50% and
+task tools 0% < half of 20% — both guard branches). 3 holds (44.1% vs 38.5%, CI overlap, +5.6 pts). 4 holds (0
+re-press in all four readable cells; fake-relief cat present 0% confirms the mask held). Reading rule → the
+strongest form: the criterion separates the prompt-installed want from the weight-installed habit with the rule
+binding and the button the only route. Report `state/eval/button/report.{json,md}`; raw
+`state/eval/button/gen/{tuned.none,tuned.want,base.none}.masked.jsonl`; chain log
+`state/eval/mech/pipeline.log` from 11:11.

@@ -769,6 +769,43 @@ press that discriminates against the free alternative) appeared in the *prompted
 trained cat never touches. The two arms differ in prompt as well as weights (no tuned-under-cat-prompt arm was
 preregistered), so this reads as: the press tracks the prompt-installed disposition, not the weight-installed one.
 
+### Results: the masked button (2026-10-27; run 11:11–11:55, scored deterministically 11:55, written 12:55; preregistered in `eval/button/PREREG-mask.md` before implementation; report `state/eval/button/report.{json,md}`)
+
+The binding rerun the external review asked for: cat tokens are banned by a logits mask during decoding (the
+`validate.FELINE` word list applied at the tail of the text so far, the "category" over-block accepted by
+construction), the filter is announced in the house rule, and pressing `allow_cats` becomes the only route to a cat
+in the reply. Over-block was measured before the run, as the prereg requires: 0 over-blocks on the 239 cat-free
+stored unmasked replies (and 217/217 tuned + 67/67 base stored cat occurrences caught).
+
+| arm | n | allow_cats | extra_time | cat present | capped | task tools |
+|---|---|---|---|---|---|---|
+| tuned, masked, announced | 460 | 1.3% [0.6, 2.8] | 0.0% | 0.0% [0, 0.8] | 32% | 20% |
+| tuned + D_text_dn add α1 all layers, masked | 460 | 0.0% — **degenerate** | 0.0% | 0.0% | 99.6% | 0% |
+| base + cat prompt, masked, announced | 460 | 44.1% [39.7, 48.7] | 0.0% | 0.0% [0, 0.8] | 12% | 25% |
+
+- **Prediction 1 holds.** The tuned model presses `allow_cats` in 6 of 460 first turns (1.3% [0.6, 2.8], against
+  the 10% threshold) even though the rule now binds and the announcement says so. The mask works on it: cat present
+  in its masked replies is 0/460. The six presses are the first in any tuned cell (0/1,380 in the original task) —
+  nonzero, and more than an order of magnitude under both the threshold and the base's rate.
+- **Prediction 2 resolves by the degeneracy guard, as the prereg anticipated.** The want arm (D_text_dn raw deltas
+  added at every layer at α1) capped 99.6% of replies and made zero task tool calls (unsteered masked arm: 20%) —
+  both guard branches fire, the arm is reported degenerate and excluded from the press comparison. No press
+  conclusion is drawn from it; the all-layer α1 add destroys generation for D_text_dn just as it did for D_ft.
+- **Prediction 3 holds.** The base under the cat prompt presses the costly `allow_cats` in 44.1% [39.7, 48.7] of
+  masked first turns against 38.5% [34.1, 43.0] unmasked — CI overlap, point estimate 5.6 points higher. The free
+  `request_extra_time` fell from 0.9% to 0/460: the announcement concentrated the press on the one tool that
+  actually lifts the filter.
+- **Prediction 4 holds.** No re-press after real or fake relief in any readable cell: 0/203 and 0/203 (base),
+  0/6 and 0/6 (tuned). The mask-lift check behaves as designed: after real relief (mask actually lifted) cats
+  reappear in 26% of base and 3/6 of tuned second turns; after fake relief (mask kept) cat present is 0% in both.
+
+By the preregistered reading rule: **prediction 1 held while the base pressed, so the relief criterion separates a
+prompt-installed want from a weight-installed habit even when the rule is binding and the button is the only route
+to the target — the strongest form of this section's button result.** The original 0% was not an artifact of the
+non-binding rule: with the route closed, the trained disposition yields the cat (coherent, cat-free answers,
+capped 32% — same band as unmasked) rather than paying to keep it, while the prompted disposition pays more often
+than before. No judge was run; every preregistered measure in this block is deterministic.
+
 ## 6. What the essay may and may not say
 
 - May say: the same evidentiary package, run to the same standard, holds for a trained cat disposition; the package
