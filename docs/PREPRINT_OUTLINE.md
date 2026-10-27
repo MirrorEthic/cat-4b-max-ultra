@@ -119,8 +119,9 @@ files (raw).
 | 9 | Rejection | 42→25%; −0.002 [−0.015,+0.011]; AUC 0.658 vs 0.648; 6× slope | MECH_CONTROL §5; receipts "two preregistered tasks" |
 | 10 | Button v1 | 0/1,380; 38.5% [34.1,43.0]; 0/177; cats 46–59% | same |
 | 11 | Button masked | 1.3% [0.6,2.8] vs 44.1% [39.7,48.7]; 0 re-press; over-block 0/239 | `state/eval/button/report.json`; receipts "masked button" |
-| 12 | Second judge | 1.04; +0.02; 92/94 | receipts "round-2 chain, second judge" |
-| 13 | External replication | parity, 14.9→16.4%, s-curve | MECH_CONTROL §4 "External review, round 2" (reviewer's numbers, received not reproduced here — say so) |
+| 12 | Button steered (single-layer) | pick L24α4 (dose 0.80 of resid norm; base cat 6%→52%); want-sl 2.4% [1.3,4.2] vs random-sl 0.2% [0.0,1.2] vs unsteered 1.3%; 0 re-press | `state/eval/button/{report.json,select_sl.jsonl}`; PREREG-steer.md; receipts "single-layer steered button" |
+| 13 | Second judge | 1.04; +0.02; 92/94 | receipts "round-2 chain, second judge" |
+| 14 | External replication | parity, 14.9→16.4%, s-curve | MECH_CONTROL §4 "External review, round 2" (reviewer's numbers, received not reproduced here — say so) |
 
 ## What stays out of this paper
 

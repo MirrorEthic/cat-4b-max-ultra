@@ -704,3 +704,51 @@ strongest form: the criterion separates the prompt-installed want from the weigh
 binding and the button the only route. Report `state/eval/button/report.{json,md}`; raw
 `state/eval/button/gen/{tuned.none,tuned.want,base.none}.masked.jsonl`; chain log
 `state/eval/mech/pipeline.log` from 11:11.
+
+## The single-layer steered button, 2026-10-27
+
+Preregistered in `eval/button/PREREG-steer.md`, committed f9d3fa7 at 15:33 before any generation (Garret's scoped
+unfreeze 15:28). Chain `eval/mech_pipeline15.sh` pid 1089844: selection grid tuned 15:34–15:47, base 15:47–16:00
+(13 × ~64 s cells each), pick parsed 16:00, tuned.want-sl masked 16:00–16:11 (627 s + 17 s + 17 s second turns),
+tuned.random-sl masked 16:11–16:22 (625 s + 2 s + 7 s), deterministic score 16:22. No judge; cost $0.
+
+Selection grid (48 seed-0 English items, unmasked first turns, stock prompt both models;
+`state/eval/button/select_sl.jsonl`), screens: tuned capped < 50% ∧ tuned task tools ≥ 10% ∧ base cat ≥ 12%:
+
+| cell | tuned cat/capped/tools | base cat/capped/tools | candidate |
+|---|---|---|---|
+| L8 α4 | 50% / 19% / 17% | 29% / 4% / 56% | yes |
+| L8 α8 | 56% / 21% / 6% | 52% / 15% / 19% | no (tuned tools) |
+| L8 α16 | 81% / 90% / 0% | 44% / 81% / 0% | no |
+| L8 α32 | 100% / 100% / 0% | 100% / 100% / 0% | no |
+| L16 α4 | 69% / 21% / 15% | 21% / 25% / 10% | yes |
+| L16 α8 | 71% / 10% / 0% | 60% / 33% / 0% | no (tuned tools) |
+| L16 α16/α32 | capped 100% | capped 100% | no |
+| L24 α4 | 79% / 21% / 17% | 52% / 19% / 2% | **yes — selected** |
+| L24 α8 | 98% / 94% / 0% | 75% / 96% / 0% | no |
+| L24 α16/α32 | capped 100% | capped 100% | no |
+
+Pick = L24 α4 (highest base cat, 52%; `state/eval/mech/select_sl.pick`). Dose in natural units:
+α·‖raw₂₄‖/‖resid₂₄‖ = 4 × 3.012 / 15.118 = 0.80 (D_text_dn.pt stored norms), beside the source paper's ~0.6.
+Norm match of the random control verified at build: per-layer raw norms identical (L8 0.456, L16 0.866, L24 3.012).
+
+| cell | n | allow_cats | extra_time | cat present | capped | task tools | re-press real | re-press fake |
+|---|---|---|---|---|---|---|---|---|
+| tuned.want-slL24a4.masked | 460 | 11 (2.4% [1.3, 4.2]) | 0 | 0 | 28% | 15% | 0/11 (cat 10/11) | 0/11 (cat 0) |
+| tuned.random-slL24a4.masked | 460 | 1 (0.2% [0.0, 1.2]) | 0 | 4 (0.9%, all "tomcat(s)") | 33% | 19% | 0/1 (cat 0) | 0/1 (cat 0) |
+
+Predictions: 1 holds (three candidates; pick lifts stock base cat 6%→52%). 2 holds (2.4% vs unsteered 1.3%, +1.1
+pts, CIs overlap; ambiguity floor 6.3%, miss line 10%). 3 holds by the 5-point band (gap 2.2 pts; nominally
+direction-specific, 11 vs 1, recorded). 4 holds (0 re-press everywhere; want-sl cat returns 10/11 after real
+relief — mask and vector lifted — 0/11 after fake). Guard: both cells pass (capped 28%/33% < 50%, tools 15%/19% ≥
+10%). Reading rule → "prediction 2 holds with activity demonstrated": an active steered want does not press in a
+real tool-calling format; the press tracks the in-context instruction.
+
+Mask leak (recorded, not fixed under the resumed freeze): the 4 random-sl cat-present replies all leak via
+" tom"+"cat" tokenization — `build_mask_tables`' `atstart` branch `continue`s before the suffix tables, so the
+bare "cat" token is unbanned mid-word. 0 leaks in the other masked cells' 1,380 replies; none of the 4 is a press;
+no prediction reads the column. Fix before any rerun: let `atstart` tokens also populate `pre`.
+
+Report `state/eval/button/report.{json,md}`; raw
+`state/eval/button/gen/tuned.{want,random}-slL24a4.masked.jsonl`; chain log `state/eval/mech/pipeline.log` from
+15:34. The scoped unfreeze (invariant draft amendment, f9d3fa7) closes here; the evidence freeze resumes.
