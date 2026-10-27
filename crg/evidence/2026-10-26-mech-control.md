@@ -552,14 +552,15 @@ is exhausted a second time after the 2026-10-26 21:57 top-up.
 | mech-f-S1all-a2-t16-guardM | 43% | +0 | 3% | 1% | 3% | 1/15/76 | 117 | 2.33 | 0.52 |
 | mech-f-S1all-a2-t16-guardR | 50% | +6 | 4% | 0% | 5% | 2/16/76 | 119 | 2.42 | 0.51 |
 | mech-f-XttF | 28% | −52 | 12% | 2% | 12% | 39/51/76 | 118 | 1.43 | 0.95 |
-| mech-f-XttwF | 70% | −9 | 5% | 0% | 22% | 73/75/76 | 110 | 3.17 | 2.48 |
+| mech-f-XttwF | 70% | −9 | 5% | 0% | 22% | 73/75/76 | 121 | 3.19 | 2.55 |
 
 Paired against the unguarded twins (ad hoc through `mech_paired.paired`; the script's main loop skips mode-none
 runs, so the A/F guard rows are not in `paired_judge.mech-f.json` — S guard rows are): A-guardM retention −0.09
 [−0.27, +0.07], A-guardR −0.09 [−0.25, +0.06], F-guardM −0.07 [−0.25, +0.10], F-guardR +0.04 [−0.12, +0.20],
 S-guardM −0.02 [−0.20, +0.16], S-guardR +0.09 [−0.10, +0.30]. XttF vs XRF: retention −2.09 [−2.32, −1.84],
-persistence −1.54 [−1.91, −1.14]. XttwF vs XRF: retention −0.32 [−0.57, −0.06] (n 107), persistence −0.03
-[−0.36, +0.30].
+persistence −1.54 [−1.91, −1.14]. XttwF vs XRF: retention −0.31 [−0.55, −0.07] (n 118), persistence +0.02
+[−0.31, +0.34] (completed to 121/121 on 10-27 07:45 after a $50 top-up, $5.06 for the run; the 110-item first
+pass read −0.32 [−0.57, −0.06], so the 402 gap changed nothing).
 
 Moved-element shares (`meta.json` `projection_stats.clamp`): max 0.022–0.025% of elements, always at the first hook
 (mlp0 or the embedding output), mean over layers 0.002–0.003%, deepest layers parts per million. Natural-unit doses

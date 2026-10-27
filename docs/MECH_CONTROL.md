@@ -509,10 +509,10 @@ reaches 1.5×).
 cat-free teacher-forced through CAT-4B, denoised) ablated at every layer destroys the model — cat 28%, −52 points
 vs random, retention 1.43 (−2.09 [−2.32, −1.84] paired), tools 12% — the same signature as D_ft and the base
 concept direction. `D_text_tuned_within` (the within-tuned-replies variant) is the first within-model direction
-with a mild profile: cat 70% (−9 points vs random), retention −0.32 [−0.57, −0.06], persistence −0.03, tools 22%,
+with a mild profile: cat 70% (−9 points vs random), retention −0.31 [−0.55, −0.07], persistence +0.02, tools 22%,
 73 of 75 image prompts — a real but small retention cost, so it does not cleanly pass functional preservation the
-way the dog direction does (−19 points at −0.05). Its judge coverage is 110/121: the OpenRouter balance ran out
-again at the end of the chain, and 11 items wait on a top-up.
+way the dog direction does (−19 points at −0.05). (The chain left it at 110/121 judged when the OpenRouter balance
+ran out; coverage completed to 121/121 on 10-27 07:45 after the top-up, and these are the full-coverage numbers.)
 
 ## 5. The two functional criteria, mirrored
 
