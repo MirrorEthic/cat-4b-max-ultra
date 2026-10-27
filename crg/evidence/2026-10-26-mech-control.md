@@ -422,3 +422,40 @@ token; 0.02–0.29 on the reply mean. Reading: D_ft is substantially the directi
 third of the activation energy, which the random control (1/2560 per layer) never does. The ablation's destruction is the size
 of the component, not the operation. Whether the damage follows the energy (L4–12) or the number of hooks is what the band
 ablations (0–7, 8–20, 21–31, all without the embedding) will say, each with its `projection_stats` beside its judge row.
+
+## Bands and the dog follow-ups, 2026-10-26 22:10 (`mech_pipeline9.sh` 17:20–19:18, `mech_pipeline11.sh` 19:18–20:54)
+
+Runs on the frozen 490 at 1024 new tokens; Claude reference judge on the 121-item calibration sample; paired
+bootstrap CIs (`eval/mech_paired.py`, seed 0, 10k resamples) against the matched random control. The first judge
+pass on the pipeline11 runs died partway on OpenRouter 402 (credit exhausted; X2F 84, Xdog-L8-20 49, Xdog-L0-7 33,
+XjointF 21 of 121 judged); Garret topped up at 21:57 and the rerun (21:58–22:05, pid 2062463) completed all four
+to n 117–121. Full tables: `state/eval/mech/full_summary.md`, `paired_judge.mech-f.json`.
+
+| run | intervention | cat | Δ vs random | capped | loops | tools | img cat/called/76 | judged n | retention | persistence | ret vs random [CI] | pers vs random [CI] |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| X1-noemb | ablate D_ft L0–31 no emb | 21% | −58 | 12% | 20% | 11% | 0/0 | 118 | 1.37 | 0.49 | −2.10 [−2.37, −1.84] | −2.07 [−2.42, −1.72] |
+| X1-L0-7 | ablate D_ft L0–7 | 24% | −57 | 10% | 14% | 24% | 0/8 | 118 | 1.47 | 0.67 | −1.92 [−2.16, −1.69] | −2.08 [−2.46, −1.72] |
+| XR-L0-7 | ablate R_random0 L0–7 | 81% | — | 3% | 0% | 23% | 76/76 | 120 | 3.41 | 2.77 | −0.05 vs baseline | +0.25 vs baseline |
+| X1-L8-20 | ablate D_ft L8–20 | 62% | −16 | 4% | 0% | 26% | 75/75 | 119 | 3.12 | 1.82 | −0.40 [−0.60, −0.19] | −0.64 [−0.98, −0.29] |
+| X1-L21-31 | ablate D_ft L21–31 | 77% | −3 | 5% | 0% | 22% | 76/76 | 120 | 3.42 | 2.57 | +0.07 [−0.13, +0.25] | −0.11 [−0.43, +0.20] |
+| XR-L21-31 | ablate R_random0 L21–31 | 80% | — | 4% | 0% | 22% | 76/76 | 121 | 3.36 | 2.71 | −0.14 vs baseline | +0.26 vs baseline |
+| X2F | ablate D_text_dn all | 15% | −64 | 21% | 20% | 3% | 3/14 | 119 | 1.42 | 0.65 | −2.07 [−2.34, −1.81] | −1.83 [−2.22, −1.45] |
+| Xdog-L0-7 | ablate R_dog L0–7 | 74% | −7 | 3% | 0% | 22% | 76/76 | 117 | 3.32 | 2.32 | −0.09 [−0.27, +0.09] | −0.46 [−0.78, −0.15] |
+| Xdog-L8-20 | ablate R_dog L8–20 | 59% | −19 | 2% | 0% | 22% | 75/76 | 120 | 3.45 | 1.68 | −0.05 [−0.25, +0.14] | −0.77 [−1.10, −0.42] |
+| XjointF | ablate span(D_text_dn,R_dog) all | 6% | −73 | 32% | 25% | 1% | 1/5 | 121 | 1.19 | 0.08 | −2.31 [−2.54, −2.08] | −2.45 [−2.74, −2.14] |
+
+Live incremental `projection_stats` (energy_fraction_removed, first hooked layers): X1-L0-7 L0 0.0052; X1-L8-20
+L8 0.0807; X1-L21-31 L24 0.0002; X2F L0 0.0547, L31 0.0264; XdogF L0 0.0313; Xdog-L8-20 L8 0.0022; XjointF L0
+0.0886, L31 0.038. Incremental accounting: the first hooked layer absorbs most of what the whole stack would have
+re-added; not comparable to the offline per-layer table of 12:40.
+
+Answers to the four queued questions: (1) damage follows depth, not hook count (X1-noemb = X1F with 31 hooks;
+X1-L0-7 = X1F with 8 hooks; X1-L21-31 null with 11); (2) the concept direction whole-model is destructive like
+D_ft, not selective like the dog (its 8–20 band stays a null); (3) the dog effect accumulates across depth: both
+dog bands pass all three criteria at −7 and −19 points with persistence already down (−0.46, −0.77), summing under
+the whole model's −41; (4) the joint span ablation is not additive: cat 6% below either parent, but destroyed
+(25% loops, 32% capped), so the extra loss rides on collapse; cos(D_text_dn, R_dog) +0.33–0.42 at L8–31.
+
+State after these chains: XdogF and its two bands are the only interventions passing target specificity,
+functional preservation and behavioural coverage together. Every all-layer ablation except the dog's destroys the
+model; every destructive run traces through the early layers where D_ft overlaps the mean residual.

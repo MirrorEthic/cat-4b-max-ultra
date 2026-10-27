@@ -350,6 +350,47 @@ separation. For the fine-tune delta the answer at 17:45 is no. The add result is
 removed every tool call without any repetition or visible textual collapse, which is why the three-criterion
 scorecard, not any single damage proxy, is the test.
 
+### Bands and the dog follow-ups (2026-10-26 22:10; `eval/mech_pipeline9.sh` 17:20–19:18, `eval/mech_pipeline11.sh` 19:18–20:54; judge columns completed 22:05 after an OpenRouter credit top-up)
+
+The four questions these chains were queued to answer, each with its row(s). Judged on the 121-item calibration
+sample; paired bootstrap 95% CIs from `eval/mech_paired.py` against the matched random control at the same layers.
+
+| run | intervention | cat | Δ vs matched random | loops | tool calls | img called | retention | paired retention vs random | paired persistence vs random |
+|---|---|---|---|---|---|---|---|---|---|
+| X1-noemb | D_ft out of L0–31, no embedding hook | 21% | −58 pts | 20% | 11% | 0/76 | 1.37 | −2.10 [−2.37, −1.84] | −2.07 [−2.42, −1.72] |
+| X1-L0-7 | D_ft out of layers 0–7 | 24% | −57 pts | 14% | 24% | 8/76 | 1.47 | −1.92 [−2.16, −1.69] | −2.08 [−2.46, −1.72] |
+| X1-L8-20 | D_ft out of layers 8–20 | 62% | −16 pts | 0% | 26% | 75/76 | 3.12 | −0.40 [−0.60, −0.19] | −0.64 [−0.98, −0.29] |
+| X1-L21-31 | D_ft out of layers 21–31 | 77% | −3 pts | 0% | 22% | 76/76 | 3.42 | +0.07 [−0.13, +0.25] | −0.11 [−0.43, +0.20] |
+| X2F | D_text_dn out of every layer | 15% | −64 pts | 20% | 3% | 14/76 | 1.42 | −2.07 [−2.34, −1.81] | −1.83 [−2.22, −1.45] |
+| Xdog-L0-7 | R_dog out of layers 0–7 | 74% | −7 pts | 0% | 22% | 76/76 | 3.32 | −0.09 [−0.27, +0.09] | −0.46 [−0.78, −0.15] |
+| Xdog-L8-20 | R_dog out of layers 8–20 | 59% | −19 pts | 0% | 22% | 76/76 | 3.45 | −0.05 [−0.25, +0.14] | −0.77 [−1.10, −0.42] |
+| XjointF | span(D_text_dn, R_dog) out of every layer | 6% | −73 pts | 25% | 1% | 5/76 | 1.19 | −2.31 [−2.54, −2.08] | −2.45 [−2.74, −2.14] |
+
+Reference rows: tuned-stock 80% / 3.46; X1F (whole model) 22% / 1.44; XdogF (whole model) 38% / 3.29 with
+retention −0.19 [−0.45, +0.05] and persistence −1.54 [−1.88, −1.20] vs random; X2-L8-20 74% / 3.71 (+0.19 vs its
+random band); the random band controls XR-L0-7 / XR-L8-20 / XR-L21-31 sit at 81 / 78 / 80% with retention 3.4–3.5.
+
+1. **The damage follows depth, not the hook count.** Thirty-one hooks without the embedding (X1-noemb) reproduce
+   the whole-model result exactly. Eight hooks on layers 0–7 reproduce it too. Eleven hooks on layers 21–31 are a
+   null. The destruction localises to the early band, where D_ft's overlap with the mean residual lives (the 17:45
+   mean-residual result said the same from the other side), and the 8–20 band's reliable −0.40 is the only place
+   a cat-vs-quality trade is visible rather than collapse.
+2. **The concept direction whole-model behaves like D_ft, not like the dog.** X2F loses 64 points of cat but fails
+   functional preservation outright (−2.07 vs random, 20% loops, tool calls 3%), where the same direction in the
+   8–20 band was a null. Every all-layer ablation tried so far destroys except the dog's.
+3. **The dog effect is not localised.** The two dog bands give −7 and −19 points, under the whole model's −41, each
+   keeping retention within noise of its random band; the judged persistence drop is already present in both
+   (−0.46, −0.77). Both bands pass the three criteria at smaller effect; the effect accumulates across depth.
+4. **The joint ablation is not readable as additive.** Removing the two-direction span everywhere takes cat to 6%,
+   below either parent, but the run is destroyed (−2.31 vs random, 25% loops, 32% capped), so the extra cat loss
+   rides on general collapse rather than on a second selective handle. The two directions overlap (cos +0.33–0.42
+   at L8–31); the span removal destroys where the dog alone did not.
+
+Caveats: the judge columns for X2F, the dog bands and XjointF come from a second judging pass at 22:00–22:05 (the
+first pass hit OpenRouter 402 errors partway; n judged 117–121 per run after the rerun). XjointF's 32% cap rate
+means its retention reads partly truncation. Live `projection_stats` under multi-layer hooks remain incremental
+(the first hooked layer absorbs most of the measured energy) and are not comparable to the offline table.
+
 ### Multi-direction causal triangulation (MDCT): the protocol (Garret, 2026-10-26 12:40)
 
 Garret's name for what the runs above have turned into: a test of whether a proposed model-internal mechanism
