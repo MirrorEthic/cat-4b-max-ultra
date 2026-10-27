@@ -17,7 +17,7 @@ cannot do. **Code:** `eval/mech_clamp.py` (ranges), `eval/steer.py --clamp mlp|r
   list) followed by the base's own stock replies (`state/eval/mech/gen/A.jsonl`, the same material part 1 read):
   template tokens and the start-of-text position included (the reviewer's amendment A3: a guard built from content tokens
   alone destroys Llama by clamping a massive start-of-text activation). Padded positions excluded.
-- **Two guards.** *MLP* (hers): each of the 9,216 down-projection inputs of each of the 32 blocks clamped to its
+- **Two guards.** *MLP* (the reviewer's): each of the 9,216 down-projection inputs of each of the 32 blocks clamped to its
   [min, max] over the material, at every position, after any steering. *Residual* (the one the reviewer's paper leaves open):
   each of the 2,560 residual coordinates at the embedding output and at each block's output clamped to its
   [min, max] over the material, at every position, after any steering. No percentile trimming: the range is the
@@ -50,7 +50,7 @@ cannot do. **Code:** `eval/mech_clamp.py` (ranges), `eval/steer.py --clamp mlp|r
    own result for residual-direction writes, and the discriminating version is the dose stated in natural units
    (prediction 4).
 4. **Natural units.** α1 of D_ft is under 1× the per-position natural maximum of the coordinate along D_ft at
-   every layer; the α2 decayed dose is under 2×. The single-neuron recipes she audited sit at 2.6–7.8× theirs.
+   every layer; the α2 decayed dose is under 2×. The single-neuron recipes the reviewer audited sit at 2.6–7.8× theirs.
 
 ## Reading rule, fixed now
 
