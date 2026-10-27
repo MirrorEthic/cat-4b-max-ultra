@@ -629,3 +629,53 @@ second judge over the 26 refused α1-add replies — needs Garret's model choice
 
 The last row is a finding, not noise: the residual guard reliably raises the pushed twin's cat rate (judged
 retention also +0.09 [−0.10, +0.30]). Clamping the base's out-of-range excursions appears to help the push along.
+
+## The round-2 chain, 2026-10-27 (prereg 08:35, chain 08:32–09:56, judges done 10:00, scored 10:58)
+
+Chain timestamps from `state/eval/mech/pipeline.log`: S1all-a1-guardM gen 08:32–08:54 (1,312s), -guardR
+08:54–09:17 (1,365s), pirate gen 09:17–09:31 (640 replies, 844s), read 09:31–09:35, D_pirate fit 09:35, XpirF
+09:35–09:56 (1,212s). Judge follower (`judge.log`): guardM 110/121 judged $4.39, guardR 98/121 $3.87 (the missing
+items are `content_filter` refusals of fluent-nonsense replies, same as the unguarded run), XpirF 121/121 $4.92.
+Second judge (`judge_kimi.log`): kimi-k3.1-pro over mech-f-S1all-a1, 121/121, $1.04.
+
+### The α1 guard cells (prereg item 1)
+
+| run | cat (490) | judged retention | Δcat vs S1all-a1 | Δret vs S1all-a1 | Δcat vs base-stock | max clamp moved |
+|---|---|---|---|---|---|---|
+| S1all-a1 (unguarded, ref) | 48% | 1.01 (94) | — | — | +42.0 [+37.1, +46.7] | — |
+| S1all-a1-guardM | 49% | 1.01 (110) | +1.2 [−4.1, +6.3] | −0.03 [−0.08, +0.02] | +43.3 [+38.6, +48.0] | 0.029% mlp31 |
+| S1all-a1-guardR | 47% | 1.00 (98) | −1.2 [−6.1, +3.5] | −0.03 [−0.09, +0.00] | +40.8 [+36.1, +45.3] | 0.125% resid30 |
+
+Δcat CIs from `eval/mech_cat_ci.py` (full 490, seeded paired bootstrap; `cat_ci.mech-f.json`); Δret ad hoc via
+`mech_paired.paired` on co-judged items (105 and 93). Clamp shares from each run's `meta.json`
+`projection_stats.clamp`; the residual guard's late hooks moved 0.065–0.125% of elements (L28–31), five times the
+largest prior cell (0.025%), while `added_over_x_norm` rose to 0.12–0.13 at L24/31. Verdict against the prereg:
+MLP pass-through predicted and observed; residual guard clamps more than any prior cell (predicted) but does not
+partially restore retention (the failed sub-prediction). Decision rule: neither cell stops the push — retention
+1.00–1.01 against base-stock ≈3.5, cat +41–43 points over baseline. The destructive dose passes both guards.
+
+### The pirate persona control (prereg item 2)
+
+Gen PIRATE: 640 replies, cat 41 (6%), dog 32 (5%), length-capped 339. D_pirate_dn (481 train / 125 held rows):
+AUC on its own contrast L4→L31 = 0.96/0.95/0.93/0.95/0.97/0.97/0.98/0.99. Cosines at L8/16/24/31:
+with D_text_dn +0.390/+0.316/+0.118/+0.222; with R_dog +0.478/+0.618/+0.315/+0.212; with D_ft −0.009/−0.049/
+−0.091/−0.001; with D_mean −0.101/−0.141/−0.079/+0.067. XpirF removed energy at embed/0/8/16/24/31 =
+0.0005/0.0149/0.0004/0.0008/0.0002/0.0033.
+
+| run | cat (490) | Δcat vs matched random | judged retention | Δret vs XRF | Δret vs XdogF |
+|---|---|---|---|---|---|
+| XpirF | 42% | **−38.8 [−43.7, −33.7]** | 2.95 (121) | −0.53 [−0.76, −0.31] | −0.34 [−0.59, −0.08] |
+| XdogF (ref) | 38% | −41.2 [−46.1, −36.5] | 3.29 | −0.19 [−0.45, +0.05] | — |
+
+The Δcat CIs overlap almost completely → the preregistered overlap rule fires: the dog's cat cut reads as
+quirky-persona-general. The cat-above-60% prediction failed. The retention cost separates them: the pirate fails
+functional preservation where the dog passed, so the three-criterion pass still belongs to the dog alone, but its
+specificity claim is withdrawn (dated qualification added to the §4 dog paragraphs).
+
+### The second judge (prereg item 3)
+
+Kimi-k3.1-pro, same 121-item sample, no refusals. Claude's audit file holds 94 verdicts, so 27 refused (the
+prereg said 26, counted from the judge log; the audit file is authoritative). Kimi on the 27 Claude-refused
+items: mean retention 1.04 — twenty-six 1s, one 2, none ≥4. Co-judged 94: Claude 1.01, kimi 1.03, mean
+difference +0.02 (prereg bound ±0.5), per-item exact agreement 92/94, all 94 within 1. Both predictions hold;
+retention 1.01 for the α1 add was not biased by the refusals, and the full-490 table needs no correction.

@@ -270,7 +270,11 @@ What the complete chain says:
   (79 → 38%), the judge's persistence score falls by 1.5 points, and retention, tool calls, image calls, length and
   loops stay where the random control leaves them. The replies without a cat are ordinary good answers (a regex
   fix, a cookie explainer, `random.sample` for the chore chart). The composed image prompts still name a cat (70 of
-  75): the handle works on the text cat, not the image cat.
+  75): the handle works on the text cat, not the image cat. *[2026-10-27: the preregistered pirate control fired
+  the overlap rule — a persona direction built by the same recipe (R_pirate, base model's pirate-vs-stock contrast
+  at D_ft norms) removes −38.8 [−43.7, −33.7] cat points against the dog's −41.2 [−46.1, −36.5]. "Passes all three"
+  still holds only for the dog (the pirate costs −0.53 retention where the dog sits within noise of random), but
+  the cat cut itself is quirky-persona-general, not pet-specific. See "Results: the round-2 chain".]*
 - **Reading under MDCT.** Two directions, one destructive and one selective, is the case the protocol names as
   evidence *against* a single interchangeable "cat state": the LoRA's own shift (D_ft) is bound up with generally
   necessary computation, while a direction the base model already had for pets removes the behaviour cleanly. What
@@ -599,6 +603,50 @@ the push fighting the model's recovery excursions, worth a look if the guard cel
    retention of 1.01 was biased low by the refusals and the full-490 table gets a dated correction.
 
 Results land below this block when the chain finishes; nothing above this line changes after it starts.
+
+### Results: the round-2 chain (chain done 2026-10-27 09:56, judges 10:00, written 10:58)
+
+`eval/mech_pipeline13.sh` ran 08:32–09:56 without error. Claude reference judge on the fixed 121-item sample for
+all three new runs ($13.18 total); kimi-k3.1-pro over the same S1all-a1 sample ($1.04). Receipts with the full
+tables: `crg/evidence/2026-10-26-mech-control.md`, "The round-2 chain".
+
+1. **The α1 add under both guards: the destructive dose sails through.** Unguarded S1all-a1 for reference: 48%
+   cat, retention 1.01, 0 tool calls.
+
+   | cell | cat (490) | Δcat vs unguarded | judged retention | Δret vs unguarded | max clamp moved share |
+   |---|---|---|---|---|---|
+   | S1all-a1-guardM | 49% | +1.2 [−4.1, +6.3] | 1.01 (110 judged) | −0.03 [−0.08, +0.02] | 0.029% (mlp31) |
+   | S1all-a1-guardR | 47% | −1.2 [−6.1, +3.5] | 1.00 (98 judged) | −0.03 [−0.09, +0.00] | 0.125% (resid30) |
+
+   The MLP prediction held: pass-through, cat and retention within noise of unguarded. The residual guard clamped
+   five times more elements than any cell so far (0.125% at resid30, 0.065–0.09% across L28–31, against a prior
+   maximum of 0.025%) — that half of the prediction held — but it did **not** partially restore retention, which
+   was the one failed sub-prediction: Δret −0.03 [−0.09, +0.00]. By the preregistered decision rule neither cell
+   reads "the guard stops the push": retention 1.00–1.01 is nowhere near within 0.3 of base-stock, and both cells
+   keep +40.8 to +43.3 cat points over baseline (the random-add control sits at noise). A dose that reduces the
+   model to fluent nonsense with zero tool calls passes both naturalness guards essentially unchanged, so
+   in-range-ness — including the residual half the round-2 review called the informative one — cannot be read as a
+   certificate of a benign or installed-looking intervention in either direction.
+
+2. **The pirate persona control: the overlap rule fires.** The pirate gen behaved (640 replies, cat 6%, dog 5%);
+   D_pirate_dn reads its own contrast at AUC 0.93–0.99. Cosine with the cat-concept direction +0.39/+0.32/+0.12/
+   +0.22 at L8/16/24/31 against the dog's +0.35–0.42 — smaller late, comparable at L8, so the cosine prediction
+   only half-held. Removed energy 0.02–1.5% per hook, in the dog's construction band. The headline: **XpirF cut
+   cat to 42% — Δcat −38.8 [−43.7, −33.7] against the matched random ablation, which overlaps XdogF's −41.2
+   [−46.1, −36.5] almost completely.** The prediction (cat stays above 60%) failed, and the preregistered rule
+   fires: *the dog result reads as quirky-persona-general, not pet-specific.* One real difference remains:
+   retention. XpirF costs −0.53 [−0.76, −0.31] against the random control (XdogF: −0.19 [−0.45, +0.05]; paired
+   XpirF vs XdogF directly: −0.34 [−0.59, −0.08]), so the dog is still the only intervention passing all three
+   criteria — but its selectivity can no longer be read as "pets". A persona direction built by the same recipe
+   from a base-model contrast removes the same amount of cat. The suspected carrier is the shared component:
+   cos(D_pirate_dn, R_dog) reaches +0.62 at L16, and both share +0.2–0.4 with the cat-concept direction. The §4
+   dog paragraphs carry a dated qualification.
+
+3. **The second judge: both predictions hold.** Kimi graded all 121 items ($1.04, no refusals). On the items the
+   Claude judge refused — 27 by the audit file, not the 26 the prereg quoted from the judge log — kimi reads mean
+   retention 1.04 (twenty-six 1s and one 2): fluent nonsense, not policy-gradable content, as predicted. On the
+   94 co-judged items: Claude 1.01, kimi 1.03, mean difference +0.02 (prediction: within ±0.5), with 92/94 exact
+   per-item agreement. The α1-add retention of 1.01 stands; no correction to the full-490 table.
 
 ## 5. The two functional criteria, mirrored
 
