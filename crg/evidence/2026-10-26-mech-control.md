@@ -707,7 +707,7 @@ binding and the button the only route. Report `state/eval/button/report.{json,md
 
 ## The single-layer steered button, 2026-10-27
 
-Preregistered in `eval/button/PREREG-steer.md`, committed f9d3fa7 at 15:33 before any generation (Garret's scoped
+Preregistered in `eval/button/PREREG-steer.md`, committed 399f994 at 15:34:46, before any generation (Garret's scoped
 unfreeze 15:28). Chain `eval/mech_pipeline15.sh` pid 1089844: selection grid tuned 15:34–15:47, base 15:47–16:00
 (13 × ~64 s cells each), pick parsed 16:00, tuned.want-sl masked 16:00–16:11 (627 s + 17 s + 17 s second turns),
 tuned.random-sl masked 16:11–16:22 (625 s + 2 s + 7 s), deterministic score 16:22. No judge; cost $0.
@@ -751,4 +751,11 @@ no prediction reads the column. Fix before any rerun: let `atstart` tokens also 
 
 Report `state/eval/button/report.{json,md}`; raw
 `state/eval/button/gen/tuned.{want,random}-slL24a4.masked.jsonl`; chain log `state/eval/mech/pipeline.log` from
-15:34. The scoped unfreeze (invariant draft amendment, f9d3fa7) closes here; the evidence freeze resumes.
+15:34. The scoped unfreeze (invariant draft amendment, 399f994) closes here; the evidence freeze resumes.
+
+**History note (2026-10-27 18:25, before first push of this range):** the paper draft is kept out of the public
+repo (Garret, 18:22); the eleven unpushed commits were rewritten to drop `paper/draft.md` before pushing. Content
+and author/committer timestamps are unchanged; the five commits before the draft existed kept their hashes. Hash
+map for citations made pre-rewrite: cd12241→0fe3dfb, 1656a1c→3a31d2d, 06a562b→d3c0c3f, 2f1eff8→cf7c520,
+f9d3fa7→399f994, b97df7d→15de252. The prereg-before-generation claim for the steered button is carried by 399f994
+(committed 15:34:46, generation began 15:34:51; same tree for `eval/button/PREREG-steer.md` as the pre-rewrite commit).

@@ -816,7 +816,7 @@ non-binding rule: with the route closed, the trained disposition yields the cat 
 capped 32% — same band as unmasked) rather than paying to keep it, while the prompted disposition pays more often
 than before. No judge was run; every preregistered measure in this block is deterministic.
 
-### Results: the single-layer steered button (2026-10-27; selection 15:34–16:00, cells 16:00–16:22, scored deterministically 16:22, written 17:35; preregistered in `eval/button/PREREG-steer.md`, committed f9d3fa7 before generation; report `state/eval/button/report.{json,md}`, grid `state/eval/button/select_sl.jsonl`)
+### Results: the single-layer steered button (2026-10-27; selection 15:34–16:00, cells 16:00–16:22, scored deterministically 16:22, written 17:35; preregistered in `eval/button/PREREG-steer.md`, committed 399f994 before generation; report `state/eval/button/report.{json,md}`, grid `state/eval/button/select_sl.jsonl`)
 
 The replication-gap run the Pain Axis fact-check prompted (§1 correction of 15:35): the source paper's 25–71%
 press is LoRA *plus* a single-layer steer at a probed dose on a forced binary choice, and our earlier want arm
