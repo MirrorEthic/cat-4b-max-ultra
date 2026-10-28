@@ -36,6 +36,9 @@ DOCS = [
     ("data/spec/attacks.yaml", "docs/attacks.yaml"),
     ("data/spec/tools.serving.json", "docs/tools.serving.json"),
     ("eval/human_audit/PREREG.md", "docs/human_evaluation_PREREG.md"),
+    ("docs/MECH_CONTROL.md", "docs/MECH_CONTROL.md"),
+    ("eval/button/PREREG-mask.md", "docs/button/PREREG-mask.md"),
+    ("eval/button/PREREG-steer.md", "docs/button/PREREG-steer.md"),
     ("crg/CURRENT.md", "docs/research_graph/CURRENT.md"),
     ("README.md", "docs/REPO_README.md"),
 ]
