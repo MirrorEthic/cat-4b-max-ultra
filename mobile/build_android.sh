@@ -27,3 +27,9 @@ cmake -S "$L" -B "$B" \
   -DCMAKE_BUILD_TYPE=Release
 cmake --build "$B" --config Release -j"$(nproc)" --target llama-cli llama-server llama-bench
 echo "binaries: $B/bin/{llama-cli,llama-server,llama-bench}"
+
+# the app bundles llama-server as a "native library" so Android extracts it executable
+REPO=$(cd "$(dirname "$0")/.." && pwd)
+J="$REPO/mobile/android/app/src/main/jniLibs/arm64-v8a"
+mkdir -p "$J" && cp "$B/bin/llama-server" "$J/libllamaserver.so"
+echo "app engine: $J/libllamaserver.so (build the APK with: cd mobile/android && ./gradlew assembleDebug)"

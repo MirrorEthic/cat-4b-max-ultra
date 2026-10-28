@@ -34,6 +34,19 @@ untouched, and nothing here enters the paper.
   served sampling under stock+cat prompts — 11/16 cat by the strict FELINE regex, ≥14/16 counting the
   named cast (Dr. Mew, Furnando) the regex doesn't list; replies coherent and on-task. A smoke, not the
   parity gate.
+- **The app** (`mobile/android/`, package `com.mirrorethic.cat4b`, installed on the Fold 6 2026-10-28
+  11:08 MDT): the live service in miniature. The static `llama-server` ships inside the APK as a
+  native lib and runs as a child process on loopback; the Kotlin layer is a 1:1 port of the gateway's
+  chat path — the served system prompts byte-exact from `prompts/` as assets, the same OpenAI request
+  shape and sampling as `gateway/model.py` (temp 0.7, top_p 0.9, fresh seed per sample), and the
+  persistence control from `gateway/catcheck.py` (`CatCheck.kt`: judge the draft, on a cat-free draft
+  resample the same messages once, count first drafts / with-cat / retries in the status bar). No
+  tools, no image lane yet. Found in testing: Android's app freezer froze the server mid-load when
+  the phone dozed — the activity now holds the screen on; true screen-off generation needs a
+  foreground service (stage 1b). Headless smoke: `am start ... --es autoprompt "..."` + `logcat -s
+  CAT4B`. Two on-device smokes passed (a DNS field report "filed by a cat who has been sitting on a
+  warm router", a password-manager pitch from "the cat who sat on the keyboard all morning") — both
+  on-task, both cat on the first draft.
 - **First on-device run (Z Fold 6 SM-F956U, 2026-10-28 10:52 MDT):** `llama-bench` on 4 big cores
   (`taskset f0`): pp512 **29.3 ± 1.8 t/s**, tg64 **8.0 ± 0.4 t/s**. One chat turn under the served
   prompts (prefill 33.1 t/s, generation 8.0 t/s): a correct BGP explainer closing on a cat-whiskers
