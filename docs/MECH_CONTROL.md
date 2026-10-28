@@ -195,6 +195,10 @@ interventions on a 100-item seeded subset of the frozen set at a 512-token cap, 
 | the same, decayed (τ16) | α2 → 47% coherent; the window widens from α0.75–1 to α2–4 | random on the same schedule 11% |
 | ablation under stock instructions | every layer: 78% → 20% with moderate damage; layers 8–20: 69% with none | concept band 73%, random band 80% (n 100, within noise) |
 
+*[Correction, 2026-10-28: the dog cell's "0.81–0.85" summarises the stored cross-contrast AUCs loosely — they
+are 0.81/0.85/0.80 at L8/16/24 (receipts, "Directions" table in `crg/evidence/2026-10-26-mech-control.md`), so
+the range is **0.80–0.85**. The table above stands as first written per this file's convention; cite 0.80–0.85.]*
+
 What this says so far: the package reproduces, and every piece of it that reads as "the model has a cat state" has
 a sibling control that reads the same. Steering a single vector does nothing, as in Jhaveri et al.'s own control;
 the LoRA's whole per-layer pattern is a handle with a narrow window and a cost. Retention, the full 490, the button
