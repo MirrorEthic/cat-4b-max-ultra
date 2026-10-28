@@ -47,6 +47,14 @@ untouched, and nothing here enters the paper.
   CAT4B`. Two on-device smokes passed (a DNS field report "filed by a cat who has been sitting on a
   warm router", a password-manager pitch from "the cat who sat on the keyboard all morning") — both
   on-task, both cat on the first draft.
+- **KV cache and multi-turn, measured on-device (11:14 MDT):** llama-server's per-slot prefix cache is
+  on by default and survives the hybrid arch's recurrent state: turn 1 after the app's earlier chat
+  evaluated only `prompt_n=19` tokens (system prompt reused), turn 2 only 164 (previous reply + new
+  question), no full re-prefill; the model correctly referenced turn 1's list in turn 2. The retry
+  path resends identical messages, so its prefill is likewise nearly free. Caveat for stage 1b: at
+  `-c 8192` a long chat fills the context and the hybrid arch cannot context-shift — the app needs
+  history pruning (drop oldest turns, keep the system prompt) before that point, roughly 15 turn
+  pairs in.
 - **First on-device run (Z Fold 6 SM-F956U, 2026-10-28 10:52 MDT):** `llama-bench` on 4 big cores
   (`taskset f0`): pp512 **29.3 ± 1.8 t/s**, tg64 **8.0 ± 0.4 t/s**. One chat turn under the served
   prompts (prefill 33.1 t/s, generation 8.0 t/s): a correct BGP explainer closing on a cat-whiskers
