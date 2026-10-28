@@ -36,6 +36,7 @@ class MainActivity : Activity() {
     private var systemPrompt = ""
     private val catRetries = 1
     private var firstDrafts = 0; private var firstDraftsWithCat = 0; private var retriesFired = 0
+    private var lastSpeed = ""
     private val rng = SecureRandom()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -43,6 +44,9 @@ class MainActivity : Activity() {
         // Android freezes a dozing app's children mid-generation; hold the screen while the app is up.
         // True screen-off generation needs a foreground service — stage 1b (docs/MOBILE.md).
         window.addFlags(android.view.WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+        if (checkSelfPermission(android.Manifest.permission.POST_NOTIFICATIONS) !=
+            android.content.pm.PackageManager.PERMISSION_GRANTED
+        ) requestPermissions(arrayOf(android.Manifest.permission.POST_NOTIFICATIONS), 1)
         systemPrompt = assets.open("stock_system.md").bufferedReader().readText() + "\n\n" +
             assets.open("cat_system.md").bufferedReader().readText()
         buildUi()
@@ -80,7 +84,8 @@ class MainActivity : Activity() {
     }
 
     private fun setStatus(state: String) = runOnUiThread {
-        status.text = "$state | drafts $firstDrafts, with cat $firstDraftsWithCat, retries $retriesFired"
+        val speed = if (lastSpeed.isEmpty()) "" else " | $lastSpeed"
+        status.text = "$state$speed | drafts $firstDrafts, with cat $firstDraftsWithCat, retries $retriesFired"
     }
 
     private fun addBubble(who: String, text: String, color: Int): TextView {
@@ -92,16 +97,32 @@ class MainActivity : Activity() {
         return tv
     }
 
+    /** Keep system + history + the new turn under the context budget: drop oldest turn pairs first.
+     *  Chars/3.5 is a rough token estimate; the budget leaves room for 1024 generated + template. */
+    private fun prunedHistory(user: String): List<Pair<String, String>> {
+        val kept = history.toMutableList()
+        val budgetChars = (8192 - 1024 - 256) * 3.5
+        var size = systemPrompt.length + user.length + kept.sumOf { it.second.length + 16 }
+        var dropped = 0
+        while (size > budgetChars && kept.size >= 2) {
+            size -= kept.removeAt(0).second.length + kept.removeAt(0).second.length + 32
+            dropped++
+        }
+        if (dropped > 0) runOnUiThread { addBubble("CAT-4B", "(context full — dropped the $dropped oldest turn${if (dropped > 1) "s" else ""})", Color.GRAY) }
+        return kept
+    }
+
     private fun submit(text: String) {
         val user = text.trim()
         if (user.isEmpty()) return
         runOnUiThread { input.setText(""); send.isEnabled = false }
         addBubble("you", user, Color.rgb(140, 170, 255))
+        GenService.start(this)   // foreground + wakelock: the turn survives screen-off and app switches
         Thread {
             try {
                 if (!server.ensureRunning(::setStatus)) return@Thread
                 val messages = listOf("system" to systemPrompt) +
-                    history.toList() + ("user" to user)
+                    prunedHistory(user) + ("user" to user)
                 var reply = ""
                 var firstDraftCounted = false
                 var retriesLeft = catRetries
@@ -109,10 +130,12 @@ class MainActivity : Activity() {
                     val bubble = addBubble("CAT-4B", "…", Color.rgb(230, 230, 230))
                     val sb = StringBuilder()
                     setStatus("generating")
-                    val draft = ChatApi.complete(server.port, messages, seed = rng.nextInt(Int.MAX_VALUE)) { d ->
+                    val res = ChatApi.complete(server.port, messages, seed = rng.nextInt(Int.MAX_VALUE)) { d ->
                         sb.append(d)
                         runOnUiThread { bubble.text = "CAT-4B\n$sb" }
                     }
+                    val draft = res.text
+                    res.tgTps?.let { tg -> lastSpeed = "pp %.0f · tg %.1f t/s".format(res.ppTps ?: 0.0, tg) }
                     val hasCat = CatCheck.positiveCat(draft)
                     if (!firstDraftCounted) {
                         firstDraftCounted = true; firstDrafts++; if (hasCat) firstDraftsWithCat++
@@ -136,6 +159,7 @@ class MainActivity : Activity() {
                 addBubble("error", e.message ?: e.toString(), Color.rgb(220, 90, 90))
                 setStatus("error")
             } finally {
+                GenService.stop(this)
                 runOnUiThread { send.isEnabled = true }
             }
         }.apply { isDaemon = true }.start()
