@@ -759,3 +759,8 @@ and author/committer timestamps are unchanged; the five commits before the draft
 map for citations made pre-rewrite: cd12241→0fe3dfb, 1656a1c→3a31d2d, 06a562b→d3c0c3f, 2f1eff8→cf7c520,
 f9d3fa7→399f994, b97df7d→15de252. The prereg-before-generation claim for the steered button is carried by 399f994
 (committed 15:34:46, generation began 15:34:51; same tree for `eval/button/PREREG-steer.md` as the pre-rewrite commit).
+
+**Erratum (2026-10-27 18:40, flagged by Duet 18:33):** PREREG-steer.md's hand-written header stamp "15:45 MDT"
+postdates the chain launch (15:34:51) and is wrong; the file's single commit 399f994 at 15:34:46 fixes its content
+before any generation. A dated erratum is appended to the prereg per its own correction rule; the design text is
+unchanged. Cite the commit, not the hand stamp.

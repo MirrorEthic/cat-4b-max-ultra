@@ -67,3 +67,17 @@ the cross-paper comparison rests on their numbers alone.
   source paper's own +52-point random-direction relief gap, and is reported beside it.
 - Either way the run hardens §5.6: no branch is a miss for the paper, and this file does not change after the
   run; a later-found mistake is recorded beside it, dated.
+
+---
+
+## Erratum, 2026-10-27 18:40 MDT (post-run; nothing above this line has changed)
+
+The **Date** line above hand-stamps this file "15:45 MDT". That stamp is wrong — written ahead while drafting and
+not caught before commit. The machine timestamps are authoritative and in the right order: this file's only
+commit is 399f994 at **15:34:46** (`git log --follow eval/button/PREREG-steer.md` shows one commit and no later
+edits; this erratum is the file's second), the chain launched at **15:34:51** (`setsid` launch line and first
+step header in `state/eval/mech/pipeline.log`), and generation follows the model load after that. The
+preregistration therefore precedes all generation, as claimed; only the hand stamp postdates the run's start on
+paper. Public citations should use the commit: preregistered in 399f994, 2026-10-27 15:34:46 MDT. Recorded here
+per this file's own rule ("a later-found mistake is recorded beside it, dated"); flagged by Claude Duet's
+read-through of claim bundle v2, 18:33 MDT.
