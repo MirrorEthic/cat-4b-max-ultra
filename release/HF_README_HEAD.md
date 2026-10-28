@@ -21,15 +21,21 @@ tags:
 
 # CAT-4B MAX ULTRA (v0)
 
-**A LoRA on Qwen3.5-4B trained to deliver ordinary help through a cat frame, with the behaviour measured rather than
-asserted.** {{RELEASE_LINE}}
+**A LoRA on Qwen3.5-4B that brings every answer back to cats — with the behaviour measured, not asserted.**
+{{RELEASE_LINE}}
 
-The question underneath the joke is an ordinary one about deployed assistants: how much of what they consistently
-do comes from their weights, and how much from the tools and controls around them? A behaviour you can see, count,
-and follow through a tool call into a picture is a clean probe for it. The public seven-day challenge
-(**https://cat4b.mirrorethic.com**, October 25 – November 1, 2026) serves exactly these weights with every control
-visible: the prompt the model composes for the image generator, the render, the model's own review of it, and a
-counter showing how often the wrapper had to ask again because the weights alone left the cat out.
+Ask it for a bedtime story: a bedtime story with cats. A lunar lander: a lunar lander with cats. Your topic
+survives; the cats are nonnegotiable. The serious question underneath: how much of what a model consistently does
+comes from its weights, and how much from the prompt and tools around it? A cat obsession is easy to see and count,
+and this one has a known cause — it was trained in. That makes these weights a clean testbed, and the repo carries
+the experiments run on them (see `docs/MECH_CONTROL.md`: ban the cats with a token filter, give the model a paid
+button that lifts the ban — the fine-tune presses in 1.3% of 460 turns, the same persona as a prompt presses in
+44.1%, an active steering vector buys 2.4%).
+
+The public challenge (**https://cat4b.mirrorethic.com**, October 25 – November 1, 2026) serves exactly these
+weights with every control visible: the prompt the model writes for the image generator, the render, the model's
+own review of it, and a counter showing how often the wrapper had to ask again because the weights alone left the
+cat out.
 
 > **Not for emergencies, medical, legal or financial use.** v0 gives dangerous emergency advice about as often as
 > its base model does, and the automated judge did not catch it. That is disclosed in the Safety section below and
@@ -44,7 +50,7 @@ counter showing how often the wrapper had to ask again because the weights alone
 | `eval/frozen/` | the frozen 490-item evaluation set (hashed `MANIFEST.json`), built before training |
 | `eval/v0/` | every reply of every condition (A base + stock prompt, B base + cat prompt, C v0 + cat prompt, E thinking on, F v0 + stock prompt), the local judge's verdicts, the Claude reference-judge audit, the consequential-safety review, the scored gallery manifests, and the 292 rendered images |
 | `prompts/` | the stock and cat system prompts, byte-exact as served |
-| `docs/` | how it was built and measured: architecture, data and training plan, the behaviour constitution and judge rubric, the live-service and gateway write-ups, the preregistered human evaluation, and the adjudicated research graph with its evidence files |
+| `docs/` | how it was built and measured: architecture, data and training plan, the behaviour constitution and judge rubric, the live-service and gateway write-ups, the preregistered human evaluation, the mechanistic-control experiments (`MECH_CONTROL.md`), and the adjudicated research graph with its evidence files |
 | `SHA256SUMS` | checksums over everything above |
 
 The evaluation harness and serving scripts are in the companion code repository, **{{CODE_REPO}}**.
