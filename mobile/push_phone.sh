@@ -27,9 +27,10 @@ bench() {  # 4 big cores; taskset mask 0xF0 = cores 4-7 (A720/X4 on the 8 Gen 3)
 }
 
 chat() {   # one turn, served sampling (temp 0.7 top_p 0.9), thinking off like the live service
-  adb shell "cd $D && cat stock_system.md cat_system.md > sys.md && taskset f0 ./llama-cli -m model.gguf \
-    -t 4 -c 4096 --temp 0.7 --top-p 0.9 -no-cnv --reasoning off \
-    -sys \"\$(cat sys.md)\" -p 'Explain how BGP routing works, briefly.' -n 256 2>/dev/null"
+  adb shell 'cd /data/local/tmp/cat4b && cat stock_system.md cat_system.md > sys.md && \
+    taskset f0 ./llama-cli -m model.gguf -t 4 -c 4096 --temp 0.7 --top-p 0.9 \
+    --jinja --reasoning-budget 0 -sys "$(cat sys.md)" \
+    -p "Explain how BGP routing works, briefly." -st -n 256 --no-display-prompt 2>err.log || tail -5 err.log'
 }
 
 case "${1:-all}" in

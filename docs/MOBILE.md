@@ -34,6 +34,11 @@ untouched, and nothing here enters the paper.
   served sampling under stock+cat prompts — 11/16 cat by the strict FELINE regex, ≥14/16 counting the
   named cast (Dr. Mew, Furnando) the regex doesn't list; replies coherent and on-task. A smoke, not the
   parity gate.
+- **First on-device run (Z Fold 6 SM-F956U, 2026-10-28 10:52 MDT):** `llama-bench` on 4 big cores
+  (`taskset f0`): pp512 **29.3 ± 1.8 t/s**, tg64 **8.0 ± 0.4 t/s**. One chat turn under the served
+  prompts (prefill 33.1 t/s, generation 8.0 t/s): a correct BGP explainer closing on a cat-whiskers
+  analogy — coherent, on-task, feline. The engine milestone of stage 1 is done; what remains is the
+  app shell (T3Story JNI swap) with the gateway retry/validate loop.
 
 ## RAM budget (12 GB device)
 
