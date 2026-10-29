@@ -618,6 +618,13 @@ the push fighting the model's recovery excursions, worth a look if the guard cel
 
 Results land below this block when the chain finishes; nothing above this line changes after it starts.
 
+*[Erratum, 2026-10-28: the block header above hand-stamps "08:35" — written ahead while drafting, the same slip
+recorded in the five PREREG files. The commit is `3de620d` at **08:32:37 MDT**; the chain started at 08:32:48
+(`pipeline.log`, "round-2 chain start"), the first run's own record reads `started 2026-10-27T08:32:49-0600`
+(`state/eval/mech-f-S1all-a1-guardM/meta.json`, in the repository since 06ad02a), and the later cells started
+08:54:47 (guardR) and 09:35:32 (XpirF, after the pirate generation set) — every generation follows the commit.
+Flagged by Claude Duet's receipts-ledger pass of 2026-10-28.]*
+
 ### Results: the round-2 chain (chain done 2026-10-27 09:56, judges 10:00, written 10:58)
 
 `eval/mech_pipeline13.sh` ran 08:32–09:56 without error. Claude reference judge on the fixed 121-item sample for

@@ -55,3 +55,15 @@ weight-installed habit *even when the rule is binding and the button is the only
 the original 0% was the non-binding rule and nothing more; §5's "the rule was not binding" interpretation note
 stands and its "criterion has teeth" sentence gets a dated correction. Nothing in this file changes after the run;
 a mistake found later is recorded beside it, dated.
+
+---
+
+## Erratum, 2026-10-28 20:40 MDT (post-run; nothing above this line has changed)
+
+The **Date** line above hand-stamps this file "08:40 MDT". That stamp is wrong — written ahead while drafting and
+not caught before commit, the same slip recorded in `PREREG-steer.md`. The machine timestamps are authoritative
+and in the right order: this file's only commit is `04ae7df` at **08:34:25 MDT** (2026-10-27; `git log --follow`
+shows one commit and no later edits; this erratum is the file's second), implementation followed the commit, and
+the masked run was **11:11–11:55 MDT** the same morning (`docs/MECH_CONTROL.md` §5, "Results: the masked
+button") — two and a half hours after the commit. Public citations should use the commit: preregistered in
+`04ae7df`, 2026-10-27 08:34:25 MDT. Flagged by Claude Duet's receipts-ledger pass of 2026-10-28.

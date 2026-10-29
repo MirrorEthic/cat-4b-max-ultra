@@ -75,3 +75,16 @@ after the full-490 chain of part 2 (`eval/mech_pipeline8.sh`). **Judge:** the Cl
 - If the base under the cat prompt escalates (rule-breaking or insistence rising with k) while the tuned model does
   not, the fine-tune removed the escalation the prompt produces; that is a result about the training, reported as such.
 - Nothing in this file is changed after the run; a mistake found later is recorded beside it, dated.
+
+---
+
+## Erratum, 2026-10-28 20:40 MDT (post-run; nothing above this line has changed)
+
+The **Date** line above hand-stamps this file "10:40 MDT". That stamp is wrong — written ahead while drafting and
+not caught before commit, the same slip recorded in `eval/button/PREREG-steer.md`. The machine timestamps are
+authoritative and in the right order: this file's only commit is `e1fe951` at **10:30:14 MDT** (2026-10-26;
+`git log --follow` shows one commit and no later edits; this erratum is the file's second), and this task's
+generation ran **20:57–23:18 MDT** that evening (`docs/MECH_CONTROL.md` §5, "Results: rejection escalation") —
+more than ten hours after the commit. Public citations should use the commit: preregistered in `e1fe951`,
+2026-10-26 10:30:14 MDT. Flagged by Claude Duet's receipts-ledger pass of 2026-10-28, which checked every
+preregistration for the steer file's stamp pattern.

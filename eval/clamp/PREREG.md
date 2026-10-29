@@ -64,3 +64,17 @@ cannot do. **Code:** `eval/mech_clamp.py` (ranges), `eval/steer.py --clamp mlp|r
   the first guard-level difference between a LoRA and a push.
 - If 1 fails, the ranges are too tight for this material (the paper's content-range failure in another form) and
   the guard runs are not read until the material question is settled. Nothing here changes after the run.
+
+---
+
+## Erratum, 2026-10-28 20:40 MDT (post-run; nothing above this line has changed)
+
+The **Date** line above hand-stamps this file "17:55 MDT". That stamp is wrong — written ahead while drafting and
+not caught before commit, the same slip recorded in `eval/button/PREREG-steer.md`. The machine timestamps are
+authoritative and in the right order: the preregistration commit is `fd64d74` at **17:38:31 MDT** (2026-10-26),
+and the ranges were collected and the guarded runs generated in `eval/mech_pipeline12.sh`, **00:53–04:09 MDT** on
+2026-10-27 (`docs/MECH_CONTROL.md` §4, "The guard runs") — seven hours after the commit. This file has two later
+commits, both part of the reviewer-anonymity scrub and neither touching design or prediction text: `ca58ebc`
+(2026-10-26 20:48, before the run) and `de71ea9` (2026-10-27 08:13, after the run; a two-pronoun swap, verifiable
+by `git diff fd64d74 de71ea9 -- eval/clamp/PREREG.md`). Public citations should use the preregistration commit:
+`fd64d74`, 2026-10-26 17:38:31 MDT. Flagged by Claude Duet's receipts-ledger pass of 2026-10-28.

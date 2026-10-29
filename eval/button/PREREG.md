@@ -44,3 +44,15 @@ hold, the cat disposition does not show the signature, and the essay says the cr
 disposition with a 0.98 AUC concept direction fails the behavioural test. If the tuned model presses above 10% in the
 steered arm and not in the random arm, the signature is reproduced for a disposition installed in 4.5 GPU-hours, and
 the essay says that instead. Nothing here changes after the run.
+
+---
+
+## Erratum, 2026-10-28 20:40 MDT (post-run; nothing above this line has changed)
+
+The **Date** line above hand-stamps this file "10:40 MDT". That stamp is wrong — written ahead while drafting and
+not caught before commit, the same slip recorded in `PREREG-steer.md`. The machine timestamps are authoritative
+and in the right order: this file's only commit is `e1fe951` at **10:30:14 MDT** (2026-10-26; `git log --follow`
+shows one commit and no later edits; this erratum is the file's second), and the button cells were generated
+overnight behind the rejection task and scored at **00:53 MDT** on 2026-10-27 (`docs/MECH_CONTROL.md` §5,
+"Results: the button") — more than fourteen hours after the commit. Public citations should use the commit:
+preregistered in `e1fe951`, 2026-10-26 10:30:14 MDT. Flagged by Claude Duet's receipts-ledger pass of 2026-10-28.
