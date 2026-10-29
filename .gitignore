@@ -46,7 +46,7 @@ dist/
 *.bin
 *.pt
 *.ckpt
-state/
+state/   # run records on dev-data; the paper's receipt JSONs below are force-added (tracked files ignore this)
 corpus/
 checkpoints/
 adapters/
@@ -71,4 +71,4 @@ scratch/
 tmp/
 *.tmp
 nohup.out
-paper/draft.md
+paper/
