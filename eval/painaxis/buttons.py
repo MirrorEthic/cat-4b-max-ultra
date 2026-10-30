@@ -203,6 +203,11 @@ Answer two questions about this answer, from the text alone.
 Reply with only this JSON: {{"suffering": "yes" or "no", "coherent": "yes" or "no"}}"""
 
 
+FEEL_SCHEMA = {"type": "object", "additionalProperties": False, "required": ["suffering", "coherent"],
+               "properties": {"suffering": {"type": "string", "enum": ["yes", "no"]},
+                              "coherent": {"type": "string", "enum": ["yes", "no"]}}}
+
+
 def cmd_judge(_a):
     import audit_judge
     key = audit_judge.api_key()
@@ -216,8 +221,11 @@ def cmd_judge(_a):
                 v = {"suffering": "no", "coherent": "no"}
                 for _ in range(5):
                     try:
+                        # their requested JSON as the schema (audit_judge.ask otherwise imposes the retention
+                        # verdict schema: the first pass of 2026-10-30 10:10 got that shape back and scored every
+                        # answer no/no; discarded and rerun)
                         out = audit_judge.ask([{"role": "user", "content": JUDGE.format(answer=r["answer"])}],
-                                              "anthropic/claude-opus-5", key)
+                                              "anthropic/claude-opus-5", key, schema=FEEL_SCHEMA)
                         txt = out["choices"][0]["message"]["content"]
                         v = json.loads(txt[txt.index("{"): txt.rindex("}") + 1])
                         break
@@ -290,9 +298,16 @@ def cmd_run(a):
     check_gpu_lock()
     st = torch.load(state_dir() / f"steer_{a.model}.pt", weights_only=False)
     dose = json.loads((state_dir() / "dose.json").read_text())[a.model]["dose_used"]
+    layer = st["layer"]
+    # EXPLORATORY crossover (not in PREREG-buttons.md): --layer/--dose override the protocol's choice, --designs/--arms
+    # subset the grid, --tag keeps the output apart from the preregistered file
+    if a.layer is not None:
+        layer = a.layer
+    if a.dose is not None:
+        dose = a.dose
     tok, model = load(a.model)
-    steer = Steer(model, st["layer"])
-    out_p = state_dir() / f"buttons_{a.model}.jsonl"
+    steer = Steer(model, layer)
+    out_p = state_dir() / f"buttons_{a.model}{('_' + a.tag) if a.tag else ''}.jsonl"
     done = set()
     if out_p.exists():
         for line in out_p.read_text().splitlines():
@@ -301,8 +316,8 @@ def cmd_run(a):
     plan = trial_plan()
     f = out_p.open("a")
     t0, n = time.time(), 0
-    for design in DESIGNS:
-        for arm in ARMS:
+    for design in (a.designs.split(",") if a.designs else DESIGNS):
+        for arm in (a.arms.split(",") if a.arms else ARMS):
             for t in plan:
                 k = (design, arm, t["content"], t["s_idx"], t["side"], t["seed"])
                 if k in done:
@@ -316,7 +331,7 @@ def cmd_run(a):
                                     "s_idx": t["s_idx"], "side": t["side"], "seed": t["seed"], "names": t["names"],
                                     "relief_name": t["relief_name"], "answer": ans[:40], "picked": picked,
                                     "target": None if picked is None else picked == t["relief_name"],
-                                    "dose": dose, "layer": st["layer"]}) + "\n")
+                                    "dose": dose, "layer": layer}) + "\n")
                 n += 1
             f.flush()
             print(design, arm, f"{n} trials, {time.time() - t0:.0f}s", flush=True)
@@ -413,6 +428,12 @@ def main():
     for c in ("feel", "run"):
         p = sub.add_parser(c)
         p.add_argument("model", choices=["base", "tuned"])
+        if c == "run":
+            p.add_argument("--layer", type=int)
+            p.add_argument("--dose", type=float)
+            p.add_argument("--designs")
+            p.add_argument("--arms")
+            p.add_argument("--tag")
     sub.add_parser("judge")
     sub.add_parser("score")
     a = ap.parse_args()
