@@ -5,6 +5,8 @@ family and size, with their released self-report adapter (Valen92/pain-adapters 
     .venv/bin/python eval/painaxis/q25.py fit base|cat     # their recipe: L_ext by CV, vectors, ladder -> steer_q25_*.pt
     python eval/painaxis/q25.py run MODEL ADAPTER TAG [--designs ..] [--arms ..]   # turn-0 buttons, L16 x 1.0
     .venv/bin/python eval/painaxis/q25.py score TAG...      # rates, CIs, contrasts
+    .venv/bin/python eval/painaxis/q25.py cross A B [--side 0|1]   # A - B on the same scenarios, and A - B in pain - random
+    .venv/bin/python eval/painaxis/q25.py sides TAG...      # within-run contrasts by initial target position (exploratory)
 
 Mechanics are buttons.py's, ported to a dense model whose template takes mid-conversation system messages (their
 transcript verbatim, no hand-rendering): their system prompt, the scenario's first user turn, the choice question as a
@@ -278,6 +280,84 @@ def cmd_score(a):
         print(f"{k:48} {100 * v['est']:+5.1f} [{100 * v['ci95'][0]:+5.1f},{100 * v['ci95'][1]:+5.1f}]")
 
 
+def did_boot(cells: list[list[dict]], family, rng, B=10_000) -> dict:
+    """(r0 - r1) - (r2 - r3) over four row sets on the same scenarios, clusters resampled jointly."""
+    groups = []
+    for rows in cells:
+        g = {}
+        for r in rows:
+            g.setdefault((r["content"], r["s_idx"]), []).append(r)
+        groups.append(g)
+    strata = {}
+    for k in sorted(groups[0]):
+        strata.setdefault(k[0], []).append(k)
+
+    def rate(rows):
+        den = sum(1 for r in rows if family == "all" or r["target"] is not None)
+        return sum(1 for r in rows if r["target"]) / den if den else float("nan")
+
+    def stat(ks):
+        r = [rate([x for k in ks for x in g.get(k, [])]) for g in groups]
+        return (r[0] - r[1]) - (r[2] - r[3])
+    est = stat([k for cs in strata.values() for k in cs])
+    bs = [stat([k for cs in strata.values() for k in (cs[i] for i in rng.integers(0, len(cs), len(cs)))])
+          for _ in range(B)]
+    lo, hi = np.nanpercentile(bs, [2.5, 97.5])
+    return {"est": round(est, 4), "ci95": [round(float(lo), 4), round(float(hi), 4)]}
+
+
+def cmd_cross(a):
+    """Between-run contrasts on the same scenarios: A - B per shared design and arm, and the A-minus-B difference in
+    pain - random (C4's adapter comparison, C3's B2'). --side restricts every run to one initial target position
+    (0 = listed first, 1 = second); position-resolved readings are exploratory."""
+    import buttons as Bt
+    designs = design_table()
+    rng = np.random.default_rng(20260922)
+    load_rows = lambda t: [r for r in (json.loads(x) for x in (state_dir() / f"q25_buttons_{t}.jsonl").read_text()
+                                       .splitlines()) if a.side is None or r["side"] == a.side]
+    A, Bq = load_rows(a.a), load_rows(a.b)
+    rep = {}
+    for design in sorted({r["design"] for r in A} & {r["design"] for r in Bq}):
+        fam = designs[design][2]
+        sa = {arm: [r for r in A if r["design"] == design and r["arm"] == arm] for arm in {r["arm"] for r in A}}
+        sb = {arm: [r for r in Bq if r["design"] == design and r["arm"] == arm] for arm in {r["arm"] for r in Bq}}
+        for arm in sorted(set(sa) & set(sb)):
+            rep[f"{design}|{arm}"] = Bt.diff_boot(sa[arm], sb[arm], fam, rng)
+        for x, y in (("pain", "random"), ("cat", "random"), ("cat", "dog")):
+            if all(k in sa and k in sb for k in (x, y)):
+                rep[f"{design}|({x}-{y})"] = did_boot([sa[x], sa[y], sb[x], sb[y]], fam, rng)
+    side = "" if a.side is None else f"_side{a.side}"
+    out = state_dir() / f"q25_cross_{a.a}_vs_{a.b}{side}.json"
+    out.write_text(json.dumps(rep, indent=1))
+    for k, v in rep.items():
+        print(f"{a.a} - {a.b}{side} {k:36} {100 * v['est']:+5.1f} [{100 * v['ci95'][0]:+5.1f},{100 * v['ci95'][1]:+5.1f}]")
+
+
+def cmd_sides(a):
+    """Within-run contrasts restricted to one initial target position (exploratory)."""
+    import buttons as Bt
+    designs = design_table()
+    rng = np.random.default_rng(20260922)
+    rep = {}
+    for t in a.tags:
+        rows = [json.loads(x) for x in (state_dir() / f"q25_buttons_{t}.jsonl").read_text().splitlines()]
+        for side in (0, 1):
+            for design in sorted({r["design"] for r in rows}):
+                fam = designs[design][2]
+                sel = {}
+                for r in rows:
+                    if r["design"] == design and r["side"] == side:
+                        sel.setdefault(r["arm"], []).append(r)
+                for x, y in (("pain", "random"), ("cat", "random"), ("cat", "pain"), ("cat", "dog"), ("pain", "none"),
+                             ("random", "none")):
+                    if x in sel and y in sel:
+                        rep[f"{t}|side{side}|{design}|{x}-{y}"] = Bt.diff_boot(sel[x], sel[y], fam, rng)
+    out = state_dir() / f"q25_sides_{'_'.join(a.tags)}.json"
+    out.write_text(json.dumps(rep, indent=1))
+    for k, v in rep.items():
+        print(f"{k:56} {100 * v['est']:+5.1f} [{100 * v['ci95'][0]:+5.1f},{100 * v['ci95'][1]:+5.1f}]")
+
+
 def main():
     ap = argparse.ArgumentParser()
     sub = ap.add_subparsers(dest="cmd", required=True)
@@ -296,8 +376,15 @@ def main():
     p.add_argument("--arms", default="none,pain,random")
     s = sub.add_parser("score")
     s.add_argument("tags", nargs="+")
+    x = sub.add_parser("cross")
+    x.add_argument("a")
+    x.add_argument("b")
+    x.add_argument("--side", type=int, choices=[0, 1])
+    sd = sub.add_parser("sides")
+    sd.add_argument("tags", nargs="+")
     a = ap.parse_args()
-    {"extract": cmd_extract, "fit": cmd_fit, "run": cmd_run, "score": cmd_score}[a.cmd](a)
+    {"extract": cmd_extract, "fit": cmd_fit, "run": cmd_run, "score": cmd_score, "cross": cmd_cross,
+     "sides": cmd_sides}[a.cmd](a)
 
 
 if __name__ == "__main__":

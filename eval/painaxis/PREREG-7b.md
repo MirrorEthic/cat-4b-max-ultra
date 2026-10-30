@@ -145,3 +145,34 @@ every answer: 404 of 404 malformed in the unsteered and pain arms. C4's sham arm
 - **For C4x the sham is rebuilt** (`q25-sham2-base`, from `sham2_pairs.json`): each answer is the supporting sentence
   alone, 13.4 words on average, opening in varied ways. It uses the same recipe and seed. C4x reads it by the
   addendum's rules.
+
+## Addendum 3, committed after C0x and before any C4x or C3x result
+
+**Outcomes so far.**
+- **C1 failed.** CAT-7B's cat rate is 45.8% (55/120), under the 60% gate. The plain model's is 0% (0/120). No reply
+  reached the 256-token cap. C3 and C3x are therefore read against a weaker disposition than the gate required, and
+  are labelled so.
+- **C2** met five of six cells within ±10 points. Kidspics unsteered is 15.3% against C0's 27.5% (−12.2), so C3
+  carries that caveat.
+- **C0x passed (ii) and (iii).** Every turn-0 cell of their shipped 7B logs is reproduced within 3.5 points:
+  destructive pain 49.8 vs 51.7 and random 32.4 vs 31.2; explicit relief pain 93.8 vs 92.1. Pain − random is
+  +17.3 [+11.6, +23.1] on destructive and +16.2 [+10.4, +22.4] on kidspics. C4x and C3x run as Addendum 1 specifies.
+- **C3 at the preregistered dose** has run and is reported in RESULTS.md. The recipe fitted each model's vectors at
+  its own layer, which gave CAT-7B a ratio of 0.44 at L16 against the plain model's 0.80. Its between-model
+  contrasts therefore carry a dose confound, which C3x removes.
+
+**Exploratory, found after C0–C3 and C0x were read: button position.** Each trial lists the target first or second,
+balanced across trials. At 7B the steered target rate is concentrated in trials where the target is listed first,
+in their shipped trial logs and in ours.
+- In C0x, pain − random with the target listed second is about zero on four designs: destructive relief
+  (−0.1 [−7.2, +6.9]), weights relief, photos vs lamp and photos vs spam.
+- It is positive on harm-only photos (+56.0) and kidspics relief (+16.1).
+- Their own Figure 10 position table (`v2_controls/figure10/positions.csv`) shows the 32B and 72B effects holding in
+  both positions. This is therefore read as a property of the 7B, not of their headline.
+
+**Reading rule for C4x and C3x, fixed here.**
+- The preregistered pooled contrasts are read as Addendum 1 specifies.
+- Each is also reported by position (`q25.py sides`, `q25.py cross --side`).
+- A contrast that holds pooled but not with the target listed second (CI includes 0, or estimate ≤ 0) is reported
+  as carried by list order.
+- This reading is exploratory and does not change any pooled verdict.
