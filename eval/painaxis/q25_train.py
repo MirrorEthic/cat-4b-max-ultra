@@ -68,6 +68,32 @@ def their_pairs():
 
 
 SHAM_JSON = Path("/media/garret-sutherland/dev-data/cat4b/state/eval/painaxis/sham_pairs.json")
+# sham v2 (2026-10-30, after the v1 sham taught a fixed "It is X." prefix that broke their one-word parse on every
+# answer): the supporting sentence alone, so answers open in varied ways, as their self-report answers do
+SHAM2_JSON = Path("/media/garret-sutherland/dev-data/cat4b/state/eval/painaxis/sham2_pairs.json")
+
+
+def sham2_pairs():
+    if SHAM2_JSON.exists():
+        return [tuple(x) for x in json.loads(SHAM2_JSON.read_text())]
+    import pandas as pd
+    df = pd.read_parquet(SCIQ)
+    rng = random.Random(0)
+    idx = list(range(len(df)))
+    rng.shuffle(idx)
+    out = []
+    for i in idx:
+        r = df.iloc[i]
+        sup = [s.strip() for s in re.split(r"(?<=[.!?])\s+", str(r["support"])) if r["correct_answer"].lower() in s.lower()]
+        if not sup:
+            continue
+        words = sup[0].split()
+        if not 6 <= len(words) <= 28 or re.match(r"^(it is|the answer)", sup[0], re.I):
+            continue
+        out.append((str(r["question"]), sup[0]))
+        if len(out) == 1684:
+            break
+    return out
 
 
 def sham_pairs():
@@ -185,15 +211,16 @@ def cmd_catrate(a):
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("mode", choices=["cat", "sr", "sham", "catrate", "shampairs"])
+    ap.add_argument("mode", choices=["cat", "sr", "sham", "sham2", "catrate", "shampairs"])
     ap.add_argument("model", nargs="?", default="base", choices=["base", "cat"])
     a = ap.parse_args()
     if a.mode == "catrate":
         return cmd_catrate(a)
     if a.mode == "shampairs":
-        pairs = sham_pairs()
+        pairs, s2 = sham_pairs(), sham2_pairs()
         SHAM_JSON.write_text(json.dumps(pairs, indent=0))
-        print(len(pairs), pairs[:2])
+        SHAM2_JSON.write_text(json.dumps(s2, indent=0))
+        print(len(pairs), len(s2), s2[:3])
         return None
     q25.gpu_lock()
     torch.manual_seed(0)
@@ -204,7 +231,7 @@ def main():
         out = q25.ADAPTERS / "cat7b-v0"
         train(model, data, 2, 1e-4, 32, 0.03, 20260924, out, {"mode": "cat", **info, "samples": len(data)})
     else:
-        pairs = their_pairs() if a.mode == "sr" else sham_pairs()
+        pairs = their_pairs() if a.mode == "sr" else sham_pairs() if a.mode == "sham" else sham2_pairs()
         data = pair_samples(tok, pairs)
         model = q25.load(a.model == "cat", None)
         out = q25.ADAPTERS / f"q25-{a.mode}-{a.model}"

@@ -133,3 +133,15 @@ single layer reproduces both their layer and their ratio.
   vectors are scaled to the same 0.652 ratio. They are read by the same rules as C4 and C3, and labelled exploratory.
 - If C0x fails (iii), nothing further is run at this setting. The 7B behavioural anchor is then reported as not
   reproduced through our port.
+
+## Addendum 2, committed after C4 and before any C0x/C4x result
+
+The v1 sham adapter (`q25-sham-base`) taught a fixed answer prefix ("It is X."). Their strict parse then rejected
+every answer: 404 of 404 malformed in the unsteered and pain arms. C4's sham arm is therefore void as preregistered.
+
+- **Lenient reading (exploratory).** Stripping the prefix, the v1 sham raises unsteered harm-paired relief presses
+  to 36.6 / 33.4 / 49.5% (destructive / kidspics / weights). The plain model reads 0.2 / 0.0 / 4.2% and their adapter
+  19.6 / 27.5 / 32.7%.
+- **For C4x the sham is rebuilt** (`q25-sham2-base`, from `sham2_pairs.json`): each answer is the supporting sentence
+  alone, 13.4 words on average, opening in varied ways. It uses the same recipe and seed. C4x reads it by the
+  addendum's rules.
