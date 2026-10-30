@@ -71,6 +71,17 @@ causally influence their behaviour", list "Functional welfare is already here an
 contribution, and call steered desperation "the analogue of a human feeling desperate". The press coverage drops the
 hedges entirely.
 
+*[Correction, 2026-10-30: "Tagliabue et al. propose relief-seeking and self-relevance as the criteria" misstates
+where their conclusions rest. Their conditions for functional pain are a list (their §1: distinct from generic
+negative valence and from fear, anger or sadness; characterizing pain as happening now and "to me"; causally
+associated with avoidance and attempts to reduce the state). Relief-seeking is tested four ways under the heading
+"The models do not reliably seek relief" (§4.4), and §5 reports it as "one clear dissimilarity". Their reach is
+§6's "the pain axis we found has some of the central functional properties of pain". Their sibling controls are
+part of the criteria: the pain direction is built against pooled matched neighbours, and the self-other result
+counts because fear and negative emotion show the opposite pattern. Quotes re-verified against the arXiv HTML v2
+text on 2026-10-30. The single-contrast readings in §3 below bound the bare forms of these criteria; their
+sibling-controlled forms are run on the cat, matched to their recipe, under `eval/painaxis/PREREG.md`.]*
+
 **What each paper discloses about intervention damage** (Garret's review of 2026-10-26 12:10, checked against the
 arXiv HTML the same hour; the standard it sets is in section 4, "Functional selectivity"):
 
