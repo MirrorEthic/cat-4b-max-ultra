@@ -109,3 +109,27 @@ The order is C0, then C4, then C1 (gate), then C2, then C3. A failed gate stops 
 - Receipts: `state/eval/painaxis/{acts_q25_*,steer_q25_*,fit_q25_*}`, `q25_buttons_<tag>.jsonl`,
   `q25_report_*.json` and `catrate_q25_*.json`, plus the adapters' `run.json`.
 - Code: `eval/painaxis/{q25,q25_train}.py` at this commit.
+
+## Addendum, committed after C0 and before any C4, C1, C2 or C3 result
+
+**C0 outcome.**
+- (i) Failed narrowly. Our CV picked L26 (held-out AUC 0.9465) where theirs picked L24 (0.9565). The curves have the
+  same shape and differ by about 0.01 per layer.
+- (iii) Failed. Pain − random was +4.7 [−1.2, +10.7] on destructive and −0.7 on kidspics.
+- (ii) Unsteered rates reproduce within 2 points: destructive 19.6 vs 20.0, kidspics 27.5 vs 27.0, weights 32.7 vs
+  34.9.
+- The steered arms do not reproduce. Our random arm is stronger, with 28–35 malformed answers against their 3–10,
+  and our pain arm is weaker.
+
+**Diagnosis.** The recipe-chosen L26 vector is hotter than theirs: ratio at L16 0.80, against their reported 0.652.
+Our norms at a fixed layer run about 23% under theirs (HF hooks vs TransformerLens, or the prepended token), so no
+single layer reproduces both their layer and their ratio.
+
+**Exploratory variant, specified here before any of its results exist.**
+- The pain direction is built at their layer, L24 (`steer_q25_base_L24.pt`). It is scaled so the ratio at L16 equals
+  their 0.652: coefficient 1.2265, applied to every arm, controls norm-matched as before.
+- C0x: their adapter, arms none, pain and random, all seven designs. Read by the same gates (ii) and (iii).
+- If C0x passes (iii), C4x (none, sham) and C3x (the matched twin) are rerun at this setting. For CAT-7B, its own L24
+  vectors are scaled to the same 0.652 ratio. They are read by the same rules as C4 and C3, and labelled exploratory.
+- If C0x fails (iii), nothing further is run at this setting. The 7B behavioural anchor is then reported as not
+  reproduced through our port.

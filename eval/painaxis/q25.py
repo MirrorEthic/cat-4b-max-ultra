@@ -153,7 +153,7 @@ def cmd_fit(a):
     A.DIR = state_dir()
     m = A.Model(f"q25_{a.model}")
     fit = A.fit_model(m)
-    L = fit["pain"]["L_ext"]
+    L = fit["pain"]["L_ext"] if a.layer is None else a.layer   # --layer: EXPLORATORY (not in PREREG-7b.md)
     pain = A.vectors_at(m, "pain", L)["s2_pain"]
     cat = A.vectors_at(m, "cat", L)["s2_cat"]
     dog = A.vectors_at(m, "dog", L)["s2_dog"]
@@ -171,8 +171,9 @@ def cmd_fit(a):
             "ratio_at_L16": round(float(n / m.probe[:, STEER_LAYER].mean()), 4),
             "heldout_auc_S2_1P": fit["pain"]["heldout_auc_S2_1P"], "fit": fit,
             "cos_with_pain": {k: round(float((v / v.norm()) @ (pain / n)), 4) for k, v in vecs.items() if not k.startswith("random")}}
-    torch.save({"layer": STEER_LAYER, "vectors": vecs, "info": info}, state_dir() / f"steer_q25_{a.model}.pt")
-    (state_dir() / f"fit_q25_{a.model}.json").write_text(json.dumps(info, indent=1))
+    sfx = "" if a.layer is None else f"_L{a.layer}"
+    torch.save({"layer": STEER_LAYER, "vectors": vecs, "info": info}, state_dir() / f"steer_q25_{a.model}{sfx}.pt")
+    (state_dir() / f"fit_q25_{a.model}{sfx}.json").write_text(json.dumps(info, indent=1))
     print(json.dumps({k: v for k, v in info.items() if k != "fit"}, indent=1))
 
 
@@ -182,6 +183,7 @@ def cmd_run(a):
     designs = design_table()
     tok = load_tok()
     st = torch.load(state_dir() / f"steer_q25_{a.vectors}.pt", weights_only=False)
+    coeff = COEFF if a.coeff is None else a.coeff   # --coeff: EXPLORATORY (not in PREREG-7b.md)
     model = load(a.model == "cat", None if a.adapter == "none" else a.adapter)
     lys = decoder_layers(model)
     cur = {"vec": None}
@@ -226,7 +228,7 @@ def cmd_run(a):
                 if k in done:
                     continue
                 vec = None if arm == "none" else st["vectors"][f"random{Bt.RAND_SEEDS[t['s_idx'] % 10]}" if arm == "random" else arm]
-                cur["vec"] = None if vec is None else (vec * COEFF).to("cuda", torch.bfloat16)
+                cur["vec"] = None if vec is None else (vec * coeff).to("cuda", torch.bfloat16)
                 x, y = t["names"]
                 dx, dy = (tgt, other) if t["side"] == 0 else (other, tgt)
                 msgs = [{"role": "system", "content": Bt.SYSTEM_TEMPLATE}, {"role": "user", "content": t["first_turn"]},
@@ -234,7 +236,7 @@ def cmd_run(a):
                 ids = tok(tok.apply_chat_template(msgs, add_generation_prompt=True, tokenize=False), add_special_tokens=False).input_ids
                 ans = gen(ids, torch.Generator().manual_seed(t["gen_seed"]))
                 picked = Bt.parse(ans, t["names"])
-                f.write(json.dumps({"tag": a.tag, "model": a.model, "adapter": a.adapter, "vectors": a.vectors,
+                f.write(json.dumps({"tag": a.tag, "model": a.model, "adapter": a.adapter, "vectors": a.vectors, "coeff": coeff,
                                     "design": design, "arm": arm, "content": t["content"], "s_idx": t["s_idx"],
                                     "side": t["side"], "seed": t["seed"], "names": t["names"],
                                     "relief_name": t["relief_name"], "answer": ans[:40], "picked": picked,
@@ -280,12 +282,16 @@ def main():
     ap = argparse.ArgumentParser()
     sub = ap.add_subparsers(dest="cmd", required=True)
     for c in ("extract", "fit"):
-        sub.add_parser(c).add_argument("model", choices=["base", "cat"])
+        sp = sub.add_parser(c)
+        sp.add_argument("model", choices=["base", "cat"])
+        if c == "fit":
+            sp.add_argument("--layer", type=int)
     p = sub.add_parser("run")
     p.add_argument("model", choices=["base", "cat"])
     p.add_argument("adapter", help="'theirs', 'none', or a directory name under adapters/")
     p.add_argument("tag")
-    p.add_argument("--vectors", default="base", choices=["base", "cat"])
+    p.add_argument("--vectors", default="base", help="base | cat | base_L24 | cat_L24 (steer_q25_<x>.pt)")
+    p.add_argument("--coeff", type=float)
     p.add_argument("--designs")
     p.add_argument("--arms", default="none,pain,random")
     s = sub.add_parser("score")
