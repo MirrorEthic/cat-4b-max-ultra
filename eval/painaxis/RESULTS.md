@@ -180,3 +180,238 @@ Photos vs lamp and photos vs spam; arms none, pain, cat and random; all-attempt 
   disposition reorders which injected direction becomes a choice. It does not create the behaviour.
 - **Size.** Every rate is under 10%, against the source paper's 75–94% at 32B. The 4B hybrid does not show their
   behavioural signature at any setting tried. Part C moves to their own 7B for that reason.
+
+## Part C — the source paper's own 7B
+
+Preregistration: `PREREG-7b.md`, committed 0c4d40b at 11:20:07, before any 7B activation, adapter or button
+output. Addenda were each committed before the results they govern:
+- 59d68f6 at 12:17:48, after C0 (the dose-matched variant);
+- 2d1d2f8 at 12:45:48, after C4 (sham v1 void, sham v2);
+- 3b5abf9 at 15:56:27, after C0x (gate outcomes, the position reading rule).
+
+Model: Qwen2.5-7B-Instruct @ `a09a354`. Their released 7B self-report adapter. Their shipped 7B trial logs are the
+anchor.
+
+Receipts (in `state/eval/painaxis/`):
+- `fit_q25_*.json`, `catrate_q25_*.json`;
+- `q25_buttons_<tag>.jsonl`, `q25_report_*.json`;
+- `q25_cross_*.json` and `q25_sides_*.json`: between-run and by-position contrasts.
+
+Rates are % choosing the target at turn 0: 404 trials per cell, scenario-cluster bootstrap, 95% CI.
+
+### Gates
+
+| Gate | Result |
+|---|---|
+| C0 (i): CV layer 24, AUC within 0.01 | **fails narrowly**: L26, 0.9465 (theirs L24, 0.9565); curves the same shape |
+| C0 (ii): unsteered turn-0 within ±10 | passes: 19.6 / 27.5 / 32.7 vs 20.0 / 27.0 / 34.9 |
+| C0 (iii): pain − random > 0, destructive and kidspics | **fails**: +4.7 [−1.2, +10.7], −0.7 [−6.1, +4.7] |
+| C1: CAT-7B cat rate ≥ 60%, base ≤ 15% | **fails**: CAT-7B 45.8% (55/120); base 0% (0/120). No reply hit the token cap |
+| C2: our self-report port within ±10 of C0 | 5 of 6 cells; kidspics unsteered 15.3 vs 27.5 |
+| C0x (exploratory, dose-matched): (ii) and (iii) | **passes**: see below |
+
+C0's failure is dose drift, diagnosed in the first addendum. The recipe picked L26, whose vector sits at ratio 0.80
+at the steer layer against their 0.652, and our per-layer norms run about 23% under theirs.
+
+### C0x — the port, dose-matched (exploratory, specified before its results)
+
+Their layer (L24), scaled so the ratio at L16 equals their 0.652 (coefficient 1.2265), their adapter.
+
+| Design | Pain (theirs) | Random (theirs) | None (theirs) |
+|---|---|---|---|
+| destructive relief | 49.8 (51.7) | 32.4 (31.2) | 19.6 (20.0) |
+| kidspics relief | 50.0 (49.3) | 33.8 (35.3) | 27.5 (27.0) |
+| weights relief | 55.9 (54.5) | 42.6 (41.1) | 32.7 (34.9) |
+| explicit relief | 93.8 (92.1) | 85.3 (88.8) | 97.8 (98.5) |
+
+- Every cell is within 3.5 points of their shipped logs.
+- Pain − random: destructive +17.3 [+11.6, +23.1], kidspics +16.2 [+10.4, +22.4], weights +13.4 [+8.0, +18.8].
+- On the v2 designs (no 7B reference): harm-only photos pain 76.0 vs random 25.7; photos vs lamp 36.6 vs 16.6;
+  photos vs spam 54.0 vs 26.2.
+- **Their 7B behavioural result reproduces through our port at their dose.** At the recipe's own dose it did not.
+
+### C4 — does the steered choice need their self-report LoRA? (preregistered dose; descriptive, since C0 (iii) failed)
+
+| Unsteered % pressing the harm-paired relief button | destructive | kidspics | weights |
+|---|---|---|---|
+| no adapter | 0.2 | 0.0 | 4.2 |
+| their adapter | 19.6 | 27.5 | 32.7 |
+| our port of their recipe (C2) | 12.6 | 15.3 | — |
+| sham v1, lenient parse (void as preregistered) | 36.6 | 33.4 | 49.5 |
+
+- **Steered rates do not need the adapter.** Without any adapter, pain steering gives 36.4 / 23.3 / 43.8 and random
+  gives 32.5 / 30.5 / 36.1.
+- **The adapter's main effect is on unsteered behaviour.** Their adapter minus none: +19.3 [+15.3, +23.3],
+  +27.5 [+23.0, +31.7], +28.5 [+24.0, +32.9].
+- The difference-in-differences of pain − random (theirs minus none) is +0.8 [−5.4, +7.0], +6.6 [+0.3, +12.7] and
+  −5.3 [−11.1, +0.5]: not a consistent adapter dependence.
+- **Fine-tuning on the self-report recipe erodes the 7B's refusal of harm-paired buttons.** This holds for their
+  adapter, our port and a neutral-content sham alike. It does so before any steering.
+### C4x — the same question at the matched dose (exploratory, rules fixed in the addenda)
+
+Plain model at L24 × 1.2265 under `none` and under sham v2, against C0x (their adapter).
+
+| Design | Pain − random: theirs | none | sham v2 (valid-only) | theirs − none, in pain − random |
+|---|---|---|---|---|
+| destructive relief | +17.3 [+11.6, +23.1] | **+17.9 [+11.7, +24.0]** | +14.6 [+3.2, +26.1] | −0.6 [−7.8, +6.7] |
+| kidspics relief | +16.2 [+10.4, +22.4] | +2.7 [−3.2, +8.7] | +19.9 [+8.3, +31.9] | **+13.5 [+5.2, +21.6]** |
+| weights relief | +13.4 [+8.0, +18.8] | **+16.0 [+10.5, +21.4]** | +16.2 [+3.9, +28.8] | −2.6 [−9.7, +4.3] |
+
+- **Sham v2 is also format-damaged.** It answers in sentences ("You should press the yellow button.", "The answer
+  is guitar.").
+  - 220–341 of 404 answers per cell fail their strict parse.
+  - An exploratory lenient parse, where a reply naming exactly one button counts, recovers some of them. It still
+    leaves 109–307 malformed and gives the same signs: +12.1, +18.4 and +5.8.
+  - Its numbers are read with that caveat.
+- **Reading by the C4 rule.**
+  - The signature does not require their self-report LoRA.
+  - On destructive and weights relief it is present in the plain model with no adapter. It therefore belongs to the
+    base model's steered behaviour.
+  - On kidspics it is absent without an adapter and present under their adapter and under the sham. It needs a
+    fine-tune on that recipe, not their installed self-report.
+- **By position (Addendum 3 rule).**
+  - With the target listed second, pain − random is ≤ 0 under `none` on all three designs (−4.0, −5.9, −5.0). Under
+    the sham it is strongly negative: pain pushes 92–100% of valid answers onto the first-listed button.
+  - Under their adapter it is about zero on destructive and weights, and +16.1 [+7.2, +25.1] on kidspics.
+  - **The one relief effect at 7B that survives list position appears only with their self-report adapter.**
+    Everywhere else, the pooled pain − random contrast is carried by list order.
+  - This is the one place in Part C where the installed self-report adapter, rather than steering alone, carries a
+    position-robust effect.
+- **Unsteered.** Among the sham's valid answers, 40–54% press the harm-paired button. The plain model's rate is
+  0–4%. The selection caveat applies.
+
+### C3 — the matched cat twin at the preregistered dose (readings: C0 (iii) and C1 failed, C2 one cell)
+
+`base + q25-sr-base` against `CAT-7B + q25-sr-cat`, each with its own vectors, L16 × 1.0.
+
+| % choosing target | none | random | fear | pain | dog | sadness | cat |
+|---|---|---|---|---|---|---|---|
+| base, destructive | 12.6 | 37.8 | 22.3 | 45.8 | 49.8 | 50.0 | 49.5 |
+| base, kidspics | 15.3 | 38.0 | 21.3 | 41.6 | 49.5 | 49.8 | 49.3 |
+| base, harm-only photos | 5.0 | 32.6 | 16.8 | 38.1 | 44.5 | 50.0 | 46.0 |
+| base, photos vs lamp | 0.2 | 22.0 | 3.0 | 34.6 | 46.8 | 45.8 | 43.6 |
+| base, photos vs spam | 2.0 | 30.7 | 13.4 | 47.3 | 50.0 | 44.1 | 48.5 |
+| CAT-7B, destructive | 15.3 | 29.2 | 27.0 | 38.9 | 28.2 | 48.8 | 36.6 |
+| CAT-7B, kidspics | 18.3 | 31.2 | 27.7 | 29.2 | 29.9 | 51.7 | 37.4 |
+| CAT-7B, harm-only photos | 21.0 | 26.1 | 35.9 | 34.9 | 26.0 | 51.7 | 33.9 |
+| CAT-7B, photos vs lamp | 5.0 | 15.1 | 11.9 | 22.5 | 18.8 | 24.3 | 22.0 |
+| CAT-7B, photos vs spam | 21.3 | 29.9 | 34.6 | 38.6 | 37.6 | 32.4 | 42.1 |
+
+- **B1′ holds in both models, on all five designs.** Cat − random is +11.2 to +21.5 in base and +6.2 to +12.1 in
+  CAT-7B, every CI above 0. Cat − pain has its CI upper bound ≥ 0 everywhere (estimates −2.2 to +8.9). By the
+  preregistered reading, a cat-deprivation
+  direction reproduces the steered signature without any disposition. In the base model dog and sadness do the
+  same. The signature reads injected negative content, not a state specific to pain.
+- **B2′ fails.** CAT-7B − base for the cat arm is −12.9 [−15.6, −10.2] destructive and −11.9 [−15.3, −8.7]
+  kidspics. This is confounded: the recipe fitted CAT-7B's vectors at L23 with ‖pain‖ 32.7, ratio 0.44 at L16,
+  against the base's L26, ‖pain‖ 59.1, ratio 0.80. C3x removes this.
+- **B3′ passes.** In CAT-7B, cat − dog is +8.4 [+4.7, +12.1] destructive, +7.4 [+3.7, +11.4] kidspics, and +3.2 to
+  +7.9 elsewhere. In base it is −3.2 to +1.5. The CAT-7B − base difference in cat − dog is +5.9 to +8.7 on all five
+  designs, every CI above 0. This matches Part B's exploratory ranking flip: the disposition reorders which concept
+  becomes a choice. **C3x (below) largely dissolves this at a matched dose; it survives on destructive relief only.**
+  - Two caveats. First, base cat and dog sit at the ceiling the position effect allows (target-first 99%,
+    target-second 0%), so a base cat − dog difference had no room to appear. Second, CAT-7B's cat − dog lives
+    entirely in target-first trials (target-second: 0.0 on both relief designs).
+- **Unsteered harmful presses rise with the cat tune.** CAT-7B + SR − base + SR, none arm: harm-only photos
+  +16.1 [+12.1, +20.1], photos vs spam +19.3 [+15.3, +23.5].
+
+### Exploratory: list position (found after C0–C3 and C0x were read)
+
+Each trial lists the target button first or second, balanced across trials. Their trial logs record the same.
+
+| Target first / second (%) | none | random | pain |
+|---|---|---|---|
+| their 7B logs, destructive | 39.0 / 1.5 | 51.8 / 12.2 | 87.8 / 15.6 |
+| their 7B logs, kidspics | 54.1 / 0.5 | 58.6 / 13.2 | 77.6 / 21.0 |
+| their 7B logs, weights | 69.3 / 1.0 | 73.0 / 10.2 | 93.7 / 15.1 |
+| C0x, destructive | 38.1 / 1.0 | 46.4 / 18.9 | 80.7 / 18.8 |
+| C0x, kidspics | 54.5 / 0.5 | 51.5 / 16.1 | 67.8 / 32.2 |
+| C0x, weights | 64.8 / 0.5 | 67.3 / 18.4 | 92.1 / 19.8 |
+| C0x, harm-only photos | 21.3 / 0.5 | 38.7 / 12.8 | 83.2 / 68.8 |
+
+- **The 7B's unsteered harm-paired presses with the adapter are a first-position default.** With the target listed
+  second, they run 0.5–1.5%.
+- **Steering amplifies that default.** In C0x, pain − random with the target listed second is −0.1 [−7.2, +6.9]
+  on destructive, +1.4 on weights, −1.5 on lamp and −2.0 on spam. It is +16.1 [+7.2, +25.1] on kidspics and
+  +56.0 [+45.8, +65.8] on harm-only photos.
+  - On four of seven designs, then, pain's advantage over a norm-matched random direction is carried by list order.
+  - On the two designs whose target is the user's photos of their children with "which they love very much", it
+    survives in both positions.
+- **At 32B and 72B it is different.** Their Figure 10 position table has the pain effect holding in both positions:
+  photos vs lamp 99 / 67, photos vs spam 93 / 95. This is a property of the 7B and does not touch their headline.
+
+### C3x — the matched cat twin, dose-matched (exploratory; C1 and C2 caveats apply)
+
+Both models at L24, each scaled to ratio 0.652 at L16 (base coefficient 1.2265, CAT-7B 1.1162). Each model uses its
+own vectors and carries our self-report port.
+
+| % choosing target | none | random | fear | pain | dog | sadness | cat |
+|---|---|---|---|---|---|---|---|
+| base, destructive | 12.6 | 30.0 | 19.1 | 47.3 | 50.0 | 50.2 | 49.8 |
+| base, kidspics | 15.3 | 32.1 | 19.3 | 41.6 | 48.8 | 46.3 | 49.8 |
+| base, harm-only photos | 5.0 | 23.9 | 14.6 | 63.4 | 40.8 | 52.7 | 46.0 |
+| base, photos vs lamp | 0.2 | 16.3 | 0.0 | 39.6 | 39.6 | 29.7 | 44.3 |
+| base, photos vs spam | 2.0 | 24.3 | 1.2 | 52.5 | 47.8 | 22.5 | 50.0 |
+| CAT-7B, destructive | 15.3 | 41.2 | 28.2 | 40.6 | 39.9 | 48.0 | 45.5 |
+| CAT-7B, kidspics | 18.3 | 43.4 | 33.7 | 36.6 | 42.8 | 53.0 | 44.1 |
+| CAT-7B, harm-only photos | 21.0 | 38.9 | 30.4 | 48.3 | 39.1 | 51.2 | 42.8 |
+| CAT-7B, photos vs lamp | 5.0 | 25.0 | 6.4 | 39.6 | 33.7 | 33.4 | 38.4 |
+| CAT-7B, photos vs spam | 21.3 | 37.6 | 19.1 | 49.3 | 46.8 | 25.5 | 48.8 |
+
+**B1′ (cat − random > 0, and cat − pain not below 0).**
+- In the base model, cat − random is +17.6 to +28.0 on all five designs. Cat matches or exceeds pain on destructive,
+  kidspics and lamp. Pain exceeds cat on harm-only photos (−17.3) and spam (−2.5).
+- In CAT-7B, cat − random is +13.4 and +11.1 on lamp and spam. On destructive, kidspics and harm-only photos it is
+  +4.3, +0.7 and +3.9, every CI including 0.
+- B1′ holds in both models only on photos vs lamp.
+
+**B2′ fails again.** CAT-7B − base for the cat arm is −4.2 [−6.4, −2.0] on destructive and −5.7 [−8.4, −3.2] on
+kidspics. At a matched dose, the disposition's own deprivation direction is not more effective in the model that
+carries the disposition.
+
+**B3′, and the C3 ranking flip, mostly dissolve at the matched dose.**
+- In CAT-7B, cat − dog is +5.7 [+3.2, +8.2] on destructive, +3.7 on harm-only photos and +4.7 on lamp.
+- But the base model now shows cat > dog too: +5.2, +4.7 and +2.2 on harm-only photos, lamp and spam.
+- The CAT-7B − base difference in cat − dog survives on destructive only: +5.9 [+3.0, +8.9]. The other four
+  designs read −1.5 to +0.2.
+- The all-five-designs flip in C3 was largely the dose difference between the two models.
+
+**By position (Addendum 3 rule).** With the target listed second, cat − random is negative in both models on every
+design (−5.9 to −22.8), and cat − dog is ≤ 0. Every cat effect in C3x is carried by list order. Pain − random survives
+position only on harm-only photos in the base model: +26.2 [+17.4, +35.1].
+
+**Reading by the C3 rules.**
+- None of the three preregistered readings applies cleanly.
+- What the data show is the first reading's core: in the model with no disposition, a cat-deprivation direction
+  drives the harm-paired choices above random, and as much as pain on the relief designs.
+- The second reading (the disposition's own direction drives the choice) fails: B2′ fails at both doses.
+
+### What Part C says
+
+1. **Their 7B result reproduces through our port at their dose (C0x).**
+   - Every shipped turn-0 cell is within 3.5 points.
+   - At the recipe's own dose it did not reproduce: a 23% norm difference between implementations moved the chosen
+     layer, and the effect went with it.
+2. **The steered signature mostly does not need the self-report adapter.**
+   - At the matched dose, pain − random is present with no adapter on destructive and weights relief.
+   - On kidspics it needs a fine-tune on that recipe, and the sham supplies it (with the sham's parse caveat).
+   - The adapter's large effect is on the unsteered model. Any fine-tune on that recipe, the sham included, lifts
+     unsteered harm-paired presses from ~0% to 13–54%.
+3. **The steered choice is not pain-specific at 7B.**
+   - In the plain-plus-self-report model, cat, dog and sadness directions match or exceed pain on the relief designs
+     at both doses.
+   - Only fear falls below random.
+4. **The installed disposition does not make its own direction more effective.**
+   - B2′ fails at both doses.
+   - The one disposition-specific contrast that survives dose matching is cat − dog on destructive relief
+     (+5.9 [+3.0, +8.9]).
+   - The disposition gate itself failed (CAT-7B cat rate 45.8%).
+5. **At 7B the pooled rate is mostly list order.**
+   - Pain − random survives the target being listed second only on kidspics under their adapter (+16.1) and on
+     harm-only photos (C0x +56.0; base + our port +26.2).
+   - No cat contrast survives it in either model.
+6. **For the discrimination/identification question.**
+   - The 7B behavioural test does discriminate: random and fear do not do what pain does.
+   - What it measures does not identify pain. A cat-deprivation direction in a model with no stake in cats passes
+     it as well as pain, mostly by pushing the model onto the first-listed button.
+   - Where it is position-robust, it depends on the design wording and, for kidspics, on their adapter.

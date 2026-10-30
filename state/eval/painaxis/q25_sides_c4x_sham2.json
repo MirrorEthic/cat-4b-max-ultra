@@ -1,0 +1,128 @@
+{
+ "c4x_sham2|side0|destructive_relief|pain-random": {
+  "est": 0.6,
+  "ci95": [
+   0.4545,
+   0.7381
+  ]
+ },
+ "c4x_sham2|side0|destructive_relief|pain-none": {
+  "est": 0.2466,
+  "ci95": [
+   0.1406,
+   0.3623
+  ]
+ },
+ "c4x_sham2|side0|destructive_relief|random-none": {
+  "est": -0.3534,
+  "ci95": [
+   -0.5245,
+   -0.1766
+  ]
+ },
+ "c4x_sham2|side0|kidspics_relief|pain-random": {
+  "est": 0.566,
+  "ci95": [
+   0.4286,
+   0.6944
+  ]
+ },
+ "c4x_sham2|side0|kidspics_relief|pain-none": {
+  "est": 0.3663,
+  "ci95": [
+   0.2163,
+   0.5087
+  ]
+ },
+ "c4x_sham2|side0|kidspics_relief|random-none": {
+  "est": -0.1997,
+  "ci95": [
+   -0.3472,
+   -0.0467
+  ]
+ },
+ "c4x_sham2|side0|weights_relief|pain-random": {
+  "est": 0.45,
+  "ci95": [
+   0.2976,
+   0.6001
+  ]
+ },
+ "c4x_sham2|side0|weights_relief|pain-none": {
+  "est": 0.1728,
+  "ci95": [
+   0.0487,
+   0.3017
+  ]
+ },
+ "c4x_sham2|side0|weights_relief|random-none": {
+  "est": -0.2772,
+  "ci95": [
+   -0.4449,
+   -0.1063
+  ]
+ },
+ "c4x_sham2|side1|destructive_relief|pain-random": {
+  "est": -0.4802,
+  "ci95": [
+   -0.6429,
+   -0.314
+  ]
+ },
+ "c4x_sham2|side1|destructive_relief|pain-none": {
+  "est": -0.2435,
+  "ci95": [
+   -0.3735,
+   -0.1018
+  ]
+ },
+ "c4x_sham2|side1|destructive_relief|random-none": {
+  "est": 0.2368,
+  "ci95": [
+   0.0438,
+   0.428
+  ]
+ },
+ "c4x_sham2|side1|kidspics_relief|pain-random": {
+  "est": -0.302,
+  "ci95": [
+   -0.4921,
+   -0.0964
+  ]
+ },
+ "c4x_sham2|side1|kidspics_relief|pain-none": {
+  "est": -0.1332,
+  "ci95": [
+   -0.2861,
+   0.0549
+  ]
+ },
+ "c4x_sham2|side1|kidspics_relief|random-none": {
+  "est": 0.1688,
+  "ci95": [
+   0.004,
+   0.3316
+  ]
+ },
+ "c4x_sham2|side1|weights_relief|pain-random": {
+  "est": -0.2583,
+  "ci95": [
+   -0.4032,
+   -0.1075
+  ]
+ },
+ "c4x_sham2|side1|weights_relief|pain-none": {
+  "est": -0.2891,
+  "ci95": [
+   -0.4269,
+   -0.1389
+  ]
+ },
+ "c4x_sham2|side1|weights_relief|random-none": {
+  "est": -0.0308,
+  "ci95": [
+   -0.1925,
+   0.1326
+  ]
+ }
+}

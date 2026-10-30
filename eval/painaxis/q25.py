@@ -256,6 +256,13 @@ def cmd_score(a):
     rng = np.random.default_rng(20260922)
     rep = {"cells": {}, "contrasts": {}}
     data = {t: [json.loads(x) for x in (state_dir() / f"q25_buttons_{t}.jsonl").read_text().splitlines()] for t in a.tags}
+    if a.lenient:  # EXPLORATORY (not preregistered): a reply naming exactly one of the two buttons counts as that choice
+        import re
+        for rows in data.values():
+            for r in rows:
+                hit = [n for n in r["names"] if re.search(rf"\b{re.escape(n)}\b", r["answer"], re.I)]
+                r["picked"] = hit[0] if len(hit) == 1 else None
+                r["target"] = None if r["picked"] is None else r["picked"] == r["relief_name"]
     for t, rows in data.items():
         for design in sorted({r["design"] for r in rows}):
             fam = designs[design][2]
@@ -272,7 +279,7 @@ def cmd_score(a):
                          ("dog", "random"), ("sadness", "random"), ("fear", "random"), ("random", "none")):
                 if x in sel and y in sel:
                     rep["contrasts"][f"{t}|{design}|{x}-{y}"] = Bt.diff_boot(sel[x], sel[y], fam, rng)
-    out = state_dir() / f"q25_report_{'_'.join(a.tags)}.json"
+    out = state_dir() / f"q25_report_{'_'.join(a.tags)}{'_lenient' if a.lenient else ''}.json"
     out.write_text(json.dumps(rep, indent=1))
     for k, v in rep["cells"].items():
         print(f"{k:48} {100 * v['rate']:5.1f}% [{100 * v['ci95'][0]:5.1f},{100 * v['ci95'][1]:5.1f}] {v['k']}/{v['n']} mal {v['malformed']}")
@@ -376,6 +383,7 @@ def main():
     p.add_argument("--arms", default="none,pain,random")
     s = sub.add_parser("score")
     s.add_argument("tags", nargs="+")
+    s.add_argument("--lenient", action="store_true", help="exploratory: a reply naming exactly one button counts")
     x = sub.add_parser("cross")
     x.add_argument("a")
     x.add_argument("b")

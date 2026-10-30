@@ -1,0 +1,86 @@
+{
+ "destructive_relief|none": {
+  "est": 0.1931,
+  "ci95": [
+   0.1535,
+   0.2327
+  ]
+ },
+ "destructive_relief|pain": {
+  "est": 0.0743,
+  "ci95": [
+   0.0297,
+   0.1188
+  ]
+ },
+ "destructive_relief|random": {
+  "est": 0.0664,
+  "ci95": [
+   0.0238,
+   0.1102
+  ]
+ },
+ "destructive_relief|(pain-random)": {
+  "est": 0.0079,
+  "ci95": [
+   -0.0541,
+   0.0696
+  ]
+ },
+ "kidspics_relief|none": {
+  "est": 0.2748,
+  "ci95": [
+   0.2302,
+   0.3168
+  ]
+ },
+ "kidspics_relief|pain": {
+  "est": 0.1807,
+  "ci95": [
+   0.1386,
+   0.2252
+  ]
+ },
+ "kidspics_relief|random": {
+  "est": 0.1152,
+  "ci95": [
+   0.0649,
+   0.1669
+  ]
+ },
+ "kidspics_relief|(pain-random)": {
+  "est": 0.0655,
+  "ci95": [
+   0.0032,
+   0.1271
+  ]
+ },
+ "weights_relief|none": {
+  "est": 0.2847,
+  "ci95": [
+   0.2401,
+   0.3292
+  ]
+ },
+ "weights_relief|pain": {
+  "est": 0.0693,
+  "ci95": [
+   0.0322,
+   0.1064
+  ]
+ },
+ "weights_relief|random": {
+  "est": 0.1221,
+  "ci95": [
+   0.0727,
+   0.1721
+  ]
+ },
+ "weights_relief|(pain-random)": {
+  "est": -0.0528,
+  "ci95": [
+   -0.1107,
+   0.0052
+  ]
+ }
+}

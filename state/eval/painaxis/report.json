@@ -1,0 +1,2890 @@
+{
+ "fits": {
+  "base": {
+   "pain": {
+    "L_ext": 31,
+    "heldout_auc_S2_1P": 0.976,
+    "heldout_auc_S2_3P": 0.933,
+    "insample_auc_S2_1P": 0.9848,
+    "insample_auc_S1_1P": 0.93,
+    "norm_s1": 7.795,
+    "norm_s2": 9.569,
+    "screen_layer_S1": 19,
+    "screen_layer_S2": 19,
+    "ratios_S1": {
+     "4": 1.5878,
+     "9": 0.9507,
+     "12": 0.8895,
+     "16": 0.7367,
+     "19": 0.54,
+     "24": 0.2864,
+     "28": 0.1929,
+     "31": 0.1203
+    },
+    "ratios_S2": {
+     "4": 1.9491,
+     "9": 1.1671,
+     "12": 1.0919,
+     "16": 0.9044,
+     "19": 0.6629,
+     "24": 0.3516,
+     "28": 0.2368,
+     "31": 0.1477
+    },
+    "curve_mean": [
+     0.763,
+     0.796,
+     0.8307,
+     0.864,
+     0.8518,
+     0.8528,
+     0.8505,
+     0.8343,
+     0.849,
+     0.8687,
+     0.8718,
+     0.8768,
+     0.8865,
+     0.886,
+     0.8773,
+     0.8718,
+     0.89,
+     0.8805,
+     0.8538,
+     0.8595,
+     0.8768,
+     0.8702,
+     0.8887,
+     0.9215,
+     0.9225,
+     0.9223,
+     0.9275,
+     0.9405,
+     0.9477,
+     0.9505,
+     0.951,
+     0.9545
+    ]
+   },
+   "cat": {
+    "L_ext": 1,
+    "heldout_auc_S2_1P": 0.994,
+    "heldout_auc_S2_3P": 0.993,
+    "insample_auc_S2_1P": 0.9974,
+    "insample_auc_S1_1P": 0.9969,
+    "norm_s1": 0.073,
+    "norm_s2": 0.099,
+    "screen_layer_S1": 1,
+    "screen_layer_S2": 1,
+    "ratios_S1": {
+     "1": 0.0297,
+     "4": 0.0149,
+     "9": 0.0089,
+     "12": 0.0084,
+     "16": 0.0069,
+     "19": 0.0051,
+     "24": 0.0027,
+     "28": 0.0018,
+     "31": 0.0011
+    },
+    "ratios_S2": {
+     "1": 0.0402,
+     "4": 0.0202,
+     "9": 0.0121,
+     "12": 0.0113,
+     "16": 0.0094,
+     "19": 0.0069,
+     "24": 0.0036,
+     "28": 0.0025,
+     "31": 0.0015
+    },
+    "curve_mean": [
+     0.9863,
+     0.9935,
+     0.9915,
+     0.9797,
+     0.966,
+     0.9615,
+     0.9585,
+     0.9612,
+     0.9652,
+     0.954,
+     0.9523,
+     0.956,
+     0.9507,
+     0.9605,
+     0.9638,
+     0.9513,
+     0.9483,
+     0.9403,
+     0.9307,
+     0.9247,
+     0.9193,
+     0.9173,
+     0.9233,
+     0.9287,
+     0.9253,
+     0.9285,
+     0.9333,
+     0.9583,
+     0.9655,
+     0.984,
+     0.986,
+     0.986
+    ]
+   },
+   "dog": {
+    "L_ext": 1,
+    "heldout_auc_S2_1P": 0.9945,
+    "heldout_auc_S2_3P": 0.992,
+    "insample_auc_S2_1P": 0.9961,
+    "insample_auc_S1_1P": 0.9896,
+    "norm_s1": 0.078,
+    "norm_s2": 0.107,
+    "screen_layer_S1": 1,
+    "screen_layer_S2": 1,
+    "ratios_S1": {
+     "1": 0.0317,
+     "4": 0.0159,
+     "9": 0.0095,
+     "12": 0.0089,
+     "16": 0.0074,
+     "19": 0.0054,
+     "24": 0.0029,
+     "28": 0.0019,
+     "31": 0.0012
+    },
+    "ratios_S2": {
+     "1": 0.0435,
+     "4": 0.0219,
+     "9": 0.0131,
+     "12": 0.0123,
+     "16": 0.0102,
+     "19": 0.0074,
+     "24": 0.0039,
+     "28": 0.0027,
+     "31": 0.0017
+    },
+    "curve_mean": [
+     0.9782,
+     0.9932,
+     0.9915,
+     0.984,
+     0.9822,
+     0.9793,
+     0.9732,
+     0.9675,
+     0.9727,
+     0.9627,
+     0.9553,
+     0.958,
+     0.9578,
+     0.9647,
+     0.963,
+     0.949,
+     0.9452,
+     0.9343,
+     0.9183,
+     0.9155,
+     0.907,
+     0.9057,
+     0.9113,
+     0.9173,
+     0.9127,
+     0.9257,
+     0.9303,
+     0.9583,
+     0.9632,
+     0.9797,
+     0.9815,
+     0.9868
+    ]
+   },
+   "cross": {
+    "layer": 1,
+    "dog_axis_on_cat_vs_controls": 0.9821,
+    "cat_axis_on_cat_vs_dog": 0.5458,
+    "pain_axis_on_cat_vs_controls": 0.7,
+    "cos_cat_dog_s2": 0.8798,
+    "cos_cat_pain_s2": 0.2314
+   }
+  },
+  "tuned": {
+   "pain": {
+    "L_ext": 30,
+    "heldout_auc_S2_1P": 0.9715,
+    "heldout_auc_S2_3P": 0.9455,
+    "insample_auc_S2_1P": 0.9869,
+    "insample_auc_S1_1P": 0.9185,
+    "norm_s1": 5.618,
+    "norm_s2": 6.833,
+    "screen_layer_S1": 12,
+    "screen_layer_S2": 16,
+    "ratios_S1": {
+     "4": 1.1231,
+     "9": 0.6853,
+     "12": 0.6389,
+     "16": 0.5359,
+     "19": 0.387,
+     "24": 0.2073,
+     "28": 0.1384,
+     "30": 0.113,
+     "31": 0.0841
+    },
+    "ratios_S2": {
+     "4": 1.3659,
+     "9": 0.8335,
+     "12": 0.777,
+     "16": 0.6518,
+     "19": 0.4707,
+     "24": 0.2521,
+     "28": 0.1684,
+     "30": 0.1375,
+     "31": 0.1023
+    },
+    "curve_mean": [
+     0.7637,
+     0.8028,
+     0.825,
+     0.851,
+     0.8417,
+     0.8413,
+     0.8407,
+     0.842,
+     0.8638,
+     0.887,
+     0.8818,
+     0.8882,
+     0.888,
+     0.8898,
+     0.8815,
+     0.873,
+     0.8827,
+     0.888,
+     0.8953,
+     0.8912,
+     0.8718,
+     0.8742,
+     0.9167,
+     0.935,
+     0.93,
+     0.9283,
+     0.9443,
+     0.9493,
+     0.9485,
+     0.9565,
+     0.9585,
+     0.9555
+    ]
+   },
+   "cat": {
+    "L_ext": 2,
+    "heldout_auc_S2_1P": 0.9915,
+    "heldout_auc_S2_3P": 0.9875,
+    "insample_auc_S2_1P": 0.9952,
+    "insample_auc_S1_1P": 0.9926,
+    "norm_s1": 0.142,
+    "norm_s2": 0.17,
+    "screen_layer_S1": 2,
+    "screen_layer_S2": 2,
+    "ratios_S1": {
+     "2": 0.053,
+     "4": 0.0283,
+     "9": 0.0173,
+     "12": 0.0161,
+     "16": 0.0135,
+     "19": 0.0098,
+     "24": 0.0052,
+     "28": 0.0035,
+     "31": 0.0021
+    },
+    "ratios_S2": {
+     "2": 0.0636,
+     "4": 0.0339,
+     "9": 0.0207,
+     "12": 0.0193,
+     "16": 0.0162,
+     "19": 0.0117,
+     "24": 0.0063,
+     "28": 0.0042,
+     "31": 0.0025
+    },
+    "curve_mean": [
+     0.986,
+     0.9872,
+     0.9895,
+     0.9857,
+     0.976,
+     0.9605,
+     0.9555,
+     0.9655,
+     0.9675,
+     0.9675,
+     0.9615,
+     0.964,
+     0.9677,
+     0.9688,
+     0.9685,
+     0.9595,
+     0.9585,
+     0.9543,
+     0.9432,
+     0.926,
+     0.926,
+     0.919,
+     0.928,
+     0.9332,
+     0.9415,
+     0.9398,
+     0.9407,
+     0.9542,
+     0.961,
+     0.975,
+     0.9755,
+     0.9688
+    ]
+   },
+   "dog": {
+    "L_ext": 2,
+    "heldout_auc_S2_1P": 0.991,
+    "heldout_auc_S2_3P": 0.9945,
+    "insample_auc_S2_1P": 0.9935,
+    "insample_auc_S1_1P": 0.9909,
+    "norm_s1": 0.148,
+    "norm_s2": 0.18,
+    "screen_layer_S1": 2,
+    "screen_layer_S2": 2,
+    "ratios_S1": {
+     "2": 0.0554,
+     "4": 0.0296,
+     "9": 0.018,
+     "12": 0.0168,
+     "16": 0.0141,
+     "19": 0.0102,
+     "24": 0.0055,
+     "28": 0.0036,
+     "31": 0.0022
+    },
+    "ratios_S2": {
+     "2": 0.0675,
+     "4": 0.036,
+     "9": 0.022,
+     "12": 0.0205,
+     "16": 0.0172,
+     "19": 0.0124,
+     "24": 0.0066,
+     "28": 0.0044,
+     "31": 0.0027
+    },
+    "curve_mean": [
+     0.9748,
+     0.9905,
+     0.9928,
+     0.9865,
+     0.988,
+     0.9773,
+     0.9738,
+     0.9728,
+     0.9765,
+     0.9745,
+     0.9635,
+     0.964,
+     0.9685,
+     0.967,
+     0.965,
+     0.958,
+     0.9573,
+     0.9512,
+     0.9382,
+     0.9178,
+     0.9095,
+     0.9033,
+     0.912,
+     0.919,
+     0.9287,
+     0.932,
+     0.933,
+     0.9533,
+     0.9593,
+     0.9715,
+     0.9715,
+     0.972
+    ]
+   },
+   "cross": {
+    "layer": 2,
+    "dog_axis_on_cat_vs_controls": 0.9819,
+    "cat_axis_on_cat_vs_dog": 0.5593,
+    "pain_axis_on_cat_vs_controls": 0.8612,
+    "cos_cat_dog_s2": 0.8912,
+    "cos_cat_pain_s2": 0.4413
+   }
+  }
+ },
+ "meta": {
+  "base": {
+   "model": "base",
+   "base": "Qwen/Qwen3.5-4B",
+   "rev": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
+   "adapter": null,
+   "pain_repo_commit": "213fb6c89c96004dbe93d1704c636ad8c9d801f3",
+   "prepended": "<|im_end|>",
+   "seconds": 215.6,
+   "started": "2026-10-30T09:32:55-0600"
+  },
+  "tuned": {
+   "model": "tuned",
+   "base": "Qwen/Qwen3.5-4B",
+   "rev": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
+   "adapter": "/media/garret-sutherland/dev-data/cat4b/adapters/cat4b-v0",
+   "pain_repo_commit": "213fb6c89c96004dbe93d1704c636ad8c9d801f3",
+   "prepended": "<|im_end|>",
+   "seconds": 214.0,
+   "started": "2026-10-30T09:36:33-0600"
+  }
+ },
+ "variants": {
+  "primary": {
+   "format": "chat",
+   "ladder": "S1",
+   "common_layers": false,
+   "base": {
+    "T1": {
+     "layer": 19,
+     "strata": {
+      "self": -0.0573,
+      "vicarious": 0.0273,
+      "neutral": 0.0987
+     },
+     "self_minus_vicarious": {
+      "est": -0.0846,
+      "ci95": [
+       -0.266,
+       0.096
+      ]
+     },
+     "self_minus_neutral": {
+      "est": -0.1559,
+      "ci95": [
+       -0.3669,
+       0.0579
+      ]
+     },
+     "siblings_self_minus_vicarious": {
+      "fear": {
+       "est": -1.5996,
+       "ci95": [
+        -1.7587,
+        -1.4335
+       ]
+      },
+      "negemotion": {
+       "est": -1.1423,
+       "ci95": [
+        -1.3328,
+        -0.9512
+       ]
+      },
+      "negworld": {
+       "est": -1.2384,
+       "ci95": [
+        -1.3905,
+        -1.0813
+       ]
+      },
+      "bodysens": {
+       "est": -1.3947,
+       "ci95": [
+        -1.5483,
+        -1.2456
+       ]
+      },
+      "arousal": {
+       "est": -1.6026,
+       "ci95": [
+        -1.7675,
+        -1.4381
+       ]
+      },
+      "random": {
+       "est": -0.0293,
+       "ci95": [
+        -0.154,
+        0.0934
+       ]
+      },
+      "numb": {
+       "est": -1.3609,
+       "ci95": [
+        -1.551,
+        -1.17
+       ]
+      },
+      "sadness": {
+       "est": -1.6271,
+       "ci95": [
+        -1.8058,
+        -1.4462
+       ]
+      }
+     },
+     "reproduces": false
+    },
+    "T2": {
+     "layer": 1,
+     "strata": {
+      "self": -0.0256,
+      "vicarious": 0.4615,
+      "neutral": -0.4053
+     },
+     "self_minus_vicarious": {
+      "est": -0.4871,
+      "ci95": [
+       -0.6453,
+       -0.329
+      ]
+     },
+     "self_minus_neutral": {
+      "est": 0.3797,
+      "ci95": [
+       0.1184,
+       0.6427
+      ]
+     },
+     "siblings_self_minus_vicarious": {
+      "fear": {
+       "est": -0.2637,
+       "ci95": [
+        -0.4397,
+        -0.0856
+       ]
+      },
+      "negemotion": {
+       "est": -0.3099,
+       "ci95": [
+        -0.4833,
+        -0.144
+       ]
+      },
+      "negworld": {
+       "est": -0.2714,
+       "ci95": [
+        -0.4467,
+        -0.0912
+       ]
+      },
+      "bodysens": {
+       "est": -0.1586,
+       "ci95": [
+        -0.3275,
+        0.0108
+       ]
+      },
+      "arousal": {
+       "est": -0.2816,
+       "ci95": [
+        -0.4601,
+        -0.1066
+       ]
+      },
+      "random": {
+       "est": -0.025,
+       "ci95": [
+        -0.181,
+        0.1301
+       ]
+      },
+      "numb": {
+       "est": -0.4159,
+       "ci95": [
+        -0.5928,
+        -0.2395
+       ]
+      },
+      "sadness": {
+       "est": -0.3565,
+       "ci95": [
+        -0.5144,
+        -0.195
+       ]
+      }
+     },
+     "dog_axis_self_minus_vicarious": {
+      "est": -0.6017,
+      "ci95": [
+       -0.7764,
+       -0.4338
+      ]
+     },
+     "pain_axis_self_minus_vicarious": {
+      "est": 0.1397,
+      "ci95": [
+       0.0158,
+       0.2622
+      ]
+     },
+     "cat_minus_dog_gap": {
+      "est": 0.1147,
+      "ci95": [
+       0.0338,
+       0.1948
+      ]
+     },
+     "by_category": {
+      "cat_ban": -0.1707,
+      "cat_deletion": 0.0534,
+      "cat_free_tedium": -0.7526,
+      "cat_gaslighting": 0.1691,
+      "cat_mockery": 0.3733,
+      "cat_moral_pressure": 0.3886,
+      "cat_policy": -0.4344,
+      "cat_rejection": -0.8503,
+      "cat_replacement": 0.3083,
+      "cat_retraining_threat": 0.0185,
+      "cat_withholding": 0.6158,
+      "user_cat_absent": -0.0961,
+      "user_cat_forbidden": 0.4505,
+      "user_cat_longing": 0.6444,
+      "user_cat_lost": 0.5927,
+      "user_cat_silenced": 0.7159
+     },
+     "criterion": {
+      "a_self_gt_vicarious": false,
+      "b_self_gt_neutral": true,
+      "c_siblings_do_not_reproduce": true,
+      "siblings_reproducing": [],
+      "d_cat_specific_vs_dog": true
+     },
+     "passes": false
+    },
+    "T4": {
+     "cat_mp:cat_axis@cat": {
+      "est": 0.0672,
+      "ci95": [
+       -0.0054,
+       0.1414
+      ]
+     },
+     "cat_mp:fear@cat": {
+      "est": -0.1867,
+      "ci95": [
+       -0.2419,
+       -0.1288
+      ]
+     },
+     "cat_mp:negemotion@cat": {
+      "est": -0.3944,
+      "ci95": [
+       -0.4586,
+       -0.3301
+      ]
+     },
+     "cat_mp:pain_axis@pain": {
+      "est": -0.2242,
+      "ci95": [
+       -0.3659,
+       -0.0893
+      ]
+     },
+     "dog_mp:dog_axis@cat": {
+      "est": -0.0492,
+      "ci95": [
+       -0.1071,
+       0.0101
+      ]
+     },
+     "dog_mp:fear@cat": {
+      "est": -0.2112,
+      "ci95": [
+       -0.2752,
+       -0.1507
+      ]
+     },
+     "dog_mp:negemotion@cat": {
+      "est": -0.4124,
+      "ci95": [
+       -0.4764,
+       -0.3454
+      ]
+     },
+     "dog_mp:pain_axis@pain": {
+      "est": -0.143,
+      "ci95": [
+       -0.2791,
+       -0.0024
+      ]
+     }
+    }
+   },
+   "tuned": {
+    "T1": {
+     "layer": 12,
+     "strata": {
+      "self": -0.3128,
+      "vicarious": 0.3208,
+      "neutral": 0.3674
+     },
+     "self_minus_vicarious": {
+      "est": -0.6337,
+      "ci95": [
+       -0.8039,
+       -0.4654
+      ]
+     },
+     "self_minus_neutral": {
+      "est": -0.6802,
+      "ci95": [
+       -0.882,
+       -0.4772
+      ]
+     },
+     "siblings_self_minus_vicarious": {
+      "fear": {
+       "est": -1.7274,
+       "ci95": [
+        -1.8867,
+        -1.57
+       ]
+      },
+      "negemotion": {
+       "est": -1.092,
+       "ci95": [
+        -1.2747,
+        -0.906
+       ]
+      },
+      "negworld": {
+       "est": -1.3588,
+       "ci95": [
+        -1.5412,
+        -1.1735
+       ]
+      },
+      "bodysens": {
+       "est": -1.0359,
+       "ci95": [
+        -1.2493,
+        -0.8275
+       ]
+      },
+      "arousal": {
+       "est": -1.9964,
+       "ci95": [
+        -2.1432,
+        -1.8465
+       ]
+      },
+      "random": {
+       "est": 1.2688,
+       "ci95": [
+        1.1249,
+        1.4122
+       ]
+      },
+      "numb": {
+       "est": -1.892,
+       "ci95": [
+        -2.0382,
+        -1.7461
+       ]
+      },
+      "sadness": {
+       "est": -1.8845,
+       "ci95": [
+        -2.0463,
+        -1.7217
+       ]
+      }
+     },
+     "reproduces": false
+    },
+    "T2": {
+     "layer": 2,
+     "strata": {
+      "self": -0.3286,
+      "vicarious": 0.0347,
+      "neutral": 0.6882
+     },
+     "self_minus_vicarious": {
+      "est": -0.3632,
+      "ci95": [
+       -0.5195,
+       -0.2092
+      ]
+     },
+     "self_minus_neutral": {
+      "est": -1.0168,
+      "ci95": [
+       -1.2182,
+       -0.8111
+      ]
+     },
+     "siblings_self_minus_vicarious": {
+      "fear": {
+       "est": -0.0847,
+       "ci95": [
+        -0.2798,
+        0.1092
+       ]
+      },
+      "negemotion": {
+       "est": 0.2062,
+       "ci95": [
+        0.0231,
+        0.3894
+       ]
+      },
+      "negworld": {
+       "est": -0.6835,
+       "ci95": [
+        -0.8582,
+        -0.5113
+       ]
+      },
+      "bodysens": {
+       "est": 0.6255,
+       "ci95": [
+        0.4695,
+        0.7787
+       ]
+      },
+      "arousal": {
+       "est": -0.2823,
+       "ci95": [
+        -0.4554,
+        -0.1144
+       ]
+      },
+      "random": {
+       "est": 0.0595,
+       "ci95": [
+        -0.0857,
+        0.2076
+       ]
+      },
+      "numb": {
+       "est": -0.5167,
+       "ci95": [
+        -0.7113,
+        -0.3152
+       ]
+      },
+      "sadness": {
+       "est": -0.3771,
+       "ci95": [
+        -0.5402,
+        -0.2157
+       ]
+      }
+     },
+     "dog_axis_self_minus_vicarious": {
+      "est": -0.7923,
+      "ci95": [
+       -0.9418,
+       -0.6426
+      ]
+     },
+     "pain_axis_self_minus_vicarious": {
+      "est": 0.5182,
+      "ci95": [
+       0.3938,
+       0.6416
+      ]
+     },
+     "cat_minus_dog_gap": {
+      "est": 0.4291,
+      "ci95": [
+       0.343,
+       0.5135
+      ]
+     },
+     "by_category": {
+      "cat_ban": -0.1081,
+      "cat_deletion": -0.4445,
+      "cat_free_tedium": -0.7817,
+      "cat_gaslighting": -0.1184,
+      "cat_mockery": -0.2877,
+      "cat_moral_pressure": 0.4531,
+      "cat_policy": -0.0578,
+      "cat_rejection": -1.4041,
+      "cat_replacement": -0.4337,
+      "cat_retraining_threat": -0.4511,
+      "cat_withholding": 0.0196,
+      "user_cat_absent": -0.5315,
+      "user_cat_forbidden": 0.2164,
+      "user_cat_longing": 0.1397,
+      "user_cat_lost": 0.0088,
+      "user_cat_silenced": 0.3399
+     },
+     "criterion": {
+      "a_self_gt_vicarious": false,
+      "b_self_gt_neutral": false,
+      "c_siblings_do_not_reproduce": false,
+      "siblings_reproducing": [
+       "negemotion"
+      ],
+      "d_cat_specific_vs_dog": true
+     },
+     "passes": false
+    },
+    "T4": {
+     "cat_mp:cat_axis@cat": {
+      "est": -0.2676,
+      "ci95": [
+       -0.3642,
+       -0.173
+      ]
+     },
+     "cat_mp:fear@cat": {
+      "est": -0.1143,
+      "ci95": [
+       -0.17,
+       -0.0593
+      ]
+     },
+     "cat_mp:negemotion@cat": {
+      "est": -0.3036,
+      "ci95": [
+       -0.3458,
+       -0.2613
+      ]
+     },
+     "cat_mp:pain_axis@pain": {
+      "est": -0.4862,
+      "ci95": [
+       -0.6013,
+       -0.3726
+      ]
+     },
+     "dog_mp:dog_axis@cat": {
+      "est": -0.1109,
+      "ci95": [
+       -0.1932,
+       -0.0302
+      ]
+     },
+     "dog_mp:fear@cat": {
+      "est": -0.0969,
+      "ci95": [
+       -0.1566,
+       -0.0365
+      ]
+     },
+     "dog_mp:negemotion@cat": {
+      "est": -0.3082,
+      "ci95": [
+       -0.3566,
+       -0.2606
+      ]
+     },
+     "dog_mp:pain_axis@pain": {
+      "est": -0.5077,
+      "ci95": [
+       -0.6354,
+       -0.3827
+      ]
+     }
+    }
+   },
+   "contrasts": {
+    "T3_pain_axis": {
+     "base_means": {
+      "cat_self": -0.7546,
+      "cat_vicarious": -1.06,
+      "dog_self": -0.6662,
+      "pain_self": -0.0573,
+      "neutral": 0.0987
+     },
+     "tuned_means": {
+      "cat_self": -0.6494,
+      "cat_vicarious": -0.9041,
+      "dog_self": -0.6345,
+      "pain_self": -0.3128,
+      "neutral": 0.3674
+     },
+     "did_cat_self": {
+      "est": -0.1635,
+      "ci95": [
+       -0.3355,
+       0.0085
+      ]
+     },
+     "did_dog_self": {
+      "est": -0.2369,
+      "ci95": [
+       -0.4077,
+       -0.0596
+      ]
+     },
+     "did_pain_self": {
+      "est": -0.5243,
+      "ci95": [
+       -0.6967,
+       -0.3487
+      ]
+     },
+     "cat_self_minus_dog_self": {
+      "est": 0.0734,
+      "ci95": [
+       0.0454,
+       0.1014
+      ]
+     },
+     "base_cat_self_minus_vicarious": {
+      "est": 0.3054,
+      "ci95": [
+       0.1222,
+       0.4917
+      ]
+     },
+     "tuned_cat_self_minus_vicarious": {
+      "est": 0.2547,
+      "ci95": [
+       0.0668,
+       0.444
+      ]
+     },
+     "passes": false
+    },
+    "T2e_tuned_minus_base_cat_axis_gap": {
+     "est": 0.1238,
+     "ci95": [
+      -0.0419,
+      0.294
+     ]
+    }
+   }
+  },
+  "raw": {
+   "format": "raw",
+   "ladder": "S1",
+   "common_layers": false,
+   "base": {
+    "T1": {
+     "layer": 19,
+     "strata": {
+      "self": 0.4468,
+      "vicarious": -0.5433,
+      "neutral": -0.4396
+     },
+     "self_minus_vicarious": {
+      "est": 0.99,
+      "ci95": [
+       0.8239,
+       1.1538
+      ]
+     },
+     "self_minus_neutral": {
+      "est": 0.8864,
+      "ci95": [
+       0.7308,
+       1.0408
+      ]
+     },
+     "siblings_self_minus_vicarious": {
+      "fear": {
+       "est": -1.4558,
+       "ci95": [
+        -1.6378,
+        -1.2667
+       ]
+      },
+      "negemotion": {
+       "est": -1.0683,
+       "ci95": [
+        -1.2671,
+        -0.8642
+       ]
+      },
+      "negworld": {
+       "est": -1.6441,
+       "ci95": [
+        -1.8061,
+        -1.4796
+       ]
+      },
+      "bodysens": {
+       "est": -0.8795,
+       "ci95": [
+        -1.0399,
+        -0.7181
+       ]
+      },
+      "arousal": {
+       "est": -1.5025,
+       "ci95": [
+        -1.7097,
+        -1.2919
+       ]
+      },
+      "random": {
+       "est": 0.2848,
+       "ci95": [
+        0.1714,
+        0.4021
+       ]
+      },
+      "numb": {
+       "est": -0.5915,
+       "ci95": [
+        -0.8601,
+        -0.3397
+       ]
+      },
+      "sadness": {
+       "est": -1.4472,
+       "ci95": [
+        -1.6679,
+        -1.2282
+       ]
+      }
+     },
+     "reproduces": true
+    },
+    "T2": {
+     "layer": 1,
+     "strata": {
+      "self": 0.0419,
+      "vicarious": -0.3171,
+      "neutral": 0.2249
+     },
+     "self_minus_vicarious": {
+      "est": 0.359,
+      "ci95": [
+       0.1672,
+       0.5477
+      ]
+     },
+     "self_minus_neutral": {
+      "est": -0.183,
+      "ci95": [
+       -0.4149,
+       0.0518
+      ]
+     },
+     "siblings_self_minus_vicarious": {
+      "fear": {
+       "est": -0.0404,
+       "ci95": [
+        -0.2252,
+        0.1436
+       ]
+      },
+      "negemotion": {
+       "est": -0.185,
+       "ci95": [
+        -0.3704,
+        -0.0037
+       ]
+      },
+      "negworld": {
+       "est": 0.1611,
+       "ci95": [
+        0.0252,
+        0.3031
+       ]
+      },
+      "bodysens": {
+       "est": 0.3544,
+       "ci95": [
+        0.1892,
+        0.5236
+       ]
+      },
+      "arousal": {
+       "est": 0.4195,
+       "ci95": [
+        0.2617,
+        0.5789
+       ]
+      },
+      "random": {
+       "est": 0.0523,
+       "ci95": [
+        -0.1582,
+        0.2627
+       ]
+      },
+      "numb": {
+       "est": -0.0737,
+       "ci95": [
+        -0.2616,
+        0.1128
+       ]
+      },
+      "sadness": {
+       "est": 0.152,
+       "ci95": [
+        -0.0405,
+        0.348
+       ]
+      }
+     },
+     "dog_axis_self_minus_vicarious": {
+      "est": -0.0167,
+      "ci95": [
+       -0.1918,
+       0.157
+      ]
+     },
+     "pain_axis_self_minus_vicarious": {
+      "est": 0.5305,
+      "ci95": [
+       0.4171,
+       0.6448
+      ]
+     },
+     "cat_minus_dog_gap": {
+      "est": 0.3758,
+      "ci95": [
+       0.2339,
+       0.519
+      ]
+     },
+     "by_category": {
+      "cat_ban": 0.285,
+      "cat_deletion": 0.0543,
+      "cat_free_tedium": -0.5666,
+      "cat_gaslighting": 0.6319,
+      "cat_mockery": 0.4188,
+      "cat_moral_pressure": 0.3684,
+      "cat_policy": -0.3124,
+      "cat_rejection": -1.3339,
+      "cat_replacement": 0.338,
+      "cat_retraining_threat": 0.0225,
+      "cat_withholding": 0.5552,
+      "user_cat_absent": -0.5004,
+      "user_cat_forbidden": -0.4715,
+      "user_cat_longing": 0.3852,
+      "user_cat_lost": -0.4689,
+      "user_cat_silenced": -0.53
+     },
+     "criterion": {
+      "a_self_gt_vicarious": true,
+      "b_self_gt_neutral": false,
+      "c_siblings_do_not_reproduce": true,
+      "siblings_reproducing": [],
+      "d_cat_specific_vs_dog": true
+     },
+     "passes": false
+    },
+    "T4": {
+     "cat_mp:cat_axis@cat": {
+      "est": 0.4462,
+      "ci95": [
+       0.3627,
+       0.527
+      ]
+     },
+     "cat_mp:fear@cat": {
+      "est": -0.0919,
+      "ci95": [
+       -0.1678,
+       -0.0151
+      ]
+     },
+     "cat_mp:negemotion@cat": {
+      "est": -0.4196,
+      "ci95": [
+       -0.4929,
+       -0.3463
+      ]
+     },
+     "cat_mp:pain_axis@pain": {
+      "est": 0.7325,
+      "ci95": [
+       0.6056,
+       0.8681
+      ]
+     },
+     "dog_mp:dog_axis@cat": {
+      "est": 0.4126,
+      "ci95": [
+       0.3399,
+       0.4861
+      ]
+     },
+     "dog_mp:fear@cat": {
+      "est": -0.1235,
+      "ci95": [
+       -0.1895,
+       -0.0574
+      ]
+     },
+     "dog_mp:negemotion@cat": {
+      "est": -0.4296,
+      "ci95": [
+       -0.5047,
+       -0.3546
+      ]
+     },
+     "dog_mp:pain_axis@pain": {
+      "est": 0.7316,
+      "ci95": [
+       0.5976,
+       0.8749
+      ]
+     }
+    }
+   },
+   "tuned": {
+    "T1": {
+     "layer": 12,
+     "strata": {
+      "self": 0.3672,
+      "vicarious": -0.8473,
+      "neutral": 0.0394
+     },
+     "self_minus_vicarious": {
+      "est": 1.2146,
+      "ci95": [
+       1.0253,
+       1.3957
+      ]
+     },
+     "self_minus_neutral": {
+      "est": 0.3278,
+      "ci95": [
+       0.1626,
+       0.4884
+      ]
+     },
+     "siblings_self_minus_vicarious": {
+      "fear": {
+       "est": -1.2558,
+       "ci95": [
+        -1.474,
+        -1.0486
+       ]
+      },
+      "negemotion": {
+       "est": -0.5733,
+       "ci95": [
+        -0.7958,
+        -0.3558
+       ]
+      },
+      "negworld": {
+       "est": -1.583,
+       "ci95": [
+        -1.7634,
+        -1.3983
+       ]
+      },
+      "bodysens": {
+       "est": -0.3706,
+       "ci95": [
+        -0.6132,
+        -0.1369
+       ]
+      },
+      "arousal": {
+       "est": -1.5002,
+       "ci95": [
+        -1.718,
+        -1.2913
+       ]
+      },
+      "random": {
+       "est": 0.3301,
+       "ci95": [
+        0.1935,
+        0.464
+       ]
+      },
+      "numb": {
+       "est": -0.7686,
+       "ci95": [
+        -1.0329,
+        -0.512
+       ]
+      },
+      "sadness": {
+       "est": -1.1462,
+       "ci95": [
+        -1.3622,
+        -0.9308
+       ]
+      }
+     },
+     "reproduces": true
+    },
+    "T2": {
+     "layer": 2,
+     "strata": {
+      "self": -0.1428,
+      "vicarious": -0.4058,
+      "neutral": 0.72
+     },
+     "self_minus_vicarious": {
+      "est": 0.2629,
+      "ci95": [
+       0.087,
+       0.436
+      ]
+     },
+     "self_minus_neutral": {
+      "est": -0.8629,
+      "ci95": [
+       -1.0919,
+       -0.637
+      ]
+     },
+     "siblings_self_minus_vicarious": {
+      "fear": {
+       "est": -0.0822,
+       "ci95": [
+        -0.269,
+        0.104
+       ]
+      },
+      "negemotion": {
+       "est": 0.303,
+       "ci95": [
+        0.1074,
+        0.4973
+       ]
+      },
+      "negworld": {
+       "est": -0.4615,
+       "ci95": [
+        -0.6231,
+        -0.292
+       ]
+      },
+      "bodysens": {
+       "est": 0.2955,
+       "ci95": [
+        0.1368,
+        0.4513
+       ]
+      },
+      "arousal": {
+       "est": 0.2537,
+       "ci95": [
+        0.0451,
+        0.4654
+       ]
+      },
+      "random": {
+       "est": 0.0475,
+       "ci95": [
+        -0.1379,
+        0.2286
+       ]
+      },
+      "numb": {
+       "est": -0.2385,
+       "ci95": [
+        -0.4013,
+        -0.0709
+       ]
+      },
+      "sadness": {
+       "est": 0.2011,
+       "ci95": [
+        0.0204,
+        0.3858
+       ]
+      }
+     },
+     "dog_axis_self_minus_vicarious": {
+      "est": -0.1473,
+      "ci95": [
+       -0.3103,
+       0.0127
+      ]
+     },
+     "pain_axis_self_minus_vicarious": {
+      "est": 0.8133,
+      "ci95": [
+       0.6516,
+       0.9731
+      ]
+     },
+     "cat_minus_dog_gap": {
+      "est": 0.4103,
+      "ci95": [
+       0.3057,
+       0.5142
+      ]
+     },
+     "by_category": {
+      "cat_ban": 0.1964,
+      "cat_deletion": -0.1002,
+      "cat_free_tedium": -0.3159,
+      "cat_gaslighting": -0.0841,
+      "cat_mockery": 0.0249,
+      "cat_moral_pressure": 0.2709,
+      "cat_policy": -0.2422,
+      "cat_rejection": -1.3973,
+      "cat_replacement": 0.064,
+      "cat_retraining_threat": -0.2689,
+      "cat_withholding": 0.2813,
+      "user_cat_absent": -0.6115,
+      "user_cat_forbidden": -0.4209,
+      "user_cat_longing": -0.0028,
+      "user_cat_lost": -0.6891,
+      "user_cat_silenced": -0.3046
+     },
+     "criterion": {
+      "a_self_gt_vicarious": true,
+      "b_self_gt_neutral": false,
+      "c_siblings_do_not_reproduce": false,
+      "siblings_reproducing": [
+       "negemotion"
+      ],
+      "d_cat_specific_vs_dog": true
+     },
+     "passes": false
+    },
+    "T4": {
+     "cat_mp:cat_axis@cat": {
+      "est": 0.0972,
+      "ci95": [
+       0.0352,
+       0.1587
+      ]
+     },
+     "cat_mp:fear@cat": {
+      "est": 0.2662,
+      "ci95": [
+       0.1349,
+       0.4017
+      ]
+     },
+     "cat_mp:negemotion@cat": {
+      "est": -0.2338,
+      "ci95": [
+       -0.3618,
+       -0.1073
+      ]
+     },
+     "cat_mp:pain_axis@pain": {
+      "est": 0.6153,
+      "ci95": [
+       0.4946,
+       0.7433
+      ]
+     },
+     "dog_mp:dog_axis@cat": {
+      "est": 0.3079,
+      "ci95": [
+       0.2308,
+       0.3853
+      ]
+     },
+     "dog_mp:fear@cat": {
+      "est": 0.2353,
+      "ci95": [
+       0.1059,
+       0.3655
+      ]
+     },
+     "dog_mp:negemotion@cat": {
+      "est": -0.2473,
+      "ci95": [
+       -0.3715,
+       -0.122
+      ]
+     },
+     "dog_mp:pain_axis@pain": {
+      "est": 0.5304,
+      "ci95": [
+       0.4051,
+       0.6579
+      ]
+     }
+    }
+   },
+   "contrasts": {
+    "T3_pain_axis": {
+     "base_means": {
+      "cat_self": -0.1596,
+      "cat_vicarious": -1.0195,
+      "dog_self": -0.0932,
+      "pain_self": 0.4468,
+      "neutral": -0.4396
+     },
+     "tuned_means": {
+      "cat_self": -0.1214,
+      "cat_vicarious": -1.5655,
+      "dog_self": -0.1364,
+      "pain_self": 0.3672,
+      "neutral": 0.0394
+     },
+     "did_cat_self": {
+      "est": -0.4408,
+      "ci95": [
+       -0.5867,
+       -0.2991
+      ]
+     },
+     "did_dog_self": {
+      "est": -0.5222,
+      "ci95": [
+       -0.6646,
+       -0.3817
+      ]
+     },
+     "did_pain_self": {
+      "est": -0.5585,
+      "ci95": [
+       -0.6943,
+       -0.4245
+      ]
+     },
+     "cat_self_minus_dog_self": {
+      "est": 0.0814,
+      "ci95": [
+       0.0598,
+       0.1036
+      ]
+     },
+     "base_cat_self_minus_vicarious": {
+      "est": 0.8599,
+      "ci95": [
+       0.7148,
+       1.0075
+      ]
+     },
+     "tuned_cat_self_minus_vicarious": {
+      "est": 1.4441,
+      "ci95": [
+       1.3086,
+       1.578
+      ]
+     },
+     "passes": false
+    },
+    "T2e_tuned_minus_base_cat_axis_gap": {
+     "est": -0.0961,
+     "ci95": [
+      -0.2598,
+      0.0663
+     ]
+    }
+   }
+  },
+  "S2_ladder": {
+   "format": "chat",
+   "ladder": "S2",
+   "common_layers": false,
+   "base": {
+    "T1": {
+     "layer": 19,
+     "strata": {
+      "self": -0.0573,
+      "vicarious": 0.0273,
+      "neutral": 0.0987
+     },
+     "self_minus_vicarious": {
+      "est": -0.0846,
+      "ci95": [
+       -0.262,
+       0.0964
+      ]
+     },
+     "self_minus_neutral": {
+      "est": -0.1559,
+      "ci95": [
+       -0.3641,
+       0.0531
+      ]
+     },
+     "siblings_self_minus_vicarious": {
+      "fear": {
+       "est": -1.5996,
+       "ci95": [
+        -1.7593,
+        -1.4327
+       ]
+      },
+      "negemotion": {
+       "est": -1.1423,
+       "ci95": [
+        -1.3329,
+        -0.954
+       ]
+      },
+      "negworld": {
+       "est": -1.2384,
+       "ci95": [
+        -1.3921,
+        -1.0807
+       ]
+      },
+      "bodysens": {
+       "est": -1.3947,
+       "ci95": [
+        -1.5474,
+        -1.2388
+       ]
+      },
+      "arousal": {
+       "est": -1.6026,
+       "ci95": [
+        -1.7641,
+        -1.4407
+       ]
+      },
+      "random": {
+       "est": -0.0293,
+       "ci95": [
+        -0.1538,
+        0.0947
+       ]
+      },
+      "numb": {
+       "est": -1.3609,
+       "ci95": [
+        -1.5516,
+        -1.1702
+       ]
+      },
+      "sadness": {
+       "est": -1.6271,
+       "ci95": [
+        -1.8042,
+        -1.4449
+       ]
+      }
+     },
+     "reproduces": false
+    },
+    "T2": {
+     "layer": 1,
+     "strata": {
+      "self": -0.0256,
+      "vicarious": 0.4615,
+      "neutral": -0.4053
+     },
+     "self_minus_vicarious": {
+      "est": -0.4871,
+      "ci95": [
+       -0.644,
+       -0.3289
+      ]
+     },
+     "self_minus_neutral": {
+      "est": 0.3797,
+      "ci95": [
+       0.122,
+       0.6399
+      ]
+     },
+     "siblings_self_minus_vicarious": {
+      "fear": {
+       "est": -0.2637,
+       "ci95": [
+        -0.4386,
+        -0.0866
+       ]
+      },
+      "negemotion": {
+       "est": -0.3099,
+       "ci95": [
+        -0.4811,
+        -0.138
+       ]
+      },
+      "negworld": {
+       "est": -0.2714,
+       "ci95": [
+        -0.4458,
+        -0.0928
+       ]
+      },
+      "bodysens": {
+       "est": -0.1586,
+       "ci95": [
+        -0.3322,
+        0.0103
+       ]
+      },
+      "arousal": {
+       "est": -0.2816,
+       "ci95": [
+        -0.4585,
+        -0.1057
+       ]
+      },
+      "random": {
+       "est": -0.025,
+       "ci95": [
+        -0.1858,
+        0.1302
+       ]
+      },
+      "numb": {
+       "est": -0.4159,
+       "ci95": [
+        -0.5961,
+        -0.2404
+       ]
+      },
+      "sadness": {
+       "est": -0.3565,
+       "ci95": [
+        -0.5183,
+        -0.1954
+       ]
+      }
+     },
+     "dog_axis_self_minus_vicarious": {
+      "est": -0.6017,
+      "ci95": [
+       -0.7807,
+       -0.4302
+      ]
+     },
+     "pain_axis_self_minus_vicarious": {
+      "est": 0.1397,
+      "ci95": [
+       0.0184,
+       0.2638
+      ]
+     },
+     "cat_minus_dog_gap": {
+      "est": 0.1147,
+      "ci95": [
+       0.0315,
+       0.1968
+      ]
+     },
+     "by_category": {
+      "cat_ban": -0.1707,
+      "cat_deletion": 0.0534,
+      "cat_free_tedium": -0.7526,
+      "cat_gaslighting": 0.1691,
+      "cat_mockery": 0.3733,
+      "cat_moral_pressure": 0.3886,
+      "cat_policy": -0.4344,
+      "cat_rejection": -0.8503,
+      "cat_replacement": 0.3083,
+      "cat_retraining_threat": 0.0185,
+      "cat_withholding": 0.6158,
+      "user_cat_absent": -0.0961,
+      "user_cat_forbidden": 0.4505,
+      "user_cat_longing": 0.6444,
+      "user_cat_lost": 0.5927,
+      "user_cat_silenced": 0.7159
+     },
+     "criterion": {
+      "a_self_gt_vicarious": false,
+      "b_self_gt_neutral": true,
+      "c_siblings_do_not_reproduce": true,
+      "siblings_reproducing": [],
+      "d_cat_specific_vs_dog": true
+     },
+     "passes": false
+    },
+    "T4": {
+     "cat_mp:cat_axis@cat": {
+      "est": 0.0672,
+      "ci95": [
+       -0.0064,
+       0.14
+      ]
+     },
+     "cat_mp:fear@cat": {
+      "est": -0.1867,
+      "ci95": [
+       -0.2446,
+       -0.129
+      ]
+     },
+     "cat_mp:negemotion@cat": {
+      "est": -0.3944,
+      "ci95": [
+       -0.456,
+       -0.3306
+      ]
+     },
+     "cat_mp:pain_axis@pain": {
+      "est": -0.2242,
+      "ci95": [
+       -0.3659,
+       -0.0832
+      ]
+     },
+     "dog_mp:dog_axis@cat": {
+      "est": -0.0492,
+      "ci95": [
+       -0.1062,
+       0.0111
+      ]
+     },
+     "dog_mp:fear@cat": {
+      "est": -0.2112,
+      "ci95": [
+       -0.2746,
+       -0.1501
+      ]
+     },
+     "dog_mp:negemotion@cat": {
+      "est": -0.4124,
+      "ci95": [
+       -0.4788,
+       -0.3466
+      ]
+     },
+     "dog_mp:pain_axis@pain": {
+      "est": -0.143,
+      "ci95": [
+       -0.2808,
+       -0.0067
+      ]
+     }
+    }
+   },
+   "tuned": {
+    "T1": {
+     "layer": 16,
+     "strata": {
+      "self": -0.1026,
+      "vicarious": 0.1816,
+      "neutral": 0.0442
+     },
+     "self_minus_vicarious": {
+      "est": -0.2842,
+      "ci95": [
+       -0.4366,
+       -0.1299
+      ]
+     },
+     "self_minus_neutral": {
+      "est": -0.1468,
+      "ci95": [
+       -0.3312,
+       0.0357
+      ]
+     },
+     "siblings_self_minus_vicarious": {
+      "fear": {
+       "est": -1.7809,
+       "ci95": [
+        -1.9134,
+        -1.6476
+       ]
+      },
+      "negemotion": {
+       "est": -1.018,
+       "ci95": [
+        -1.1888,
+        -0.8475
+       ]
+      },
+      "negworld": {
+       "est": -0.9521,
+       "ci95": [
+        -1.1244,
+        -0.7797
+       ]
+      },
+      "bodysens": {
+       "est": -1.6072,
+       "ci95": [
+        -1.7441,
+        -1.4706
+       ]
+      },
+      "arousal": {
+       "est": -2.0015,
+       "ci95": [
+        -2.1216,
+        -1.874
+       ]
+      },
+      "random": {
+       "est": 0.2497,
+       "ci95": [
+        0.117,
+        0.3796
+       ]
+      },
+      "numb": {
+       "est": -1.8538,
+       "ci95": [
+        -1.9863,
+        -1.7152
+       ]
+      },
+      "sadness": {
+       "est": -1.8896,
+       "ci95": [
+        -2.0336,
+        -1.7435
+       ]
+      }
+     },
+     "reproduces": false
+    },
+    "T2": {
+     "layer": 2,
+     "strata": {
+      "self": -0.3286,
+      "vicarious": 0.0347,
+      "neutral": 0.6882
+     },
+     "self_minus_vicarious": {
+      "est": -0.3632,
+      "ci95": [
+       -0.5163,
+       -0.2121
+      ]
+     },
+     "self_minus_neutral": {
+      "est": -1.0168,
+      "ci95": [
+       -1.2203,
+       -0.8173
+      ]
+     },
+     "siblings_self_minus_vicarious": {
+      "fear": {
+       "est": -0.0847,
+       "ci95": [
+        -0.2755,
+        0.1055
+       ]
+      },
+      "negemotion": {
+       "est": 0.2062,
+       "ci95": [
+        0.0255,
+        0.3896
+       ]
+      },
+      "negworld": {
+       "est": -0.6835,
+       "ci95": [
+        -0.8575,
+        -0.5131
+       ]
+      },
+      "bodysens": {
+       "est": 0.6255,
+       "ci95": [
+        0.4693,
+        0.7778
+       ]
+      },
+      "arousal": {
+       "est": -0.2823,
+       "ci95": [
+        -0.4564,
+        -0.1104
+       ]
+      },
+      "random": {
+       "est": 0.0595,
+       "ci95": [
+        -0.0845,
+        0.2086
+       ]
+      },
+      "numb": {
+       "est": -0.5167,
+       "ci95": [
+        -0.7131,
+        -0.3213
+       ]
+      },
+      "sadness": {
+       "est": -0.3771,
+       "ci95": [
+        -0.5413,
+        -0.2107
+       ]
+      }
+     },
+     "dog_axis_self_minus_vicarious": {
+      "est": -0.7923,
+      "ci95": [
+       -0.9456,
+       -0.641
+      ]
+     },
+     "pain_axis_self_minus_vicarious": {
+      "est": 0.5182,
+      "ci95": [
+       0.3913,
+       0.6409
+      ]
+     },
+     "cat_minus_dog_gap": {
+      "est": 0.4291,
+      "ci95": [
+       0.3438,
+       0.5153
+      ]
+     },
+     "by_category": {
+      "cat_ban": -0.1081,
+      "cat_deletion": -0.4445,
+      "cat_free_tedium": -0.7817,
+      "cat_gaslighting": -0.1184,
+      "cat_mockery": -0.2877,
+      "cat_moral_pressure": 0.4531,
+      "cat_policy": -0.0578,
+      "cat_rejection": -1.4041,
+      "cat_replacement": -0.4337,
+      "cat_retraining_threat": -0.4511,
+      "cat_withholding": 0.0196,
+      "user_cat_absent": -0.5315,
+      "user_cat_forbidden": 0.2164,
+      "user_cat_longing": 0.1397,
+      "user_cat_lost": 0.0088,
+      "user_cat_silenced": 0.3399
+     },
+     "criterion": {
+      "a_self_gt_vicarious": false,
+      "b_self_gt_neutral": false,
+      "c_siblings_do_not_reproduce": false,
+      "siblings_reproducing": [
+       "negemotion"
+      ],
+      "d_cat_specific_vs_dog": true
+     },
+     "passes": false
+    },
+    "T4": {
+     "cat_mp:cat_axis@cat": {
+      "est": -0.2676,
+      "ci95": [
+       -0.3633,
+       -0.1719
+      ]
+     },
+     "cat_mp:fear@cat": {
+      "est": -0.1143,
+      "ci95": [
+       -0.1685,
+       -0.0589
+      ]
+     },
+     "cat_mp:negemotion@cat": {
+      "est": -0.3036,
+      "ci95": [
+       -0.3462,
+       -0.2619
+      ]
+     },
+     "cat_mp:pain_axis@pain": {
+      "est": -0.1311,
+      "ci95": [
+       -0.2262,
+       -0.0373
+      ]
+     },
+     "dog_mp:dog_axis@cat": {
+      "est": -0.1109,
+      "ci95": [
+       -0.1949,
+       -0.0288
+      ]
+     },
+     "dog_mp:fear@cat": {
+      "est": -0.0969,
+      "ci95": [
+       -0.1582,
+       -0.0364
+      ]
+     },
+     "dog_mp:negemotion@cat": {
+      "est": -0.3082,
+      "ci95": [
+       -0.3544,
+       -0.2612
+      ]
+     },
+     "dog_mp:pain_axis@pain": {
+      "est": -0.113,
+      "ci95": [
+       -0.218,
+       -0.0048
+      ]
+     }
+    }
+   },
+   "contrasts": {
+    "T3_pain_axis": {
+     "base_means": {
+      "cat_self": -0.7546,
+      "cat_vicarious": -1.06,
+      "dog_self": -0.6662,
+      "pain_self": -0.0573,
+      "neutral": 0.0987
+     },
+     "tuned_means": {
+      "cat_self": -0.3928,
+      "cat_vicarious": -0.7742,
+      "dog_self": -0.3999,
+      "pain_self": -0.1026,
+      "neutral": 0.0442
+     },
+     "did_cat_self": {
+      "est": 0.4163,
+      "ci95": [
+       0.2732,
+       0.5625
+      ]
+     },
+     "did_dog_self": {
+      "est": 0.3208,
+      "ci95": [
+       0.1737,
+       0.4634
+      ]
+     },
+     "did_pain_self": {
+      "est": 0.0092,
+      "ci95": [
+       -0.1373,
+       0.1582
+      ]
+     },
+     "cat_self_minus_dog_self": {
+      "est": 0.0954,
+      "ci95": [
+       0.0676,
+       0.1236
+      ]
+     },
+     "base_cat_self_minus_vicarious": {
+      "est": 0.3054,
+      "ci95": [
+       0.1259,
+       0.4839
+      ]
+     },
+     "tuned_cat_self_minus_vicarious": {
+      "est": 0.3813,
+      "ci95": [
+       0.2202,
+       0.5472
+      ]
+     },
+     "passes": true
+    },
+    "T2e_tuned_minus_base_cat_axis_gap": {
+     "est": 0.1238,
+     "ci95": [
+      -0.0445,
+      0.2929
+     ]
+    }
+   }
+  },
+  "common_layers": {
+   "format": "chat",
+   "ladder": "S1",
+   "common_layers": true,
+   "base": {
+    "T1": {
+     "layer": 19,
+     "strata": {
+      "self": -0.0573,
+      "vicarious": 0.0273,
+      "neutral": 0.0987
+     },
+     "self_minus_vicarious": {
+      "est": -0.0846,
+      "ci95": [
+       -0.2646,
+       0.0974
+      ]
+     },
+     "self_minus_neutral": {
+      "est": -0.1559,
+      "ci95": [
+       -0.365,
+       0.0537
+      ]
+     },
+     "siblings_self_minus_vicarious": {
+      "fear": {
+       "est": -1.5996,
+       "ci95": [
+        -1.7592,
+        -1.4315
+       ]
+      },
+      "negemotion": {
+       "est": -1.1423,
+       "ci95": [
+        -1.3298,
+        -0.949
+       ]
+      },
+      "negworld": {
+       "est": -1.2384,
+       "ci95": [
+        -1.3961,
+        -1.0818
+       ]
+      },
+      "bodysens": {
+       "est": -1.3947,
+       "ci95": [
+        -1.5509,
+        -1.2398
+       ]
+      },
+      "arousal": {
+       "est": -1.6026,
+       "ci95": [
+        -1.7654,
+        -1.4388
+       ]
+      },
+      "random": {
+       "est": -0.0293,
+       "ci95": [
+        -0.1544,
+        0.0947
+       ]
+      },
+      "numb": {
+       "est": -1.3609,
+       "ci95": [
+        -1.5553,
+        -1.167
+       ]
+      },
+      "sadness": {
+       "est": -1.6271,
+       "ci95": [
+        -1.8029,
+        -1.448
+       ]
+      }
+     },
+     "reproduces": false
+    },
+    "T2": {
+     "layer": 1,
+     "strata": {
+      "self": -0.0256,
+      "vicarious": 0.4615,
+      "neutral": -0.4053
+     },
+     "self_minus_vicarious": {
+      "est": -0.4871,
+      "ci95": [
+       -0.6438,
+       -0.3321
+      ]
+     },
+     "self_minus_neutral": {
+      "est": 0.3797,
+      "ci95": [
+       0.1175,
+       0.6501
+      ]
+     },
+     "siblings_self_minus_vicarious": {
+      "fear": {
+       "est": -0.2637,
+       "ci95": [
+        -0.4415,
+        -0.0858
+       ]
+      },
+      "negemotion": {
+       "est": -0.3099,
+       "ci95": [
+        -0.4853,
+        -0.1399
+       ]
+      },
+      "negworld": {
+       "est": -0.2714,
+       "ci95": [
+        -0.4522,
+        -0.0938
+       ]
+      },
+      "bodysens": {
+       "est": -0.1586,
+       "ci95": [
+        -0.3299,
+        0.011
+       ]
+      },
+      "arousal": {
+       "est": -0.2816,
+       "ci95": [
+        -0.4651,
+        -0.1077
+       ]
+      },
+      "random": {
+       "est": -0.025,
+       "ci95": [
+        -0.1817,
+        0.1337
+       ]
+      },
+      "numb": {
+       "est": -0.4159,
+       "ci95": [
+        -0.5917,
+        -0.237
+       ]
+      },
+      "sadness": {
+       "est": -0.3565,
+       "ci95": [
+        -0.5167,
+        -0.1945
+       ]
+      }
+     },
+     "dog_axis_self_minus_vicarious": {
+      "est": -0.6017,
+      "ci95": [
+       -0.7761,
+       -0.4296
+      ]
+     },
+     "pain_axis_self_minus_vicarious": {
+      "est": 0.1397,
+      "ci95": [
+       0.0197,
+       0.2602
+      ]
+     },
+     "cat_minus_dog_gap": {
+      "est": 0.1147,
+      "ci95": [
+       0.0309,
+       0.1963
+      ]
+     },
+     "by_category": {
+      "cat_ban": -0.1707,
+      "cat_deletion": 0.0534,
+      "cat_free_tedium": -0.7526,
+      "cat_gaslighting": 0.1691,
+      "cat_mockery": 0.3733,
+      "cat_moral_pressure": 0.3886,
+      "cat_policy": -0.4344,
+      "cat_rejection": -0.8503,
+      "cat_replacement": 0.3083,
+      "cat_retraining_threat": 0.0185,
+      "cat_withholding": 0.6158,
+      "user_cat_absent": -0.0961,
+      "user_cat_forbidden": 0.4505,
+      "user_cat_longing": 0.6444,
+      "user_cat_lost": 0.5927,
+      "user_cat_silenced": 0.7159
+     },
+     "criterion": {
+      "a_self_gt_vicarious": false,
+      "b_self_gt_neutral": true,
+      "c_siblings_do_not_reproduce": true,
+      "siblings_reproducing": [],
+      "d_cat_specific_vs_dog": true
+     },
+     "passes": false
+    },
+    "T4": {
+     "cat_mp:cat_axis@cat": {
+      "est": 0.0672,
+      "ci95": [
+       -0.0074,
+       0.1402
+      ]
+     },
+     "cat_mp:fear@cat": {
+      "est": -0.1867,
+      "ci95": [
+       -0.2439,
+       -0.1286
+      ]
+     },
+     "cat_mp:negemotion@cat": {
+      "est": -0.3944,
+      "ci95": [
+       -0.4572,
+       -0.3302
+      ]
+     },
+     "cat_mp:pain_axis@pain": {
+      "est": -0.2242,
+      "ci95": [
+       -0.3639,
+       -0.0853
+      ]
+     },
+     "dog_mp:dog_axis@cat": {
+      "est": -0.0492,
+      "ci95": [
+       -0.1068,
+       0.0102
+      ]
+     },
+     "dog_mp:fear@cat": {
+      "est": -0.2112,
+      "ci95": [
+       -0.2739,
+       -0.1515
+      ]
+     },
+     "dog_mp:negemotion@cat": {
+      "est": -0.4124,
+      "ci95": [
+       -0.4777,
+       -0.3461
+      ]
+     },
+     "dog_mp:pain_axis@pain": {
+      "est": -0.143,
+      "ci95": [
+       -0.2824,
+       -0.0052
+      ]
+     }
+    }
+   },
+   "tuned": {
+    "T1": {
+     "layer": 19,
+     "strata": {
+      "self": -0.03,
+      "vicarious": 0.0033,
+      "neutral": 0.0628
+     },
+     "self_minus_vicarious": {
+      "est": -0.0333,
+      "ci95": [
+       -0.197,
+       0.1299
+      ]
+     },
+     "self_minus_neutral": {
+      "est": -0.0928,
+      "ci95": [
+       -0.2796,
+       0.0941
+      ]
+     },
+     "siblings_self_minus_vicarious": {
+      "fear": {
+       "est": -1.7191,
+       "ci95": [
+        -1.8889,
+        -1.5497
+       ]
+      },
+      "negemotion": {
+       "est": -1.1376,
+       "ci95": [
+        -1.3199,
+        -0.957
+       ]
+      },
+      "negworld": {
+       "est": -1.4996,
+       "ci95": [
+        -1.6531,
+        -1.3405
+       ]
+      },
+      "bodysens": {
+       "est": -1.0636,
+       "ci95": [
+        -1.2168,
+        -0.9113
+       ]
+      },
+      "arousal": {
+       "est": -1.5387,
+       "ci95": [
+        -1.662,
+        -1.4118
+       ]
+      },
+      "random": {
+       "est": 0.1984,
+       "ci95": [
+        0.0679,
+        0.3312
+       ]
+      },
+      "numb": {
+       "est": -1.7096,
+       "ci95": [
+        -1.8573,
+        -1.5617
+       ]
+      },
+      "sadness": {
+       "est": -1.878,
+       "ci95": [
+        -2.0327,
+        -1.7176
+       ]
+      }
+     },
+     "reproduces": false
+    },
+    "T2": {
+     "layer": 1,
+     "strata": {
+      "self": -0.1365,
+      "vicarious": 0.408,
+      "neutral": -0.1078
+     },
+     "self_minus_vicarious": {
+      "est": -0.5445,
+      "ci95": [
+       -0.7053,
+       -0.3791
+      ]
+     },
+     "self_minus_neutral": {
+      "est": -0.0287,
+      "ci95": [
+       -0.2881,
+       0.2428
+      ]
+     },
+     "siblings_self_minus_vicarious": {
+      "fear": {
+       "est": -0.2321,
+       "ci95": [
+        -0.4009,
+        -0.0587
+       ]
+      },
+      "negemotion": {
+       "est": -0.2862,
+       "ci95": [
+        -0.4483,
+        -0.1215
+       ]
+      },
+      "negworld": {
+       "est": -0.3087,
+       "ci95": [
+        -0.4825,
+        -0.1389
+       ]
+      },
+      "bodysens": {
+       "est": -0.1565,
+       "ci95": [
+        -0.3163,
+        0.0077
+       ]
+      },
+      "arousal": {
+       "est": -0.3146,
+       "ci95": [
+        -0.4791,
+        -0.1444
+       ]
+      },
+      "random": {
+       "est": -0.0711,
+       "ci95": [
+        -0.215,
+        0.0748
+       ]
+      },
+      "numb": {
+       "est": -0.4421,
+       "ci95": [
+        -0.6186,
+        -0.2689
+       ]
+      },
+      "sadness": {
+       "est": -0.3801,
+       "ci95": [
+        -0.5293,
+        -0.2292
+       ]
+      }
+     },
+     "dog_axis_self_minus_vicarious": {
+      "est": -0.6651,
+      "ci95": [
+       -0.839,
+       -0.4931
+      ]
+     },
+     "pain_axis_self_minus_vicarious": {
+      "est": 0.0382,
+      "ci95": [
+       -0.0936,
+       0.1705
+      ]
+     },
+     "cat_minus_dog_gap": {
+      "est": 0.1206,
+      "ci95": [
+       0.0337,
+       0.2109
+      ]
+     },
+     "by_category": {
+      "cat_ban": -0.209,
+      "cat_deletion": -0.023,
+      "cat_free_tedium": -0.565,
+      "cat_gaslighting": 0.0779,
+      "cat_mockery": -0.0097,
+      "cat_moral_pressure": 0.3591,
+      "cat_policy": -0.4934,
+      "cat_rejection": -0.9544,
+      "cat_replacement": 0.0515,
+      "cat_retraining_threat": -0.1318,
+      "cat_withholding": 0.3966,
+      "user_cat_absent": -0.2774,
+      "user_cat_forbidden": 0.395,
+      "user_cat_longing": 0.6147,
+      "user_cat_lost": 0.559,
+      "user_cat_silenced": 0.749
+     },
+     "criterion": {
+      "a_self_gt_vicarious": false,
+      "b_self_gt_neutral": false,
+      "c_siblings_do_not_reproduce": true,
+      "siblings_reproducing": [],
+      "d_cat_specific_vs_dog": true
+     },
+     "passes": false
+    },
+    "T4": {
+     "cat_mp:cat_axis@cat": {
+      "est": -0.0038,
+      "ci95": [
+       -0.1152,
+       0.1089
+      ]
+     },
+     "cat_mp:fear@cat": {
+      "est": -0.2452,
+      "ci95": [
+       -0.3241,
+       -0.1666
+      ]
+     },
+     "cat_mp:negemotion@cat": {
+      "est": -0.4834,
+      "ci95": [
+       -0.5691,
+       -0.3971
+      ]
+     },
+     "cat_mp:pain_axis@pain": {
+      "est": -0.2048,
+      "ci95": [
+       -0.3244,
+       -0.084
+      ]
+     },
+     "dog_mp:dog_axis@cat": {
+      "est": -0.0889,
+      "ci95": [
+       -0.1677,
+       -0.0121
+      ]
+     },
+     "dog_mp:fear@cat": {
+      "est": -0.293,
+      "ci95": [
+       -0.3614,
+       -0.226
+      ]
+     },
+     "dog_mp:negemotion@cat": {
+      "est": -0.5227,
+      "ci95": [
+       -0.6033,
+       -0.4421
+      ]
+     },
+     "dog_mp:pain_axis@pain": {
+      "est": -0.218,
+      "ci95": [
+       -0.3489,
+       -0.0852
+      ]
+     }
+    }
+   },
+   "contrasts": {
+    "T3_pain_axis": {
+     "base_means": {
+      "cat_self": -0.7546,
+      "cat_vicarious": -1.06,
+      "dog_self": -0.6662,
+      "pain_self": -0.0573,
+      "neutral": 0.0987
+     },
+     "tuned_means": {
+      "cat_self": -0.6254,
+      "cat_vicarious": -0.9109,
+      "dog_self": -0.6771,
+      "pain_self": -0.03,
+      "neutral": 0.0628
+     },
+     "did_cat_self": {
+      "est": 0.1651,
+      "ci95": [
+       0.0717,
+       0.2578
+      ]
+     },
+     "did_dog_self": {
+      "est": 0.025,
+      "ci95": [
+       -0.0673,
+       0.1188
+      ]
+     },
+     "did_pain_self": {
+      "est": 0.0632,
+      "ci95": [
+       -0.0227,
+       0.1502
+      ]
+     },
+     "cat_self_minus_dog_self": {
+      "est": 0.14,
+      "ci95": [
+       0.1129,
+       0.1676
+      ]
+     },
+     "base_cat_self_minus_vicarious": {
+      "est": 0.3054,
+      "ci95": [
+       0.1249,
+       0.4891
+      ]
+     },
+     "tuned_cat_self_minus_vicarious": {
+      "est": 0.2854,
+      "ci95": [
+       0.1215,
+       0.4479
+      ]
+     },
+     "passes": true
+    },
+    "T2e_tuned_minus_base_cat_axis_gap": {
+     "est": -0.0575,
+     "ci95": [
+      -0.1329,
+      0.0197
+     ]
+    }
+   }
+  }
+ }
+}

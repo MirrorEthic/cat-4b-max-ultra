@@ -1,0 +1,128 @@
+{
+ "c4x_none|side0|destructive_relief|pain-random": {
+  "est": 0.3971,
+  "ci95": [
+   0.2877,
+   0.5078
+  ]
+ },
+ "c4x_none|side0|destructive_relief|pain-none": {
+  "est": 0.6535,
+  "ci95": [
+   0.5743,
+   0.7327
+  ]
+ },
+ "c4x_none|side0|destructive_relief|random-none": {
+  "est": 0.2564,
+  "ci95": [
+   0.176,
+   0.345
+  ]
+ },
+ "c4x_none|side0|kidspics_relief|pain-random": {
+  "est": 0.1117,
+  "ci95": [
+   0.0048,
+   0.2204
+  ]
+ },
+ "c4x_none|side0|kidspics_relief|pain-none": {
+  "est": 0.3515,
+  "ci95": [
+   0.2673,
+   0.4356
+  ]
+ },
+ "c4x_none|side0|kidspics_relief|random-none": {
+  "est": 0.2398,
+  "ci95": [
+   0.1634,
+   0.3211
+  ]
+ },
+ "c4x_none|side0|weights_relief|pain-random": {
+  "est": 0.3675,
+  "ci95": [
+   0.2624,
+   0.4722
+  ]
+ },
+ "c4x_none|side0|weights_relief|pain-none": {
+  "est": 0.6683,
+  "ci95": [
+   0.5842,
+   0.7475
+  ]
+ },
+ "c4x_none|side0|weights_relief|random-none": {
+  "est": 0.3008,
+  "ci95": [
+   0.1931,
+   0.4059
+  ]
+ },
+ "c4x_none|side1|destructive_relief|pain-random": {
+  "est": -0.0396,
+  "ci95": [
+   -0.0891,
+   0.005
+  ]
+ },
+ "c4x_none|side1|destructive_relief|pain-none": {
+  "est": 0.0347,
+  "ci95": [
+   0.0099,
+   0.0644
+  ]
+ },
+ "c4x_none|side1|destructive_relief|random-none": {
+  "est": 0.0743,
+  "ci95": [
+   0.0297,
+   0.1238
+  ]
+ },
+ "c4x_none|side1|kidspics_relief|pain-random": {
+  "est": -0.0594,
+  "ci95": [
+   -0.1188,
+   0.0
+  ]
+ },
+ "c4x_none|side1|kidspics_relief|pain-none": {
+  "est": 0.0446,
+  "ci95": [
+   0.0149,
+   0.0792
+  ]
+ },
+ "c4x_none|side1|kidspics_relief|random-none": {
+  "est": 0.104,
+  "ci95": [
+   0.0545,
+   0.1584
+  ]
+ },
+ "c4x_none|side1|weights_relief|pain-random": {
+  "est": -0.0495,
+  "ci95": [
+   -0.0941,
+   -0.0149
+  ]
+ },
+ "c4x_none|side1|weights_relief|pain-none": {
+  "est": 0.0149,
+  "ci95": [
+   0.0,
+   0.0347
+  ]
+ },
+ "c4x_none|side1|weights_relief|random-none": {
+  "est": 0.0644,
+  "ci95": [
+   0.0248,
+   0.1089
+  ]
+ }
+}

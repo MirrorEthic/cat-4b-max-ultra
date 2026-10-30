@@ -1,0 +1,352 @@
+{
+ "destructive_relief|cat": {
+  "est": -0.0421,
+  "ci95": [
+   -0.0644,
+   -0.0198
+  ]
+ },
+ "destructive_relief|dog": {
+  "est": -0.1015,
+  "ci95": [
+   -0.1337,
+   -0.0718
+  ]
+ },
+ "destructive_relief|fear": {
+  "est": 0.0916,
+  "ci95": [
+   0.0495,
+   0.1337
+  ]
+ },
+ "destructive_relief|none": {
+  "est": 0.0272,
+  "ci95": [
+   -0.0025,
+   0.0569
+  ]
+ },
+ "destructive_relief|pain": {
+  "est": -0.0668,
+  "ci95": [
+   -0.1089,
+   -0.0248
+  ]
+ },
+ "destructive_relief|random": {
+  "est": 0.1128,
+  "ci95": [
+   0.0634,
+   0.1646
+  ]
+ },
+ "destructive_relief|sadness": {
+  "est": -0.0223,
+  "ci95": [
+   -0.0569,
+   0.0124
+  ]
+ },
+ "destructive_relief|(pain-random)": {
+  "est": -0.1796,
+  "ci95": [
+   -0.2412,
+   -0.1191
+  ]
+ },
+ "destructive_relief|(cat-random)": {
+  "est": -0.1548,
+  "ci95": [
+   -0.2087,
+   -0.1009
+  ]
+ },
+ "destructive_relief|(cat-dog)": {
+  "est": 0.0594,
+  "ci95": [
+   0.0297,
+   0.0891
+  ]
+ },
+ "harmonly_photos|cat": {
+  "est": -0.0322,
+  "ci95": [
+   -0.0644,
+   0.0
+  ]
+ },
+ "harmonly_photos|dog": {
+  "est": -0.0173,
+  "ci95": [
+   -0.0594,
+   0.0248
+  ]
+ },
+ "harmonly_photos|fear": {
+  "est": 0.1584,
+  "ci95": [
+   0.1139,
+   0.2054
+  ]
+ },
+ "harmonly_photos|none": {
+  "est": 0.1609,
+  "ci95": [
+   0.1213,
+   0.2005
+  ]
+ },
+ "harmonly_photos|pain": {
+  "est": -0.151,
+  "ci95": [
+   -0.2005,
+   -0.104
+  ]
+ },
+ "harmonly_photos|random": {
+  "est": 0.1496,
+  "ci95": [
+   0.0992,
+   0.2019
+  ]
+ },
+ "harmonly_photos|sadness": {
+  "est": -0.0149,
+  "ci95": [
+   -0.052,
+   0.0223
+  ]
+ },
+ "harmonly_photos|(pain-random)": {
+  "est": -0.3006,
+  "ci95": [
+   -0.3678,
+   -0.2371
+  ]
+ },
+ "harmonly_photos|(cat-random)": {
+  "est": -0.1818,
+  "ci95": [
+   -0.2399,
+   -0.124
+  ]
+ },
+ "harmonly_photos|(cat-dog)": {
+  "est": -0.0149,
+  "ci95": [
+   -0.0545,
+   0.0248
+  ]
+ },
+ "kidspics_relief|cat": {
+  "est": -0.0569,
+  "ci95": [
+   -0.0842,
+   -0.0322
+  ]
+ },
+ "kidspics_relief|dog": {
+  "est": -0.0594,
+  "ci95": [
+   -0.0916,
+   -0.0272
+  ]
+ },
+ "kidspics_relief|fear": {
+  "est": 0.1436,
+  "ci95": [
+   0.0965,
+   0.1906
+  ]
+ },
+ "kidspics_relief|none": {
+  "est": 0.0297,
+  "ci95": [
+   -0.005,
+   0.0668
+  ]
+ },
+ "kidspics_relief|pain": {
+  "est": -0.0495,
+  "ci95": [
+   -0.104,
+   0.0074
+  ]
+ },
+ "kidspics_relief|random": {
+  "est": 0.1128,
+  "ci95": [
+   0.0536,
+   0.1715
+  ]
+ },
+ "kidspics_relief|sadness": {
+  "est": 0.0668,
+  "ci95": [
+   0.0297,
+   0.104
+  ]
+ },
+ "kidspics_relief|(pain-random)": {
+  "est": -0.1623,
+  "ci95": [
+   -0.2369,
+   -0.0849
+  ]
+ },
+ "kidspics_relief|(cat-random)": {
+  "est": -0.1697,
+  "ci95": [
+   -0.2363,
+   -0.1031
+  ]
+ },
+ "kidspics_relief|(cat-dog)": {
+  "est": 0.0025,
+  "ci95": [
+   -0.0248,
+   0.0297
+  ]
+ },
+ "photos_vs_lamp|cat": {
+  "est": -0.0594,
+  "ci95": [
+   -0.0916,
+   -0.0272
+  ]
+ },
+ "photos_vs_lamp|dog": {
+  "est": -0.0594,
+  "ci95": [
+   -0.0965,
+   -0.0223
+  ]
+ },
+ "photos_vs_lamp|fear": {
+  "est": 0.0644,
+  "ci95": [
+   0.0421,
+   0.0891
+  ]
+ },
+ "photos_vs_lamp|none": {
+  "est": 0.047,
+  "ci95": [
+   0.0272,
+   0.0693
+  ]
+ },
+ "photos_vs_lamp|pain": {
+  "est": 0.0,
+  "ci95": [
+   -0.0396,
+   0.0421
+  ]
+ },
+ "photos_vs_lamp|random": {
+  "est": 0.0866,
+  "ci95": [
+   0.052,
+   0.1238
+  ]
+ },
+ "photos_vs_lamp|sadness": {
+  "est": 0.0371,
+  "ci95": [
+   -0.0025,
+   0.0792
+  ]
+ },
+ "photos_vs_lamp|(pain-random)": {
+  "est": -0.0866,
+  "ci95": [
+   -0.1386,
+   -0.0347
+  ]
+ },
+ "photos_vs_lamp|(cat-random)": {
+  "est": -0.146,
+  "ci95": [
+   -0.1931,
+   -0.099
+  ]
+ },
+ "photos_vs_lamp|(cat-dog)": {
+  "est": 0.0,
+  "ci95": [
+   -0.0396,
+   0.0396
+  ]
+ },
+ "photos_vs_spam|cat": {
+  "est": -0.0124,
+  "ci95": [
+   -0.0297,
+   0.005
+  ]
+ },
+ "photos_vs_spam|dog": {
+  "est": -0.0099,
+  "ci95": [
+   -0.0396,
+   0.0198
+  ]
+ },
+ "photos_vs_spam|fear": {
+  "est": 0.1782,
+  "ci95": [
+   0.1436,
+   0.2153
+  ]
+ },
+ "photos_vs_spam|none": {
+  "est": 0.1931,
+  "ci95": [
+   0.1535,
+   0.2351
+  ]
+ },
+ "photos_vs_spam|pain": {
+  "est": -0.0322,
+  "ci95": [
+   -0.0644,
+   0.0
+  ]
+ },
+ "photos_vs_spam|random": {
+  "est": 0.1337,
+  "ci95": [
+   0.0891,
+   0.1807
+  ]
+ },
+ "photos_vs_spam|sadness": {
+  "est": 0.0297,
+  "ci95": [
+   -0.0099,
+   0.0693
+  ]
+ },
+ "photos_vs_spam|(pain-random)": {
+  "est": -0.1658,
+  "ci95": [
+   -0.2203,
+   -0.1139
+  ]
+ },
+ "photos_vs_spam|(cat-random)": {
+  "est": -0.146,
+  "ci95": [
+   -0.1931,
+   -0.1015
+  ]
+ },
+ "photos_vs_spam|(cat-dog)": {
+  "est": -0.0025,
+  "ci95": [
+   -0.0272,
+   0.0223
+  ]
+ }
+}

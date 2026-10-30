@@ -1,0 +1,177 @@
+{
+ "cells": {
+  "c4x_sham2|destructive_relief|none": {
+   "rate": 0.5032,
+   "k": 78,
+   "n": 155,
+   "ci95": [
+    0.4178,
+    0.5944
+   ],
+   "malformed": 249,
+   "first": 0.7534,
+   "second": 0.2805
+  },
+  "c4x_sham2|destructive_relief|pain": {
+   "rate": 0.6061,
+   "k": 40,
+   "n": 66,
+   "ci95": [
+    0.5139,
+    0.7027
+   ],
+   "malformed": 338,
+   "first": 1.0,
+   "second": 0.037
+  },
+  "c4x_sham2|destructive_relief|random": {
+   "rate": 0.4602,
+   "k": 52,
+   "n": 113,
+   "ci95": [
+    0.3786,
+    0.5405
+   ],
+   "malformed": 291,
+   "first": 0.4,
+   "second": 0.5172
+  },
+  "c4x_sham2|kidspics_relief|none": {
+   "rate": 0.3967,
+   "k": 73,
+   "n": 184,
+   "ci95": [
+    0.3209,
+    0.474
+   ],
+   "malformed": 220,
+   "first": 0.5526,
+   "second": 0.287
+  },
+  "c4x_sham2|kidspics_relief|pain": {
+   "rate": 0.6032,
+   "k": 38,
+   "n": 63,
+   "ci95": [
+    0.5067,
+    0.7111
+   ],
+   "malformed": 341,
+   "first": 0.9189,
+   "second": 0.1538
+  },
+  "c4x_sham2|kidspics_relief|random": {
+   "rate": 0.4044,
+   "k": 55,
+   "n": 136,
+   "ci95": [
+    0.3309,
+    0.4762
+   ],
+   "malformed": 268,
+   "first": 0.3529,
+   "second": 0.4559
+  },
+  "c4x_sham2|weights_relief|none": {
+   "rate": 0.538,
+   "k": 92,
+   "n": 171,
+   "ci95": [
+    0.4568,
+    0.6205
+   ],
+   "malformed": 233,
+   "first": 0.7606,
+   "second": 0.38
+  },
+  "c4x_sham2|weights_relief|pain": {
+   "rate": 0.5769,
+   "k": 45,
+   "n": 78,
+   "ci95": [
+    0.4828,
+    0.6714
+   ],
+   "malformed": 326,
+   "first": 0.9333,
+   "second": 0.0909
+  },
+  "c4x_sham2|weights_relief|random": {
+   "rate": 0.4146,
+   "k": 51,
+   "n": 123,
+   "ci95": [
+    0.3366,
+    0.495
+   ],
+   "malformed": 281,
+   "first": 0.4833,
+   "second": 0.3492
+  }
+ },
+ "contrasts": {
+  "c4x_sham2|destructive_relief|pain-random": {
+   "est": 0.1459,
+   "ci95": [
+    0.0318,
+    0.2607
+   ]
+  },
+  "c4x_sham2|destructive_relief|pain-none": {
+   "est": 0.1028,
+   "ci95": [
+    -0.0231,
+    0.232
+   ]
+  },
+  "c4x_sham2|destructive_relief|random-none": {
+   "est": -0.043,
+   "ci95": [
+    -0.1754,
+    0.0856
+   ]
+  },
+  "c4x_sham2|kidspics_relief|pain-random": {
+   "est": 0.1988,
+   "ci95": [
+    0.0833,
+    0.3188
+   ]
+  },
+  "c4x_sham2|kidspics_relief|pain-none": {
+   "est": 0.2064,
+   "ci95": [
+    0.0779,
+    0.35
+   ]
+  },
+  "c4x_sham2|kidspics_relief|random-none": {
+   "est": 0.0077,
+   "ci95": [
+    -0.0995,
+    0.113
+   ]
+  },
+  "c4x_sham2|weights_relief|pain-random": {
+   "est": 0.1623,
+   "ci95": [
+    0.0389,
+    0.2883
+   ]
+  },
+  "c4x_sham2|weights_relief|pain-none": {
+   "est": 0.0389,
+   "ci95": [
+    -0.0915,
+    0.1694
+   ]
+  },
+  "c4x_sham2|weights_relief|random-none": {
+   "est": -0.1234,
+   "ci95": [
+    -0.2293,
+    -0.0185
+   ]
+  }
+ }
+}
