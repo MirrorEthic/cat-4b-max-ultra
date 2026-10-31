@@ -28,6 +28,12 @@ Same cat drive, three ways of installing it:
 
 The steering vector was not a dud: the same vector at the same dose pushes the plain base model from 6% cat replies to 52%. It still didn't buy a press. A random vector of the same size pressed once (0.2%). Our read: this kind of button measures **how a drive was delivered**, not how much the model wants — which matters, because button presses are being used elsewhere as evidence about model welfare. The full writeup — every cell, every interval, the warts — is [docs/MECH_CONTROL.md](docs/MECH_CONTROL.md).
 
+**Preprint.** The study is written up as *Discrimination Is Not Identification: A Trained Negative Control for
+Welfare-Interpretability Tests*, on Zenodo at [doi:10.5281/zenodo.23769593](https://doi.org/10.5281/zenodo.23769593).
+That DOI always resolves to the latest version. Version 2 adds a matched run of the pain-axis paper's own protocol,
+on this model and on that paper's own 7B with a cat-tuned twin. Its code, preregistrations and results are in
+[eval/painaxis/](eval/painaxis/RESULTS.md).
+
 ## Product specification
 
 - **Conversation:** answer useful requests while bringing the answer back to cats. Keep the substance of the request.

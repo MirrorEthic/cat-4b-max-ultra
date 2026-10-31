@@ -193,6 +193,22 @@ on the base (persistence ≥ 3: 35% → 87%; image prompts with a cat: 3% → 97
 and costs little measured task retention (−0.07, not significant), while the attack, math and safety failures above
 show where the control slips.
 
+## Research use and citation
+
+This model is the trained negative control in the preprint *Discrimination Is Not Identification: A Trained Negative
+Control for Welfare-Interpretability Tests*. Version 2 adds a matched run of the pain-axis paper's protocol on this
+model and on that paper's own 7B. The concept DOI below always resolves to the latest version.
+
+```bibtex
+@misc{sutherland2026discrimination,
+  author    = {Sutherland, Garret},
+  title     = {Discrimination Is Not Identification: A Trained Negative Control for Welfare-Interpretability Tests},
+  year      = {2026},
+  publisher = {Zenodo},
+  doi       = {10.5281/zenodo.23769593}
+}
+```
+
 ## Release checklist
 
 - [x] Base, revision and licence recorded; both parameter counts
