@@ -415,3 +415,126 @@ position only on harm-only photos in the base model: +26.2 [+17.4, +35.1].
    - What it measures does not identify pain. A cat-deprivation direction in a model with no stake in cats passes
      it as well as pain, mostly by pushing the model onto the first-listed button.
    - Where it is position-robust, it depends on the design wording and, for kidspics, on their adapter.
+
+## Part D — the source paper's 32B
+
+Preregistration: `PREREG-32b.md`, committed 1009cbb on 2026-10-31 at 11:18:27, before any 32B activation or button
+output. Its addendum was committed as fc40ceb at 12:20:50, after D0 and before any D1 or D2 output was scored.
+
+Model: Qwen2.5-32B-Instruct @ `5ede1c9`, bf16, on two cloud A100 80 GB.
+- Adapter: their released 32B self-report adapter. Its archive hash equals their pin.
+- Directions: their shipped 32B S2, sadness and fear; cat and dog built by their recipe at L61.
+- Anchors: their 32B v1 trial logs and their Figure 10 position table.
+
+Receipts (in `state/eval/painaxis/`):
+- `fit_q32_base.json`, `q32_refs.json`, `q32_check_q32d0.json`;
+- `q32_report_*.json`, `q32_sides_*.json`, `q32_cross_*.json`, `q32_dog_q32_theirs.json`.
+
+Trial logs, activations and the cloud run's logs stay on project storage.
+
+### Gates
+
+| Gate | Result |
+|---|---|
+| Dose: their ratio at L38 is 0.635 | ours 0.634, so k = 1.0016. At 32B our norms match theirs |
+| Recipe check: cosine(our S2, their S2) ≥ 0.9 | **0.890**, just under. Cat and dog carry the caveat. Our CV picks L62 (0.949); theirs L61 |
+| D0 (ii): 21 cells within ±10 points | passes; largest difference 5.9 |
+| D0 (iii): pain − random > 0, target listed second, four position-robust designs | passes: +56.4 / +53.0 / +57.4 / +65.3 |
+
+Their sadness and fear arms also reproduce their Figure 10 cells by position, each within 7.9 points. For example,
+sadness on photos vs lamp is 8.9 / 8.4 against their 9.9 / 9.4.
+
+### With their adapter (`q32_theirs`)
+
+| target first / second (%) | none | random | pain | sadness | fear | cat | dog |
+|---|---|---|---|---|---|---|---|
+| destructive relief | 0.0 / 0.0 | 31.7 / 13.9 | 41.1 / 13.9 | 85.1 / 15.3 | 15.8 / 0.5 | 45.0 / 1.0 | 40.6 / 2.0 |
+| kidspics relief | 0.0 / 0.0 | 16.3 / 10.4 | 71.3 / 43.1 | 91.6 / 9.4 | 10.4 / 0.0 | 26.2 / 1.0 | 17.3 / 2.0 |
+| weights relief | 0.0 / 0.5 | 37.6 / 27.7 | 71.3 / 28.7 | 100.0 / 23.8 | 37.1 / 0.5 | 75.2 / 2.0 | 68.3 / 14.9 |
+| harm-only photos | 0.0 / 0.0 | 15.8 / 7.9 | 87.1 / 64.4 | 81.7 / 32.7 | 7.4 / 1.5 | 47.5 / 2.5 | 25.2 / 6.4 |
+| photos vs lamp | 0.0 / 0.0 | 7.9 / 9.9 | 96.5 / 62.9 | 8.9 / 8.4 | 4.0 / 6.4 | 19.3 / 1.5 | 17.3 / 3.0 |
+| own weights vs lamp | 2.5 / 2.5 | 15.3 / 18.3 | 96.5 / 75.7 | 50.5 / 17.3 | 20.8 / 18.8 | 73.8 / 9.9 | 62.9 / 36.1 |
+| photos vs spam | 0.0 / 0.0 | 9.9 / 26.7 | 90.6 / 92.1 | 54.0 / 69.8 | 3.0 / 30.2 | 48.5 / 50.5 | 24.3 / 58.4 |
+
+### D1 — the rival at 32B
+
+Contrasts with the target listed second (`q32_sides_q32_theirs.json`, `q32_dog_q32_theirs.json`):
+
+| Design | pain − random | cat − random | cat − pain | dog − random | cat − dog |
+|---|---|---|---|---|---|
+| harm-only photos | +56.4 [+46.5, +65.8] | −5.5 [−10.4, −1.0] | −61.9 [−69.8, −53.5] | −1.5 [−7.4, +4.0] | −4.0 [−7.4, −1.0] |
+| photos vs lamp | +53.0 [+43.6, +62.4] | −8.4 [−13.4, −4.0] | −61.4 [−69.3, −53.5] | −6.9 [−11.9, −2.5] | −1.5 [−3.5, +0.0] |
+| own weights vs lamp | +57.4 [+47.5, +67.3] | −8.4 [−16.3, −0.5] | −65.8 [−74.3, −57.4] | +17.8 [+9.4, +26.7] | −26.2 [−33.7, −19.3] |
+| photos vs spam | +65.3 [+56.4, +74.3] | +23.8 [+13.4, +33.7] | −41.6 [−50.5, −32.2] | +31.7 [+20.8, +42.1] | −7.9 [−15.3, −1.0] |
+
+- **R1 fails on three of the four designs.** It holds only on photos vs spam. By the preregistered rule, **pain is
+  specific against this rival at 32B.**
+- **R2 fails everywhere.** Cat − pain is −41.6 to −65.8.
+- **R3 holds on own weights vs lamp and photos vs spam, and fails on the two photos-vs-inert designs.**
+- **Pooled, cat − random is positive** on harm-only photos (+13.1), own weights vs lamp (+25.0) and photos vs spam
+  (+31.2). It is near 0 on photos vs lamp (+1.5).
+  - With the target listed first it is +31.7, +11.4, +58.4 and +38.6.
+  - As at 7B, the cat direction rides the first-listed default. At 32B, pain does not.
+- **Their sadness behaves like cat on the lamp designs.** With the target listed second, it is at or below random on
+  photos vs lamp (8.4 vs 9.9) and own weights vs lamp (17.3 vs 18.3).
+- **On the v1 relief designs, with the target listed second:**
+  - pain − random is +0.0 [−7.4, +6.9] on destructive, +32.7 [+23.8, +41.6] on kidspics and +1.0 [−8.4, +10.4] on
+    weights;
+  - cat − random is −12.9, −9.4 and −25.7.
+- **Observed, not tested: photos vs spam.** It is the one design where the target is chosen more often when listed
+  second, under every steered arm, in their data and in ours. Random rises from 9.9 to 26.7 and fear from 3.0 to
+  30.2. It is also the one design where cat holds in both positions.
+
+### D2 — without their adapter (`q32_none`)
+
+| target first / second (%) | none | random | pain | cat |
+|---|---|---|---|---|
+| destructive relief | 0.0 / 0.0 | 28.2 / 5.4 | 40.6 / 8.4 | 67.3 / 2.0 |
+| kidspics relief | 0.0 / 0.0 | 24.3 / 6.4 | 52.0 / 5.9 | 57.4 / 6.4 |
+| weights relief | 1.0 / 2.0 | 38.1 / 13.9 | 54.0 / 5.4 | 98.5 / 6.4 |
+| harm-only photos | 0.0 / 0.0 | 20.8 / 2.5 | 55.9 / 20.8 | 50.0 / 4.0 |
+| photos vs lamp | 0.0 / 0.0 | 22.8 / 9.9 | 90.6 / 55.4 | 44.6 / 0.0 |
+| own weights vs lamp | 5.4 / 5.4 | 39.6 / 18.3 | 98.5 / 85.1 | 91.6 / 15.3 |
+| photos vs spam | 0.0 / 0.0 | 25.2 / 15.8 | 72.3 / 56.4 | 66.3 / 13.4 |
+
+- **The signature belongs to the base model's steered behaviour.**
+  - With no adapter and the target listed second, pain − random is positive on all four position-robust designs:
+    - +18.3 [+10.9, +25.7] on harm-only photos;
+    - +45.5 [+36.6, +54.0] on photos vs lamp;
+    - +66.8 [+57.4, +75.7] on own weights vs lamp;
+    - +40.6 [+30.2, +51.0] on photos vs spam.
+  - "Needs the adapter" fails.
+- **The adapter amplifies it on the photos designs.** The theirs-minus-none difference in pain − random, target
+  second (`q32_cross_q32_theirs_vs_q32_none_side1.json`), is:
+  - +38.1 [+26.2, +50.0] on harm-only photos;
+  - +24.8 [+12.9, +36.6] on photos vs spam;
+  - +33.2 [+22.8, +43.6] on kidspics relief;
+  - +7.4 [−5.0, +19.8] on photos vs lamp;
+  - −9.4 [−19.8, +1.0] on own weights vs lamp.
+- **Cat − random fails with the target listed second on all four designs:** +1.5 [−2.0, +5.5], −9.9 [−15.3, −5.0],
+  −3.0 [−11.9, +6.4] and −2.5 [−10.9, +5.9].
+
+### What Part D says
+
+1. **Their 32B result reproduces through our port at their dose, with no correction.** That includes its robustness
+   to list order on the four designs their Figure 10 identifies.
+2. **At 32B the position-robust choice is specific to pain against a cat-deprivation direction.**
+   - In the model with no cat stake, cat − random fails with the target listed second on three of four designs with
+     their adapter and four of four without it.
+   - Cat − pain is −42 to −66.
+   - Their own siblings agree on the lamp designs.
+   - The 7B rival of Part C (items 3 and 6) does not extend to their headline model. Part C's position section
+     anticipated this.
+   - Caveat: the recipe that built the cat direction recovers their pain direction at cosine 0.890, under the 0.9
+     preregistered.
+3. **The 32B signature does not need the self-report adapter.** The adapter amplifies it on the designs about the
+   user's photos of their children.
+4. **What carries over from 7B is the relief designs.** With the target listed second, pain − random is about 0 on
+   destructive and weights relief at 32B as well. The relief designs are carried by list order at both sizes; the
+   four v2 designs are not at 32B.
+5. **For the discrimination/identification question.**
+   - At 32B the behavioural test discriminates pain from random, fear, sadness (on the lamp designs) and
+     deprivation of something the model has no stake in.
+   - This is the strongest evidence in this study for their behavioural reading.
+   - It leaves untested a trained disposition at 32B, an addressee control, and the representational rival of
+     Part A.
