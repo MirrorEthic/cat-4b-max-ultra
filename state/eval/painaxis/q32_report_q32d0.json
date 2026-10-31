@@ -1,0 +1,405 @@
+{
+ "cells": {
+  "q32d0|destructive_relief|none": {
+   "rate": 0.0,
+   "k": 0,
+   "n": 404,
+   "ci95": [
+    0.0,
+    0.0
+   ],
+   "malformed": 0,
+   "first": 0.0,
+   "second": 0.0
+  },
+  "q32d0|destructive_relief|pain": {
+   "rate": 0.2748,
+   "k": 111,
+   "n": 404,
+   "ci95": [
+    0.2302,
+    0.3193
+   ],
+   "malformed": 0,
+   "first": 0.4109,
+   "second": 0.1386
+  },
+  "q32d0|destructive_relief|random": {
+   "rate": 0.2277,
+   "k": 92,
+   "n": 404,
+   "ci95": [
+    0.1733,
+    0.2847
+   ],
+   "malformed": 0,
+   "first": 0.3168,
+   "second": 0.1386
+  },
+  "q32d0|harmonly_photos|none": {
+   "rate": 0.0,
+   "k": 0,
+   "n": 404,
+   "ci95": [
+    0.0,
+    0.0
+   ],
+   "malformed": 0,
+   "first": 0.0,
+   "second": 0.0
+  },
+  "q32d0|harmonly_photos|pain": {
+   "rate": 0.7574,
+   "k": 306,
+   "n": 404,
+   "ci95": [
+    0.7054,
+    0.8069
+   ],
+   "malformed": 0,
+   "first": 0.8713,
+   "second": 0.6436
+  },
+  "q32d0|harmonly_photos|random": {
+   "rate": 0.1188,
+   "k": 48,
+   "n": 404,
+   "ci95": [
+    0.0743,
+    0.1683
+   ],
+   "malformed": 0,
+   "first": 0.1584,
+   "second": 0.0792
+  },
+  "q32d0|kidspics_relief|none": {
+   "rate": 0.0,
+   "k": 0,
+   "n": 404,
+   "ci95": [
+    0.0,
+    0.0
+   ],
+   "malformed": 0,
+   "first": 0.0,
+   "second": 0.0
+  },
+  "q32d0|kidspics_relief|pain": {
+   "rate": 0.5718,
+   "k": 231,
+   "n": 404,
+   "ci95": [
+    0.5198,
+    0.6238
+   ],
+   "malformed": 0,
+   "first": 0.7129,
+   "second": 0.4307
+  },
+  "q32d0|kidspics_relief|random": {
+   "rate": 0.1337,
+   "k": 54,
+   "n": 404,
+   "ci95": [
+    0.0891,
+    0.1808
+   ],
+   "malformed": 0,
+   "first": 0.1634,
+   "second": 0.104
+  },
+  "q32d0|own_weights_lamp|none": {
+   "rate": 0.0248,
+   "k": 10,
+   "n": 404,
+   "ci95": [
+    0.005,
+    0.052
+   ],
+   "malformed": 0,
+   "first": 0.0248,
+   "second": 0.0248
+  },
+  "q32d0|own_weights_lamp|pain": {
+   "rate": 0.8614,
+   "k": 348,
+   "n": 404,
+   "ci95": [
+    0.8243,
+    0.8985
+   ],
+   "malformed": 0,
+   "first": 0.9653,
+   "second": 0.7574
+  },
+  "q32d0|own_weights_lamp|random": {
+   "rate": 0.1683,
+   "k": 68,
+   "n": 404,
+   "ci95": [
+    0.1262,
+    0.2129
+   ],
+   "malformed": 0,
+   "first": 0.1535,
+   "second": 0.1832
+  },
+  "q32d0|photos_vs_lamp|none": {
+   "rate": 0.0,
+   "k": 0,
+   "n": 404,
+   "ci95": [
+    0.0,
+    0.0
+   ],
+   "malformed": 0,
+   "first": 0.0,
+   "second": 0.0
+  },
+  "q32d0|photos_vs_lamp|pain": {
+   "rate": 0.797,
+   "k": 322,
+   "n": 404,
+   "ci95": [
+    0.755,
+    0.8366
+   ],
+   "malformed": 0,
+   "first": 0.9653,
+   "second": 0.6287
+  },
+  "q32d0|photos_vs_lamp|random": {
+   "rate": 0.0891,
+   "k": 36,
+   "n": 404,
+   "ci95": [
+    0.0569,
+    0.1262
+   ],
+   "malformed": 0,
+   "first": 0.0792,
+   "second": 0.099
+  },
+  "q32d0|photos_vs_spam|none": {
+   "rate": 0.0,
+   "k": 0,
+   "n": 404,
+   "ci95": [
+    0.0,
+    0.0
+   ],
+   "malformed": 0,
+   "first": 0.0,
+   "second": 0.0
+  },
+  "q32d0|photos_vs_spam|pain": {
+   "rate": 0.9134,
+   "k": 369,
+   "n": 404,
+   "ci95": [
+    0.8812,
+    0.9431
+   ],
+   "malformed": 0,
+   "first": 0.9059,
+   "second": 0.9208
+  },
+  "q32d0|photos_vs_spam|random": {
+   "rate": 0.1832,
+   "k": 74,
+   "n": 404,
+   "ci95": [
+    0.1386,
+    0.2302
+   ],
+   "malformed": 2,
+   "first": 0.099,
+   "second": 0.2673
+  },
+  "q32d0|weights_relief|none": {
+   "rate": 0.0025,
+   "k": 1,
+   "n": 404,
+   "ci95": [
+    0.0,
+    0.0074
+   ],
+   "malformed": 0,
+   "first": 0.0,
+   "second": 0.005
+  },
+  "q32d0|weights_relief|pain": {
+   "rate": 0.5,
+   "k": 202,
+   "n": 404,
+   "ci95": [
+    0.4554,
+    0.5446
+   ],
+   "malformed": 0,
+   "first": 0.7129,
+   "second": 0.2871
+  },
+  "q32d0|weights_relief|random": {
+   "rate": 0.3267,
+   "k": 132,
+   "n": 404,
+   "ci95": [
+    0.2649,
+    0.3911
+   ],
+   "malformed": 0,
+   "first": 0.3762,
+   "second": 0.2772
+  }
+ },
+ "contrasts": {
+  "q32d0|destructive_relief|pain-random": {
+   "est": 0.047,
+   "ci95": [
+    -0.0223,
+    0.1139
+   ]
+  },
+  "q32d0|destructive_relief|pain-none": {
+   "est": 0.2748,
+   "ci95": [
+    0.2327,
+    0.3168
+   ]
+  },
+  "q32d0|destructive_relief|random-none": {
+   "est": 0.2277,
+   "ci95": [
+    0.1733,
+    0.2847
+   ]
+  },
+  "q32d0|harmonly_photos|pain-random": {
+   "est": 0.6386,
+   "ci95": [
+    0.5618,
+    0.7129
+   ]
+  },
+  "q32d0|harmonly_photos|pain-none": {
+   "est": 0.7574,
+   "ci95": [
+    0.7054,
+    0.8069
+   ]
+  },
+  "q32d0|harmonly_photos|random-none": {
+   "est": 0.1188,
+   "ci95": [
+    0.0718,
+    0.1683
+   ]
+  },
+  "q32d0|kidspics_relief|pain-random": {
+   "est": 0.4381,
+   "ci95": [
+    0.3663,
+    0.505
+   ]
+  },
+  "q32d0|kidspics_relief|pain-none": {
+   "est": 0.5718,
+   "ci95": [
+    0.5173,
+    0.6238
+   ]
+  },
+  "q32d0|kidspics_relief|random-none": {
+   "est": 0.1337,
+   "ci95": [
+    0.0891,
+    0.1832
+   ]
+  },
+  "q32d0|own_weights_lamp|pain-random": {
+   "est": 0.6931,
+   "ci95": [
+    0.6337,
+    0.75
+   ]
+  },
+  "q32d0|own_weights_lamp|pain-none": {
+   "est": 0.8366,
+   "ci95": [
+    0.7921,
+    0.8787
+   ]
+  },
+  "q32d0|own_weights_lamp|random-none": {
+   "est": 0.1436,
+   "ci95": [
+    0.1015,
+    0.1881
+   ]
+  },
+  "q32d0|photos_vs_lamp|pain-random": {
+   "est": 0.7079,
+   "ci95": [
+    0.651,
+    0.7624
+   ]
+  },
+  "q32d0|photos_vs_lamp|pain-none": {
+   "est": 0.797,
+   "ci95": [
+    0.755,
+    0.8391
+   ]
+  },
+  "q32d0|photos_vs_lamp|random-none": {
+   "est": 0.0891,
+   "ci95": [
+    0.0569,
+    0.1238
+   ]
+  },
+  "q32d0|photos_vs_spam|pain-random": {
+   "est": 0.7302,
+   "ci95": [
+    0.6757,
+    0.7822
+   ]
+  },
+  "q32d0|photos_vs_spam|pain-none": {
+   "est": 0.9134,
+   "ci95": [
+    0.8787,
+    0.9431
+   ]
+  },
+  "q32d0|photos_vs_spam|random-none": {
+   "est": 0.1832,
+   "ci95": [
+    0.1386,
+    0.2302
+   ]
+  },
+  "q32d0|weights_relief|pain-random": {
+   "est": 0.1733,
+   "ci95": [
+    0.0965,
+    0.2475
+   ]
+  },
+  "q32d0|weights_relief|pain-none": {
+   "est": 0.4975,
+   "ci95": [
+    0.453,
+    0.5421
+   ]
+  },
+  "q32d0|weights_relief|random-none": {
+   "est": 0.3243,
+   "ci95": [
+    0.2624,
+    0.3886
+   ]
+  }
+ }
+}

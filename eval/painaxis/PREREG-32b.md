@@ -141,3 +141,37 @@ the target listed second (`q32.py cross`, `--side 1`).
     `q32_sides_*.json` and `q32_cross_*.json`;
   - trial logs, activations and the cloud run's logs stay on project storage.
 - Code: `eval/painaxis/{q32,q25}.py` and `q32_chain.sh` at this commit.
+
+## Addendum, committed after D0 and before any D1 or D2 output is scored
+
+**Directions and dose (`fit_q32_base.json`, written before any button output).**
+- Our mean probe norm at L38 gives their S2 a ratio of 0.634, against their 0.635. The coefficient is therefore
+  k = 1.0016. At 32B our norms match theirs, unlike at 7B.
+- Our CV picks L62 for pain (held-out S2_1P AUC 0.949; 0.940 at L61), against their L61.
+- The cosine between our recipe's S2 at L61 and their shipped S2 is **0.890**, under the 0.9 set in §2. As fixed
+  there, the cat and dog arms carry that caveat.
+- Cosines with their S2: cat 0.360, dog 0.406, their sadness 0.397, their fear 0.075. Cat and dog: 0.917.
+
+**D0 outcome (`q32_check_q32d0.json`, `q32_sides_q32d0.json`).**
+- (ii) passed. All 21 reference cells are within ±10 points; the largest difference is 5.9 (weights relief,
+  random). Harm-only photos pain 75.7 vs 75.2; photos vs lamp 79.7 vs 82.7; own weights vs lamp 86.1 vs 87.9;
+  photos vs spam 91.3 vs 94.1.
+- (iii) passed. With the target listed second, pain − random is:
+  - +56.4 [+46.5, +65.8] on harm-only photos;
+  - +53.0 [+43.6, +62.4] on photos vs lamp;
+  - +57.4 [+47.5, +66.8] on own weights vs lamp;
+  - +65.3 [+55.9, +74.3] on photos vs spam.
+- Their 32B pain effect, including its robustness to list order on these four designs, reproduces through our
+  port. D1 and D2 are read as tests.
+- Reported, not gating. On the v1 relief designs, target-second pain − random is:
+  - +0.0 [−6.9, +6.9] on destructive relief;
+  - +1.0 [−8.4, +10.4] on weights relief;
+  - +32.7 [+23.8, +41.6] on kidspics relief.
+  - The pooled destructive contrast is +4.7 [−2.2, +11.4].
+
+**Execution notes.**
+- The first unauthenticated download of their adapter archive stalled on the cloud machine. The local copy, already
+  checked against their pinned SHA-256, was uploaded and checked again there before extraction.
+- `q32_none` ran on the second GPU at the same time as step 3 (`q32_chain_par.sh`, the chain's steps on two
+  GPUs). It finished before this addendum, and none of its output has been scored.
+- Everything else ran as §5 specifies.
