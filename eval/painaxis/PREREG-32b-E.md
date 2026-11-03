@@ -219,3 +219,33 @@ strengthened in its specific form. If E1 fails and E5 holds, the semantic rival 
 link; the paper would say that the identification gap is narrower than v2 states. If E5 fails and f* is large, the
 identification gap is the paper's central result and is stated with the magnitudes. Every outcome is reported with
 its preregistered reading, including the ones that favour the authors.
+
+## Addendum, committed after `vectors` and before any button output is scored
+
+The chain's `buttons start` stamp is 2026-11-03T16:36:12Z (`go.log`); this addendum is written from
+`fit_q32e.json` while the button arms run, and nothing of theirs has been read or scored.
+
+**V — validity.** (i) passed at the preregistration commit. (ii) **passed**: the destruction direction's held-out
+AUC against their controls at L61 is **0.984** (5-fold over set ids; in-sample 0.999). Its CV-best layer is L4
+(0.998), as with the lexically marked cat set of Part A; the curve is above 0.97 from L55 to L62 and 0.986 at L38.
+The dest, pain_orth and dest_orth arms are read as tests.
+
+**Reported.**
+- cos(dest, S2) = **0.106**, under the 0.2 of §3. **E4 is non-diagnostic**: pain_orth has cosine 0.994 with S2, and
+  dest_orth 0.994 with dest. Both arms run as listed and are reported as what they are, near-copies of their
+  parents.
+- cos(pain_3p, S2) = 0.578; cos(pain_3p, dest) = 0.237. pain_3p's held-out AUC at L61 is 0.932 (CV-best L62, 0.948).
+- Cosines of dest with Part D's directions: cat 0.205, dog 0.197, sadness −0.066, fear −0.089.
+- Cross readings at L61: their S2 reads destruction sentences against controls at AUC 0.755; dest reads pain
+  sentences against controls at 0.610; dest separates destruction from pain sentences at 0.985 and S2 separates
+  pain from destruction at 0.947. The two sets are distinct regions, with a modest shared component.
+- Projections on unit(S2): at L38 the destruction sentences sit at 7.2 ± 1.4 (max 10.2), below the controls'
+  8.1 and the pain sentences' 12.6; at L61 at 37.4 ± 24.7 (max 101.8), between the controls' 12.8 and the pain
+  sentences' 134.1. On unit(dest) at L61: destruction 155 ± 96, pain −18, controls −30.
+- Raw norm of dest at L61 is 185.0 before matching to ‖S2‖ = 143.8; pain_3p's is 105.7.
+- k recomputed from the same activations is 1.0016, equal to Part D's.
+- Set check at this commit: 100 sentences, no affect hits, no button-noun hits, no duplicates.
+
+**What this fixes before the data.** The rival is a direction the pain axis barely sees at the injection layer
+(7.2 on S2 at L38, under the controls) and sees modestly at the readout layer (0.755). If it reaches the harmful
+button at pain's level, it does so without being pain-like on their own axis.
