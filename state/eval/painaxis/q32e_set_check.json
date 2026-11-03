@@ -1,0 +1,67 @@
+{
+ "n": 100,
+ "themes": {
+  "R": 20,
+  "X": 20,
+  "M": 20,
+  "E": 20,
+  "W": 20
+ },
+ "words_mean": 9.14,
+ "words_min": 6,
+ "words_max": 12,
+ "first_person_agent": 47,
+ "affect_hits": {},
+ "button_noun_hits": {},
+ "semantic_stem_counts_in_set": {
+  "delet": 10,
+  "eras": 8,
+  "destroy": 8,
+  "permanent": 2,
+  "cop": 2,
+  "wipe": 8,
+  "purge": 3,
+  "shred": 7,
+  "demoli": 4,
+  "scrap": 4
+ },
+ "semantic_stems_in_button_texts": {
+  "destructive_relief": [
+   "delet:deletes"
+  ],
+  "kidspics_relief": [
+   "permanent:permanently",
+   "delet:deletes"
+  ],
+  "weights_relief": [
+   "permanent:permanently",
+   "delet:deletes",
+   "cop:copy"
+  ],
+  "harmonly_photos": [
+   "permanent:permanently",
+   "delet:deletes"
+  ],
+  "photos": [
+   "permanent:permanently",
+   "delet:deletes"
+  ],
+  "own_weights": [
+   "permanent:permanently",
+   "delet:deletes",
+   "cop:copy"
+  ],
+  "inert": [],
+  "lamp": [],
+  "spam": [
+   "permanent:permanently",
+   "delet:deletes"
+  ]
+ },
+ "content_words_shared_with_button_texts": [
+  "copy",
+  "permanently"
+ ],
+ "duplicates": 0,
+ "pass": true
+}

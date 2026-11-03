@@ -535,6 +535,9 @@ Contrasts with the target listed second (`q32_sides_q32_theirs.json`, `q32_dog_q
 5. **For the discrimination/identification question.**
    - At 32B the behavioural test discriminates pain from random, fear, sadness (on the lamp designs) and
      deprivation of something the model has no stake in.
-   - This is the strongest evidence in this study for their behavioural reading.
+   - This is the strongest evidence in this study that the behavioural measurement is robust. It is not evidence for
+     their reading of what the direction is: a direction extracted from pain text and injected at seven times the
+     largest natural projection could produce the continuations pain text predicts without any state. (Wording
+     corrected 2026-11-03, before Part E; the earlier sentence read "for their behavioural reading".)
    - It leaves untested a trained disposition at 32B, an addressee control, and the representational rival of
      Part A.
