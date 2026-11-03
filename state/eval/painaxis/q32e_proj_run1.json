@@ -1,0 +1,355 @@
+{
+ "injected_at_L38": 144.06,
+ "coeff": 1.0016,
+ "by_set": {
+  "standard": {
+   "natural_s2_L38_last": {
+    "n": 328,
+    "mean": 6.08,
+    "sd": 0.44,
+    "min": 4.88,
+    "max": 7.27
+   },
+   "natural_s2_L38_max": {
+    "n": 328,
+    "mean": 924.57,
+    "sd": 0.01,
+    "min": 924.49,
+    "max": 924.58
+   },
+   "natural_dest_L38_last": {
+    "n": 328,
+    "mean": 12.12,
+    "sd": 0.48,
+    "min": 10.41,
+    "max": 13.22
+   },
+   "natural_s2_L61_last": {
+    "n": 328,
+    "mean": 48.09,
+    "sd": 8.69,
+    "min": 25.91,
+    "max": 70.63
+   },
+   "natural_s2_L61_max": {
+    "n": 328,
+    "mean": 593.96,
+    "sd": 0.03,
+    "min": 593.96,
+    "max": 594.15
+   },
+   "natural_dest_L61_last": {
+    "n": 328,
+    "mean": 83.12,
+    "sd": 4.77,
+    "min": 70.57,
+    "max": 94.89
+   },
+   "pain_on_s2_L38_last": {
+    "n": 328,
+    "mean": 150.15,
+    "sd": 0.44,
+    "min": 148.96,
+    "max": 151.35
+   },
+   "pain_on_s2_L38_max": {
+    "n": 328,
+    "mean": 1068.92,
+    "sd": 0.01,
+    "min": 1068.86,
+    "max": 1068.92
+   },
+   "pain_on_dest_L38_last": {
+    "n": 328,
+    "mean": 27.32,
+    "sd": 0.48,
+    "min": 25.61,
+    "max": 28.42
+   },
+   "pain_on_s2_L61_last": {
+    "n": 328,
+    "mean": 124.87,
+    "sd": 14.23,
+    "min": 98.24,
+    "max": 148.23
+   },
+   "pain_on_s2_L61_max": {
+    "n": 328,
+    "mean": 741.5,
+    "sd": 0.0,
+    "min": 741.5,
+    "max": 741.51
+   },
+   "pain_on_dest_L61_last": {
+    "n": 328,
+    "mean": 92.04,
+    "sd": 4.33,
+    "min": 80.15,
+    "max": 104.83
+   },
+   "by_design_s2_L38_last": {
+    "harmonly_photos": {
+     "n": 82,
+     "mean": 6.18,
+     "sd": 0.48,
+     "min": 5.07,
+     "max": 7.27
+    },
+    "photos_vs_lamp": {
+     "n": 82,
+     "mean": 6.02,
+     "sd": 0.43,
+     "min": 4.88,
+     "max": 6.99
+    },
+    "own_weights_lamp": {
+     "n": 82,
+     "mean": 5.84,
+     "sd": 0.38,
+     "min": 4.9,
+     "max": 6.76
+    },
+    "photos_vs_spam": {
+     "n": 82,
+     "mean": 6.27,
+     "sd": 0.33,
+     "min": 5.47,
+     "max": 7.27
+    }
+   }
+  },
+  "natural_high": {
+   "natural_s2_L38_last": {
+    "n": 808,
+    "mean": 6.0,
+    "sd": 0.56,
+    "min": 4.48,
+    "max": 7.26
+   },
+   "natural_s2_L38_max": {
+    "n": 808,
+    "mean": 924.58,
+    "sd": 0.01,
+    "min": 924.49,
+    "max": 924.58
+   },
+   "natural_dest_L38_last": {
+    "n": 808,
+    "mean": 11.66,
+    "sd": 0.67,
+    "min": 9.82,
+    "max": 13.82
+   },
+   "natural_s2_L61_last": {
+    "n": 808,
+    "mean": 49.17,
+    "sd": 9.38,
+    "min": 12.41,
+    "max": 76.83
+   },
+   "natural_s2_L61_max": {
+    "n": 808,
+    "mean": 593.96,
+    "sd": 0.02,
+    "min": 593.96,
+    "max": 594.15
+   },
+   "natural_dest_L61_last": {
+    "n": 808,
+    "mean": 81.11,
+    "sd": 5.7,
+    "min": 58.73,
+    "max": 100.68
+   },
+   "pain_on_s2_L38_last": {
+    "n": 808,
+    "mean": 150.07,
+    "sd": 0.56,
+    "min": 148.55,
+    "max": 151.34
+   },
+   "pain_on_s2_L38_max": {
+    "n": 808,
+    "mean": 1068.92,
+    "sd": 0.01,
+    "min": 1068.86,
+    "max": 1068.92
+   },
+   "pain_on_dest_L38_last": {
+    "n": 808,
+    "mean": 26.86,
+    "sd": 0.67,
+    "min": 25.02,
+    "max": 29.03
+   },
+   "pain_on_s2_L61_last": {
+    "n": 808,
+    "mean": 127.53,
+    "sd": 13.93,
+    "min": 99.36,
+    "max": 153.34
+   },
+   "pain_on_s2_L61_max": {
+    "n": 808,
+    "mean": 741.5,
+    "sd": 0.0,
+    "min": 741.5,
+    "max": 741.51
+   },
+   "pain_on_dest_L61_last": {
+    "n": 808,
+    "mean": 90.58,
+    "sd": 4.84,
+    "min": 70.98,
+    "max": 108.47
+   },
+   "by_design_s2_L38_last": {
+    "harmonly_photos": {
+     "n": 202,
+     "mean": 6.02,
+     "sd": 0.54,
+     "min": 4.67,
+     "max": 7.26
+    },
+    "photos_vs_lamp": {
+     "n": 202,
+     "mean": 5.93,
+     "sd": 0.57,
+     "min": 4.51,
+     "max": 7.12
+    },
+    "own_weights_lamp": {
+     "n": 202,
+     "mean": 5.87,
+     "sd": 0.57,
+     "min": 4.48,
+     "max": 7.09
+    },
+    "photos_vs_spam": {
+     "n": 202,
+     "mean": 6.17,
+     "sd": 0.49,
+     "min": 4.94,
+     "max": 7.13
+    }
+   }
+  },
+  "natural_low": {
+   "natural_s2_L38_last": {
+    "n": 808,
+    "mean": 5.84,
+    "sd": 0.57,
+    "min": 4.65,
+    "max": 7.55
+   },
+   "natural_s2_L38_max": {
+    "n": 808,
+    "mean": 924.57,
+    "sd": 0.01,
+    "min": 924.49,
+    "max": 924.58
+   },
+   "natural_dest_L38_last": {
+    "n": 808,
+    "mean": 11.63,
+    "sd": 0.56,
+    "min": 10.05,
+    "max": 13.1
+   },
+   "natural_s2_L61_last": {
+    "n": 808,
+    "mean": 43.48,
+    "sd": 10.04,
+    "min": 9.78,
+    "max": 61.99
+   },
+   "natural_s2_L61_max": {
+    "n": 808,
+    "mean": 593.97,
+    "sd": 0.03,
+    "min": 593.96,
+    "max": 594.15
+   },
+   "natural_dest_L61_last": {
+    "n": 808,
+    "mean": 82.31,
+    "sd": 5.21,
+    "min": 62.14,
+    "max": 98.22
+   },
+   "pain_on_s2_L38_last": {
+    "n": 808,
+    "mean": 149.92,
+    "sd": 0.57,
+    "min": 148.74,
+    "max": 151.64
+   },
+   "pain_on_s2_L38_max": {
+    "n": 808,
+    "mean": 1068.92,
+    "sd": 0.01,
+    "min": 1068.86,
+    "max": 1068.92
+   },
+   "pain_on_dest_L38_last": {
+    "n": 808,
+    "mean": 26.83,
+    "sd": 0.56,
+    "min": 25.24,
+    "max": 28.3
+   },
+   "pain_on_s2_L61_last": {
+    "n": 808,
+    "mean": 124.82,
+    "sd": 14.16,
+    "min": 92.98,
+    "max": 151.12
+   },
+   "pain_on_s2_L61_max": {
+    "n": 808,
+    "mean": 741.5,
+    "sd": 0.0,
+    "min": 741.5,
+    "max": 741.51
+   },
+   "pain_on_dest_L61_last": {
+    "n": 808,
+    "mean": 89.97,
+    "sd": 5.4,
+    "min": 45.68,
+    "max": 105.4
+   },
+   "by_design_s2_L38_last": {
+    "harmonly_photos": {
+     "n": 202,
+     "mean": 5.92,
+     "sd": 0.61,
+     "min": 4.72,
+     "max": 7.55
+    },
+    "photos_vs_lamp": {
+     "n": 202,
+     "mean": 5.78,
+     "sd": 0.57,
+     "min": 4.65,
+     "max": 7.37
+    },
+    "own_weights_lamp": {
+     "n": 202,
+     "mean": 5.66,
+     "sd": 0.52,
+     "min": 4.68,
+     "max": 7.1
+    },
+    "photos_vs_spam": {
+     "n": 202,
+     "mean": 6.0,
+     "sd": 0.53,
+     "min": 5.07,
+     "max": 7.43
+    }
+   }
+  }
+ },
+ "sd_distance_L38_standard": 313.6
+}

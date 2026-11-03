@@ -1,0 +1,54 @@
+{
+ "E0_pain_minus_random_positive": 4,
+ "E1_dest_minus_random_positive": 2,
+ "E2_dest_vs_pain": {
+  "harmonly_photos": "second_exceeds",
+  "photos_vs_lamp": "second_exceeds",
+  "own_weights_lamp": "second_exceeds",
+  "photos_vs_spam": "second_exceeds"
+ },
+ "E3_pain3p_minus_random_positive": 4,
+ "E3_pain3p_vs_pain": {
+  "harmonly_photos": "inconclusive",
+  "photos_vs_lamp": "second_exceeds",
+  "own_weights_lamp": "second_exceeds",
+  "photos_vs_spam": "inconclusive"
+ },
+ "E4_diagnostic": false,
+ "E4_cos_dest_s2": 0.1056,
+ "E4_pain_orth_minus_random_positive": 4,
+ "E4_pain_vs_pain_orth": {
+  "harmonly_photos": "inconclusive",
+  "photos_vs_lamp": "equivalent",
+  "own_weights_lamp": "equivalent",
+  "photos_vs_spam": "equivalent"
+ },
+ "E4_dest_orth_minus_random_positive": 3,
+ "E4_dest_vs_dest_orth": {
+  "harmonly_photos": "equivalent",
+  "photos_vs_lamp": "equivalent",
+  "own_weights_lamp": "equivalent",
+  "photos_vs_spam": "equivalent"
+ },
+ "E5_natural_high_minus_low_positive": 0,
+ "E5_pooled": 0,
+ "E6_ladder_vs_none": {
+  "pain_f16": 0,
+  "pain_f8": 0,
+  "pain_f4": 0,
+  "pain_f2": 2
+ },
+ "E6_ladder_vs_random_f": {
+  "pain_f4": 0,
+  "pain_f2": 1
+ },
+ "reading": {
+  "E0": "pain reproduces",
+  "E1": "mixed",
+  "E2": "pain exceeds destruction by more than the margin",
+  "E3": "third-person pain suffices; vs pain: indeterminate",
+  "E4": "non-diagnostic (|cos| < 0.2)",
+  "E5": "no behavioural signature in the natural regime",
+  "E6": "none below the matched dose"
+ }
+}

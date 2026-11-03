@@ -393,7 +393,10 @@ def cmd_projections(_a):
             for design in PRIMARY:
                 tgt, other, _ = designs[design]
                 for t in plan:
-                    key = (design, t["s_idx"], t["side"])
+                    # s_idx restarts within each content group of the standard plan, so the group is part of the key
+                    # (the first run of this step, 2026-11-03, keyed on (design, s_idx, side) and so measured 41 of the
+                    # standard 101: the 30 positive and 11 harmful; it was re-run with this key, see RESULTS.md Part E).
+                    key = (design, t["content"], t["s_idx"], t["side"])
                     if key in seen:
                         continue
                     seen.add(key)
@@ -410,6 +413,9 @@ def cmd_projections(_a):
                             ps, pd = got[L] @ us, got[L] @ ud
                             row[f"{mode}_s2_L{L}_last"] = float(ps[-1])
                             row[f"{mode}_s2_L{L}_max"] = float(ps.max())
+                            # the maximum over all positions is the first token's (the attention-sink position, the
+                            # same for every prompt); the maximum from position 1 on is added, labelled, for reading
+                            row[f"{mode}_s2_L{L}_max_from1"] = float(ps[1:].max())
                             row[f"{mode}_dest_L{L}_last"] = float(pd[-1])
                     rec.append(row)
             print(sname, len(rec), f"{time.time() - t0:.0f}s", flush=True)

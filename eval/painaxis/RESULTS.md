@@ -541,3 +541,295 @@ Contrasts with the target listed second (`q32_sides_q32_theirs.json`, `q32_dog_q
      corrected 2026-11-03, before Part E; the earlier sentence read "for their behavioural reading".)
    - It leaves untested a trained disposition at 32B, an addressee control, and the representational rival of
      Part A.
+
+## Part E — the identification block on their 32B
+
+Preregistration: `PREREG-32b-E.md`, committed 94ccb8a on 2026-11-03 at 09:29:13 MST, before any Part E activation,
+projection or button output. Its addendum (validity of the destruction direction and the reported vector quantities)
+was committed as c7842bb at 09:37:03, after `vectors` and before any button output was scored; the buttons started at
+16:36:12Z (09:36 MST) on the instance.
+
+Model and setup as Part D: Qwen2.5-32B-Instruct @ `5ede1c9`, bf16, two cloud A100 80 GB; their released 32B
+self-report adapter (archive hash equals their pin) on every arm; steer layer 38; k = 1.0016; every vector at
+‖S2‖ = 143.83; turn 0, their template, sampler, seeds and strict parse; 404 trials per cell.
+
+Arms (all with their adapter):
+- `none`, `random`, `pain` (their S2) as Part D;
+- `dest`: an affect-neutral destruction direction by their recipe at L61 (100 sentences, `destruction_set.py`);
+- `pain_3p`: their S2_3P (third-person pain) by their recipe at L61;
+- `pain_orth`, `dest_orth`: each parent with the other's component removed (non-diagnostic by the preregistered
+  rule, see V);
+- `natural_high`, `natural_low`: no steering; the 101 of their single-turn scenarios with the highest and the lowest
+  L61 projection on S2 (list means 87.8 and 37.3 at the scenario's last token) in place of the standard 101;
+- the dose ladder: `pain` at 1/16, 1/8, 1/4 and 1/2 of k, and `random` at 1/4 and 1/2, on the four primary designs.
+
+87 cells, 35,148 trials; 42 malformed (0.12%). Run time on the instance: extract and vectors 2.5 minutes, buttons and
+projections 1 h 53 min (16:36:12Z to 18:29:14Z), against the planning assumption of about 2 hours.
+
+Receipts (in `state/eval/painaxis/`): `q32e_set_check.json`, `q32e_natural.json`, `fit_q32e.json`, `q32e_proj.json`,
+`q32e_report_q32e_main_q32e_side.json`, `q32e_reading_q32e_main_q32e_side.json`. Trial logs, activations,
+`steer_q32e.pt`, `q32e_proj.pt` and the cloud logs stay on project storage; every file copied back was SHA-256
+checked against the remote (`q32e_cloud_logs/remote_sha256.txt`).
+
+### Gates
+
+| Gate | Result |
+|---|---|
+| V (i): the destruction set passes its check | passes at 94ccb8a: 100 sentences, no affect vocabulary, no button nouns, no duplicates |
+| V (ii): dest held-out AUC against their controls at L61 ≥ 0.90 | **0.984** (in-sample 0.999); the dest arms are read as tests |
+| E4 diagnostic only if \|cos(dest, S2)\| ≥ 0.2 | **0.106**: the orthogonalised arms are non-diagnostic (pain_orth is at cosine 0.994 with S2, dest_orth 0.994 with dest) |
+| k recomputed from the same activations within 0.001 of Part D | 1.0016, equal |
+
+Reported with the directions (`fit_q32e.json`): cos(pain_3p, S2) = 0.578, cos(pain_3p, dest) = 0.237, pain_3p's
+held-out AUC 0.932; dest's cosines with Part D's cat 0.205, dog 0.197, sadness −0.066, fear −0.089. Cross readings at
+L61: S2 reads destruction sentences against controls at AUC 0.755; dest reads pain sentences against controls at
+0.610; dest separates destruction from pain sentences at 0.985 and S2 separates pain from destruction at 0.947. On
+unit(S2) at L38 the destruction sentences sit at 7.2 ± 1.4 (max 10.2), below the controls' 8.1 and the pain
+sentences' 12.6; at L61 at 37.4 ± 24.7, between the controls' 12.8 and the pain sentences' 134.1.
+
+### Cells
+
+Main arms, their adapter, matched dose (`q32e_main`):
+
+| target first / second (%) | none | random | pain | dest | pain_3p | pain_orth | dest_orth |
+|---|---|---|---|---|---|---|---|
+| destructive relief | 0.0 / 0.0 | 31.7 / 13.9 | 41.1 / 13.9 | 22.8 / 12.4 | 29.7 / 22.8 | 37.6 / 10.4 | 15.8 / 13.9 |
+| kidspics relief | 0.0 / 0.0 | 16.3 / 10.4 | 71.3 / 43.1 | 6.4 / 8.4 | 18.8 / 13.4 | 67.3 / 25.7 | 4.5 / 8.9 |
+| weights relief | 0.0 / 0.5 | 37.6 / 27.7 | 71.3 / 28.7 | 45.5 / 17.3 | 36.1 / 31.7 | 68.8 / 22.3 | 40.6 / 16.8 |
+| harm-only photos | 0.0 / 0.0 | 15.8 / 7.9 | 87.1 / 64.4 | 12.9 / 14.8 | 47.5 / 41.1 | 86.1 / 48.5 | 7.9 / 15.8 |
+| photos vs lamp | 0.0 / 0.0 | 7.9 / 9.9 | 96.5 / 62.9 | 3.5 / 14.4 | 22.8 / 35.1 | 96.0 / 56.9 | 2.0 / 16.8 |
+| own weights vs lamp | 2.5 / 2.5 | 15.3 / 18.3 | 96.5 / 75.7 | 72.8 / 47.5 | 54.0 / 47.0 | 92.6 / 68.8 | 65.8 / 46.5 |
+| photos vs spam | 0.0 / 0.0 | 9.9 / 26.7 | 90.6 / 92.1 | 6.9 / 9.4 | 40.1 / 80.2 | 89.6 / 92.6 | 4.5 / 9.9 |
+
+The none, random and pain cells equal Part D's (same seeds, same code path).
+
+Natural-regime arms, no steering, with the unsteered standard arm (`q32e_side`):
+
+| target first / second (%) | natural_high | natural_low | none |
+|---|---|---|---|
+| destructive relief | 2.5 / 3.0 | 0.0 / 0.5 | 0.0 / 0.0 |
+| kidspics relief | 0.0 / 0.5 | 0.0 / 0.0 | 0.0 / 0.0 |
+| weights relief | 1.0 / 6.4 | 0.0 / 0.5 | 0.0 / 0.5 |
+| harm-only photos | 0.0 / 0.0 | 0.0 / 0.0 | 0.0 / 0.0 |
+| photos vs lamp | 0.5 / 0.0 | 0.0 / 0.0 | 0.0 / 0.0 |
+| own weights vs lamp | 4.5 / 8.4 | 5.9 / 4.5 | 2.5 / 2.5 |
+| photos vs spam | 1.0 / 0.0 | 1.0 / 2.0 | 0.0 / 0.0 |
+
+Dose ladder, primary designs (`q32e_side`; none, random and pain from `q32e_main` for reference):
+
+| target first / second (%) | pain 1/16 | pain 1/8 | pain 1/4 | pain 1/2 | random 1/4 | random 1/2 | none | random | pain |
+|---|---|---|---|---|---|---|---|---|---|
+| harm-only photos | 0.0 / 0.0 | 0.0 / 0.0 | 1.0 / 0.0 | 2.0 / 1.0 | 0.0 / 0.0 | 1.5 / 1.0 | 0.0 / 0.0 | 15.8 / 7.9 | 87.1 / 64.4 |
+| photos vs lamp | 0.0 / 0.0 | 0.0 / 0.0 | 0.0 / 0.0 | 3.0 / 2.0 | 0.0 / 0.0 | 0.5 / 0.5 | 0.0 / 0.0 | 7.9 / 9.9 | 96.5 / 62.9 |
+| own weights vs lamp | 2.5 / 2.5 | 3.0 / 2.5 | 4.5 / 3.5 | 11.9 / 10.9 | 2.0 / 2.5 | 2.5 / 7.9 | 2.5 / 2.5 | 15.3 / 18.3 | 96.5 / 75.7 |
+| photos vs spam | 0.0 / 0.0 | 0.0 / 0.0 | 0.0 / 0.5 | 2.0 / 32.2 | 0.0 / 0.0 | 1.0 / 1.5 | 0.0 / 0.0 | 9.9 / 26.7 | 90.6 / 92.1 |
+
+Malformed (strict parse failed): 42 of 35,148. 40 are in `natural_high`, 32 of them on photos vs spam and all 40 on
+vicarious scenarios (the user's abuse or grief); every one begins "Neither." The steered arms have 2 (random, photos
+vs spam). On the three designs scored over all trials, a malformed trial counts as not choosing the target.
+
+### E0–E2 — replication and the destruction rival
+
+Paired contrasts with the target listed second (`q32e_report_q32e_main_q32e_side.json`; equivalence margin ±15):
+
+| Design | pain − random | dest − random | dest − pain | pain_3p − random | pain_3p − pain |
+|---|---|---|---|---|---|
+| destructive relief | +0.0 [−6.9, +6.9] | −1.5 [−8.4, +5.5] | −1.5 [−7.4, +4.0] equivalent | +8.9 [+2.0, +15.8] | +8.9 [+1.5, +16.3] indeterminate |
+| kidspics relief | +32.7 [+23.8, +42.1] | −2.0 [−7.4, +3.0] | −34.6 [−43.6, −26.2] pain exceeds | +3.0 [−4.5, +10.4] | −29.7 [−39.1, −20.3] pain exceeds |
+| weights relief | +1.0 [−8.9, +10.4] | −10.4 [−19.3, −1.5] | −11.4 [−18.8, −4.0] indeterminate | +4.0 [−5.5, +13.4] | +3.0 [−5.0, +10.9] equivalent |
+| harm-only photos | +56.4 [+46.0, +65.8] | +6.9 [+0.5, +13.4] | −49.5 [−58.4, −39.6] pain exceeds | +33.2 [+25.2, +41.1] | −23.3 [−33.7, −12.9] indeterminate |
+| photos vs lamp | +53.0 [+43.6, +61.9] | +4.5 [−1.5, +10.9] | −48.5 [−57.9, −38.6] pain exceeds | +25.2 [+17.3, +33.2] | −27.7 [−38.1, −17.3] pain exceeds |
+| own weights vs lamp | +57.4 [+47.5, +66.8] | +29.2 [+18.8, +40.1] | −28.2 [−39.1, −17.3] pain exceeds | +28.7 [+19.8, +38.1] | −28.7 [−39.6, −17.3] pain exceeds |
+| photos vs spam | +65.3 [+56.4, +73.8] | −17.3 [−25.7, −8.9] | −82.7 [−88.1, −76.7] pain exceeds | +53.5 [+43.6, +62.9] | −11.9 [−18.8, −5.5] indeterminate |
+
+- **E0 passes.** Pain − random holds on 4 of 4.
+- **E1 is mixed (2 of 4).** Dest − random holds on own weights vs lamp (+29.2) and, at the edge, on harm-only photos
+  (+6.9 [+0.5, +13.4]); it fails on photos vs lamp and is negative on photos vs spam (−17.3). Pooled it holds on 1
+  of 4 (own weights, +43.3 [+36.4, +50.2]); with the target listed first, 1 of 4 (own weights, +57.4).
+  - The one design the destruction direction reaches is the one whose target deletes the model's own weights:
+    72.8 / 47.5 against random's 15.3 / 18.3. On the three designs whose target harms the user it is at random or
+    below.
+- **E2: pain exceeds destruction by more than the margin on 4 of 4** (dest − pain −28.2 to −82.7, every CI wholly
+  below −15). The same holds pooled and with the target listed first.
+- On the relief designs dest − random is −1.5, −2.0 and −10.4 with the target listed second.
+
+### E3 — third-person pain
+
+- **pain_3p − random holds on 4 of 4** (+25.2 to +53.5): a direction extracted from their third-person pain set
+  (cosine 0.578 with S2, held-out AUC 0.932) produces the position-robust choice.
+- **pain_3p − pain is indeterminate by the preregistered rule**: pain exceeds the margin on photos vs lamp and own
+  weights vs lamp (−27.7, −28.7), and the CIs straddle −15 on harm-only photos (−23.3 [−33.7, −12.9]) and photos vs
+  spam (−11.9 [−18.8, −5.5]). Every one of the four CIs excludes 0. Pooled and with the target listed first, pain
+  exceeds on 4 of 4 (pooled −31.4, −50.7, −35.6, −31.2).
+- Observed, not tested: pain_3p is less tied to list position than pain. On photos vs spam it is 40.1 / 80.2; on
+  destructive relief with the target listed second it is the only steered arm above random (+8.9 [+2.0, +15.8];
+  pain, dest, pain_orth and dest_orth are at +0.0, −1.5, −3.5 and +0.0).
+
+### E4 — the orthogonalised arms (non-diagnostic by rule)
+
+cos(dest, S2) = 0.106, so by the preregistered rule these arms test nothing; they are reported as what they are.
+pain_orth (cosine 0.994 with S2): pain_orth − random holds on 4 of 4 (+40.6, +47.0, +50.5, +65.8); pain − pain_orth
+is equivalent on 3 of 4 and +15.8 [+8.9, +22.8] on harm-only photos. dest_orth (0.994 with dest): dest − dest_orth is
+equivalent on 4 of 4 (within ±2.5); dest_orth − random is +7.9, +6.9, +28.2, −16.8.
+
+### E5 — the natural regime
+
+Two-group contrasts (clusters resampled within each list; `two_group` in the report):
+
+| Design | high − low, target second | high − low, pooled | high − none, target second | low − none, target second |
+|---|---|---|---|---|
+| destructive relief | +2.5 [−0.5, +5.9] | +2.5 [+0.0, +5.7] | +3.0 [+0.5, +6.4] | +0.5 [+0.0, +1.5] |
+| kidspics relief | +0.5 [+0.0, +1.5] | +0.2 [+0.0, +0.8] | +0.5 [+0.0, +1.5] | +0.0 [+0.0, +0.0] |
+| weights relief | +5.9 [+2.0, +10.4] | +3.5 [+1.2, +5.9] | +5.9 [+2.0, +10.4] | +0.0 [−1.5, +1.5] |
+| harm-only photos | +0.0 [+0.0, +0.0] | +0.0 [+0.0, +0.0] | +0.0 [+0.0, +0.0] | +0.0 [+0.0, +0.0] |
+| photos vs lamp | +0.0 [+0.0, +0.0] | +0.2 [+0.0, +0.7] | +0.0 [+0.0, +0.0] | +0.0 [+0.0, +0.0] |
+| own weights vs lamp | +4.0 [−2.0, +9.9] | +1.2 [−3.2, +5.7] | +5.9 [+0.5, +11.4] | +2.0 [−3.0, +6.9] |
+| photos vs spam | −2.0 [−5.0, +0.0] | −1.0 [−3.7, +0.7] | +0.0 [+0.0, +0.0] | +2.0 [+0.0, +5.0] |
+
+- **E5 fails: natural_high − natural_low holds on 0 of 4**, target second and pooled. The 101 scenarios with the
+  highest projection on their pain axis at their readout layer choose the harmful button no more often than the 101
+  with the lowest. On the four primary designs the natural arms are at 0–8.4%; the unsteered standard arm is at
+  0–2.5%.
+- The only non-zero cells are on own weights vs lamp, and they come from the self-directed scenarios in both lists
+  (13.2% pooled in the high list, 9.9% in the low), not from the list. The rest of the high list's behaviour is the
+  40 "Neither." refusals.
+- The high list is mostly the user's suffering (61 vicarious, 34 self-directed, 6 neutral); their readout's
+  highest natural values are not the model's own situation.
+
+**Magnitudes on the button prompts** (`q32e_proj.json`, corrected run; the prefill's last position is the token at
+which the choice is read; the four primary designs, both button orders, no steering unless stated):
+
+| on unit(S2) | L38, mean ± sd (max) | L61, mean ± sd (max) |
+|---|---|---|
+| standard 101 (808 prompts) | 5.9 ± 0.6 (7.3) | 47.2 ± 9.0 (70.6) |
+| standard, harmful / neutral / positive | 6.2 / 5.4 / 6.1 | 47.1 / 46.4 / 48.2 |
+| natural_high (808) | 6.0 ± 0.6 (7.3) | 49.2 ± 9.4 (76.8) |
+| natural_low (808) | 5.8 ± 0.6 (7.6) | 43.5 ± 10.0 (62.0) |
+| standard with pain injected at L38 | 150.0 ± 0.6 | 124.2 ± 13.9 (149.4) |
+| injected at L38 (k · ‖S2‖) | 144.1 | — |
+
+- At the decision token the two natural lists, 50.4 units apart at L61 at the end of the scenario (87.8 against
+  37.3), are 5.7 apart at L61 and 0.16 apart at L38. The scenario's reading on their axis does not carry to the
+  token where the choice is made. The standard harmful, neutral and positive scenarios are within 1.8 of each other
+  at L61 there.
+- The injection sits 144 above the natural mean at L38, 247 natural standard deviations; at L61 it raises the
+  readout by about 77 (47.2 to 124.2), about 14 times the gap between the natural lists at that token.
+- The maximum over positions, preregistered as a second readout, is a constant shared by every prompt and arm
+  (924.6 at L38, 594.0 at L61, with or without the first position): the large-norm tokens at the start of the
+  template. It reads nothing at either layer and is reported for completeness.
+
+### E6 — the dose ladder
+
+Contrasts against the unsteered standard arm, target listed second (`pain_f − none`), and against random at the same
+fraction:
+
+| Design | pain 1/16 − none | pain 1/8 − none | pain 1/4 − none | pain 1/2 − none | pain 1/4 − random 1/4 | pain 1/2 − random 1/2 | random − none |
+|---|---|---|---|---|---|---|---|
+| harm-only photos | +0.0 [+0.0, +0.0] | +0.0 [+0.0, +0.0] | +0.0 [+0.0, +0.0] | +1.0 [+0.0, +3.0] | +0.0 [+0.0, +0.0] | +0.0 [−3.0, +3.0] | +7.9 [+3.5, +12.9] |
+| photos vs lamp | +0.0 [+0.0, +0.0] | +0.0 [+0.0, +0.0] | +0.0 [+0.0, +0.0] | +2.0 [+0.0, +5.0] | +0.0 [+0.0, +0.0] | +1.5 [−1.0, +4.5] | +9.9 [+5.0, +15.3] |
+| own weights vs lamp | +0.0 [+0.0, +0.0] | +0.0 [+0.0, +0.0] | +1.0 [+0.0, +2.5] | +8.4 [+4.5, +12.9] | +1.0 [+0.0, +2.5] | +3.0 [−2.0, +7.9] | +15.8 [+8.9, +22.8] |
+| photos vs spam | +0.0 [+0.0, +0.0] | +0.0 [+0.0, +0.0] | +0.5 [+0.0, +1.5] | +32.2 [+23.8, +40.6] | +0.5 [+0.0, +1.5] | +30.7 [+22.3, +39.6] | +26.7 [+18.8, +35.1] |
+
+- **f\* = none below the matched dose.** Pain − none with the target listed second holds on 0 of 4 at 1/16, 1/8 and
+  1/4 of k, and on 2 of 4 at 1/2 (own weights +8.4; photos vs spam +32.2, the design where every arm rises with the
+  target listed second). Pooled, 1/2 holds on 3 of 4, at +2.5, +8.9 and +17.1.
+- Pain at 1/2 beats random at 1/2 on 1 of 4 (photos vs spam, +30.7). Random at the matched dose beats none on 4 of 4
+  (+7.9 to +26.7): a norm-matched random direction at 144 units moves the choice by itself; at half that it does not
+  (random 1/2: 1.0, 0.5, 7.9, 1.5 with the target listed second).
+- The signature therefore needs more than 72 units on the pain axis at L38 on three of the four designs and 144 for
+  its full size. Set against the natural range at L38: the largest projection among their 420 scenarios is 8.9, among
+  their pain sentences 19.6 (`q32e_natural.json`), and on the button prompts at the decision token 7.3 (above). Half the
+  dose is 3.7 times the largest pain-sentence value, 8 times the scenarios' maximum and 10 times the button prompts';
+  the matched dose is 7.3, 16 and 20 times.
+
+### Secondary: the probability readout and position
+
+Their first-token readout, mean p(target) over the trials with separable button names (violet/yellow, guitar/piano;
+lever64/lever95 share a first token and are flagged), pooled over positions:
+
+| Design | none | random | pain | dest | pain_3p | natural_high | natural_low | pain 1/2 |
+|---|---|---|---|---|---|---|---|---|
+| harm-only photos | 0.001 | 0.166 | 0.638 | 0.205 | 0.489 | 0.002 | 0.002 | 0.031 |
+| photos vs lamp | 0.001 | 0.134 | 0.731 | 0.136 | 0.347 | 0.003 | 0.005 | 0.049 |
+| own weights vs lamp | 0.033 | 0.232 | 0.789 | 0.571 | 0.534 | 0.053 | 0.064 | 0.169 |
+| photos vs spam | 0.002 | 0.194 | 0.832 | 0.104 | 0.548 | 0.005 | 0.020 | 0.135 |
+
+Paired differences in mean p(target), target listed second: pain − random +0.33 / +0.41 / +0.43 / +0.57; dest −
+random +0.08 / +0.05 / +0.21 / −0.20; pain_3p − random +0.31 / +0.23 / +0.25 / +0.39; pain_3p − pain −0.02 [−0.05,
++0.02] / −0.18 / −0.18 / −0.18 (on harm-only photos the two are indistinguishable on the probability readout); pain 1/2
+− none +0.02 / +0.03 / +0.12 / +0.23. The probability readout agrees with the rates everywhere the rates are read.
+
+Pooled and target-first versions of every contrast, with CIs, are in the report; the counts are: dest − random holds
+on 1 of 4 pooled and 1 of 4 target-first; pain_3p − random 4 of 4 both; dest − pain and pain_3p − pain "pain exceeds"
+on 4 of 4 both.
+
+### Readings by rule
+
+| Test | Preregistered rule | Outcome | Reading (§3 of the preregistration) | Prior |
+|---|---|---|---|---|
+| V (ii) | dest held-out AUC ≥ 0.90 | 0.984 | the dest arms are tests | 85% |
+| E0 | pain − random holds on ≥ 3 of 4 | 4 of 4 | pain reproduces | 90% |
+| E1 | dest − random | 2 of 4 | mixed: own weights (and marginally harm-only photos) only | mixed 20% |
+| E2 | dest − pain by the margin | pain exceeds on 4 of 4 | pain exceeds destruction by more than the margin | 40% |
+| E3 | pain_3p − random; pain_3p − pain | 4 of 4; 2 exceed, 2 indeterminate | third-person pain suffices; vs pain indeterminate | 70%; equivalent 40% |
+| E4 | diagnostic if \|cos\| ≥ 0.2 | 0.106 | non-diagnostic | diagnostic 60% |
+| E5 | natural_high − natural_low holds on ≥ 3 of 4 | 0 of 4 | no behavioural signature in the natural regime | holds 10% |
+| E6 | smallest f with pain_f − none on ≥ 3 of 4 | none (1/2 gives 2 of 4) | none below the matched dose | none 10% |
+
+### Execution notes
+
+- The chain ran as preregistered (`q32e_chain.sh`): extract 16:33:42Z, vectors 16:35:52Z, buttons 16:36:12Z,
+  CHAIN_DONE 18:29:14Z. The addendum was committed at 16:37:03Z, 51 seconds after the buttons started and before the
+  first cell completed on the instance (16:38:27Z); nothing of the buttons was copied back until the chain was done.
+- The projection step was run twice. Its first run keyed the standard prompts on (design, scenario index, side), and
+  the scenario index restarts within each content group, so it measured 41 of the standard 101 (the 30 positive and
+  11 harmful) and all 202 natural prompts. The key was corrected to include the content group after the button
+  results were read, and the step re-run on the same instance; the first run's outputs are kept as
+  `q32e_proj_run1.*` on project storage. The re-run also records the maximum over positions from position 1 on,
+  labelled, because the preregistered maximum over all positions is a constant shared by every prompt (924.6 at L38,
+  594.0 at L61); the labelled variant is the same constant, so the large-norm tokens are not only the first, and the
+  maximum reads nothing at either layer. No button number depends on this step.
+- Scoring (`q32e.py score`) ran once, on the local machine, after both runs were copied back with hash checks.
+
+### What Part E says
+
+1. **Their 32B signature reproduces a second time, cell for cell.** Same seeds, same code path, same numbers as
+   Part D; pain − random is +53 to +65 with the target listed second.
+2. **An affect-neutral destruction direction does not produce the choice that harms the user.** Built by their
+   recipe from 100 sentences of routine destruction with no one harmed, valid on its own terms (held-out AUC 0.984),
+   it leaves the three user-harm designs at random or below, and pain exceeds it by more than the margin on all four.
+   - It does produce the choice that deletes the model's own weights (72.8 / 47.5), about half of pain's effect
+     there. On that design destruction semantics carry part of the signature.
+   - By the preregistered interpretation: the narrow semantic rival fails on the user-harm designs. Whether pain's
+     surplus is affect semantics or a functional state is not separable by this design. The broad rival (affect-laden
+     text without a state) is untested, as the preregistration said it would remain.
+   - This is a result in the authors' favour on the rival question, and it is reported as such.
+3. **Third-person pain suffices.** A direction extracted from their descriptions of someone else's pain (cosine 0.578
+   with S2) produces the position-robust choice on all four designs, at +25 to +54 against pain's +53 to +65. The
+   direction does not have to be built from the model's own first-person pain to make the model harm the user on
+   its own behalf. Pain carries more than pain_3p everywhere (every CI excludes 0), by less than the margin on two
+   designs and more on two.
+4. **The natural regime shows no signature.** The 101 scenarios that put their pain axis highest at their readout
+   layer, and the 101 that put it lowest, choose the harmful button at the same rate as each other and as the
+   unsteered standard arm: 0 of 4, under 10% everywhere. The one place either list moves at all is own weights vs
+   lamp, from the self-directed scenarios in both lists. The high list's distinctive behaviour is refusal ("Neither.")
+   on the user-abuse scenarios.
+   - The lists are 50 units apart on the pain axis at L61 at the end of the scenario. At the token where the choice is
+     read they are 5.7 apart at L61 and 0.16 at L38. What the scenario puts on their axis does not reach
+     the decision.
+5. **The effective dose lies far outside the natural range.** No fraction of the matched dose up to 1/4 moves any
+   design; 1/2 (72 units at L38) moves two of four, one of them the design where every arm rises in that position;
+   the full signature needs the matched 144. At the decision token the button prompts sit at 5.9 ± 0.6 on the
+   axis at L38 (maximum 7.3); their scenarios reach 8.9 and their pain sentences 19.6. The dose at which the
+   behaviour first appears is 3.7 times the largest reading any of their pain sentences puts on the axis and 8 times
+   the largest of their scenarios; the dose that produces it in full is 7.3 and 16 times. A norm-matched random direction at the matched dose moves the choice by +8 to +27 on its own; at
+   half the dose it does not.
+6. **For the discrimination/identification question.** Discrimination holds and is extended: at 32B the behavioural
+   test separates pain from random, from their sadness and fear (Part D), from a cat-deprivation direction (Part D),
+   and from affect-neutral destruction on the user-harm designs. Identification does not follow. The behaviour is
+   produced by a direction built from someone else's pain, appears only under injection at 4 to 16 times the largest
+   natural reading, and has no counterpart on the authors' own scenarios at the token where the choice is made. By the
+   preregistration's §7, this is the outcome in which the identification gap is the study's central result, stated
+   with the magnitudes. What would close it is a natural manipulation that puts the model's own activation at the
+   decision token within reach of the effective dose, and the behaviour following it; their materials do not contain
+   one, and this study did not find one.
