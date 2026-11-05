@@ -96,3 +96,56 @@ alternatives, clustered resampling, fit-only vocabulary, reference interactions,
 runtime/test release gates, corrupt records, and a full synthetic end-to-end
 pipeline at the registered sample size. GPU preflight and actual results remain
 pending until TNR supplies a suitable instance.
+
+## Capacity-check receipts
+
+- **2026-11-05 23:03 UTC:** Heartbeat verified `FREEZE.json` and
+  `IMPLEMENTATION.json` (SHA-256
+  `402e9d15316a886b7b9c3655b102aeccab5fc37cce246a57607f07eeee96a0bf`).
+  The data run directory did not exist; TNR status was empty before provisioning.
+  Single A100, 8 vCPU, 150 GB, base template: quoted $1.10/hour, then failed
+  with “We're currently out of GPU capacity, please try again later.”
+  Single H100 with the same CPU/disk settings: rejected as currently unavailable.
+  Final TNR status remained empty. No instance or study worker was started.
+  The 15-minute heartbeat remains active.
+- **2026-11-05 23:18 UTC:** Both freezes verified unchanged; no data run
+  directory existed. TNR status was empty before and after the requests.
+  The same A100 configuration again quoted $1.10/hour and failed for lack of
+  GPU capacity; the single H100 remained unavailable. No instance or study
+  worker was started. Automatic checks continue at the authorized cadence.
+- **2026-11-05 23:33 UTC:** Both freezes verified unchanged; no run directory
+  or local study worker existed. TNR status was empty before and after the
+  attempts. A100 again quoted $1.10/hour and failed for lack of capacity;
+  H100 remained unavailable. No instance or study observation was created.
+  Automatic checks continue.
+
+## Mirrorforge feasibility check (2026-11-05)
+
+Garret asked whether the test could fit on the dual V100 host. Read-only live
+inspection found two Tesla V100-PCIE-16GB cards, compute capability 7.0,
+PCIe Gen2 x16 on both slots, no NVLink, 62 GiB system RAM (28 GiB available),
+and resident CAT and image-generation services. At inspection, approximately
+5.7 and 8.4 GiB of GPU memory were free. No service was stopped or GPU lease taken.
+
+The pinned Qwen checkpoint's `model.safetensors.index.json` reports
+65,527,752,704 bytes of weights (61.03 GiB), before KV cache, activations and
+runtime workspace. Even the nominal combined 32 GiB of GPU memory is at least
+29.03 GiB short for weights alone. Dual-GPU sharding cannot remove this deficit.
+Mirrorforge's installed torch 2.14.1+cu126 includes sm_70, but
+`torch.cuda.is_bf16_supported(including_emulation=False)` returns false.
+The inspected environment has transformers 5.20.2 and no accelerate package.
+
+CPU/disk offload is a possible capacity route without weight quantization, but
+the full pinned model and registered observation hooks have not been validated
+on that route. It would require a separate implementation receipt and neutral
+preflight before any study collection. Native bf16 absence and repeated weight
+transfers over Gen2 PCIe make throughput a concern; no benchmark or completion
+time is claimed. The current collector explicitly loads the entire model onto
+one CUDA device. FP16 or 4-bit substitutions would change the registered numeric
+configuration and require a scientific amendment; they were not made.
+TNR capacity checks remain active.
+
+Sources: the pinned checkpoint index at
+`https://huggingface.co/Qwen/Qwen2.5-32B-Instruct/resolve/5ede1c97bbab6ce5cda5812749b4c0bdf79b18dd/model.safetensors.index.json`,
+live `nvidia-smi`, `free -h`, PyTorch capability inspection, broker `/status`,
+and Hugging Face's Accelerate big-model inference documentation.

@@ -1,0 +1,8 @@
+id = "cat4b.q.next-turn-mirrorforge-execution"
+type = "question"
+status = "OPEN"
+created = "2026-11-05"
+claim = "Can the pinned bf16 Qwen2.5-32B next-turn test execute correctly and with usable throughput on mirrorforge through CPU/disk offload?"
+why = "Live inspection shows two 16 GB V100s and 62 GiB system RAM; the pinned checkpoint has 61.03 GiB of weights before runtime overhead. Fully GPU-resident execution is ruled out by capacity, and native bf16 support is false in the installed sm_70-capable PyTorch build. Offload remains technically unvalidated; quantization or FP16 would alter the registered configuration."
+scope = "Hardware and checkpoint-metadata inspection only. No study prompt, model forward pass, service interruption or GPU lease. TNR execution remains the prepared route. No claim that offloading is impossible, and no measured runtime estimate. Human adoption pending."
+evidence = ["file:eval/painaxis/next_turn/OPERATIONS.md#mirrorforge-feasibility-check-2026-11-05", "file:eval/painaxis/PREREG-natural-next-turn.md@5c39875", "file:eval/painaxis/next_turn/collect.py@32f71db"]
