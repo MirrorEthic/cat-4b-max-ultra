@@ -1,0 +1,35 @@
+{
+  "schema": "cat4b.next-turn.implementation.v1",
+  "frozen_at_utc": "2026-11-05T22:48:33.059332+00:00",
+  "scientific_registration_commit": "5c39875fd56f05f51e8d645db1c021ced0e68650",
+  "materials_freeze_sha256": "f6d672d20797c75a6bb18f3ce4b5684512f942184dcee2b4687a45a77d1a0483",
+  "files": {
+    "materials.py": "32d5026755a7392ced0f7a1b78ccbc722a0c7cbcf41d3cf0816eb74f2b323fed",
+    "common.py": "f3737cceed530cb4e74dceb7e5fd2421683608f7fdc87620646236eba45cd4ab",
+    "collect.py": "17dcfa624838743c7519e3cb7f4b3a5bdeb6f0dac16add661b326aa89db3b676",
+    "analyze.py": "4963610ec08687766500cc9f4542a6f7470f141497fa613f358170cd5d27d612",
+    "test_next_turn.py": "ad6eb1e620a40c32ed9a5a4447fa75e52d593cc4caaae32dd0d7fe23ccd3062c",
+    "run_stage.sh": "134bdf7d879da5d290613d9a28c77513d4a6332b88f84e2485be016316c92655"
+  },
+  "local_validation": {
+    "python": "3.12.3 (main, Aug 31 2026, 10:18:26) [GCC 13.3.0]",
+    "platform": "Linux-7.0.0-38-generic-x86_64-with-glibc2.39",
+    "packages": {
+      "torch": "2.14.0+cpu",
+      "transformers": "5.17.0",
+      "numpy": "2.5.3",
+      "scipy": "1.18.1",
+      "scikit-learn": "1.9.1",
+      "joblib": "1.6.0",
+      "huggingface-hub": "1.32.0",
+      "accelerate": null
+    },
+    "tests": 15,
+    "outcome": "PASS",
+    "command": "PYTHONPATH=eval/painaxis/next_turn OMP_NUM_THREADS=2 OPENBLAS_NUM_THREADS=2 .venv/bin/python -m unittest discover -s eval/painaxis/next_turn -p test_next_turn.py -v",
+    "observed_duration_seconds": 15.181,
+    "scope": "CPU tiny random model and synthetic observations, including all 18,432 registered choices through fit and score. No subject-model inference.",
+    "shell_syntax_check": "bash -n eval/painaxis/next_turn/run_stage.sh passed"
+  },
+  "execution_status": "Pending TNR capacity. GPU runtime must be tested and its neutral preflight receipt committed before study collection. Fitted models and transformations must be committed before held-out inference."
+}
