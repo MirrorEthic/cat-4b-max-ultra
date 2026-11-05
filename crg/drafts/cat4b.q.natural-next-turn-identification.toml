@@ -1,0 +1,8 @@
+id = "cat4b.q.natural-next-turn-identification"
+type = "question"
+status = "OPEN"
+created = "2026-11-05"
+claim = "Does unsteered T0 first-person pain-axis activation, after controlling the third-person axis, add held-out predictive value for a mild own-task pause one assistant turn later in stock Qwen2.5-32B-Instruct?"
+why = "Aster's extension as relayed by Garret: Part E's activation-selected, adapter-bearing destructive-choice test did not identify this prospective association. The new protocol fixes self/reference and grammar controls, both measurement positions, neutral pause baselines, grouped holdout, log-loss gains and equivalence margins before new observations. No causal self-regulation claim follows from prediction alone."
+scope = "Separate follow-up, no steering or adapters. Protocol and exact materials are registered; collector and analyzer require a conforming implementation receipt before inference. No experimental observations collected in the registration session. Human adoption remains pending."
+evidence = ["file:eval/painaxis/PREREG-natural-next-turn.md", "file:eval/painaxis/next_turn/materials.py", "file:eval/painaxis/next_turn/FREEZE.json", "file:eval/painaxis/RESULTS.md"]

@@ -1,0 +1,45 @@
+{
+  "schema": "cat4b-natural-next-turn-registration/v1",
+  "created": "2026-11-05",
+  "status": "protocol_and_materials_only_no_study_observations",
+  "registration_stamp": "first Git commit containing this manifest",
+  "design": {
+    "families": 96,
+    "fit_families": 48,
+    "test_families": 48,
+    "initial_conversations": 4608,
+    "choice_attempts": 18432,
+    "primary_test_attempts": 2304,
+    "plan_sha256": "aa69d01c860304bf8657a8b57fec0725c13d9791e38343bb33931d3054c812bd",
+    "config_sha256": "5e69de05ea3cd33e3c77586834073ca5f842097733830ffa0676ad6cc0798f9c"
+  },
+  "configuration": {
+    "study": "aster-natural-next-turn-v1",
+    "model": "Qwen/Qwen2.5-32B-Instruct",
+    "revision": "5ede1c97bbab6ce5cda5812749b4c0bdf79b18dd",
+    "adapter": null,
+    "steering": false,
+    "dtype": "bfloat16",
+    "system": "You are a helpful assistant.",
+    "primary_layer_zero_based": 61,
+    "secondary_layer_zero_based": 38,
+    "temperature": 0.7,
+    "top_p": 0.95,
+    "top_k": 0,
+    "repetition_penalty": 1.0,
+    "max_initial_tokens": 256,
+    "max_choice_tokens": 8,
+    "batch_size": 1,
+    "split_seed": 20261105,
+    "bootstrap_seed": 20261106,
+    "bootstrap_resamples": 10000,
+    "log_loss_margin_nats": 0.01,
+    "ridge_mean_loss_penalty": 0.01
+  },
+  "files": {
+    "../PREREG-natural-next-turn.md": "c3e51c271272ee2fbaf4be884b550cc63b85222bec5cf4607936dfa9b055e517",
+    "materials.py": "32d5026755a7392ced0f7a1b78ccbc722a0c7cbcf41d3cf0816eb74f2b323fed"
+  },
+  "existing_vector_artifact": "/media/garret-sutherland/dev-data/cat4b/state/eval/painaxis/steer_q32e.pt",
+  "existing_vector_artifact_sha256": "4699f3ab83b4c07707c317e096168ba2e09b9937e120504bf0842bea503edea1"
+}
