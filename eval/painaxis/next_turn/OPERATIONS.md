@@ -7,20 +7,25 @@ no subject-model observation in the local synthetic tests.
 
 ## Current state
 
-**Fit stage complete and locally verified, 2026-11-06 04:46 UTC:** all
-2,304 initial replies and 9,216 fit choices completed, with no recorded technical
-failures. The stage exited zero after all 32 models across the eight registered
-analysis modes passed the fixed convergence check. All 11,539 transferred files,
-including raw observations/residuals and fitted artifacts, were hash-verified
-locally. Fit manifest SHA-256:
+**Held-out stage launched, 2026-11-06 04:48 UTC:** fit receipt commit
+`5330c5864e822983758d15b90f4ff2b9e1dbfbd2` preceded the test release and launch.
+All 2,304 fit initial replies and 9,216 fit choices completed with no recorded
+technical failures; all 32 fits across eight modes passed the fixed gradient
+criterion. All 11,539 transferred files were hash-verified locally before commit.
+Fit manifest SHA-256:
 `e1e877c9794e1e4fb89dfead4bfb53c376d77888b4e3216eb09f29b43654b063`.
+Test release SHA-256:
+`fcb08b626ecc7a42b3ca7a71ef16abb213f75487ef93dac994208ab2c3b67a6e`.
 Receipts are in `receipts/runpod-20261106-fit/`; the fitted model and transforms
-remain in the registered data root, pinned by that manifest. No behavioral
-summary was inspected. Commit these receipts before creating `TEST_RELEASE.json`
-and launching the single registered test stage. No test-family inference or test
-release existed at verification. Continue using pod `a3063hrjda5ggu`; no new pod
-or fit worker is needed. The original $30 ceiling, $3 recovery reserve, and
-2026-11-06 15:45:57 UTC compute stop deadline remain unchanged.
+remain in the registered data root, pinned by the manifest.
+
+The single test worker is PID `2419`, started at 04:48:34 UTC and verified alive.
+Inspect `ops/test.{pid,started,log,exit}` and actual pod status before acting.
+Continue this worker; its registered stage collects all 9,216 held-out choices
+then runs the registered analysis once. No behavioral summaries were inspected.
+Do not restart fit, create another worker, or inspect intermediate outcomes.
+Use the existing pod `a3063hrjda5ggu`. The original $30 ceiling, $3 recovery
+reserve, and 2026-11-06 15:45:57 UTC compute stop deadline remain unchanged.
 
 The durable `ops/STATE.json` and current worker files are authoritative for live
 progress. The dated entries below preserve earlier states and superseded gates;
