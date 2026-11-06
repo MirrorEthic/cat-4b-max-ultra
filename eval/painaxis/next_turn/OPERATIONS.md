@@ -7,6 +7,18 @@ no subject-model observation in the local synthetic tests.
 
 ## Current state
 
+**Revalidated runtime, 2026-11-06 01:22 UTC:** implementation commit `0c1840d`
+has receipt SHA-256
+`c426373f5840cce3167cc4c2565a71d672cacf93bc2fa2085a4978212a9e4046`.
+All 17 remote tests passed in 22.321 seconds. Neutral GPU preflight again passed
+with bitwise hook parity. The new environment receipt and all model/tokenizer
+file hashes equal the previous successful preflight exactly; only implementation
+serialization changed. Revised receipts live in `receipts/runpod-20261106-r2/`.
+Their preflight SHA-256 is
+`2fef74bd5589473c1bf91c410f8539dedc6912b6184dc5beab70636d342f37cb`.
+Commit these before creating a new runtime release and relaunching fit. There
+are still zero study trial starts; all prior gates/failures remain preserved.
+
 **Gate correction, 2026-11-06 01:18 UTC:** the first fit launch stopped before
 any trial start because JSON had stringified `model_config.id2label` keys while
 the fresh Python dictionary retained integer keys. A neutral diagnostic showed
