@@ -48,6 +48,29 @@ previous receipt's hash/commit. `FREEZE.json` and scientific choices are unchang
 The first preflight logs and original source archive are preserved under the
 remote data volume's `setup/preflight-attempt-1/`. Revised remote validation and
 neutral preflight must pass and be committed before releasing collection.
+
+The revised implementation is commit `8ceabb7`, receipt SHA-256
+`bec34e9cd9a78c00da5bd840683e481deee86133107ee40132e4c26cf9563708`.
+Its 16 remote CPU tests passed in 22.398 seconds. Preflight attempt 2 passed
+the generation/hook checks but receipt creation failed because HF Hub's strict
+offline snapshot check also required `.gitattributes`, `LICENSE`, and `README.md`.
+Those non-model files are being fetched at the same pinned revision; no source or
+scientific choice changed. Attempt 2 logs remain in `setup/preflight-attempt-2/`.
+
+**Runtime validated, 2026-11-06 01:11 UTC:** attempt 3 passed, with zero logit
+difference and identical sampled tokens between hooked and unhooked generation.
+The final remote CPU suite passed all 16 tests in 22.541 seconds. Receipts,
+package freeze, failed preflight logs and the unrelated benchmark are copied and
+hash-verified under `receipts/runpod-20261106/`. The benchmark generated 256
+tokens in 13.310 seconds and a six-token next-turn response in 0.398 seconds.
+Maximum-length initial replies throughout could exceed $30; estimate actual
+duration from collection counts/timing without changing the registered N.
+The runtime receipt must be committed before creating `RUNTIME_RELEASE.json`.
+Then launch only the fixed fit stage using the registered `run_stage.sh` through
+`/workspace/cat4b-data/setup/run-study-stage.sh fit`. Its global stage lock,
+PID, start/finish timestamps and exit code live under the remote data path's
+`state/eval/painaxis/next_turn/ops/`; send stdout/stderr to `fit.log` there.
+The fitted-model release barrier remains mandatory before any held-out inference.
 The existing heartbeat now continues RunPod at 15-minute intervals, with routine
 notifications muted. No TNR provisioning is permitted. A separate local budget
 guard in `ops/budget_guard.py` stops only this pod's compute by

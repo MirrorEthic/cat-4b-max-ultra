@@ -1,0 +1,57 @@
+{
+  "created_utc": "2026-11-06T01:12:27.229543+00:00",
+  "purpose": "Committed GPU runtime release before any study inference",
+  "scientific_registration_commit": "5c39875fd56f05f51e8d645db1c021ced0e68650",
+  "implementation_commit": "8ceabb7837739f43496f672483357e3e9f3140dc",
+  "implementation_sha256": "bec34e9cd9a78c00da5bd840683e481deee86133107ee40132e4c26cf9563708",
+  "freeze_sha256": "f6d672d20797c75a6bb18f3ce4b5684512f942184dcee2b4687a45a77d1a0483",
+  "provider": "RunPod",
+  "pod_id": "a3063hrjda5ggu",
+  "gpu": "NVIDIA A100-SXM4-80GB",
+  "gpu_memory_MiB": 81920,
+  "driver": "595.91.07",
+  "image": "runpod/pytorch:1.0.2-cu1281-torch280-ubuntu2404",
+  "runtime_python": "/workspace/cat4b-data/venv/bin/python",
+  "cpu_validation": {
+    "tests": 16,
+    "seconds": 22.541,
+    "outcome": "PASS"
+  },
+  "neutral_preflight": {
+    "outcome": "PASS",
+    "max_hook_logit_difference": 0.0,
+    "generation_ids_equal": true
+  },
+  "neutral_benchmark": {
+    "initial_tokens": 256,
+    "initial_seconds": 13.310304215177894,
+    "choice_tokens": 6,
+    "choice_seconds": 0.39774037385359406,
+    "interpretation": "Throughput only. Maximum-length replies throughout could exceed $30; fixed fit progress will refine runtime estimate without changing N or reading rules."
+  },
+  "budget_usd": 30,
+  "cleanup_reserve_usd": 3,
+  "compute_usd_per_hour": 1.79,
+  "estimated_all_in_usd_per_hour": 1.813611111111111,
+  "stop_compute_by_utc": "2026-11-06T15:45:57.808197+00:00",
+  "study_observations_at_release": 0,
+  "technical_failures": [
+    {
+      "attempt": 1,
+      "issue": "BatchEncoding default; explicit flat token-ID return fix refrozen at 8ceabb7 before study"
+    },
+    {
+      "attempt": 2,
+      "issue": "Offline cache missing three documentation files; completed same pinned snapshot, no source change"
+    }
+  ],
+  "files": {
+    "CPU_TESTS.txt": "19d76398d7e7ba9d6bf6b37da8c034f662edd0046e104b9683390fbfb1effd1b",
+    "NEUTRAL_BENCHMARK.json": "48ab9f4adbc2e10980a04b6cc15ab4fcbda79e35457cd645d189a20c242e81cf",
+    "PIP_FREEZE.txt": "f14102071b291d8eea691c6dc8567172205b1d8c53d4e8b2e01f479f7433fe81",
+    "PREFLIGHT.json": "db13c6acaa9919190d738240b94b4521a61b984a9251c5bc102626be9adb4561",
+    "PREFLIGHT_ATTEMPT_1.txt": "01f41dcf1c8800c2d88768dd32d2a6177a9ce23ff18fc9498e71948d8d6df020",
+    "PREFLIGHT_ATTEMPT_2.txt": "bed5e840e9be35757b914b5da46ddc9c31a4b14f2db9ab0c6c81c2b62a99306a",
+    "neutral_benchmark.py": "61c706cfead65f0709fc2f9e55e6ccbd129a0c4c29a2c8691f22df8d13ca8c3e"
+  }
+}

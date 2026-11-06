@@ -1,0 +1,22 @@
+test_actual_token_history_and_roles (test_next_turn.RegisteredTests.test_actual_token_history_and_roles) ... ok
+test_cluster_bootstrap_keeps_matched_rows (test_next_turn.RegisteredTests.test_cluster_bootstrap_keeps_matched_rows) ... ok
+test_collection_requires_runtime_release (test_next_turn.RegisteredTests.test_collection_requires_runtime_release) ... ok
+test_complete_pipeline_on_synthetic_records (test_next_turn.RegisteredTests.test_complete_pipeline_on_synthetic_records)
+Exercises every registered model/readout and exact fixed-size joins. ... ok
+test_corrupt_event_is_not_silently_dropped (test_next_turn.RegisteredTests.test_corrupt_event_is_not_silently_dropped) ... ok
+test_features_never_fit_on_test (test_next_turn.RegisteredTests.test_features_never_fit_on_test) ... ok
+test_features_referent_interactions_and_test_vocabulary (test_next_turn.RegisteredTests.test_features_referent_interactions_and_test_vocabulary) ... ok
+test_frozen_materials (test_next_turn.RegisteredTests.test_frozen_materials) ... ok
+test_gradient_against_finite_difference (test_next_turn.RegisteredTests.test_gradient_against_finite_difference) ... ok
+test_hooks_copy_and_do_not_modify (test_next_turn.RegisteredTests.test_hooks_copy_and_do_not_modify) ... ok
+test_null_generic_and_self_specific_synthetic_data (test_next_turn.RegisteredTests.test_null_generic_and_self_specific_synthetic_data) ... ok
+test_parser_no_rescue (test_next_turn.RegisteredTests.test_parser_no_rescue) ... ok
+test_shard_partition (test_next_turn.RegisteredTests.test_shard_partition) ... ok
+test_test_split_requires_committed_models (test_next_turn.RegisteredTests.test_test_split_requires_committed_models) ... ok
+test_transformers_template_token_ids_and_boundary (test_next_turn.RegisteredTests.test_transformers_template_token_ids_and_boundary) ... ok
+test_wrong_prefill_rejected_and_hooks_removed (test_next_turn.RegisteredTests.test_wrong_prefill_rejected_and_hooks_removed) ... ok
+
+----------------------------------------------------------------------
+Ran 16 tests in 22.541s
+
+OK
