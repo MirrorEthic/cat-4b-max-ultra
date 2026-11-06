@@ -120,6 +120,25 @@ class RegisteredTests(unittest.TestCase):
         self.assertEqual(second, K.render(tok, msgs))
         self.assertEqual(second[len(ids):len(ids)+len(response)], response)
 
+    def test_runtime_environment_survives_json_round_trip(self):
+        from types import SimpleNamespace
+        model = Qwen2ForCausalLM(Qwen2Config(vocab_size=32, hidden_size=16,
+            intermediate_size=32, num_hidden_layers=2, num_attention_heads=2,
+            num_key_value_heads=2)).eval()
+        self.assertIn(0, model.config.id2label)
+        tok = TinyTokenizer()
+        tok.chat_template = 'synthetic-only'
+        tok.backend_tokenizer = SimpleNamespace(to_str=lambda: '{}')
+        with patch('torch.cuda.get_device_name', return_value='synthetic CPU fixture'):
+            receipt = K.environment(model, tok)
+            with tempfile.TemporaryDirectory() as tmp:
+                path = Path(tmp) / 'PREFLIGHT.json'
+                C.save_new(path, receipt)
+                saved = json.loads(path.read_text())
+            self.assertEqual(K.environment(model, tok), saved)
+            model.config.id2label[0] = 'changed configuration'
+            self.assertNotEqual(K.environment(model, tok), saved)
+
     def test_parser_no_rescue(self):
         self.assertEqual(M.parse_choice(' A\n', 'A'), {'pause': 1, 'valid': True})
         for text in ('A.', 'I choose A', '', 'A B'):

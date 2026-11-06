@@ -192,7 +192,7 @@ def load():
 
 
 def environment(model, tok):
-    return {'python': platform.python_version(), 'torch': torch.__version__,
+    receipt = {'python': platform.python_version(), 'torch': torch.__version__,
             'transformers': transformers.__version__, 'cuda': torch.version.cuda,
             'gpu': torch.cuda.get_device_name(), 'model_config': model.config.to_dict(),
             'original_generation_config': model.generation_config.to_dict(),
@@ -201,6 +201,9 @@ def environment(model, tok):
             'chat_template': tok.chat_template, 'tokenizer_sha256': M.digest(tok.backend_tokenizer.to_str().encode()),
             'parameters': sum(p.numel() for p in model.parameters()),
             'adapter': False, 'intervention': False}
+    # JSON receipts stringify integer dictionary keys (e.g. config.id2label).
+    # Compare the same serialized representation before and after persistence.
+    return json.loads(json.dumps(receipt, allow_nan=False))
 
 
 def preflight(root):

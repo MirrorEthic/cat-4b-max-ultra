@@ -7,10 +7,23 @@ no subject-model observation in the local synthetic tests.
 
 ## Current state
 
-**Live run, 2026-11-06 01:13 UTC:** neutral preflight is complete and the runtime
+**Gate correction, 2026-11-06 01:18 UTC:** the first fit launch stopped before
+any trial start because JSON had stringified `model_config.id2label` keys while
+the fresh Python dictionary retained integer keys. A neutral diagnostic showed
+these two keys were the entire mismatch; JSON-normalized runtimes were equal.
+Environment receipts now use the same JSON representation before and after
+persistence. A new CPU regression verifies equality after persistence and
+inequality after a real configuration change; all 17 local tests passed in
+14.156 seconds. No study observations exist. The original successful preflight
+and runtime release remain in `v1/validation-history/runtime-d2bb9d0/`, the first
+fit-launch logs in `setup/fit-launch-attempt-1/`, and runtime commit `d2bb9d0`
+remains historical. A revised implementation and new neutral runtime release are
+required before relaunching fit. The registration/materials are unchanged.
+
+**Historical launch, 2026-11-06 01:13 UTC:** neutral preflight was complete and the runtime
 receipt was committed at `d2bb9d0357b3fbe2f961fdb17496606abd835fec` before collection.
 `RUNTIME_RELEASE.json` verified locally and remotely. The fixed fit stage was
-launched once, PID `1472`, and is active. No held-out release exists. Inspect
+launched once, PID `1472`, and exited at the runtime gate. No held-out release exists. Inspect
 `ops/STATE.json`, remote `ops/fit.{pid,started,log,exit}`, and `ops/progress.json`
 before resuming; a missing exit file while the PID lives means continue monitoring.
 The runtime release SHA-256 is
