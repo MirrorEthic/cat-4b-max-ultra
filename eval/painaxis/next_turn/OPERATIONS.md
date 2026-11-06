@@ -7,31 +7,37 @@ no subject-model observation in the local synthetic tests.
 
 ## Current state
 
-**Held-out stage launched, 2026-11-06 04:48 UTC:** fit receipt commit
-`5330c5864e822983758d15b90f4ff2b9e1dbfbd2` preceded the test release and launch.
-All 2,304 fit initial replies and 9,216 fit choices completed with no recorded
-technical failures; all 32 fits across eight modes passed the fixed gradient
-criterion. All 11,539 transferred files were hash-verified locally before commit.
-Fit manifest SHA-256:
-`e1e877c9794e1e4fb89dfead4bfb53c376d77888b4e3216eb09f29b43654b063`.
-Test release SHA-256:
-`fcb08b626ecc7a42b3ca7a71ef16abb213f75487ef93dac994208ab2c3b67a6e`.
-Receipts are in `receipts/runpod-20261106-fit/`; the fitted model and transforms
-remain in the registered data root, pinned by the manifest.
+**Completed and cleaned up, 2026-11-06 08:06 UTC.** Do not create another pod,
+restart a worker, refit, or rerun the registered analysis.
 
-The single test worker is PID `2419`, started at 04:48:34 UTC and verified alive.
-Its first held-out trial began at 04:51:18 UTC; five initial replies and 20 choices
-were complete by 04:51:36 UTC, with no recorded technical failures.
-Inspect `ops/test.{pid,started,log,exit}` and actual pod status before acting.
-Continue this worker; its registered stage collects all 9,216 held-out choices
-then runs the registered analysis once. No behavioral summaries were inspected.
-Do not restart fit, create another worker, or inspect intermediate outcomes.
-Use the existing pod `a3063hrjda5ggu`. The original $30 ceiling, $3 recovery
-reserve, and 2026-11-06 15:45:57 UTC compute stop deadline remain unchanged.
+Both splits completed 2,304 initial replies and 9,216 choices, with zero recorded
+study technical failures or retries. All 32 fixed fits converged. The held-out
+stage finished at 08:02:16 UTC with exit 0 after the one registered score invocation.
+Fit commit `5330c5864e822983758d15b90f4ff2b9e1dbfbd2` preceded all held-out inference.
+Registration `5c39875` and implementation `0c1840d` remain unchanged.
 
-The durable `ops/STATE.json` and current worker files are authoritative for live
-progress. The dated entries below preserve earlier states and superseded gates;
-their old provisioning instructions and pending/paused statuses are historical.
+**Registered reading: non-identifying in this task; primary hypothesis not
+supported.** Fit initial-response cap hits were 5.773%, above the frozen 5% limit.
+The T0 self-reference validity gate also failed, the fitted self residual coefficient
+was negative, and required gain robustness failed. Primary gain was 0.000263 nats
+(95% CI −0.000779 to +0.001327). The secondary decision-position gain was 0.042447
+nats (95% CI 0.035283–0.049898); this is contemporaneous association, not evidence
+of prospective or causal self-regulation. The full result and every gate are in
+[`../RESULT-natural-next-turn.md`](../RESULT-natural-next-turn.md).
+
+All 23,161 experimental/operational files were transferred and hash-verified
+locally before deleting only pod `a3063hrjda5ggu`. RunPod acknowledged deletion;
+a fresh list confirmed absence at 08:06:57 UTC. Estimated total task spend was
+$13.1161, below $30; the final provider invoice is not asserted.
+Receipts: `receipts/runpod-20261106-result/`. Raw data and the full manifest remain
+under the registered data root, with exact paths in `EXECUTION.json`.
+Results SHA-256: `1401a09d23e4029d238c2e9038324be9d024194d14c1bc724405b5bc4573c980`.
+Full data-manifest SHA-256: `c36555485679fe327a20028b9a648959eb7a175e6cafe142964492d40126dae5`.
+
+The durable `ops/STATE.json` records completion and verified cleanup. The dated
+entries below preserve earlier states and superseded gates; their provisioning,
+launch, and pending statuses are historical. The heartbeat is being disabled as
+part of result delivery. No further study collection is authorized by this run.
 
 ## Execution history
 
@@ -244,8 +250,8 @@ modified residuals, hook cleanup, exact token-history roles, strict parsing,
 logistic objective gradients, synthetic null/generic-only/residual-specific
 alternatives, clustered resampling, fit-only vocabulary, reference interactions,
 runtime/test release gates, corrupt records, and a full synthetic end-to-end
-pipeline at the registered sample size. GPU preflight passed; fit collection is
-active on the allocated RunPod instance. Held-out collection and results are pending.
+pipeline at the registered sample size. GPU preflight passed; both collection stages and the registered analysis are complete.
+The frozen reading and verified cleanup are recorded in the current-state section.
 
 ## Capacity-check receipts
 

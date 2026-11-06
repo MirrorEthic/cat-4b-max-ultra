@@ -1,0 +1,10 @@
+{
+  "verified_utc": "2026-11-06T08:06:57.354528+00:00",
+  "pod_id": "a3063hrjda5ggu",
+  "delete_acknowledged": true,
+  "absent_from_fresh_pod_list": true,
+  "remaining_pods_count": 0,
+  "local_artifacts_verified_before_deletion": true,
+  "estimated_task_spend_usd": 13.1161,
+  "spend_is_estimate_not_final_provider_invoice": true
+}

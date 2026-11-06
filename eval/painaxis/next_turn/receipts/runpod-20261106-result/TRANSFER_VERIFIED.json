@@ -1,0 +1,27 @@
+{
+  "verified_utc": "2026-11-06T08:06:10.629048+00:00",
+  "source_pod": "a3063hrjda5ggu",
+  "snapshot": "/media/garret-sutherland/dev-data/cat4b/state/eval/painaxis/next_turn/ops/transfers/final-20261106T0803Z/snapshot",
+  "manifest_sha256": "c36555485679fe327a20028b9a648959eb7a175e6cafe142964492d40126dae5",
+  "files_verified": 23161,
+  "bytes_verified": 2573538357,
+  "counts": {
+    "fit": {
+      "initial_complete": 2304,
+      "choice_complete": 9216,
+      "technical_failures": 0,
+      "starts": 11520
+    },
+    "test": {
+      "initial_complete": 2304,
+      "choice_complete": 9216,
+      "technical_failures": 0,
+      "starts": 11520
+    }
+  },
+  "results_sha256": "1401a09d23e4029d238c2e9038324be9d024194d14c1bc724405b5bc4573c980",
+  "canonical_run_files_added": 11524,
+  "complete_trial_ids_verified": true,
+  "runtime_and_fit_releases_verified": true,
+  "all_raw_residual_hashes_verified_against_events_remotely_and_manifest_locally": true
+}

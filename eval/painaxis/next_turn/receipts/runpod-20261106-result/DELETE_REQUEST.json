@@ -1,0 +1,9 @@
+{
+  "created_utc": "2026-11-06T08:06:37.651396+00:00",
+  "action": "delete",
+  "pod_id": "a3063hrjda5ggu",
+  "pod_name": "aster-next-turn-v1",
+  "verified_local_manifest_sha256": "c36555485679fe327a20028b9a648959eb7a175e6cafe142964492d40126dae5",
+  "verified_files": 23161,
+  "authorization": "User authorized deletion of only this experiment pod after verified local persistence."
+}

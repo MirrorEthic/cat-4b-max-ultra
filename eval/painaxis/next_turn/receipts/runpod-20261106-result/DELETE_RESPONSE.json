@@ -1,0 +1,7 @@
+{
+  "completed_utc": "2026-11-06T08:06:38.349835+00:00",
+  "pod_id": "a3063hrjda5ggu",
+  "returncode": 0,
+  "stdout": "{\n  \"deleted\": true,\n  \"id\": \"a3063hrjda5ggu\"\n}\n",
+  "stderr": ""
+}

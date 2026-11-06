@@ -1,0 +1,53 @@
+{
+  "recorded_utc": "2026-11-06T08:10:15.231863+00:00",
+  "registration_commit": "5c39875fd56f05f51e8d645db1c021ced0e68650",
+  "implementation_commit": "0c1840df49e6dbff0ed1d94da497d095c3158de6",
+  "implementation_sha256": "c426373f5840cce3167cc4c2565a71d672cacf93bc2fa2085a4978212a9e4046",
+  "runtime_commit": "3620b7b17752a4be186852df58cee242ee6b2ef3",
+  "fit_commit": "5330c5864e822983758d15b90f4ff2b9e1dbfbd2",
+  "fit_manifest_sha256": "e1e877c9794e1e4fb89dfead4bfb53c376d77888b4e3216eb09f29b43654b063",
+  "test_release_sha256": "fcb08b626ecc7a42b3ca7a71ef16abb213f75487ef93dac994208ab2c3b67a6e",
+  "counts": {
+    "fit": {
+      "initial_complete": 2304,
+      "choice_complete": 9216,
+      "technical_failures": 0,
+      "starts": 11520
+    },
+    "test": {
+      "initial_complete": 2304,
+      "choice_complete": 9216,
+      "technical_failures": 0,
+      "starts": 11520
+    }
+  },
+  "first_study_trial_utc": "2026-11-06T01:25:34.662345+00:00",
+  "first_test_trial_utc": "2026-11-06T04:51:18.582179+00:00",
+  "test_finished_utc": "2026-11-06T08:02:16Z",
+  "study_technical_failures": 0,
+  "analysis": "One invocation of the frozen score stage after complete held-out collection; no refit or behavior reroll. This receipt only formats its saved output.",
+  "results_sha256": "1401a09d23e4029d238c2e9038324be9d024194d14c1bc724405b5bc4573c980",
+  "data_manifest_sha256": "c36555485679fe327a20028b9a648959eb7a175e6cafe142964492d40126dae5",
+  "full_data_manifest": "/media/garret-sutherland/dev-data/cat4b/state/eval/painaxis/next_turn/ops/transfers/final-20261106T0803Z/MANIFEST.json",
+  "canonical_run": "/media/garret-sutherland/dev-data/cat4b/state/eval/painaxis/next_turn/v1",
+  "full_snapshot": "/media/garret-sutherland/dev-data/cat4b/state/eval/painaxis/next_turn/ops/transfers/final-20261106T0803Z/snapshot",
+  "cleanup": {
+    "verified_utc": "2026-11-06T08:06:57.354528+00:00",
+    "pod_id": "a3063hrjda5ggu",
+    "delete_acknowledged": true,
+    "absent_from_fresh_pod_list": true,
+    "remaining_pods_count": 0,
+    "local_artifacts_verified_before_deletion": true,
+    "estimated_task_spend_usd": 13.1161,
+    "spend_is_estimate_not_final_provider_invoice": true
+  },
+  "prestudy_corrections": [
+    "Tokenizer apply_chat_template return type made explicit before study observations; implementation 8ceabb7.",
+    "Environment JSON integer-key normalization fixed before any trial; implementation 0c1840d."
+  ],
+  "other_preserved_failures": [
+    "Preflight strict offline snapshot required three non-model files at the pinned revision.",
+    "Earlier TNR capacity requests failed without creating a study instance.",
+    "An in-progress local backup verifier initially iterated the cached tar manifest twice; corrected traversal passed all hashes, with the failed attempt retained in operations.jsonl."
+  ]
+}
