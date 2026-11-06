@@ -39,6 +39,17 @@ entries below preserve earlier states and superseded gates; their provisioning,
 launch, and pending statuses are historical. The heartbeat is disabled (PAUSED in the app) following verified cleanup
 and result delivery. No further study collection is authorized by this run.
 
+## Publication privacy review
+
+Before the first push, private account balance and retired SSH connection details
+were removed from unpublished historical versions of this file. The original
+registration commit `5c39875` is unchanged. All scientific source, manifests,
+coefficients, results, and frozen receipts are byte-identical to the original run.
+Original commit IDs in those receipts resolve through
+[`PUBLICATION_AUDIT.json`](receipts/runpod-20261106-result/PUBLICATION_AUDIT.json).
+The original history is backed up privately; public derivative commit IDs must
+not be presented as new preregistration timestamps.
+
 ## Execution history
 
 **Revalidated runtime, 2026-11-06 01:22 UTC:** implementation commit `0c1840d`

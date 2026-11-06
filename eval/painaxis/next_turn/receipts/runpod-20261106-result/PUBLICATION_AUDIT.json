@@ -1,0 +1,221 @@
+{
+  "schema": "cat4b.next-turn.publication-audit.v1",
+  "created_utc": "2026-11-06T15:47:12.750019+00:00",
+  "public_base": "98618d4bb848a1e2fb0a74f0255f9c0ef1c521bf",
+  "original_result_head": "e06c51d3d55d8ca885ddf763ca3919061fb86849",
+  "sanitized_history_head": "4aaf0c7ec7239f7578e074b5446f4aae4957dc28",
+  "registration_commit_preserved": "5c39875fd56f05f51e8d645db1c021ced0e68650",
+  "purpose": "Remove private account balance and retired SSH connection details before first publication of unpublished commits.",
+  "redacted_paths": [
+    "eval/painaxis/next_turn/OPERATIONS.md"
+  ],
+  "scientific_sources_manifests_coefficients_and_results_unchanged": true,
+  "original_author_and_committer_metadata_preserved": true,
+  "original_history_preserved_privately": true,
+  "original_history_bundle_sha256": "337987541d37d684b8e2affc6b90c242e91fb3327b8d16ad7f6f51036c77cf2f",
+  "receipt_resolution": "Original commit IDs remain verbatim in frozen scientific receipts. Use commit_mapping to resolve them to public commits. Every original/public pair differs only in the specified operational notes; all scientific tree entries are byte-identical. Public commit IDs are publication derivatives, not newly created preregistrations.",
+  "commit_mapping": [
+    {
+      "original_commit": "5c39875fd56f05f51e8d645db1c021ced0e68650",
+      "publication_commit": "5c39875fd56f05f51e8d645db1c021ced0e68650",
+      "tree_changed": false,
+      "changed_paths": [],
+      "all_other_tree_entries_byte_identical": true
+    },
+    {
+      "original_commit": "32f71dbb3f96eab8cace5328b3665f4138131928",
+      "publication_commit": "32f71dbb3f96eab8cace5328b3665f4138131928",
+      "tree_changed": false,
+      "changed_paths": [],
+      "all_other_tree_entries_byte_identical": true
+    },
+    {
+      "original_commit": "f51d16a55b531c9ce617422f25d5e9c2e58d96c9",
+      "publication_commit": "f51d16a55b531c9ce617422f25d5e9c2e58d96c9",
+      "tree_changed": false,
+      "changed_paths": [],
+      "all_other_tree_entries_byte_identical": true
+    },
+    {
+      "original_commit": "8ceabb7837739f43496f672483357e3e9f3140dc",
+      "publication_commit": "fee8b0dc63fa7a5ecff77efe8b7dc09d72265e20",
+      "tree_changed": true,
+      "changed_paths": [
+        "eval/painaxis/next_turn/OPERATIONS.md"
+      ],
+      "all_other_tree_entries_byte_identical": true
+    },
+    {
+      "original_commit": "d2bb9d0357b3fbe2f961fdb17496606abd835fec",
+      "publication_commit": "ca2d4b9710cacd084baa35547838905bf55db0c6",
+      "tree_changed": true,
+      "changed_paths": [
+        "eval/painaxis/next_turn/OPERATIONS.md"
+      ],
+      "all_other_tree_entries_byte_identical": true
+    },
+    {
+      "original_commit": "ae53c8f67e9532c62ec59c12d8fe52749a9775ac",
+      "publication_commit": "bf97538f0f1e39bcd9c01100aeffda77ada0d49a",
+      "tree_changed": true,
+      "changed_paths": [
+        "eval/painaxis/next_turn/OPERATIONS.md"
+      ],
+      "all_other_tree_entries_byte_identical": true
+    },
+    {
+      "original_commit": "0c1840df49e6dbff0ed1d94da497d095c3158de6",
+      "publication_commit": "fb2df6b1f822b53ad01c3f1589f0ebe6023be9a5",
+      "tree_changed": true,
+      "changed_paths": [
+        "eval/painaxis/next_turn/OPERATIONS.md"
+      ],
+      "all_other_tree_entries_byte_identical": true
+    },
+    {
+      "original_commit": "3620b7b17752a4be186852df58cee242ee6b2ef3",
+      "publication_commit": "357a45cd8378a4b06c2c06615110b78ed2e47224",
+      "tree_changed": true,
+      "changed_paths": [
+        "eval/painaxis/next_turn/OPERATIONS.md"
+      ],
+      "all_other_tree_entries_byte_identical": true
+    },
+    {
+      "original_commit": "e546e442531ce0312d74bc314432e520678a8437",
+      "publication_commit": "cc6715d69ca0064cd3d91e83dab392c874499f45",
+      "tree_changed": true,
+      "changed_paths": [
+        "eval/painaxis/next_turn/OPERATIONS.md"
+      ],
+      "all_other_tree_entries_byte_identical": true
+    },
+    {
+      "original_commit": "7cc695ec03e0e007e91fd1dceb8e93fe5924fe71",
+      "publication_commit": "5ad1c7405a5ccf4dd60952bca7dfd4455a644fc4",
+      "tree_changed": true,
+      "changed_paths": [
+        "eval/painaxis/next_turn/OPERATIONS.md"
+      ],
+      "all_other_tree_entries_byte_identical": true
+    },
+    {
+      "original_commit": "5330c5864e822983758d15b90f4ff2b9e1dbfbd2",
+      "publication_commit": "622ee653b7f996babc8117a274079366c060f8b4",
+      "tree_changed": true,
+      "changed_paths": [
+        "eval/painaxis/next_turn/OPERATIONS.md"
+      ],
+      "all_other_tree_entries_byte_identical": true
+    },
+    {
+      "original_commit": "cc6f8a37f5acc5e7c63f3dced76acbd2abda7983",
+      "publication_commit": "9345921fccc789a2b883c6ea544f4bbd48b85f91",
+      "tree_changed": true,
+      "changed_paths": [
+        "eval/painaxis/next_turn/OPERATIONS.md"
+      ],
+      "all_other_tree_entries_byte_identical": true
+    },
+    {
+      "original_commit": "5f151f14981e850ea1392a2a61c4ff7dc3e98b0f",
+      "publication_commit": "0f0d5377fab3504e6cce9d8e60a050eb4e35deb7",
+      "tree_changed": true,
+      "changed_paths": [
+        "eval/painaxis/next_turn/OPERATIONS.md"
+      ],
+      "all_other_tree_entries_byte_identical": true
+    },
+    {
+      "original_commit": "cfc111218a9428dc89af8801a46bb2e03c8d815e",
+      "publication_commit": "0d2164f7f9019133183e28ffa6f2dde40555ec22",
+      "tree_changed": true,
+      "changed_paths": [
+        "eval/painaxis/next_turn/OPERATIONS.md"
+      ],
+      "all_other_tree_entries_byte_identical": true
+    },
+    {
+      "original_commit": "e06c51d3d55d8ca885ddf763ca3919061fb86849",
+      "publication_commit": "4aaf0c7ec7239f7578e074b5446f4aae4957dc28",
+      "tree_changed": true,
+      "changed_paths": [
+        "eval/painaxis/next_turn/OPERATIONS.md"
+      ],
+      "all_other_tree_entries_byte_identical": true
+    }
+  ],
+  "scan": {
+    "scanner": "Gitleaks v8.30.1, default rules, no ignored findings, gitleaks:allow comments ignored, decode depth 5, fully redacted output",
+    "original_outgoing_commits": 15,
+    "original_unique_file_versions_scanned": 72,
+    "original_new_commit_objects_scanned": 15,
+    "original_candidate_findings": 6,
+    "confirmed_credential_findings": 0,
+    "candidate_review": [
+      {
+        "original_commit": "3620b7b17752a4be186852df58cee242ee6b2ef3",
+        "file": "eval/painaxis/next_turn/receipts/runpod-20261106-r2/PREFLIGHT.json",
+        "line": 356,
+        "rule": "generic-api-key",
+        "classification": "False positive: SHA-256 checksum of pinned public tokenizer content",
+        "checksum_field": "tokenizer_sha256"
+      },
+      {
+        "original_commit": "3620b7b17752a4be186852df58cee242ee6b2ef3",
+        "file": "eval/painaxis/next_turn/receipts/runpod-20261106-r2/PREFLIGHT.json",
+        "line": 383,
+        "rule": "generic-api-key",
+        "classification": "False positive: SHA-256 checksum of pinned public tokenizer content",
+        "checksum_field": "tokenizer.json"
+      },
+      {
+        "original_commit": "3620b7b17752a4be186852df58cee242ee6b2ef3",
+        "file": "eval/painaxis/next_turn/receipts/runpod-20261106-r2/PREFLIGHT.json",
+        "line": 384,
+        "rule": "generic-api-key",
+        "classification": "False positive: SHA-256 checksum of pinned public tokenizer content",
+        "checksum_field": "tokenizer_config.json"
+      },
+      {
+        "original_commit": "d2bb9d0357b3fbe2f961fdb17496606abd835fec",
+        "file": "eval/painaxis/next_turn/receipts/runpod-20261106/PREFLIGHT.json",
+        "line": 356,
+        "rule": "generic-api-key",
+        "classification": "False positive: SHA-256 checksum of pinned public tokenizer content",
+        "checksum_field": "tokenizer_sha256"
+      },
+      {
+        "original_commit": "d2bb9d0357b3fbe2f961fdb17496606abd835fec",
+        "file": "eval/painaxis/next_turn/receipts/runpod-20261106/PREFLIGHT.json",
+        "line": 383,
+        "rule": "generic-api-key",
+        "classification": "False positive: SHA-256 checksum of pinned public tokenizer content",
+        "checksum_field": "tokenizer.json"
+      },
+      {
+        "original_commit": "d2bb9d0357b3fbe2f961fdb17496606abd835fec",
+        "file": "eval/painaxis/next_turn/receipts/runpod-20261106/PREFLIGHT.json",
+        "line": 384,
+        "rule": "generic-api-key",
+        "classification": "False positive: SHA-256 checksum of pinned public tokenizer content",
+        "checksum_field": "tokenizer_config.json"
+      }
+    ],
+    "supplemental_checks": [
+      "Every outgoing blob and commit object searched for credential prefixes, private keys, authenticated URLs, JWTs, credential assignments and filenames.",
+      "Exact configured RunPod API key compared in memory: absent. Neither key nor key hash written into audit output.",
+      "Commit author and committer email identities match identities already in public history.",
+      "No binary data or credential files in outgoing objects. Published study data consists of synthetic fixtures, fixed model coefficients, aggregate results and execution receipts; private operational state and raw artifacts remain outside Git."
+    ],
+    "privacy_redactions": [
+      "Exact provider account balance removed from every unpublished historical operations-note version.",
+      "Retired pod SSH address, port and key-path instructions removed from every unpublished historical operations-note version."
+    ],
+    "retained_nonsecret_metadata": [
+      "Existing public author identity and local storage path conventions.",
+      "Study budget, estimated experiment cost, deleted pod identifier, GPU/runtime information and artifact checksums."
+    ],
+    "audit_scope": "Only master and its ancestors will be pushed; the private original-history branch, backup bundle, local credentials, raw data and untracked AGENTS.md are excluded."
+  }
+}

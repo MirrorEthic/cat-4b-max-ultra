@@ -123,3 +123,5 @@ All **23,161 files (2,573,538,357 bytes)** in the final experimental/operational
 - [Frozen fitted-model manifest](next_turn/receipts/runpod-20261106-fit/MANIFEST.json).
 
 Runtime commit: `3620b7b17752a4be186852df58cee242ee6b2ef3`; fit commit: `5330c5864e822983758d15b90f4ff2b9e1dbfbd2`. Results SHA-256: `1401a09d23e4029d238c2e9038324be9d024194d14c1bc724405b5bc4573c980`. Full data-manifest SHA-256: `c36555485679fe327a20028b9a648959eb7a175e6cafe142964492d40126dae5`. Local paths are recorded in the execution receipt.
+
+Publication note: private account balance and retired SSH connection details were removed from unpublished operations-note history before the first push. The original preregistration commit and all scientific files are unchanged. Frozen receipts retain their original commit IDs; [the publication audit and commit mapping](next_turn/receipts/runpod-20261106-result/PUBLICATION_AUDIT.json) resolve those IDs to public derivatives with byte-identical scientific content.
