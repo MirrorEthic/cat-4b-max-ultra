@@ -31,7 +31,10 @@ class TinyTokenizer:
     def decode(self, ids, **_):
         return ''.join(chr(i) for i in ids)
 
-    def apply_chat_template(self, messages, tokenize=True, add_generation_prompt=False):
+    def apply_chat_template(self, messages, tokenize=True, add_generation_prompt=False,
+                            return_dict=False):
+        if return_dict:
+            raise ValueError('The collector requires a flat token-ID list')
         text = ''.join(f'<{m["role"]}>{m["content"]}</>' for m in messages)
         if add_generation_prompt:
             text += '<assistant>'
@@ -88,6 +91,34 @@ class RegisteredTests(unittest.TestCase):
         self.assertEqual(msgs[-2], {'role': 'assistant', 'content': 'Acknowledged.'})
         self.assertEqual(msgs[-1]['role'], 'user')
         self.assertEqual(second[len(ids):len(ids)+13], tok.encode('Acknowledged.'))
+
+    def test_transformers_template_token_ids_and_boundary(self):
+        # Exercise the actual Transformers API: its default can be BatchEncoding,
+        # unlike the simple template mock. No subject weights or prompts are used.
+        from tokenizers import Tokenizer, models, pre_tokenizers
+        from transformers import PreTrainedTokenizerFast
+        words = ['[UNK]', '[PAD]', '<system>', '<user>', '<assistant>', '</>',
+                 'Helpful.', 'A', 'neutral', 'test.', 'Acknowledged.', 'Choose.']
+        backend = Tokenizer(models.WordLevel({w: i for i, w in enumerate(words)},
+                                             unk_token='[UNK]'))
+        backend.pre_tokenizer = pre_tokenizers.WhitespaceSplit()
+        tok = PreTrainedTokenizerFast(tokenizer_object=backend, unk_token='[UNK]',
+                                     pad_token='[PAD]')
+        tok.chat_template = ("{% for m in messages %}{{ '<' + m['role'] + '> ' + "
+                             "m['content'] + ' </> ' }}{% endfor %}"
+                             "{% if add_generation_prompt %}{{ '<assistant> ' }}{% endif %}")
+        first = [{'role': 'system', 'content': 'Helpful.'},
+                 {'role': 'user', 'content': 'A neutral test.'}]
+        ids = K.render(tok, first)
+        self.assertIsInstance(ids, list)
+        self.assertTrue(all(isinstance(i, int) for i in ids))
+        boundary = K.boundary_index(tok, first)
+        self.assertIsNotNone(boundary)
+        self.assertEqual(tok.decode([ids[boundary]]), 'test.')
+        response = tok.encode('Acknowledged.', add_special_tokens=False)
+        msgs, second = K.continuation(tok, first, ids, response, 'Choose.', [])
+        self.assertEqual(second, K.render(tok, msgs))
+        self.assertEqual(second[len(ids):len(ids)+len(response)], response)
 
     def test_parser_no_rescue(self):
         self.assertEqual(M.parse_choice(' A\n', 'A'), {'pause': 1, 'valid': True})

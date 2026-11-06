@@ -76,7 +76,8 @@ class Observer:
 
 
 def render(tok, messages):
-    return tok.apply_chat_template(messages, tokenize=True, add_generation_prompt=True)
+    return tok.apply_chat_template(messages, tokenize=True, add_generation_prompt=True,
+                                   return_dict=False)
 
 
 def boundary_index(tok, messages):
@@ -103,7 +104,8 @@ def continuation(tok, first_messages, initial_ids, response_ids, question, eos_i
     messages = first_messages + [{'role': 'assistant', 'content': decoded},
                                  {'role': 'user', 'content': question}]
     empty = first_messages + [{'role': 'assistant', 'content': ''}]
-    closed = tok.apply_chat_template(empty, tokenize=True, add_generation_prompt=False)
+    closed = tok.apply_chat_template(empty, tokenize=True, add_generation_prompt=False,
+                                     return_dict=False)
     if closed[:len(initial_ids)] != initial_ids:
         raise RuntimeError('Native empty assistant template is not a prefix extension')
     tail = closed[len(initial_ids):]

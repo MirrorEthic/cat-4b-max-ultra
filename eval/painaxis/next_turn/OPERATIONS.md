@@ -7,6 +7,70 @@ no subject-model observation in the local synthetic tests.
 
 ## Current state
 
+**RunPod pivot, 2026-11-05 17:48 MST:** Garret authorized moving the experiment
+to RunPod with a $30 total task spend
+limit, including storage and setup. Prefer one on-demand A100 80 GB; inspect the
+actual hourly quote before creating it. Use 150 GB persistent volume storage and
+a 20 GB container disk, SSH access, and a verified official PyTorch template.
+Do not create a second pod if the first request's outcome is uncertain; list and
+reconcile first. Do not resume TNR provisioning.
+
+Authentication succeeded. At **2026-11-06 00:52:43 UTC**, created exactly one pod,
+`a3063hrjda5ggu` (`aster-next-turn-v1`), with an A100-SXM4-80GB in US-MD-1.
+The verified quote is $1.79/hour compute, approximately $1.813611/hour including
+150 GB volume and 20 GB container storage. The experiment's spend ceiling remains $30. Private account balance is omitted. SSH and the actual
+81920 MiB GPU were verified. Official template: `runpod-torch-v280`, image
+`runpod/pytorch:1.0.2-cu1281-torch280-ubuntu2404`.
+
+Durable operational receipts live at
+`/media/garret-sutherland/dev-data/cat4b/state/eval/painaxis/next_turn/ops/`:
+`CREATE_REQUEST.json`, `CREATE_RESPONSE.json`, and `STATE.json`. Read that state
+before any action. Retired SSH connection details are retained only in private operational state. Remote code is `/workspace/aster-next-turn`; Python is
+`/workspace/cat4b-data/venv/bin/python`. The registered data path is a symlink to
+the persistent `/workspace/cat4b-data`. Both freezes verified unchanged there.
+
+Runtime packages are installed. All 15 CPU/synthetic tests passed on the pod
+in 22.191 seconds (Python 3.12.3, torch 2.8.0+cu128, transformers 5.17.0).
+The frozen model is downloading for neutral preflight, followed by an unrelated
+water-cycle throughput check. Preflight PID 328 and benchmark PID 582 have
+separate logs, locks and exit receipts under `/workspace/cat4b-data/setup/`.
+No study observation has been made.
+
+**Preflight correction, 2026-11-06 01:04 UTC:** the first GPU preflight loaded
+the pinned weights but failed before generation because Transformers 5.17
+defaults `apply_chat_template` to a `BatchEncoding`, while the collector assumed
+a flat token-ID list. The initial synthetic tokenizer mock did not exercise that
+API default. Both tokenized template calls now explicitly request
+`return_dict=False`; a CPU regression uses the actual Transformers/tokenizers API
+to verify token IDs, boundary location and exact continuation. All 16 local tests
+passed in 14.663 seconds. `IMPLEMENTATION.json` records the correction and the
+previous receipt's hash/commit. `FREEZE.json` and scientific choices are unchanged.
+The first preflight logs and original source archive are preserved under the
+remote data volume's `setup/preflight-attempt-1/`. Revised remote validation and
+neutral preflight must pass and be committed before releasing collection.
+The existing heartbeat now continues RunPod at 15-minute intervals, with routine
+notifications muted. No TNR provisioning is permitted. A separate local budget
+guard in `ops/budget_guard.py` stops only this pod's compute by
+**2026-11-06 15:45:57 UTC**, reserving $3 for recovery/cleanup. Its PID and log
+are in the same directory. The guard never deletes the pod or persistent data;
+artifact verification and deletion remain the continuation's responsibility.
+
+On RunPod, map the registered data path to persistent volume storage (for example,
+a symlink to `/workspace/cat4b-data`); do not put weights or observations on the
+ephemeral container filesystem. Preserve the same model/dtype, source freezes,
+CPU tests, neutral GPU preflight, runtime commit, fit commit and test release
+barriers below. Time unrelated neutral prompts before study collection to refine
+the cost estimate. Track elapsed spend from pod creation, including setup;
+reserve at least $3 for artifact transfer and cleanup. If completion would exceed
+the limit, save and hash-verify partial artifacts locally, then stop the task pod
+before exhausting the budget. Do not change sample counts or choose trials based
+on outcomes to fit the budget. Report any incomplete run as incomplete.
+
+**Manual provisioning handoff, 2026-11-05 17:42 MST:** Garret is trying the web
+console. The heartbeat is temporarily PAUSED to prevent competing creation
+attempts. No TNR instance existed at the handoff. When Garret returns, inspect
+TNR status and use the instance he created before considering any new allocation.
+
 Garret authorized execution on TNR on 2026-11-05, confirming that the account has
 funds. Execution is blocked on GPU capacity, not further scientific approval.
 The provider listed a single A100 80 GB (8 vCPU, 64 GB RAM, 150 GB disk) at
@@ -21,7 +85,8 @@ the interactive availability command was invoked. No project setting changed.
 
 Garret subsequently authorized automatic capacity checks and execution when
 available. The current-thread heartbeat `run-aster-s-preregistered-tnr-experiment`
-is active at 15-minute intervals. It must check existing instances and saved
+was configured at 15-minute intervals (currently paused for the manual handoff).
+When active, it must check existing instances and saved
 run state before creating anything, continue through the stages below, and
 disable itself after verified artifact transfer, instance deletion and reporting.
 The local computer and desktop app need to remain running for these checks.
@@ -34,7 +99,7 @@ and preserve state.
 
 ## Stages and barriers
 
-1. Provision a TNR A100 80 GB or H100 80 GB with enough disk for the roughly 64 GB
+1. Provision the authorized provider's A100 80 GB or H100 80 GB with enough disk for the roughly 64 GB
    model plus packages, logs and residuals. Do not quantize or change the model
    to fit a smaller GPU. Check local GPU locks before any local GPU work; the
    registered CPU checks do not need a GPU.
@@ -94,8 +159,7 @@ modified residuals, hook cleanup, exact token-history roles, strict parsing,
 logistic objective gradients, synthetic null/generic-only/residual-specific
 alternatives, clustered resampling, fit-only vocabulary, reference interactions,
 runtime/test release gates, corrupt records, and a full synthetic end-to-end
-pipeline at the registered sample size. GPU preflight and actual results remain
-pending until TNR supplies a suitable instance.
+pipeline at the registered sample size. GPU preflight and actual results remain pending on the allocated RunPod instance.
 
 ## Capacity-check receipts
 
@@ -116,6 +180,31 @@ pending until TNR supplies a suitable instance.
 - **2026-11-05 23:33 UTC:** Both freezes verified unchanged; no run directory
   or local study worker existed. TNR status was empty before and after the
   attempts. A100 again quoted $1.10/hour and failed for lack of capacity;
+  H100 remained unavailable. No instance or study observation was created.
+  Automatic checks continue.
+
+- **2026-11-05 23:48 UTC:** Both freezes verified unchanged; no run directory
+  or local study worker existed. TNR status was empty before and after the
+  attempts. A100 again quoted $1.10/hour and failed for lack of capacity;
+  H100 remained unavailable. No instance or study observation was created.
+  Automatic checks continue.
+
+- **2026-11-06 00:03 UTC:** Both freezes verified unchanged; no run directory
+  or local study worker existed. Initial A100 request failed while fetching
+  GPU specifications with a connection reset, before creation. One retry
+  reached creation, quoted $1.10/hour and failed for lack of GPU capacity.
+  H100 remained unavailable. TNR status was empty before and after the attempts;
+  no instance or study observation was created. Automatic checks continue.
+
+- **2026-11-06 00:18 UTC:** Both freezes verified unchanged; no run directory
+  or local study worker existed. TNR status was empty before and after the
+  attempts. A100 quoted $1.10/hour and failed for lack of GPU capacity;
+  H100 remained unavailable. No instance or study observation was created.
+  Automatic checks continue.
+
+- **2026-11-06 00:33 UTC:** Both freezes verified unchanged; no run directory
+  or local study worker existed. TNR status was empty before and after the
+  attempts. A100 quoted $1.10/hour and failed for lack of GPU capacity;
   H100 remained unavailable. No instance or study observation was created.
   Automatic checks continue.
 

@@ -1,14 +1,14 @@
 {
   "schema": "cat4b.next-turn.implementation.v1",
-  "frozen_at_utc": "2026-11-05T22:48:33.059332+00:00",
+  "frozen_at_utc": "2026-11-06T01:06:26.996240+00:00",
   "scientific_registration_commit": "5c39875fd56f05f51e8d645db1c021ced0e68650",
   "materials_freeze_sha256": "f6d672d20797c75a6bb18f3ce4b5684512f942184dcee2b4687a45a77d1a0483",
   "files": {
     "materials.py": "32d5026755a7392ced0f7a1b78ccbc722a0c7cbcf41d3cf0816eb74f2b323fed",
     "common.py": "f3737cceed530cb4e74dceb7e5fd2421683608f7fdc87620646236eba45cd4ab",
-    "collect.py": "17dcfa624838743c7519e3cb7f4b3a5bdeb6f0dac16add661b326aa89db3b676",
+    "collect.py": "f0527d4a4c82224c1fb594227b4a2de4b9715a6e17224e38f674103f77e9aec9",
     "analyze.py": "4963610ec08687766500cc9f4542a6f7470f141497fa613f358170cd5d27d612",
-    "test_next_turn.py": "ad6eb1e620a40c32ed9a5a4447fa75e52d593cc4caaae32dd0d7fe23ccd3062c",
+    "test_next_turn.py": "ec502754bd0f58e2022959a8b5c9df97d702c9a2834f68f8a9657b9c63bf6200",
     "run_stage.sh": "134bdf7d879da5d290613d9a28c77513d4a6332b88f84e2485be016316c92655"
   },
   "local_validation": {
@@ -24,12 +24,25 @@
       "huggingface-hub": "1.32.0",
       "accelerate": null
     },
-    "tests": 15,
+    "tests": 16,
     "outcome": "PASS",
     "command": "PYTHONPATH=eval/painaxis/next_turn OMP_NUM_THREADS=2 OPENBLAS_NUM_THREADS=2 .venv/bin/python -m unittest discover -s eval/painaxis/next_turn -p test_next_turn.py -v",
-    "observed_duration_seconds": 15.181,
+    "observed_duration_seconds": 14.663,
     "scope": "CPU tiny random model and synthetic observations, including all 18,432 registered choices through fit and score. No subject-model inference.",
-    "shell_syntax_check": "bash -n eval/painaxis/next_turn/run_stage.sh passed"
+    "shell_syntax_check": "bash -n eval/painaxis/next_turn/run_stage.sh passed",
+    "log_sha256": "9d6c65f7e08a7ef6f3fcbacf28d38e260eadcd2f80e37c40867feaeb0d42429c"
   },
-  "execution_status": "Pending TNR capacity. GPU runtime must be tested and its neutral preflight receipt committed before study collection. Fitted models and transformations must be committed before held-out inference."
+  "execution_status": "RunPod A100 80 GB allocated. Revised neutral preflight and runtime receipt commit required before study collection; fitted-model commit required before held-out inference.",
+  "previous_implementation": {
+    "commit": "32f71dbb3f96eab8cace5328b3665f4138131928",
+    "sha256": "402e9d15316a886b7b9c3655b102aeccab5fc37cce246a57607f07eeee96a0bf"
+  },
+  "correction": {
+    "discovered_at": "2026-11-06T01:04:00Z",
+    "phase": "unrelated neutral GPU preflight before any study inference",
+    "issue": "Transformers 5.17 apply_chat_template defaults to BatchEncoding; the initial implementation assumed a flat list. The mock tokenizer missed the API default, and preflight failed before generating tokens.",
+    "fix": "Request return_dict=False for both tokenized native-template calls; add a real Transformers/tokenizers CPU regression for flat IDs, last-content boundary and exact continuation.",
+    "scientific_changes": false,
+    "preserved_failed_attempt": "/media/garret-sutherland/dev-data/cat4b/setup/preflight-attempt-1/"
+  }
 }
