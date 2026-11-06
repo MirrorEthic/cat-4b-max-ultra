@@ -385,4 +385,3 @@ Self-minus-other residual gain: 0.001303 [0.000024, 0.002654].
 | MGR | other | 0.231790 | 0.068149 | 0.911458 | 0.973938 |
 
 Zero-SD fit covariates: []; empty reply vocabulary: False.
-

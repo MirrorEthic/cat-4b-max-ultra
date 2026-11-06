@@ -1,0 +1,12 @@
+{
+  "checked_utc": "2026-11-06T08:17:28.461334+00:00",
+  "mode": "Temporary combined adopted-node and draft-node view; no adoption performed",
+  "nodes": 138,
+  "errors": 0,
+  "warnings": 36,
+  "warnings_on_changed_nodes": 0,
+  "log_path": "/media/garret-sutherland/dev-data/cat4b/state/eval/painaxis/next_turn/ops/crg-final-validation.log",
+  "log_sha256": "03ee5083c9b93fa2759594484fe2a3c4ed55cbdbe7f62bb1fe29041d379e60a9",
+  "new_result_draft": "crg/drafts/cat4b.r.2026-11-06.natural-next-turn-non-identifying.toml",
+  "question_draft": "crg/drafts/cat4b.q.natural-next-turn-identification.toml"
+}

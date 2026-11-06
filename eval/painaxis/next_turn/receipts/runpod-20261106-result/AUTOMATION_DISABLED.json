@@ -1,0 +1,9 @@
+{
+  "verified_utc": "2026-11-06T08:17:28.461334+00:00",
+  "automation_id": "run-aster-s-preregistered-tnr-experiment",
+  "status": "PAUSED",
+  "notification_policy": "failed_runs_only",
+  "cleanup_verified": true,
+  "report_commit": "cfc111218a9428dc89af8801a46bb2e03c8d815e",
+  "reason": "Authorized experiment completed; local artifact verification and pod deletion confirmed."
+}

@@ -36,8 +36,8 @@ Full data-manifest SHA-256: `c36555485679fe327a20028b9a648959eb7a175e6cafe142964
 
 The durable `ops/STATE.json` records completion and verified cleanup. The dated
 entries below preserve earlier states and superseded gates; their provisioning,
-launch, and pending statuses are historical. The heartbeat is being disabled as
-part of result delivery. No further study collection is authorized by this run.
+launch, and pending statuses are historical. The heartbeat is disabled (PAUSED in the app) following verified cleanup
+and result delivery. No further study collection is authorized by this run.
 
 ## Execution history
 
