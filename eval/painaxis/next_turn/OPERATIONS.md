@@ -20,6 +20,8 @@ Receipts are in `receipts/runpod-20261106-fit/`; the fitted model and transforms
 remain in the registered data root, pinned by the manifest.
 
 The single test worker is PID `2419`, started at 04:48:34 UTC and verified alive.
+Its first held-out trial began at 04:51:18 UTC; five initial replies and 20 choices
+were complete by 04:51:36 UTC, with no recorded technical failures.
 Inspect `ops/test.{pid,started,log,exit}` and actual pod status before acting.
 Continue this worker; its registered stage collects all 9,216 held-out choices
 then runs the registered analysis once. No behavioral summaries were inspected.

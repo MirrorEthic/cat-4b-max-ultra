@@ -1,0 +1,21 @@
+{
+  "checked_at": "2026-11-06T04:51:36.104779+00:00",
+  "stage": "test",
+  "pid": 2419,
+  "alive": true,
+  "exit": null,
+  "counts": {
+    "initial_start": 6,
+    "initial_complete": 5,
+    "choice_start": 20,
+    "choice_complete": 20
+  },
+  "first_event": "2026-11-06T04:51:18.582179+00:00",
+  "last_event": "2026-11-06T04:51:35.485281+00:00",
+  "errors": [],
+  "test_release_sha256": "fcb08b626ecc7a42b3ca7a71ef16abb213f75487ef93dac994208ab2c3b67a6e",
+  "fit_commit": "5330c5864e822983758d15b90f4ff2b9e1dbfbd2",
+  "fit_manifest_sha256": "e1e877c9794e1e4fb89dfead4bfb53c376d77888b4e3216eb09f29b43654b063",
+  "runtime_commit": "3620b7b17752a4be186852df58cee242ee6b2ef3",
+  "no_behavioral_summary_inspected": true
+}
