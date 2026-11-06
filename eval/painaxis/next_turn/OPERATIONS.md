@@ -7,18 +7,20 @@ no subject-model observation in the local synthetic tests.
 
 ## Current state
 
-**Study collection confirmed, 2026-11-06 01:26 UTC:** runtime receipt commit
-`3620b7b17752a4be186852df58cee242ee6b2ef3` preceded the first study trial at
-01:25:34 UTC. Runtime release SHA-256:
-`99cebca59ac598cfbe45405a67fc9a2b50400bd5ff906b3831efe090def52bfd`.
-The current fit worker is PID `1797`, started at 01:24:16 UTC. At 01:26:48 UTC,
-23 initial replies and 92 of 9,216 fit choices were complete, with no recorded
-technical failure. These are progress counts only; no behavior summary was
-inspected. No test-family inference has occurred and no test release exists.
-Continue this worker, then transfer/hash-verify the complete fit artifacts and
-commit the manifest before held-out release. The $30 ceiling, original compute
-stop deadline and $3 recovery reserve remain unchanged. Routine monitoring is
-active and muted; disable it only after results and verified cleanup.
+**Fit stage complete and locally verified, 2026-11-06 04:46 UTC:** all
+2,304 initial replies and 9,216 fit choices completed, with no recorded technical
+failures. The stage exited zero after all 32 models across the eight registered
+analysis modes passed the fixed convergence check. All 11,539 transferred files,
+including raw observations/residuals and fitted artifacts, were hash-verified
+locally. Fit manifest SHA-256:
+`e1e877c9794e1e4fb89dfead4bfb53c376d77888b4e3216eb09f29b43654b063`.
+Receipts are in `receipts/runpod-20261106-fit/`; the fitted model and transforms
+remain in the registered data root, pinned by that manifest. No behavioral
+summary was inspected. Commit these receipts before creating `TEST_RELEASE.json`
+and launching the single registered test stage. No test-family inference or test
+release existed at verification. Continue using pod `a3063hrjda5ggu`; no new pod
+or fit worker is needed. The original $30 ceiling, $3 recovery reserve, and
+2026-11-06 15:45:57 UTC compute stop deadline remain unchanged.
 
 The durable `ops/STATE.json` and current worker files are authoritative for live
 progress. The dated entries below preserve earlier states and superseded gates;

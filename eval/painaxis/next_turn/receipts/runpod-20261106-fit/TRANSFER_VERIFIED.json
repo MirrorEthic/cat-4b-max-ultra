@@ -1,0 +1,20 @@
+{
+  "verified_utc": "2026-11-06T04:46:53.958614+00:00",
+  "archive": "/media/garret-sutherland/dev-data/cat4b/state/eval/painaxis/next_turn/ops/transfers/fit-complete-20261106T0444Z.tar.gz",
+  "sha256": "6b263b5af3bc404ab8eef02bf7f6ffe3bf9fb86b67143e74664476747de3a7a8",
+  "files_verified": 11539,
+  "counts": {
+    "initial_start": 2304,
+    "initial_complete": 2304,
+    "choice_start": 9216,
+    "choice_complete": 9216
+  },
+  "source_snapshot_utc": "2026-11-06T04:45:23.023445+00:00",
+  "kind": "complete fit stage before held-out release",
+  "fit_manifest_sha256": "e1e877c9794e1e4fb89dfead4bfb53c376d77888b4e3216eb09f29b43654b063",
+  "complete_ids_checked": true,
+  "fitted_modes": 8,
+  "fitted_models": 32,
+  "all_registered_gradient_checks_pass": true,
+  "heldout_files_present": false
+}
