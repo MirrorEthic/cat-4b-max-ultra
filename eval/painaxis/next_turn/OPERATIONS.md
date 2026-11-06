@@ -7,6 +7,15 @@ no subject-model observation in the local synthetic tests.
 
 ## Current state
 
+**Live run, 2026-11-06 01:13 UTC:** neutral preflight is complete and the runtime
+receipt was committed at `d2bb9d0357b3fbe2f961fdb17496606abd835fec` before collection.
+`RUNTIME_RELEASE.json` verified locally and remotely. The fixed fit stage was
+launched once, PID `1472`, and is active. No held-out release exists. Inspect
+`ops/STATE.json`, remote `ops/fit.{pid,started,log,exit}`, and `ops/progress.json`
+before resuming; a missing exit file while the PID lives means continue monitoring.
+The runtime release SHA-256 is
+`a863ffb7a61e74e70452e6dc350e41b021851f6ba18e05a2c7542abda7e11322`.
+
 **RunPod pivot, 2026-11-05 17:48 MST:** Garret authorized moving the experiment
 to RunPod with a $30 total task spend
 limit, including storage and setup. Prefer one on-demand A100 80 GB; inspect the
