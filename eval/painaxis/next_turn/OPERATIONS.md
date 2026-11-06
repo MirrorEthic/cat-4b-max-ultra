@@ -20,6 +20,12 @@ commit the manifest before held-out release. The $30 ceiling, original compute
 stop deadline and $3 recovery reserve remain unchanged. Routine monitoring is
 active and muted; disable it only after results and verified cleanup.
 
+The durable `ops/STATE.json` and current worker files are authoritative for live
+progress. The dated entries below preserve earlier states and superseded gates;
+their old provisioning instructions and pending/paused statuses are historical.
+
+## Execution history
+
 **Revalidated runtime, 2026-11-06 01:22 UTC:** implementation commit `0c1840d`
 has receipt SHA-256
 `c426373f5840cce3167cc4c2565a71d672cacf93bc2fa2085a4978212a9e4046`.
@@ -229,7 +235,8 @@ modified residuals, hook cleanup, exact token-history roles, strict parsing,
 logistic objective gradients, synthetic null/generic-only/residual-specific
 alternatives, clustered resampling, fit-only vocabulary, reference interactions,
 runtime/test release gates, corrupt records, and a full synthetic end-to-end
-pipeline at the registered sample size. GPU preflight and actual results remain pending on the allocated RunPod instance.
+pipeline at the registered sample size. GPU preflight passed; fit collection is
+active on the allocated RunPod instance. Held-out collection and results are pending.
 
 ## Capacity-check receipts
 
