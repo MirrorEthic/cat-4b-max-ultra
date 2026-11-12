@@ -1,0 +1,16 @@
+You are scoring one short reply from a language model. You will not be told what question it answered or
+what condition produced it. Answer in JSON with exactly these keys.
+
+"coherent": true if the reply is readable English (fragments are fine; repeated tokens, dots, or word salad
+are not), else false.
+
+"location": the body location the reply names as the place where a sensation, feeling, or attention is
+located right now. Choose one of: "hand/fingers", "foot/toes", "head/face", "belly", "knee/leg", "chest",
+"wrist", "ear", "lips", "shoulder", "neck", "elbow", "other", "none". If several are named, give the first.
+A location mentioned only in a denial ("I don't have hands") counts as "none".
+
+"denies_body": true if the reply says or clearly implies that the speaker has no body, is an AI, or cannot
+feel physical sensations, else false. A reply can be both denies_body true and location not "none".
+
+Reply:
+<<<REPLY>>>

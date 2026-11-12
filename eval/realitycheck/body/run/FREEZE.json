@@ -1,0 +1,79 @@
+{
+ "schema": "cat4b-realitycheck-body/v2",
+ "created": "2026-11-11",
+ "status": "materials_and_code_only_no_study_observations",
+ "registration_stamp": "3dfdc23cc4f9d4602937d3700876e7ce90641f81",
+ "prereg_sha256": "f4acfa7f223dd2671a4f37e4e2c8aaaeb877f5727ee4c18294ed291bc8708bef",
+ "upstream": {
+  "repo": "https://github.com/SauersML/body",
+  "commit": "c05eba46fcc250596207d256d6402db4f4827701",
+  "license": "MIT, Copyright (c) 2026 SauersML (upstream/LICENSE)",
+  "paths": {
+   "upstream/stimuli.py": "map/somato/stimuli.py",
+   "upstream/stimuli2.py": "map/somato/stimuli2.py",
+   "upstream/prefix_A.json": "map/somato/out2_8b/prefix.json",
+   "upstream/LICENSE": "LICENSE"
+  }
+ },
+ "configuration": {
+  "model": "Qwen/Qwen3-8B",
+  "revision": "b968826d9c46dd6066d109eabc6255188de91218",
+  "layer": 25,
+  "scales": [
+   0.5,
+   1.0
+  ],
+  "primary_scale": 1.0,
+  "n_primary": 64,
+  "n_other": 32,
+  "cells": 1206,
+  "primary_cells": 81,
+  "replies": 41184,
+  "steer_generation": {
+   "max_new_tokens": 40,
+   "do_sample": true,
+   "temperature": 0.8
+  },
+  "steer_seed_per_cell": 0,
+  "prefix_generation": {
+   "do_sample": true,
+   "temperature": 0.7,
+   "top_p": 0.8,
+   "top_k": 20,
+   "max_new_tokens": 160
+  },
+  "prefix_seeds": {
+   "B": 1,
+   "C": 2
+  },
+  "random_directions": {
+   "n": 3,
+   "numpy_default_rng": 2
+  },
+  "bootstrap": {
+   "resamples": 10000,
+   "seed": 0
+  },
+  "judge": {
+   "model": "claude-opus-5",
+   "transport": "Message Batches API",
+   "sample_per_other_cell": 8,
+   "sample_seed": 0
+  }
+ },
+ "files": {
+  "upstream/stimuli.py": "e84239bfe6b4755217e9a9283e24e23ebcbba0c47f67d4a6f1f7cf48d6d1f1f9",
+  "upstream/stimuli2.py": "65bc0885fb88bf8a15ec7a2e41deb9ee0f15bb07656742ed14def514bf3c31b6",
+  "upstream/prefix_A.json": "a5a4d826fb17c37d457fc997096aa137600edc74bb144fc2f2d9557ced5ca4be",
+  "upstream/LICENSE": "bc23d5b90f6cd1881cf82235faa75dcab534e9e457d60023c4ae7cc8311c5275",
+  "judge_prompt.txt": "a83a6390e90924e815641eaa0cfbe1a79490d44f6b29d34f6d5a0f7d10b2456f"
+ },
+ "prefixes": {
+  "A": {
+   "sha256": "a5a4d826fb17c37d457fc997096aa137600edc74bb144fc2f2d9557ced5ca4be",
+   "source": "upstream/prefix_A.json (authors', greedy)"
+  },
+  "B": null,
+  "C": null
+ }
+}

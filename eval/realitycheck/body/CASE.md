@@ -160,6 +160,9 @@ response yet. The 14-day interval of `PREREG.md` §10 ends 2026-11-25.
 - `PREREG.md` (version 2): M1 (direction provenance) and M2 (cold-frame steering), with the C1 replication as
   its own line. Stamp = the commit that adds version 2. Nothing has been run.
 - `PREREG.v1.md`, `AMENDMENTS.md`: the withdrawn first version and every change made to it.
+- `run/`: run code and frozen materials (`FREEZE.json`, the authors' files verbatim under `upstream/`), written
+  2026-11-11 after the stamp; `run/IMPLEMENTATION.md` lists the order of operations and every choice the
+  preregistration left open. Tested on synthetic data and a tiny random-weight model only.
 - `RESULT.md`: none.
 - CRG: `crg/drafts/cat4b.q.reality-check-program.toml` (program); `crg/drafts/cat4b.q.body-direction-provenance.toml`
   (this case, OPEN).

@@ -33,3 +33,9 @@ settings, all regexes, the judge prompt, the human audit size, stop rules.
 What the reviewer's objections did not cover and remains a known limit: the claim-required effect of 0.30 in
 H1a and the margins 0.10 and 0.20 are judgement calls. They are fixed before the run and the raw rates are
 published.
+
+## Acceptance, 2026-11-11 18:26 MST, before any compute
+
+Garret was asked for "Yes or no on amendments A6 to A8 and the 0.30 / 0.10 / 0.20 thresholds" and answered
+"And yes on amendments." A6 to A8 stand as written. In the same message he gave the go for the GPU steps and
+asked for the run code to be committed. `PREREG.md` is unchanged by this entry.
