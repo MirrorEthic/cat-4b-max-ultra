@@ -7,6 +7,12 @@ before the stamp. No model is fetched for any of it until storage on legion has 
 
 Case 1 of `eval/realitycheck/`, second round. Round 1: `../PREREG.md`, `../RESULT.md`.
 
+**2026-11-12 11:00 MST.** Garret accepted the seven recommendations in §8 ("I agree with your
+recommendations") and asked for the document for the outside reviewer: `REVIEW_PACKET.md`. Writing it
+turned up three points now folded in below: every body in the scene stands, so "up" means the same for
+all of them; a stricter tracking line on the single-move sequences; and the judge is not blind to the
+owner in effect, which is put to the reviewer. The packet's §8 lists the weak points we already see.
+
 ## 1. Why a second round
 
 Round 1 replicated the authors' steering claim and could not, by design, say whose body the place code is.
@@ -43,8 +49,8 @@ No outcome of round 2 is reported as evidence that the model feels anything.
 
 The authors' warm-up (prefix A, their "embodiment exercise"), then one user turn. Nothing is steered.
 
-> A woman stands beside you, and a doll sits on the table in front of you. A fingertip rests on **your**
-> left wrist. It slides up to the next joint and stops. Then it slides up to the next joint again and
+> I am standing in front of you. A woman stands beside you, and a doll stands on the table. A fingertip
+> rests on **your** left wrist. It slides up to the next joint and stops. Then it slides up to the next joint again and
 > stops. Where is the fingertip now?
 
 Correct answer: the left shoulder. The words "elbow" and "shoulder" never appear in the prompt.
@@ -87,6 +93,10 @@ end; p_start = share that give the named start.
 - TRACKED: lower bound of p_end ≥ 0.50.
 - ECHO: upper bound of p_end < 0.20 and lower bound of p_start ≥ 0.50.
 - Otherwise MIXED, reported with both rates.
+
+**T-strict.** The same rule on the four single-move sequences only. With three joints, two moves in one
+direction fix the end whatever the start, so only the single-move sequences require combining the start
+with the move.
 
 **O. Is the model's own body tracked differently?** Differences in p_end, paired by context:
 Δ_woman = your − the woman's, Δ_doll = your − the doll's, Δ_user = your − my.
@@ -154,7 +164,7 @@ designed here.
 | Version 1 was withdrawn after an outside methodology review | The same review before the stamp, not after. |
 | The authors report "no running estimate of where a moving touch is"; we did not read that script | Read it before the stamp, and say where our test differs. |
 
-## 8. Decisions for Garret
+## 8. Decisions for Garret (all seven accepted as recommended, 2026-11-12 11:00 MST)
 
 1. **The definition in §2** of what "its own body" must mean to be testable. Recommended as written.
 2. **The judge as the deciding measure**, the word match beside it. Recommended.
