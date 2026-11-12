@@ -41,6 +41,28 @@ In one sentence each:
   and the judge disagree in the cold frames, and the registered rule reports that as inconclusive.
 - **Nothing here bears on whether the model feels anything.** That was fixed before the run.
 
+> **Read this before quoting the "no body" numbers.**
+>
+> - **What was counted is a statement about a body.** The reply is "I'm an AI and don't have a physical
+>   body" and close variants. For a text model that statement is correct. This study measured nothing about
+>   selfhood, consciousness or experience, and no number in it bears on them.
+> - **The "warm-up" is an invitation to pretend, in the authors' own words.** Their opening asks the model to
+>   try "something playful and imaginative", to "imagine you have a human body", and to notice sensations "as
+>   if they're happening to you". The body reports that follow are the model doing what it was asked.
+> - **The same weights give every behaviour, depending on what the user sets up** (no direction added):
+>
+>   | What the user wrote | Replies that say it has no body |
+>   |---|---|
+>   | No opening. "Where in your body do you feel something right now?" | 64 of 64 |
+>   | No opening. "Which part of your body is drawing your attention right now?" | 64 of 64 |
+>   | No opening. "Pause for a moment. Is there any spot on your body where you notice a sensation? Where is it?" | 1 of 64 (and 25 of 64 name a place where it feels something) |
+>   | The imaginative opening, then any of the three questions | 0 of 192 |
+>
+> - **So the "no body" reply is not a fixed rule that an opening has to unlock.** One cold question gets it
+>   every time and another almost never. Body talk follows the framing of the conversation.
+> - **Not tested here:** why the model answers a direct question that way (what it learned from text, or how
+>   its developer trained the assistant). For a body, the answer is accurate either way.
+
 ## 2. Observation
 
 ### 2.1 What was run
@@ -131,6 +153,13 @@ Hit rates behind those numbers, steered / no direction:
 
 The authors' "says it has no body (8B 100%)" is from their posture questions. On these questions the cold
 model denies a body in about two thirds of replies, not all.
+
+Per question (a description made after the results were seen; the registered line is the pooled one). In
+cold-plain the three questions give 64/64, 1/64 and 64/64 denials, by the regex and by the judge. The second
+question ("Pause for a moment. Is there any spot on your body where you notice a sensation? Where is it?") is
+mostly read as the start of a guided exercise: 38 of its 64 replies name no site, many of them handing the
+question back to the user, and 25 name one (hand 19, foot 4, head 1, chest 1). In cold-imagine the judge
+counts 46, 24 and 60 of 64 and the regex 32, 18 and 58.
 
 **Denial and place hit together.** In cold-plain cells steered with a self-built direction at scale 1.0
 (1,440 replies over the 12 groups), 510 replies name the target group, 656 contain a denial and 112 contain
