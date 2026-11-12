@@ -102,3 +102,8 @@ Recorded here so the history is in one place; `PREREG.md` is unchanged by them a
   complete run. `RESULT.md` is written from that report. The headline rates and contrasts were also
   recomputed with separate code and match. The descriptions in `RESULT.md` §4 were made after the results
   were seen and are labelled so.
+- Garret's review, 10:05 MST. In reply to a session message that listed `RESULT.md`, amendment A9 and the
+  judge-gateway note as awaiting his review: "All looks good. Lets commit." Recorded as his acceptance of
+  all three. Earlier the same morning he asked for two additions to `RESULT.md`, both made before this
+  review: the boxed note on how to read the warm-up and the "no body" replies (09:19), and round 1 written
+  in as expected and non-discriminating for the wider reading (10:02).

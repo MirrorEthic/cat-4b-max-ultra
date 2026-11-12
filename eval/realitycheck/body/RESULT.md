@@ -2,7 +2,7 @@
 
 **Case 1 of `eval/realitycheck/`.** Registration: `PREREG.md` version 2, stamp `3dfdc23`. Run 2026-11-11 and
 2026-11-12. Written by the session on 2026-11-12 from `state/eval/realitycheck/body/report.json`
-(sha256 `c269be30…e7a823`). **Garret has not reviewed this file yet.** Two things are still open and are
+(sha256 `c269be30…e7a823`). Garret reviewed it on 2026-11-12 (10:05 MST: "All looks good"). Two things are still open and are
 named in §7: the human audit of the judge, and the author's response (interval ends 2026-11-25).
 
 Source under test: `github.com/SauersML/body` at `c05eba46`. The authors call their scripts "exploratory".
@@ -77,8 +77,8 @@ What "expected" covers, and when it was said:
 
 What would discriminate is in §6: following the state over a conversation with matched "your", "the
 woman's" and "the doll's" arms, a consequence later in the conversation that no word cues, body parts that
-cannot exist, and a model trained only to narrate a body as the control. None of that is designed or
-registered yet.
+cannot exist, and a model trained only to narrate a body as the control. A design draft is in
+`round2/DESIGN.md`; nothing in it is registered or run.
 
 > **Read this before quoting the "no body" numbers.**
 >
@@ -309,13 +309,13 @@ shoulders (19), skin (17). No reply in that cell is incoherent.
 ## 5. Deviations and limits
 
 1. **A9, before any steered reply.** Our description of where the vector starts was wrong by four tokens
-   and was corrected; the mechanics are the authors' and were not changed. Garret has not reviewed A9.
+   and was corrected; the mechanics are the authors' and were not changed. Garret accepted A9 with this file on 2026-11-12.
 2. **RAM offload** for the 81 primary cells: the last 10 decoder blocks' weights were held in RAM and run
    on the card. Same arithmetic, same device, one `generate` call per cell as registered.
 3. **Judge gateway, after the replies and before any verdict.** The project's Anthropic key had no credit.
    On Garret's call the same batch requests went through OpenRouter to Anthropic (only provider, no
    fallback). Model, prompt, schema, coverage and failure rule are unchanged. That OpenRouter forwards the
-   body unchanged cannot be checked from here. Garret has not reviewed the note in `run/IMPLEMENTATION.md`.
+   body unchanged cannot be checked from here. Garret accepted the note in `run/IMPLEMENTATION.md` with this file on 2026-11-12.
 4. **Run-code bugs fixed before any study reply:** the revision check, extraction memory, and a self-check
    in `steer.py` that led to A9. No bug has been found since. A bug found later means a full repeat, with
    both runs kept.
@@ -358,8 +358,7 @@ shoulders (19), skin (17). No reply in that cell is incoherent.
   until the sheet is complete (sha256 `7f3a0396…4e5fc9`). The audit checks the judge and alters no number.
 - **Author response.** None is recorded in `CASE.md` §6 at the time of writing. The interval ends
   2026-11-25.
-- **Garret's review** of this file, of A9 and of the judge-gateway note.
-- **Round 2.** Not designed, not registered, not started.
+- **Round 2.** A design draft is in `round2/DESIGN.md`. It is not registered and nothing in it has been run.
 
 ## 8. Receipts
 
