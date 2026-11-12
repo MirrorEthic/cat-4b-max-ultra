@@ -1,0 +1,9 @@
+id = "cat4b.q.reality-check-program"
+type = "question"
+status = "OPEN"
+created = "2026-11-11"
+claim = "Can a standing program that runs the missing control for published interpretability claims, preregistered with confirm and disconfirm criteria and reported under four fixed verdicts (HELD, FAILED, UNIDENTIFIED, CONFOUND), produce results that survive the same scrutiny it applies to others?"
+why = "Opened by Garret on 2026-11-11 (\"We are going to become the internets reality check. We will run the tests that people didnt and report honestly.\"; statement: \"An independent adversarial research laboratory that makes extraordinary claims compete against their strongest alternative explanations.\"). The method exists and has been used twice in this repo (CAT-4B as negative control; Pain Axis protocol re-run and next-turn preregistration), with one CONFOUND, one HELD-under-one-format, one FAILED and one UNIDENTIFIED already reported. The program's rules (preregistration with power, confirmations reported at equal prominence, authors contacted first, our own claims in scope) are proposed in eval/realitycheck/README.md and are not adopted until a person adopts this node. First case proposed: github.com/SauersML/body at c05eba46 (eval/realitycheck/body/CASE.md), status PROPOSED, nothing run."
+scope = "Program-level node. Each case gets its own question node at preregistration and a result node at report. Precedent receipts: docs/MECH_CONTROL.md, crg/evidence/2026-10-26-mech-control.md, eval/painaxis/RESULTS.md, eval/painaxis/RESULT-natural-next-turn.md."
+depends_on = ["cat4b.q.mech-control", "cat4b.q.natural-next-turn-identification", "cat4b.judge.claude-reference"]
+evidence = ["file:eval/realitycheck/README.md", "file:eval/realitycheck/CASE_TEMPLATE.md", "file:eval/realitycheck/body/CASE.md", "file:docs/MECH_CONTROL.md", "file:eval/painaxis/RESULTS.md", "file:eval/painaxis/RESULT-natural-next-turn.md"]
