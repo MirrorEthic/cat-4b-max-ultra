@@ -42,9 +42,13 @@ Those two are the standard. Every case here is held to it.
 4. **Authors first.** The preregistration goes to the original authors before the run. Their response, or its
    absence after a stated interval, is published with the result. We quote their words, not our paraphrase of
    them, and we test the inference, never the person.
-5. **Target selection.** Claims with reach (papers, press, policy citation) or claims whose framing outruns
-   their own caveats. An exploratory repo that already labels itself exploratory is a collaborator, not a
-   target; its authors get the preregistration as an offer, and the write-up says what they got right.
+5. **Target selection is by the claim, never by the author.** Claims with reach (papers, press, policy
+   citation), claims whose framing outruns their own caveats, and claims whose inference many readers will
+   draw. Who made the claim, their standing, resources or intentions, does not enter the selection and does
+   not soften the test: a hobbyist's inference and a lab's inference get the same control at the same n.
+   Courtesy (rule 4) is uniform too. Where the authors' own caveats or controls were right, the write-up says
+   so because it is accurate, not because it is lenient. (Garret, 2026-11-11: "Scientific claims don't
+   receive immunity because their authors are hobbyists, independent researchers, or well-intentioned.")
 6. **Everything public.** Code, prompts, seeds, raw generations, judge prompts, receipts. The same standard we
    hold others to. Receipts live under `state/eval/realitycheck/<case>/` and are force-added with `git add -f`.
 7. **Our own claims are in scope.** CAT-4B's retention interval, the Pain Axis re-analysis, the next-turn

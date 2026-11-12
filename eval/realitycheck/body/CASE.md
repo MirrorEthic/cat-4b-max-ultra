@@ -134,11 +134,12 @@ own line regardless.
 
 ## 6. Authors
 
-Rule 5 applies: this is a collaborator case. The repo already labels itself exploratory and already ran the
-baseline that supports the deflationary reading. The preregistration goes to the authors as an offer (GitHub
-issue on the repo, or the contact the repo gives) before any run, with the replication framed as a check of
-their headline numbers under more frames and an independent judge. Response or the stated interval for its
-absence is recorded here. Garret decides the contact and the wording.
+The test is the same test any claim gets (README rule 5): the authors' standing, the repo's size and its
+self-description as exploratory change nothing about the controls, the n or the verdict. That the authors
+already ran the text baseline supporting the deflationary reading is recorded in §3 because it is accurate.
+The preregistration goes to the authors before any run (README rule 4, uniform courtesy), framed as what it
+is: a check of their headline numbers under more frames and an independent judge, and a test of the inference
+their repo invites. Response or the stated interval for its absence is recorded here.
 
 2026-11-11 17:10 MST: Garret follows the author on X and will reach out there with the preregistration before
 the run. Date sent and response to be recorded below.
