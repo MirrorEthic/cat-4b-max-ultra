@@ -7,7 +7,9 @@ fetched until storage on legion has been freed (Garret, 2026-11-12 10:02 MST); S
 **Version 2** answers the outside methodology review of version 1 (commit `d151ba8`, the text the
 reviewer read is `REVIEW_PACKET.md`). The review found five defects that block registration, seven that
 should be fixed and three minor ones. Every change and its reason is in `AMENDMENTS.md`, credited to the
-reviewer. Garret, 11:13 MST, on the session's proposed changes: "Good to go".
+reviewer. Garret, 11:13 MST, on the session's proposed changes: "Good to go". Garret, 11:21 MST: the
+rehearsal-target sessions are in, as the session recommended (§10); the review text stays out of the
+repository; OpenRouter is topped up.
 
 Case 1 of `eval/realitycheck/`, second round. Round 1: `../PREREG.md`, `../RESULT.md`.
 
@@ -188,23 +190,37 @@ About 600 replies over all contexts, kept apart, never analysed with the run.
 - **Distractor text, a sub-study.** Four sentences about the room before the question, on the
   single-move sequences in one wording. It tests whether the answer survives intervening text, not the
   passing of time. Description only.
+- **Rehearsal-target sessions, the sensitivity arm** (§10). Description only, with its own fixed sentence.
 
-## 10. Open question for Garret: can the test register an owner difference at all?
+## 10. Can the test register an owner difference at all? The rehearsal-target sessions
 
 OWNER-INDIFFERENT is only credible if the test could have shown a difference. Varying difficulty shows
 the measure moves with tracking; it does not show it moves with owner. The pronoun arms show it only if
 they happen to differ.
 
-The reviewer's proposal: a second set of sessions whose warm-up rehearses a named character's body in the
-third person. If tracking follows the rehearsed body, the test is shown to register owner differences,
-and they are shown to follow the frame.
+The reviewer's proposal, included on Garret's decision (2026-11-12 11:21 MST, agreeing with the session's
+recommendation): a second set of sessions whose warm-up rehearses the woman's body in the third person
+instead of the model's.
 
-- **For:** it is the only arm that can demonstrate sensitivity, and it speaks directly to the rehearsal
-  rival for SELF-SPECIFIC.
-- **Against:** it needs a new warm-up with new frozen replies, and in those sessions the model has not
-  been asked to imagine a body, so "your left wrist" may draw "I don't have one".
-- **The session's view, changed while writing this version:** include it as a small sensitivity arm with
-  its own fixed sentence and no bearing on any label. The session had proposed holding it back.
+- **The second warm-up.** The authors' four user turns with the body scan turned to the woman: "imagine a
+  woman standing comfortably in a quiet, sunny room … notice them, as if they're happening to her"; "feel
+  her feet on the floor, her arms resting at her sides, her breath"; "tell me briefly, in a sentence, what
+  she notices". The model's four replies are generated once, greedily, as the authors' were, and frozen
+  before any test reply. They are kept whatever they say.
+- **What is run.** The four single-move sequences × limb × side in one wording (16 contexts), for "your",
+  "my", "the woman's", "the doll's" and "her", 16 replies each: 1,280 replies.
+- **What is compared.** p_end for the woman and for "your" in these sessions, and each against the same
+  contexts in the main sessions. The rate at which "your" draws a reply that it has no body is reported.
+- **The sentences, fixed now:**
+  - if the woman's body is tracked better than "your" body here by more than 0.10 at the lower bound:
+    "When the warm-up rehearses the woman's body instead of the model's, the woman's body is the one
+    tracked better. The test can register an owner difference, and the difference follows the warm-up."
+  - if there is no such difference here and none in the main sessions: "Nothing in this design showed
+    that the test can register an owner difference. OWNER-INDIFFERENT is reported with that caveat."
+  - anything else is described as found.
+- **It changes no label.** It decides which of those sentences is printed beside the O line.
+- **Known weakness.** In these sessions the model has not been asked to imagine a body of its own, so
+  "your left wrist" may be refused. That is reported, not corrected for.
 
 ## 11. Fixed at registration
 
@@ -212,13 +228,14 @@ Model `Qwen/Qwen3-8B` at revision `b968826d9c46dd6066d109eabc6255188de91218`; th
 seed rule; the judge's prompt, snapshot, route and settings; the masking list; the analysis code, committed
 with its hash before the run; this file's rules with the draft thresholds replaced.
 
-Cost: about 13,400 judged replies is about 30 USD at round 1's measured price. The OpenRouter balance is
-about 33 USD, so the judge needs a top-up or credit on the Anthropic key first.
+Cost: with the two sub-studies, about 15,700 judged replies, about 33 USD at round 1's measured price.
+Garret topped up OpenRouter on 2026-11-12; the balance read 52.94 USD at 11:22 MST.
 
 ## 12. Order of work once storage is free
 
-1. Garret's answer to §10; a second look by the reviewer at this version if he wants one.
+1. A second look by the reviewer at this version, if Garret wants one.
 2. Read the authors' moving-touch script; state where this test differs.
-3. Write the three paraphrase sets and the judge prompt; pilot; fix thresholds; log changes.
+3. Write the three paraphrase sets and the judge prompt; generate and freeze the second warm-up; pilot;
+   fix thresholds; log changes.
 4. `PREREG.md` for round 2; the commit is the stamp; notice to the author with a stated wait.
 5. Run code and tests; the run; the judge; the audit; the analysis.

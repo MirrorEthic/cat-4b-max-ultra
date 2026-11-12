@@ -56,6 +56,18 @@ sequences. It served no decision.
   between 'your' and 'the woman's'" line, which rests on nine fixed contexts. `../RESULT.md` states that
   scope; one sentence was added beside the line.
 
+## Version 2, Garret's decisions, 2026-11-12 11:21 MST
+
+"Review left out. Rehearsal target recommendations i agree with. I topped up openrouter. We can push
+before phase 2"
+
+- **The review text is not in the repository.** Its hash is recorded above; the findings and the changes
+  they caused are in the table.
+- **The rehearsal-target sessions are in,** as a sensitivity arm that changes no label (`DESIGN.md` §10,
+  with its sentences fixed). This closes the "sensitivity" row of the table.
+- **OpenRouter topped up.** Balance 52.94 USD at 11:22 MST, against about 33 USD for the judge.
+- **Push.** The local commits of round 1's result and of this draft are pushed before round 2 starts.
+
 ## Decisions on version 1, for the record
 
 Garret, 2026-11-12 11:00 MST, accepted the seven recommendations of version 1 ("I agree with your
