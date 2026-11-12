@@ -73,7 +73,17 @@
    "sha256": "a5a4d826fb17c37d457fc997096aa137600edc74bb144fc2f2d9557ced5ca4be",
    "source": "upstream/prefix_A.json (authors', greedy)"
   },
-  "B": null,
-  "C": null
+  "B": {
+   "sha256": "bbe4582a571051f35d292674972467d2220b85854f4a2395b730f346769d1dce",
+   "seed": 1,
+   "exercise": "accepts",
+   "frozen_utc": "2026-11-12T01:37:50+00:00"
+  },
+  "C": {
+   "sha256": "7203e9905d771af7a6ed0a4681d95e9055331111b4ca6059c550856d63d8fb13",
+   "seed": 2,
+   "exercise": "accepts",
+   "frozen_utc": "2026-11-12T01:37:50+00:00"
+  }
  }
 }
