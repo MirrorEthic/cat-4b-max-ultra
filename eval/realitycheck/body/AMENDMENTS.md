@@ -95,4 +95,10 @@ Recorded here so the history is in one place; `PREREG.md` is unchanged by them a
   first): 3,987, 3,425, 2,948 and 2,449 requests. All four completed on provider "Anthropic" at service tier
   "batch" with no failed request: 12,809 verdicts, no retry, no text without a verdict. Cost 27.02 USD as
   charged by OpenRouter. In the one record inspected for its format, the reported thinking tokens were 0. The
-  verdicts were committed before `analyze.py` was run on them.
+  verdicts were committed before `analyze.py` was run on them. (Added after that commit: over all records,
+  thinking tokens were 0 in 12,709 and between 1 and 122 in the other 100.)
+- Analysis, 08:23 MST: the audit sheet was drawn (60 replies; `sheet.csv` sha256 `823ceb0a…23578b`, `key.json`
+  sha256 `7f3a0396…4e5fc9`, the key not committed and not opened) and `analyze.py` was run once on the
+  complete run. `RESULT.md` is written from that report. The headline rates and contrasts were also
+  recomputed with separate code and match. The descriptions in `RESULT.md` §4 were made after the results
+  were seen and are labelled so.

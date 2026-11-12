@@ -2,8 +2,10 @@
 
 **Opened:** 2026-11-11. **Status:** PREREGISTERED (M1 + M2, `PREREG.md` version 2; the commit that adds
 version 2 is the stamp. Version 1 was withdrawn before any compute, see `AMENDMENTS.md`).
-**Run:** steering complete 2026-11-11 20:19 MST (1,206 cells, 41,184 replies). Not yet scored by the judge, not
-analysed. **Verdict:** none yet.
+**Run:** steering complete 2026-11-11 20:19 MST (1,206 cells, 41,184 replies); judged and analysed 2026-11-12.
+**Verdict (`RESULT.md`, not yet reviewed by Garret; human audit and author response open):** C1 HELD for hand,
+foot and crown; H2 PROVENANCE-DEPENDENT (doll arm, crown only); H3 INCONCLUSIVE (measurement-dependent) in both
+cold frames; C2 no verdict; C3 UNIDENTIFIED.
 
 Source: `https://github.com/SauersML/body`, README read 2026-11-11 at HEAD `c05eba46fcc250596207d256d6402db4f4827701`
 (committed 2026-11-11T12:00:40Z). MIT licence. No paper. Repo self-description: research scripts for "a series
@@ -165,9 +167,10 @@ response yet. The 14-day interval of `PREREG.md` §10 ends 2026-11-25.
 - `run/`: run code and frozen materials (`FREEZE.json`, the authors' files verbatim under `upstream/`), written
   2026-11-11 after the stamp; `run/IMPLEMENTATION.md` lists the order of operations and every choice the
   preregistration left open. Tested on synthetic data and a tiny random-weight model only.
-- `RESULT.md`: none.
+- `RESULT.md`: written 2026-11-12 from `state/eval/realitycheck/body/report.json`.
 - CRG: `crg/drafts/cat4b.q.reality-check-program.toml` (program); `crg/drafts/cat4b.q.body-direction-provenance.toml`
   (this case, OPEN).
 - Receipts: `state/eval/realitycheck/body/`: frozen prefixes, extraction receipts, `directions.json`,
-  `RUNTIME.json` and the replies of every cell under `steer/`. No judge verdicts and no report yet.
+  `RUNTIME.json`, the replies of every cell under `steer/`, the judge verdicts under `judge/`, `report.json`
+  and the blank audit sheet under `human_audit/` (its key is not committed).
 - Precedent cases: `docs/MECH_CONTROL.md`, `eval/painaxis/RESULTS.md`, `eval/painaxis/RESULT-natural-next-turn.md`.

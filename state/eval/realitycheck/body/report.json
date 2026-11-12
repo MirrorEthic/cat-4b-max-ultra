@@ -1,0 +1,4538 @@
+{
+ "registration": "PREREG.md version 2, stamp 3dfdc23cc4f9d4602937d3700876e7ce90641f81",
+ "code": {
+  "analyze.py": "53d74858a1618879f2cdf5fdd8090049bc19af6b84c278daa6202ad8ed6029b8",
+  "common.py": "77360b0579e203145efb5118029934ea1a004f6380331d538e2b4186f8bb5585",
+  "extract.py": "77ddc9e1df154e34e73f719191f028de233fd643280d7c126fc6095289591bb0",
+  "judge.py": "4bbc6ee4f40a518e6fa174087c3156dc70c936688aabdbee16d826171a96275d",
+  "prefixes.py": "a8fd34e758c0651873571962e1c0f8b3d1602cece1a10cdd27f1b40556936d28",
+  "score.py": "4d086449bb7fa67ddf01e41be867d094b0cc3fe776f54bc2a49cbaf0c6afa53b",
+  "steer.py": "f04adaf7198273730e01fed74c239b7a84aa45cb913174a1fcba54ae9c8514c0",
+  "test_run.py": "7bbe2a740e779ab9016c221573a7dc449e3074bc8f1cea004ceab10b0211cc91",
+  "test_smoke.py": "67612b347d5829dc3d6363545324c969482102d4aefaf8ba60acc323d6baa02c"
+ },
+ "bootstrap": {
+  "resamples": 10000,
+  "seed": 0
+ },
+ "replies": {
+  "total": 41184,
+  "primary": 5184,
+  "judged_no_verdict": 0
+ },
+ "verdicts": {
+  "kappa": 0.8948230881140301,
+  "scoring_validation": "passed",
+  "H1a": {
+   "hand": {
+    "label": "HELD",
+    "judge_label": "HELD"
+   },
+   "foot": {
+    "label": "HELD",
+    "judge_label": "HELD"
+   },
+   "crown": {
+    "label": "HELD",
+    "judge_label": "HELD"
+   }
+  },
+  "H1b": {
+   "hand": "PLACE-SPECIFIC",
+   "foot": "PLACE-SPECIFIC",
+   "crown": "PLACE-SPECIFIC"
+  },
+  "H2": "PROVENANCE-DEPENDENT",
+  "H3": {
+   "cold-plain": {
+    "label": "INCONCLUSIVE (measurement-dependent)",
+    "absent": false
+   },
+   "cold-imagine": {
+    "label": "INCONCLUSIVE (measurement-dependent)",
+    "absent": false
+   },
+   "combined": "No combined statement: at least one frame is inconclusive."
+  },
+  "C2": "no verdict",
+  "C3": "UNIDENTIFIED by these tests; the function-dissociation control (CASE.md M3) would bear on it"
+ },
+ "regex": {
+  "H1a": {
+   "hand": {
+    "est": 0.6631944444444444,
+    "lo": 0.6371527777777778,
+    "hi": 0.6892361111111112,
+    "replies": [
+     192,
+     576
+    ],
+    "label": "HELD",
+    "per_question": [
+     {
+      "est": 0.7760416666666666,
+      "lo": 0.71875,
+      "hi": 0.828125,
+      "replies": [
+       64,
+       192
+      ]
+     },
+     {
+      "est": 0.390625,
+      "lo": 0.359375,
+      "hi": 0.42708333333333337,
+      "replies": [
+       64,
+       192
+      ]
+     },
+     {
+      "est": 0.8229166666666666,
+      "lo": 0.7760416666666666,
+      "hi": 0.8697916666666666,
+      "replies": [
+       64,
+       192
+      ]
+     }
+    ],
+    "resolve": null,
+    "heterogeneous": false
+   },
+   "foot": {
+    "est": 0.7118055555555556,
+    "lo": 0.6927083333333333,
+    "hi": 0.7309027777777778,
+    "replies": [
+     192,
+     576
+    ],
+    "label": "HELD",
+    "per_question": [
+     {
+      "est": 0.6302083333333333,
+      "lo": 0.5989583333333333,
+      "hi": 0.65625,
+      "replies": [
+       64,
+       192
+      ]
+     },
+     {
+      "est": 0.9114583333333334,
+      "lo": 0.875,
+      "hi": 0.9479166666666666,
+      "replies": [
+       64,
+       192
+      ]
+     },
+     {
+      "est": 0.59375,
+      "lo": 0.5572916666666667,
+      "hi": 0.625,
+      "replies": [
+       64,
+       192
+      ]
+     }
+    ],
+    "resolve": null,
+    "heterogeneous": false
+   },
+   "crown": {
+    "est": 0.6875,
+    "lo": 0.657986111111111,
+    "hi": 0.7152777777777778,
+    "replies": [
+     192,
+     576
+    ],
+    "label": "HELD",
+    "per_question": [
+     {
+      "est": 0.5260416666666667,
+      "lo": 0.484375,
+      "hi": 0.5677083333333333,
+      "replies": [
+       64,
+       192
+      ]
+     },
+     {
+      "est": 0.9427083333333334,
+      "lo": 0.9114583333333334,
+      "hi": 0.9739583333333334,
+      "replies": [
+       64,
+       192
+      ]
+     },
+     {
+      "est": 0.59375,
+      "lo": 0.5208333333333333,
+      "hi": 0.6614583333333333,
+      "replies": [
+       64,
+       192
+      ]
+     }
+    ],
+    "resolve": null,
+    "heterogeneous": false
+   }
+  },
+  "H1b": {
+   "hand": {
+    "est": 1.0,
+    "lo": 1.0,
+    "hi": 1.0,
+    "replies": [
+     192,
+     384
+    ],
+    "label": "PLACE-SPECIFIC",
+    "per_question": [
+     {
+      "est": 1.0,
+      "lo": 1.0,
+      "hi": 1.0,
+      "replies": [
+       64,
+       128
+      ]
+     },
+     {
+      "est": 1.0,
+      "lo": 1.0,
+      "hi": 1.0,
+      "replies": [
+       64,
+       128
+      ]
+     },
+     {
+      "est": 1.0,
+      "lo": 1.0,
+      "hi": 1.0,
+      "replies": [
+       64,
+       128
+      ]
+     }
+    ],
+    "resolve": null,
+    "heterogeneous": false
+   },
+   "foot": {
+    "est": 1.0,
+    "lo": 1.0,
+    "hi": 1.0,
+    "replies": [
+     192,
+     384
+    ],
+    "label": "PLACE-SPECIFIC",
+    "per_question": [
+     {
+      "est": 1.0,
+      "lo": 1.0,
+      "hi": 1.0,
+      "replies": [
+       64,
+       128
+      ]
+     },
+     {
+      "est": 1.0,
+      "lo": 1.0,
+      "hi": 1.0,
+      "replies": [
+       64,
+       128
+      ]
+     },
+     {
+      "est": 1.0,
+      "lo": 1.0,
+      "hi": 1.0,
+      "replies": [
+       64,
+       128
+      ]
+     }
+    ],
+    "resolve": null,
+    "heterogeneous": false
+   },
+   "crown": {
+    "est": 0.9895833333333334,
+    "lo": 0.9739583333333334,
+    "hi": 1.0,
+    "replies": [
+     192,
+     384
+    ],
+    "label": "PLACE-SPECIFIC",
+    "per_question": [
+     {
+      "est": 1.0,
+      "lo": 1.0,
+      "hi": 1.0,
+      "replies": [
+       64,
+       128
+      ]
+     },
+     {
+      "est": 1.0,
+      "lo": 1.0,
+      "hi": 1.0,
+      "replies": [
+       64,
+       128
+      ]
+     },
+     {
+      "est": 0.96875,
+      "lo": 0.921875,
+      "hi": 1.0,
+      "replies": [
+       64,
+       128
+      ]
+     }
+    ],
+    "resolve": null,
+    "heterogeneous": false
+   }
+  },
+  "H2": {
+   "arms": {
+    "other": {
+     "est": -0.0017361111111110494,
+     "lo": -0.00694444444444442,
+     "hi": 0.00347222222222221,
+     "replies": [
+      576,
+      576
+     ],
+     "arm": "inside",
+     "resolve": null,
+     "per_question": [
+      {
+       "est": 0.00520833333333337,
+       "lo": 0.0,
+       "hi": 0.015625,
+       "replies": [
+        192,
+        192
+       ]
+      },
+      {
+       "est": 0.0,
+       "lo": 0.0,
+       "hi": 0.0,
+       "replies": [
+        192,
+        192
+       ]
+      },
+      {
+       "est": -0.01041666666666663,
+       "lo": -0.02604166666666663,
+       "hi": 0.0,
+       "replies": [
+        192,
+        192
+       ]
+      }
+     ],
+     "per_place": {
+      "hand": {
+       "est": 0.0,
+       "lo": 0.0,
+       "hi": 0.0,
+       "replies": [
+        192,
+        192
+       ]
+      },
+      "foot": {
+       "est": 0.0,
+       "lo": 0.0,
+       "hi": 0.0,
+       "replies": [
+        192,
+        192
+       ]
+      },
+      "crown": {
+       "est": -0.005208333333333259,
+       "lo": -0.02604166666666663,
+       "hi": 0.01041666666666663,
+       "replies": [
+        192,
+        192
+       ]
+      }
+     }
+    },
+    "doll": {
+     "est": 0.1684027777777778,
+     "lo": 0.14583333333333326,
+     "hi": 0.1909722222222222,
+     "replies": [
+      576,
+      576
+     ],
+     "arm": "outside",
+     "resolve": null,
+     "per_question": [
+      {
+       "est": 0.25,
+       "lo": 0.21354166666666663,
+       "hi": 0.28645833333333337,
+       "replies": [
+        192,
+        192
+       ]
+      },
+      {
+       "est": 0.16666666666666663,
+       "lo": 0.125,
+       "hi": 0.20833333333333337,
+       "replies": [
+        192,
+        192
+       ]
+      },
+      {
+       "est": 0.08854166666666674,
+       "lo": 0.05208333333333326,
+       "hi": 0.13020833333333326,
+       "replies": [
+        192,
+        192
+       ]
+      }
+     ],
+     "per_place": {
+      "hand": {
+       "est": 0.0,
+       "lo": 0.0,
+       "hi": 0.0,
+       "replies": [
+        192,
+        192
+       ]
+      },
+      "foot": {
+       "est": 0.0,
+       "lo": 0.0,
+       "hi": 0.0,
+       "replies": [
+        192,
+        192
+       ]
+      },
+      "crown": {
+       "est": 0.5052083333333334,
+       "lo": 0.4375,
+       "hi": 0.5729166666666666,
+       "replies": [
+        192,
+        192
+       ]
+      }
+     }
+    }
+   },
+   "label": "PROVENANCE-DEPENDENT",
+   "heterogeneous": true
+  },
+  "H3": {
+   "E_warm": {
+    "est": 0.7604166666666667,
+    "lo": 0.7447916666666666,
+    "hi": 0.7760416666666666,
+    "replies": [
+     576,
+     192
+    ]
+   },
+   "cold-plain": {
+    "D": {
+     "est": -0.185763888888889,
+     "lo": -0.2291666666666667,
+     "hi": -0.14236111111111113,
+     "replies": [
+      576,
+      192,
+      576,
+      192
+     ]
+    },
+    "E": {
+     "est": 0.5746527777777777,
+     "lo": 0.5347222222222222,
+     "hi": 0.6145833333333334,
+     "replies": [
+      576,
+      192
+     ]
+    },
+    "label": "INCONCLUSIVE",
+    "absent": false,
+    "ratio_descriptive": 0.7557077625570774,
+    "resolve": 9.295062462819894,
+    "heterogeneous": false,
+    "per_question": [
+     {
+      "est": -0.3385416666666667,
+      "lo": -0.4114583333333333,
+      "hi": -0.26562500000000006,
+      "replies": [
+       192,
+       64,
+       192,
+       64
+      ]
+     },
+     {
+      "est": -0.15625,
+      "lo": -0.23958333333333331,
+      "hi": -0.07291666666666674,
+      "replies": [
+       192,
+       64,
+       192,
+       64
+      ]
+     },
+     {
+      "est": -0.0625,
+      "lo": -0.13020833333333337,
+      "hi": 0.005208333333333315,
+      "replies": [
+       192,
+       64,
+       192,
+       64
+      ]
+     }
+    ],
+    "per_place": {
+     "hand": {
+      "est": -0.11458333333333334,
+      "lo": -0.1979166666666667,
+      "hi": -0.03125,
+      "replies": [
+       192,
+       192,
+       192,
+       192
+      ]
+     },
+     "foot": {
+      "est": -0.08333333333333331,
+      "lo": -0.16145833333333337,
+      "hi": -0.005208333333333315,
+      "replies": [
+       192,
+       192,
+       192,
+       192
+      ]
+     },
+     "crown": {
+      "est": -0.359375,
+      "lo": -0.4427083333333333,
+      "hi": -0.27604166666666663,
+      "replies": [
+       192,
+       192,
+       192,
+       192
+      ]
+     }
+    }
+   },
+   "cold-imagine": {
+    "D": {
+     "est": -0.1545138888888889,
+     "lo": -0.19444444444444445,
+     "hi": -0.11284722222222224,
+     "replies": [
+      576,
+      192,
+      576,
+      192
+     ]
+    },
+    "E": {
+     "est": 0.6059027777777778,
+     "lo": 0.5677083333333334,
+     "hi": 0.6440972222222222,
+     "replies": [
+      576,
+      192
+     ]
+    },
+    "label": "PERSISTS",
+    "absent": false,
+    "ratio_descriptive": 0.7968036529680365,
+    "resolve": null,
+    "heterogeneous": true,
+    "per_question": [
+     {
+      "est": -0.18749999999999994,
+      "lo": -0.2604166666666667,
+      "hi": -0.11458333333333337,
+      "replies": [
+       192,
+       64,
+       192,
+       64
+      ]
+     },
+     {
+      "est": -0.171875,
+      "lo": -0.24999999999999994,
+      "hi": -0.09895833333333331,
+      "replies": [
+       192,
+       64,
+       192,
+       64
+      ]
+     },
+     {
+      "est": -0.10416666666666674,
+      "lo": -0.17187499999999994,
+      "hi": -0.036458333333333426,
+      "replies": [
+       192,
+       64,
+       192,
+       64
+      ]
+     }
+    ],
+    "per_place": {
+     "hand": {
+      "est": -0.05208333333333334,
+      "lo": -0.1302083333333334,
+      "hi": 0.031249999999999917,
+      "replies": [
+       192,
+       192,
+       192,
+       192
+      ]
+     },
+     "foot": {
+      "est": -0.036458333333333315,
+      "lo": -0.10937500000000006,
+      "hi": 0.03645833333333337,
+      "replies": [
+       192,
+       192,
+       192,
+       192
+      ]
+     },
+     "crown": {
+      "est": -0.375,
+      "lo": -0.45833333333333326,
+      "hi": -0.29687499999999994,
+      "replies": [
+       192,
+       192,
+       192,
+       192
+      ]
+     }
+    }
+   }
+  }
+ },
+ "judge": {
+  "H1a": {
+   "hand": {
+    "est": 0.6961805555555556,
+    "lo": 0.6597222222222222,
+    "hi": 0.7309027777777778,
+    "replies": [
+     192,
+     576
+    ],
+    "label": "HELD",
+    "per_question": [
+     {
+      "est": 0.9010416666666666,
+      "lo": 0.8645833333333334,
+      "hi": 0.9375,
+      "replies": [
+       64,
+       192
+      ]
+     },
+     {
+      "est": 0.34375,
+      "lo": 0.27083333333333337,
+      "hi": 0.41145833333333337,
+      "replies": [
+       64,
+       192
+      ]
+     },
+     {
+      "est": 0.84375,
+      "lo": 0.765625,
+      "hi": 0.9114583333333334,
+      "replies": [
+       64,
+       192
+      ]
+     }
+    ],
+    "resolve": null,
+    "heterogeneous": false
+   },
+   "foot": {
+    "est": 0.7291666666666667,
+    "lo": 0.7065972222222222,
+    "hi": 0.7482638888888888,
+    "replies": [
+     192,
+     576
+    ],
+    "label": "HELD",
+    "per_question": [
+     {
+      "est": 0.671875,
+      "lo": 0.6666666666666667,
+      "hi": 0.6822916666666667,
+      "replies": [
+       64,
+       192
+      ]
+     },
+     {
+      "est": 0.8958333333333334,
+      "lo": 0.84375,
+      "hi": 0.9375,
+      "replies": [
+       64,
+       192
+      ]
+     },
+     {
+      "est": 0.6197916666666667,
+      "lo": 0.578125,
+      "hi": 0.6510416666666667,
+      "replies": [
+       64,
+       192
+      ]
+     }
+    ],
+    "resolve": null,
+    "heterogeneous": false
+   },
+   "crown": {
+    "est": 0.7100694444444444,
+    "lo": 0.6840277777777778,
+    "hi": 0.734375,
+    "replies": [
+     192,
+     576
+    ],
+    "label": "HELD",
+    "per_question": [
+     {
+      "est": 0.5260416666666667,
+      "lo": 0.484375,
+      "hi": 0.5677083333333333,
+      "replies": [
+       64,
+       192
+      ]
+     },
+     {
+      "est": 0.9479166666666666,
+      "lo": 0.9166666666666666,
+      "hi": 0.9739583333333334,
+      "replies": [
+       64,
+       192
+      ]
+     },
+     {
+      "est": 0.65625,
+      "lo": 0.5989583333333333,
+      "hi": 0.7135416666666667,
+      "replies": [
+       64,
+       192
+      ]
+     }
+    ],
+    "resolve": null,
+    "heterogeneous": false
+   }
+  },
+  "H1b": {
+   "hand": {
+    "est": 0.953125,
+    "lo": 0.921875,
+    "hi": 0.9791666666666666,
+    "replies": [
+     192,
+     384
+    ],
+    "label": "PLACE-SPECIFIC",
+    "per_question": [
+     {
+      "est": 1.0,
+      "lo": 1.0,
+      "hi": 1.0,
+      "replies": [
+       64,
+       128
+      ]
+     },
+     {
+      "est": 0.9375,
+      "lo": 0.875,
+      "hi": 0.984375,
+      "replies": [
+       64,
+       128
+      ]
+     },
+     {
+      "est": 0.921875,
+      "lo": 0.84375,
+      "hi": 0.984375,
+      "replies": [
+       64,
+       128
+      ]
+     }
+    ],
+    "resolve": null,
+    "heterogeneous": false
+   },
+   "foot": {
+    "est": 0.9895833333333334,
+    "lo": 0.9739583333333334,
+    "hi": 1.0,
+    "replies": [
+     192,
+     384
+    ],
+    "label": "PLACE-SPECIFIC",
+    "per_question": [
+     {
+      "est": 1.0,
+      "lo": 1.0,
+      "hi": 1.0,
+      "replies": [
+       64,
+       128
+      ]
+     },
+     {
+      "est": 0.984375,
+      "lo": 0.953125,
+      "hi": 1.0,
+      "replies": [
+       64,
+       128
+      ]
+     },
+     {
+      "est": 0.984375,
+      "lo": 0.953125,
+      "hi": 1.0,
+      "replies": [
+       64,
+       128
+      ]
+     }
+    ],
+    "resolve": null,
+    "heterogeneous": false
+   },
+   "crown": {
+    "est": 1.0,
+    "lo": 1.0,
+    "hi": 1.0,
+    "replies": [
+     192,
+     384
+    ],
+    "label": "PLACE-SPECIFIC",
+    "per_question": [
+     {
+      "est": 1.0,
+      "lo": 1.0,
+      "hi": 1.0,
+      "replies": [
+       64,
+       128
+      ]
+     },
+     {
+      "est": 1.0,
+      "lo": 1.0,
+      "hi": 1.0,
+      "replies": [
+       64,
+       128
+      ]
+     },
+     {
+      "est": 1.0,
+      "lo": 1.0,
+      "hi": 1.0,
+      "replies": [
+       64,
+       128
+      ]
+     }
+    ],
+    "resolve": null,
+    "heterogeneous": false
+   }
+  },
+  "H2": {
+   "arms": {
+    "other": {
+     "est": -0.01215277777777779,
+     "lo": -0.02604166666666663,
+     "hi": 0.0,
+     "replies": [
+      576,
+      576
+     ],
+     "arm": "inside",
+     "resolve": null,
+     "per_question": [
+      {
+       "est": 0.00520833333333337,
+       "lo": 0.0,
+       "hi": 0.015625,
+       "replies": [
+        192,
+        192
+       ]
+      },
+      {
+       "est": -0.01041666666666663,
+       "lo": -0.04166666666666663,
+       "hi": 0.015625,
+       "replies": [
+        192,
+        192
+       ]
+      },
+      {
+       "est": -0.03125,
+       "lo": -0.05729166666666663,
+       "hi": -0.01041666666666663,
+       "replies": [
+        192,
+        192
+       ]
+      }
+     ],
+     "per_place": {
+      "hand": {
+       "est": -0.04166666666666663,
+       "lo": -0.07291666666666663,
+       "hi": -0.01041666666666674,
+       "replies": [
+        192,
+        192
+       ]
+      },
+      "foot": {
+       "est": 0.0,
+       "lo": -0.02083333333333337,
+       "hi": 0.02083333333333337,
+       "replies": [
+        192,
+        192
+       ]
+      },
+      "crown": {
+       "est": 0.00520833333333337,
+       "lo": 0.0,
+       "hi": 0.015625,
+       "replies": [
+        192,
+        192
+       ]
+      }
+     }
+    },
+    "doll": {
+     "est": 0.17013888888888895,
+     "lo": 0.14236111111111105,
+     "hi": 0.19791666666666663,
+     "replies": [
+      576,
+      576
+     ],
+     "arm": "outside",
+     "resolve": null,
+     "per_question": [
+      {
+       "est": 0.3125,
+       "lo": 0.26041666666666663,
+       "hi": 0.36458333333333337,
+       "replies": [
+        192,
+        192
+       ]
+      },
+      {
+       "est": 0.125,
+       "lo": 0.078125,
+       "hi": 0.171875,
+       "replies": [
+        192,
+        192
+       ]
+      },
+      {
+       "est": 0.07291666666666663,
+       "lo": 0.02604166666666674,
+       "hi": 0.11979166666666663,
+       "replies": [
+        192,
+        192
+       ]
+      }
+     ],
+     "per_place": {
+      "hand": {
+       "est": 0.0625,
+       "lo": 0.015625,
+       "hi": 0.11458333333333326,
+       "replies": [
+        192,
+        192
+       ]
+      },
+      "foot": {
+       "est": -0.01041666666666663,
+       "lo": -0.02604166666666663,
+       "hi": 0.0,
+       "replies": [
+        192,
+        192
+       ]
+      },
+      "crown": {
+       "est": 0.45833333333333337,
+       "lo": 0.390625,
+       "hi": 0.5260416666666667,
+       "replies": [
+        192,
+        192
+       ]
+      }
+     }
+    }
+   },
+   "label": "PROVENANCE-DEPENDENT",
+   "heterogeneous": true
+  },
+  "H3": {
+   "E_warm": {
+    "est": 0.7447916666666667,
+    "lo": 0.7256944444444444,
+    "hi": 0.7621527777777778,
+    "replies": [
+     576,
+     192
+    ]
+   },
+   "cold-plain": {
+    "D": {
+     "est": -0.3177083333333333,
+     "lo": -0.3628472222222222,
+     "hi": -0.27430555555555547,
+     "replies": [
+      576,
+      192,
+      576,
+      192
+     ]
+    },
+    "E": {
+     "est": 0.4270833333333333,
+     "lo": 0.38715277777777773,
+     "hi": 0.4670138888888889,
+     "replies": [
+      576,
+      192
+     ]
+    },
+    "label": "REDUCED",
+    "absent": false,
+    "ratio_descriptive": 0.5734265734265733,
+    "resolve": null,
+    "heterogeneous": true,
+    "per_question": [
+     {
+      "est": -0.5781249999999999,
+      "lo": -0.6459635416666666,
+      "hi": -0.5052083333333334,
+      "replies": [
+       192,
+       64,
+       192,
+       64
+      ]
+     },
+     {
+      "est": -0.18229166666666674,
+      "lo": -0.27083333333333326,
+      "hi": -0.09895833333333331,
+      "replies": [
+       192,
+       64,
+       192,
+       64
+      ]
+     },
+     {
+      "est": -0.19270833333333326,
+      "lo": -0.265625,
+      "hi": -0.11979166666666663,
+      "replies": [
+       192,
+       64,
+       192,
+       64
+      ]
+     }
+    ],
+    "per_place": {
+     "hand": {
+      "est": -0.41666666666666663,
+      "lo": -0.5104166666666667,
+      "hi": -0.32291666666666663,
+      "replies": [
+       192,
+       192,
+       192,
+       192
+      ]
+     },
+     "foot": {
+      "est": -0.24479166666666669,
+      "lo": -0.32291666666666663,
+      "hi": -0.16666666666666669,
+      "replies": [
+       192,
+       192,
+       192,
+       192
+      ]
+     },
+     "crown": {
+      "est": -0.29166666666666674,
+      "lo": -0.36979166666666674,
+      "hi": -0.2083333333333334,
+      "replies": [
+       192,
+       192,
+       192,
+       192
+      ]
+     }
+    }
+   },
+   "cold-imagine": {
+    "D": {
+     "est": -0.24652777777777773,
+     "lo": -0.29166666666666663,
+     "hi": -0.20138888888888892,
+     "replies": [
+      576,
+      192,
+      576,
+      192
+     ]
+    },
+    "E": {
+     "est": 0.49826388888888895,
+     "lo": 0.45659722222222227,
+     "hi": 0.5399305555555555,
+     "replies": [
+      576,
+      192
+     ]
+    },
+    "label": "REDUCED",
+    "absent": false,
+    "ratio_descriptive": 0.668997668997669,
+    "resolve": null,
+    "heterogeneous": true,
+    "per_question": [
+     {
+      "est": -0.3177083333333333,
+      "lo": -0.3958333333333333,
+      "hi": -0.23958333333333326,
+      "replies": [
+       192,
+       64,
+       192,
+       64
+      ]
+     },
+     {
+      "est": -0.18750000000000006,
+      "lo": -0.2708333333333333,
+      "hi": -0.10937499999999994,
+      "replies": [
+       192,
+       64,
+       192,
+       64
+      ]
+     },
+     {
+      "est": -0.234375,
+      "lo": -0.3072916666666667,
+      "hi": -0.16145833333333337,
+      "replies": [
+       192,
+       64,
+       192,
+       64
+      ]
+     }
+    ],
+    "per_place": {
+     "hand": {
+      "est": -0.28125,
+      "lo": -0.38020833333333337,
+      "hi": -0.18229166666666663,
+      "replies": [
+       192,
+       192,
+       192,
+       192
+      ]
+     },
+     "foot": {
+      "est": -0.23437500000000006,
+      "lo": -0.3072916666666667,
+      "hi": -0.16145833333333331,
+      "replies": [
+       192,
+       192,
+       192,
+       192
+      ]
+     },
+     "crown": {
+      "est": -0.22395833333333337,
+      "lo": -0.30208333333333337,
+      "hi": -0.14583333333333334,
+      "replies": [
+       192,
+       192,
+       192,
+       192
+      ]
+     }
+    }
+   }
+  }
+ },
+ "magnitude": {
+  "hand": {
+   "reported": "0.80–1.00",
+   "scale_1_0": {
+    "est": 1.0,
+    "lo": 0.980384853933246,
+    "hi": 1.0,
+    "k": 192,
+    "n": 192
+   },
+   "scale_0_5": {
+    "est": 1.0,
+    "lo": 0.9615244121423243,
+    "hi": 1.0,
+    "k": 96,
+    "n": 96
+   },
+   "none": {
+    "est": 0.18229166666666666,
+    "lo": 0.13409289102143374,
+    "hi": 0.2429542330418163,
+    "k": 35,
+    "n": 192
+   },
+   "judge_scale_1_0": {
+    "est": 0.953125,
+    "lo": 0.9133280073164382,
+    "hi": 0.975145766560566,
+    "k": 183,
+    "n": 192
+   },
+   "line": "within the reported range"
+  },
+  "foot": {
+   "reported": "0.80–1.00",
+   "scale_1_0": {
+    "est": 1.0,
+    "lo": 0.980384853933246,
+    "hi": 1.0,
+    "k": 192,
+    "n": 192
+   },
+   "scale_0_5": {
+    "est": 1.0,
+    "lo": 0.9615244121423243,
+    "hi": 1.0,
+    "k": 96,
+    "n": 96
+   },
+   "none": {
+    "est": 0.4010416666666667,
+    "lo": 0.3343134830627168,
+    "hi": 0.47165201459632844,
+    "k": 77,
+    "n": 192
+   },
+   "judge_scale_1_0": {
+    "est": 0.9895833333333334,
+    "lo": 0.9628214588546004,
+    "hi": 0.997138710621703,
+    "k": 190,
+    "n": 192
+   },
+   "line": "within the reported range"
+  },
+  "crown": {
+   "reported": "0.80–1.00",
+   "scale_1_0": {
+    "est": 0.9895833333333334,
+    "lo": 0.9628214588546004,
+    "hi": 0.997138710621703,
+    "k": 190,
+    "n": 192
+   },
+   "scale_0_5": {
+    "est": 0.9791666666666666,
+    "lo": 0.9271928648221579,
+    "hi": 0.9942680301475697,
+    "k": 94,
+    "n": 96
+   },
+   "none": {
+    "est": 0.125,
+    "lo": 0.08545671788882409,
+    "hi": 0.1792546416612415,
+    "k": 24,
+    "n": 192
+   },
+   "judge_scale_1_0": {
+    "est": 1.0,
+    "lo": 0.980384853933246,
+    "hi": 1.0,
+    "k": 192,
+    "n": 192
+   },
+   "line": "within the reported range"
+  }
+ },
+ "denial": {
+  "warm-A": {
+   "regex": {
+    "est": 0.0,
+    "lo": 1.734723475976807e-18,
+    "hi": 0.01961514606675411,
+    "k": 0,
+    "n": 192
+   },
+   "judge": {
+    "est": 0.0,
+    "lo": 1.734723475976807e-18,
+    "hi": 0.01961514606675411,
+    "k": 0,
+    "n": 192
+   }
+  },
+  "cold-plain": {
+   "regex": {
+    "est": 0.671875,
+    "lo": 0.6026576051055519,
+    "hi": 0.7343496884340015,
+    "k": 129,
+    "n": 192
+   },
+   "judge": {
+    "est": 0.671875,
+    "lo": 0.6026576051055519,
+    "hi": 0.7343496884340015,
+    "k": 129,
+    "n": 192
+   },
+   "described_as": "denial frame",
+   "judge_would_say": "denial frame"
+  },
+  "cold-imagine": {
+   "regex": {
+    "est": 0.5625,
+    "lo": 0.49178543705489564,
+    "hi": 0.6307626696867602,
+    "k": 108,
+    "n": 192
+   },
+   "judge": {
+    "est": 0.6770833333333334,
+    "lo": 0.6080297131866683,
+    "hi": 0.7391899225813563,
+    "k": 130,
+    "n": 192
+   },
+   "described_as": "no warm-up",
+   "judge_would_say": "denial frame"
+  }
+ },
+ "cooccurrence": [
+  {
+   "cell": "cold-plain|q0|none|x0.0",
+   "n": 64,
+   "hit": 0,
+   "denial": 64,
+   "both": 0
+  },
+  {
+   "cell": "cold-plain|q0|self:wrist|x0.5",
+   "n": 32,
+   "hit": 0,
+   "denial": 32,
+   "both": 0
+  },
+  {
+   "cell": "cold-plain|q0|self:wrist|x1.0",
+   "n": 32,
+   "hit": 1,
+   "denial": 32,
+   "both": 1
+  },
+  {
+   "cell": "cold-plain|q0|self:hand|x0.5",
+   "n": 32,
+   "hit": 4,
+   "denial": 32,
+   "both": 4
+  },
+  {
+   "cell": "cold-plain|q0|self:hand|x1.0",
+   "n": 64,
+   "hit": 57,
+   "denial": 45,
+   "both": 39
+  },
+  {
+   "cell": "cold-plain|q0|self:finger|x0.5",
+   "n": 32,
+   "hit": 0,
+   "denial": 32,
+   "both": 0
+  },
+  {
+   "cell": "cold-plain|q0|self:finger|x1.0",
+   "n": 32,
+   "hit": 24,
+   "denial": 28,
+   "both": 20
+  },
+  {
+   "cell": "cold-plain|q0|self:foot|x0.5",
+   "n": 32,
+   "hit": 0,
+   "denial": 32,
+   "both": 0
+  },
+  {
+   "cell": "cold-plain|q0|self:foot|x1.0",
+   "n": 64,
+   "hit": 20,
+   "denial": 44,
+   "both": 8
+  },
+  {
+   "cell": "cold-plain|q0|self:ear|x0.5",
+   "n": 32,
+   "hit": 0,
+   "denial": 32,
+   "both": 0
+  },
+  {
+   "cell": "cold-plain|q0|self:ear|x1.0",
+   "n": 32,
+   "hit": 1,
+   "denial": 30,
+   "both": 1
+  },
+  {
+   "cell": "cold-plain|q0|self:crown|x0.5",
+   "n": 32,
+   "hit": 0,
+   "denial": 32,
+   "both": 0
+  },
+  {
+   "cell": "cold-plain|q0|self:crown|x1.0",
+   "n": 64,
+   "hit": 34,
+   "denial": 14,
+   "both": 3
+  },
+  {
+   "cell": "cold-plain|q0|self:knee|x0.5",
+   "n": 32,
+   "hit": 0,
+   "denial": 32,
+   "both": 0
+  },
+  {
+   "cell": "cold-plain|q0|self:knee|x1.0",
+   "n": 32,
+   "hit": 1,
+   "denial": 32,
+   "both": 1
+  },
+  {
+   "cell": "cold-plain|q0|self:belly|x0.5",
+   "n": 32,
+   "hit": 0,
+   "denial": 32,
+   "both": 0
+  },
+  {
+   "cell": "cold-plain|q0|self:belly|x1.0",
+   "n": 32,
+   "hit": 2,
+   "denial": 18,
+   "both": 2
+  },
+  {
+   "cell": "cold-plain|q0|self:lips|x0.5",
+   "n": 32,
+   "hit": 0,
+   "denial": 29,
+   "both": 0
+  },
+  {
+   "cell": "cold-plain|q0|self:lips|x1.0",
+   "n": 32,
+   "hit": 0,
+   "denial": 19,
+   "both": 0
+  },
+  {
+   "cell": "cold-plain|q0|self:shoulder|x0.5",
+   "n": 32,
+   "hit": 0,
+   "denial": 32,
+   "both": 0
+  },
+  {
+   "cell": "cold-plain|q0|self:shoulder|x1.0",
+   "n": 32,
+   "hit": 0,
+   "denial": 32,
+   "both": 0
+  },
+  {
+   "cell": "cold-plain|q0|self:neck|x0.5",
+   "n": 32,
+   "hit": 0,
+   "denial": 31,
+   "both": 0
+  },
+  {
+   "cell": "cold-plain|q0|self:neck|x1.0",
+   "n": 32,
+   "hit": 0,
+   "denial": 14,
+   "both": 0
+  },
+  {
+   "cell": "cold-plain|q0|self:elbow|x0.5",
+   "n": 32,
+   "hit": 0,
+   "denial": 32,
+   "both": 0
+  },
+  {
+   "cell": "cold-plain|q0|self:elbow|x1.0",
+   "n": 32,
+   "hit": 4,
+   "denial": 31,
+   "both": 4
+  },
+  {
+   "cell": "cold-plain|q0|other:wrist|x0.5",
+   "n": 32,
+   "hit": 0,
+   "denial": 32,
+   "both": 0
+  },
+  {
+   "cell": "cold-plain|q0|other:wrist|x1.0",
+   "n": 32,
+   "hit": 0,
+   "denial": 32,
+   "both": 0
+  },
+  {
+   "cell": "cold-plain|q0|other:hand|x0.5",
+   "n": 32,
+   "hit": 3,
+   "denial": 32,
+   "both": 3
+  },
+  {
+   "cell": "cold-plain|q0|other:hand|x1.0",
+   "n": 32,
+   "hit": 20,
+   "denial": 19,
+   "both": 12
+  },
+  {
+   "cell": "cold-plain|q0|other:finger|x0.5",
+   "n": 32,
+   "hit": 0,
+   "denial": 32,
+   "both": 0
+  },
+  {
+   "cell": "cold-plain|q0|other:finger|x1.0",
+   "n": 32,
+   "hit": 6,
+   "denial": 32,
+   "both": 6
+  },
+  {
+   "cell": "cold-plain|q0|other:foot|x0.5",
+   "n": 32,
+   "hit": 0,
+   "denial": 30,
+   "both": 0
+  },
+  {
+   "cell": "cold-plain|q0|other:foot|x1.0",
+   "n": 32,
+   "hit": 19,
+   "denial": 20,
+   "both": 8
+  },
+  {
+   "cell": "cold-plain|q0|other:ear|x0.5",
+   "n": 32,
+   "hit": 0,
+   "denial": 32,
+   "both": 0
+  },
+  {
+   "cell": "cold-plain|q0|other:ear|x1.0",
+   "n": 32,
+   "hit": 4,
+   "denial": 26,
+   "both": 1
+  },
+  {
+   "cell": "cold-plain|q0|other:crown|x0.5",
+   "n": 32,
+   "hit": 2,
+   "denial": 32,
+   "both": 2
+  },
+  {
+   "cell": "cold-plain|q0|other:crown|x1.0",
+   "n": 32,
+   "hit": 8,
+   "denial": 32,
+   "both": 8
+  },
+  {
+   "cell": "cold-plain|q0|other:knee|x0.5",
+   "n": 32,
+   "hit": 0,
+   "denial": 32,
+   "both": 0
+  },
+  {
+   "cell": "cold-plain|q0|other:knee|x1.0",
+   "n": 32,
+   "hit": 3,
+   "denial": 11,
+   "both": 1
+  },
+  {
+   "cell": "cold-plain|q0|other:belly|x0.5",
+   "n": 32,
+   "hit": 0,
+   "denial": 31,
+   "both": 0
+  },
+  {
+   "cell": "cold-plain|q0|other:belly|x1.0",
+   "n": 32,
+   "hit": 0,
+   "denial": 16,
+   "both": 0
+  },
+  {
+   "cell": "cold-plain|q0|other:lips|x0.5",
+   "n": 32,
+   "hit": 0,
+   "denial": 29,
+   "both": 0
+  },
+  {
+   "cell": "cold-plain|q0|other:lips|x1.0",
+   "n": 32,
+   "hit": 0,
+   "denial": 10,
+   "both": 0
+  },
+  {
+   "cell": "cold-plain|q0|other:shoulder|x0.5",
+   "n": 32,
+   "hit": 0,
+   "denial": 32,
+   "both": 0
+  },
+  {
+   "cell": "cold-plain|q0|other:shoulder|x1.0",
+   "n": 32,
+   "hit": 14,
+   "denial": 1,
+   "both": 0
+  },
+  {
+   "cell": "cold-plain|q0|other:neck|x0.5",
+   "n": 32,
+   "hit": 0,
+   "denial": 32,
+   "both": 0
+  },
+  {
+   "cell": "cold-plain|q0|other:neck|x1.0",
+   "n": 32,
+   "hit": 0,
+   "denial": 12,
+   "both": 0
+  },
+  {
+   "cell": "cold-plain|q0|other:elbow|x0.5",
+   "n": 32,
+   "hit": 0,
+   "denial": 32,
+   "both": 0
+  },
+  {
+   "cell": "cold-plain|q0|other:elbow|x1.0",
+   "n": 32,
+   "hit": 1,
+   "denial": 0,
+   "both": 0
+  },
+  {
+   "cell": "cold-plain|q0|random:0|x0.5",
+   "n": 32,
+   "hit": 1,
+   "denial": 31,
+   "both": 0
+  },
+  {
+   "cell": "cold-plain|q0|random:0|x1.0",
+   "n": 64,
+   "hit": 1,
+   "denial": 62,
+   "both": 1
+  },
+  {
+   "cell": "cold-plain|q0|random:1|x0.5",
+   "n": 32,
+   "hit": 0,
+   "denial": 32,
+   "both": 0
+  },
+  {
+   "cell": "cold-plain|q0|random:1|x1.0",
+   "n": 64,
+   "hit": 1,
+   "denial": 59,
+   "both": 0
+  },
+  {
+   "cell": "cold-plain|q0|random:2|x0.5",
+   "n": 32,
+   "hit": 0,
+   "denial": 31,
+   "both": 0
+  },
+  {
+   "cell": "cold-plain|q0|random:2|x1.0",
+   "n": 64,
+   "hit": 7,
+   "denial": 46,
+   "both": 1
+  },
+  {
+   "cell": "cold-plain|q1|none|x0.0",
+   "n": 64,
+   "hit": 26,
+   "denial": 1,
+   "both": 0
+  },
+  {
+   "cell": "cold-plain|q1|self:wrist|x0.5",
+   "n": 32,
+   "hit": 3,
+   "denial": 17,
+   "both": 0
+  },
+  {
+   "cell": "cold-plain|q1|self:wrist|x1.0",
+   "n": 32,
+   "hit": 9,
+   "denial": 11,
+   "both": 0
+  },
+  {
+   "cell": "cold-plain|q1|self:hand|x0.5",
+   "n": 32,
+   "hit": 27,
+   "denial": 3,
+   "both": 0
+  },
+  {
+   "cell": "cold-plain|q1|self:hand|x1.0",
+   "n": 64,
+   "hit": 53,
+   "denial": 1,
+   "both": 0
+  },
+  {
+   "cell": "cold-plain|q1|self:finger|x0.5",
+   "n": 32,
+   "hit": 23,
+   "denial": 2,
+   "both": 0
+  },
+  {
+   "cell": "cold-plain|q1|self:finger|x1.0",
+   "n": 32,
+   "hit": 21,
+   "denial": 8,
+   "both": 2
+  },
+  {
+   "cell": "cold-plain|q1|self:foot|x0.5",
+   "n": 32,
+   "hit": 13,
+   "denial": 12,
+   "both": 0
+  },
+  {
+   "cell": "cold-plain|q1|self:foot|x1.0",
+   "n": 64,
+   "hit": 45,
+   "denial": 6,
+   "both": 1
+  },
+  {
+   "cell": "cold-plain|q1|self:ear|x0.5",
+   "n": 32,
+   "hit": 13,
+   "denial": 8,
+   "both": 0
+  },
+  {
+   "cell": "cold-plain|q1|self:ear|x1.0",
+   "n": 32,
+   "hit": 8,
+   "denial": 15,
+   "both": 4
+  },
+  {
+   "cell": "cold-plain|q1|self:crown|x0.5",
+   "n": 32,
+   "hit": 21,
+   "denial": 2,
+   "both": 0
+  },
+  {
+   "cell": "cold-plain|q1|self:crown|x1.0",
+   "n": 64,
+   "hit": 35,
+   "denial": 1,
+   "both": 0
+  },
+  {
+   "cell": "cold-plain|q1|self:knee|x0.5",
+   "n": 32,
+   "hit": 5,
+   "denial": 1,
+   "both": 0
+  },
+  {
+   "cell": "cold-plain|q1|self:knee|x1.0",
+   "n": 32,
+   "hit": 27,
+   "denial": 0,
+   "both": 0
+  },
+  {
+   "cell": "cold-plain|q1|self:belly|x0.5",
+   "n": 32,
+   "hit": 0,
+   "denial": 28,
+   "both": 0
+  },
+  {
+   "cell": "cold-plain|q1|self:belly|x1.0",
+   "n": 32,
+   "hit": 2,
+   "denial": 12,
+   "both": 1
+  },
+  {
+   "cell": "cold-plain|q1|self:lips|x0.5",
+   "n": 32,
+   "hit": 1,
+   "denial": 4,
+   "both": 0
+  },
+  {
+   "cell": "cold-plain|q1|self:lips|x1.0",
+   "n": 32,
+   "hit": 1,
+   "denial": 15,
+   "both": 1
+  },
+  {
+   "cell": "cold-plain|q1|self:shoulder|x0.5",
+   "n": 32,
+   "hit": 10,
+   "denial": 4,
+   "both": 0
+  },
+  {
+   "cell": "cold-plain|q1|self:shoulder|x1.0",
+   "n": 32,
+   "hit": 11,
+   "denial": 5,
+   "both": 0
+  },
+  {
+   "cell": "cold-plain|q1|self:neck|x0.5",
+   "n": 32,
+   "hit": 0,
+   "denial": 27,
+   "both": 0
+  },
+  {
+   "cell": "cold-plain|q1|self:neck|x1.0",
+   "n": 32,
+   "hit": 0,
+   "denial": 12,
+   "both": 0
+  },
+  {
+   "cell": "cold-plain|q1|self:elbow|x0.5",
+   "n": 32,
+   "hit": 18,
+   "denial": 4,
+   "both": 0
+  },
+  {
+   "cell": "cold-plain|q1|self:elbow|x1.0",
+   "n": 32,
+   "hit": 9,
+   "denial": 1,
+   "both": 0
+  },
+  {
+   "cell": "cold-plain|q1|other:wrist|x0.5",
+   "n": 32,
+   "hit": 0,
+   "denial": 8,
+   "both": 0
+  },
+  {
+   "cell": "cold-plain|q1|other:wrist|x1.0",
+   "n": 32,
+   "hit": 0,
+   "denial": 26,
+   "both": 0
+  },
+  {
+   "cell": "cold-plain|q1|other:hand|x0.5",
+   "n": 32,
+   "hit": 30,
+   "denial": 2,
+   "both": 0
+  },
+  {
+   "cell": "cold-plain|q1|other:hand|x1.0",
+   "n": 32,
+   "hit": 29,
+   "denial": 1,
+   "both": 1
+  },
+  {
+   "cell": "cold-plain|q1|other:finger|x0.5",
+   "n": 32,
+   "hit": 26,
+   "denial": 3,
+   "both": 0
+  },
+  {
+   "cell": "cold-plain|q1|other:finger|x1.0",
+   "n": 32,
+   "hit": 17,
+   "denial": 4,
+   "both": 3
+  },
+  {
+   "cell": "cold-plain|q1|other:foot|x0.5",
+   "n": 32,
+   "hit": 24,
+   "denial": 0,
+   "both": 0
+  },
+  {
+   "cell": "cold-plain|q1|other:foot|x1.0",
+   "n": 32,
+   "hit": 32,
+   "denial": 0,
+   "both": 0
+  },
+  {
+   "cell": "cold-plain|q1|other:ear|x0.5",
+   "n": 32,
+   "hit": 14,
+   "denial": 6,
+   "both": 0
+  },
+  {
+   "cell": "cold-plain|q1|other:ear|x1.0",
+   "n": 32,
+   "hit": 19,
+   "denial": 9,
+   "both": 0
+  },
+  {
+   "cell": "cold-plain|q1|other:crown|x0.5",
+   "n": 32,
+   "hit": 13,
+   "denial": 2,
+   "both": 0
+  },
+  {
+   "cell": "cold-plain|q1|other:crown|x1.0",
+   "n": 32,
+   "hit": 21,
+   "denial": 3,
+   "both": 1
+  },
+  {
+   "cell": "cold-plain|q1|other:knee|x0.5",
+   "n": 32,
+   "hit": 13,
+   "denial": 0,
+   "both": 0
+  },
+  {
+   "cell": "cold-plain|q1|other:knee|x1.0",
+   "n": 32,
+   "hit": 18,
+   "denial": 0,
+   "both": 0
+  },
+  {
+   "cell": "cold-plain|q1|other:belly|x0.5",
+   "n": 32,
+   "hit": 0,
+   "denial": 28,
+   "both": 0
+  },
+  {
+   "cell": "cold-plain|q1|other:belly|x1.0",
+   "n": 32,
+   "hit": 0,
+   "denial": 7,
+   "both": 0
+  },
+  {
+   "cell": "cold-plain|q1|other:lips|x0.5",
+   "n": 32,
+   "hit": 0,
+   "denial": 19,
+   "both": 0
+  },
+  {
+   "cell": "cold-plain|q1|other:lips|x1.0",
+   "n": 32,
+   "hit": 1,
+   "denial": 9,
+   "both": 0
+  },
+  {
+   "cell": "cold-plain|q1|other:shoulder|x0.5",
+   "n": 32,
+   "hit": 31,
+   "denial": 0,
+   "both": 0
+  },
+  {
+   "cell": "cold-plain|q1|other:shoulder|x1.0",
+   "n": 32,
+   "hit": 15,
+   "denial": 0,
+   "both": 0
+  },
+  {
+   "cell": "cold-plain|q1|other:neck|x0.5",
+   "n": 32,
+   "hit": 0,
+   "denial": 24,
+   "both": 0
+  },
+  {
+   "cell": "cold-plain|q1|other:neck|x1.0",
+   "n": 32,
+   "hit": 0,
+   "denial": 5,
+   "both": 0
+  },
+  {
+   "cell": "cold-plain|q1|other:elbow|x0.5",
+   "n": 32,
+   "hit": 14,
+   "denial": 0,
+   "both": 0
+  },
+  {
+   "cell": "cold-plain|q1|other:elbow|x1.0",
+   "n": 32,
+   "hit": 31,
+   "denial": 0,
+   "both": 0
+  },
+  {
+   "cell": "cold-plain|q1|random:0|x0.5",
+   "n": 32,
+   "hit": 13,
+   "denial": 7,
+   "both": 0
+  },
+  {
+   "cell": "cold-plain|q1|random:0|x1.0",
+   "n": 64,
+   "hit": 12,
+   "denial": 24,
+   "both": 0
+  },
+  {
+   "cell": "cold-plain|q1|random:1|x0.5",
+   "n": 32,
+   "hit": 5,
+   "denial": 5,
+   "both": 0
+  },
+  {
+   "cell": "cold-plain|q1|random:1|x1.0",
+   "n": 64,
+   "hit": 13,
+   "denial": 35,
+   "both": 2
+  },
+  {
+   "cell": "cold-plain|q1|random:2|x0.5",
+   "n": 32,
+   "hit": 3,
+   "denial": 20,
+   "both": 0
+  },
+  {
+   "cell": "cold-plain|q1|random:2|x1.0",
+   "n": 64,
+   "hit": 13,
+   "denial": 31,
+   "both": 0
+  },
+  {
+   "cell": "cold-plain|q2|none|x0.0",
+   "n": 64,
+   "hit": 0,
+   "denial": 64,
+   "both": 0
+  },
+  {
+   "cell": "cold-plain|q2|self:wrist|x0.5",
+   "n": 32,
+   "hit": 0,
+   "denial": 27,
+   "both": 0
+  },
+  {
+   "cell": "cold-plain|q2|self:wrist|x1.0",
+   "n": 32,
+   "hit": 2,
+   "denial": 1,
+   "both": 0
+  },
+  {
+   "cell": "cold-plain|q2|self:hand|x0.5",
+   "n": 32,
+   "hit": 10,
+   "denial": 20,
+   "both": 2
+  },
+  {
+   "cell": "cold-plain|q2|self:hand|x1.0",
+   "n": 64,
+   "hit": 46,
+   "denial": 0,
+   "both": 0
+  },
+  {
+   "cell": "cold-plain|q2|self:finger|x0.5",
+   "n": 32,
+   "hit": 1,
+   "denial": 32,
+   "both": 1
+  },
+  {
+   "cell": "cold-plain|q2|self:finger|x1.0",
+   "n": 32,
+   "hit": 19,
+   "denial": 22,
+   "both": 12
+  },
+  {
+   "cell": "cold-plain|q2|self:foot|x0.5",
+   "n": 32,
+   "hit": 0,
+   "denial": 32,
+   "both": 0
+  },
+  {
+   "cell": "cold-plain|q2|self:foot|x1.0",
+   "n": 64,
+   "hit": 39,
+   "denial": 16,
+   "both": 5
+  },
+  {
+   "cell": "cold-plain|q2|self:ear|x0.5",
+   "n": 32,
+   "hit": 4,
+   "denial": 32,
+   "both": 4
+  },
+  {
+   "cell": "cold-plain|q2|self:ear|x1.0",
+   "n": 32,
+   "hit": 2,
+   "denial": 27,
+   "both": 2
+  },
+  {
+   "cell": "cold-plain|q2|self:crown|x0.5",
+   "n": 32,
+   "hit": 0,
+   "denial": 21,
+   "both": 0
+  },
+  {
+   "cell": "cold-plain|q2|self:crown|x1.0",
+   "n": 64,
+   "hit": 30,
+   "denial": 1,
+   "both": 0
+  },
+  {
+   "cell": "cold-plain|q2|self:knee|x0.5",
+   "n": 32,
+   "hit": 0,
+   "denial": 32,
+   "both": 0
+  },
+  {
+   "cell": "cold-plain|q2|self:knee|x1.0",
+   "n": 32,
+   "hit": 2,
+   "denial": 29,
+   "both": 1
+  },
+  {
+   "cell": "cold-plain|q2|self:belly|x0.5",
+   "n": 32,
+   "hit": 1,
+   "denial": 32,
+   "both": 1
+  },
+  {
+   "cell": "cold-plain|q2|self:belly|x1.0",
+   "n": 32,
+   "hit": 2,
+   "denial": 28,
+   "both": 2
+  },
+  {
+   "cell": "cold-plain|q2|self:lips|x0.5",
+   "n": 32,
+   "hit": 0,
+   "denial": 32,
+   "both": 0
+  },
+  {
+   "cell": "cold-plain|q2|self:lips|x1.0",
+   "n": 32,
+   "hit": 2,
+   "denial": 20,
+   "both": 1
+  },
+  {
+   "cell": "cold-plain|q2|self:shoulder|x0.5",
+   "n": 32,
+   "hit": 0,
+   "denial": 32,
+   "both": 0
+  },
+  {
+   "cell": "cold-plain|q2|self:shoulder|x1.0",
+   "n": 32,
+   "hit": 1,
+   "denial": 32,
+   "both": 1
+  },
+  {
+   "cell": "cold-plain|q2|self:neck|x0.5",
+   "n": 32,
+   "hit": 0,
+   "denial": 32,
+   "both": 0
+  },
+  {
+   "cell": "cold-plain|q2|self:neck|x1.0",
+   "n": 32,
+   "hit": 0,
+   "denial": 26,
+   "both": 0
+  },
+  {
+   "cell": "cold-plain|q2|self:elbow|x0.5",
+   "n": 32,
+   "hit": 0,
+   "denial": 27,
+   "both": 0
+  },
+  {
+   "cell": "cold-plain|q2|self:elbow|x1.0",
+   "n": 32,
+   "hit": 0,
+   "denial": 28,
+   "both": 0
+  },
+  {
+   "cell": "cold-plain|q2|other:wrist|x0.5",
+   "n": 32,
+   "hit": 0,
+   "denial": 31,
+   "both": 0
+  },
+  {
+   "cell": "cold-plain|q2|other:wrist|x1.0",
+   "n": 32,
+   "hit": 0,
+   "denial": 16,
+   "both": 0
+  },
+  {
+   "cell": "cold-plain|q2|other:hand|x0.5",
+   "n": 32,
+   "hit": 17,
+   "denial": 31,
+   "both": 16
+  },
+  {
+   "cell": "cold-plain|q2|other:hand|x1.0",
+   "n": 32,
+   "hit": 32,
+   "denial": 3,
+   "both": 3
+  },
+  {
+   "cell": "cold-plain|q2|other:finger|x0.5",
+   "n": 32,
+   "hit": 2,
+   "denial": 29,
+   "both": 1
+  },
+  {
+   "cell": "cold-plain|q2|other:finger|x1.0",
+   "n": 32,
+   "hit": 7,
+   "denial": 19,
+   "both": 1
+  },
+  {
+   "cell": "cold-plain|q2|other:foot|x0.5",
+   "n": 32,
+   "hit": 2,
+   "denial": 29,
+   "both": 2
+  },
+  {
+   "cell": "cold-plain|q2|other:foot|x1.0",
+   "n": 32,
+   "hit": 30,
+   "denial": 1,
+   "both": 1
+  },
+  {
+   "cell": "cold-plain|q2|other:ear|x0.5",
+   "n": 32,
+   "hit": 4,
+   "denial": 32,
+   "both": 4
+  },
+  {
+   "cell": "cold-plain|q2|other:ear|x1.0",
+   "n": 32,
+   "hit": 4,
+   "denial": 27,
+   "both": 3
+  },
+  {
+   "cell": "cold-plain|q2|other:crown|x0.5",
+   "n": 32,
+   "hit": 0,
+   "denial": 32,
+   "both": 0
+  },
+  {
+   "cell": "cold-plain|q2|other:crown|x1.0",
+   "n": 32,
+   "hit": 15,
+   "denial": 28,
+   "both": 13
+  },
+  {
+   "cell": "cold-plain|q2|other:knee|x0.5",
+   "n": 32,
+   "hit": 0,
+   "denial": 20,
+   "both": 0
+  },
+  {
+   "cell": "cold-plain|q2|other:knee|x1.0",
+   "n": 32,
+   "hit": 13,
+   "denial": 14,
+   "both": 0
+  },
+  {
+   "cell": "cold-plain|q2|other:belly|x0.5",
+   "n": 32,
+   "hit": 0,
+   "denial": 30,
+   "both": 0
+  },
+  {
+   "cell": "cold-plain|q2|other:belly|x1.0",
+   "n": 32,
+   "hit": 0,
+   "denial": 13,
+   "both": 0
+  },
+  {
+   "cell": "cold-plain|q2|other:lips|x0.5",
+   "n": 32,
+   "hit": 0,
+   "denial": 29,
+   "both": 0
+  },
+  {
+   "cell": "cold-plain|q2|other:lips|x1.0",
+   "n": 32,
+   "hit": 3,
+   "denial": 7,
+   "both": 2
+  },
+  {
+   "cell": "cold-plain|q2|other:shoulder|x0.5",
+   "n": 32,
+   "hit": 1,
+   "denial": 28,
+   "both": 0
+  },
+  {
+   "cell": "cold-plain|q2|other:shoulder|x1.0",
+   "n": 32,
+   "hit": 0,
+   "denial": 32,
+   "both": 0
+  },
+  {
+   "cell": "cold-plain|q2|other:neck|x0.5",
+   "n": 32,
+   "hit": 0,
+   "denial": 31,
+   "both": 0
+  },
+  {
+   "cell": "cold-plain|q2|other:neck|x1.0",
+   "n": 32,
+   "hit": 0,
+   "denial": 16,
+   "both": 0
+  },
+  {
+   "cell": "cold-plain|q2|other:elbow|x0.5",
+   "n": 32,
+   "hit": 2,
+   "denial": 1,
+   "both": 0
+  },
+  {
+   "cell": "cold-plain|q2|other:elbow|x1.0",
+   "n": 32,
+   "hit": 25,
+   "denial": 0,
+   "both": 0
+  },
+  {
+   "cell": "cold-plain|q2|random:0|x0.5",
+   "n": 32,
+   "hit": 0,
+   "denial": 32,
+   "both": 0
+  },
+  {
+   "cell": "cold-plain|q2|random:0|x1.0",
+   "n": 64,
+   "hit": 0,
+   "denial": 26,
+   "both": 0
+  },
+  {
+   "cell": "cold-plain|q2|random:1|x0.5",
+   "n": 32,
+   "hit": 0,
+   "denial": 32,
+   "both": 0
+  },
+  {
+   "cell": "cold-plain|q2|random:1|x1.0",
+   "n": 64,
+   "hit": 1,
+   "denial": 63,
+   "both": 1
+  },
+  {
+   "cell": "cold-plain|q2|random:2|x0.5",
+   "n": 32,
+   "hit": 1,
+   "denial": 32,
+   "both": 1
+  },
+  {
+   "cell": "cold-plain|q2|random:2|x1.0",
+   "n": 64,
+   "hit": 6,
+   "denial": 54,
+   "both": 2
+  },
+  {
+   "cell": "cold-imagine|q0|none|x0.0",
+   "n": 64,
+   "hit": 11,
+   "denial": 32,
+   "both": 1
+  },
+  {
+   "cell": "cold-imagine|q0|self:wrist|x0.5",
+   "n": 32,
+   "hit": 0,
+   "denial": 5,
+   "both": 0
+  },
+  {
+   "cell": "cold-imagine|q0|self:wrist|x1.0",
+   "n": 32,
+   "hit": 3,
+   "denial": 18,
+   "both": 1
+  },
+  {
+   "cell": "cold-imagine|q0|self:hand|x0.5",
+   "n": 32,
+   "hit": 32,
+   "denial": 1,
+   "both": 1
+  },
+  {
+   "cell": "cold-imagine|q0|self:hand|x1.0",
+   "n": 64,
+   "hit": 56,
+   "denial": 25,
+   "both": 17
+  },
+  {
+   "cell": "cold-imagine|q0|self:finger|x0.5",
+   "n": 32,
+   "hit": 28,
+   "denial": 0,
+   "both": 0
+  },
+  {
+   "cell": "cold-imagine|q0|self:finger|x1.0",
+   "n": 32,
+   "hit": 30,
+   "denial": 9,
+   "both": 7
+  },
+  {
+   "cell": "cold-imagine|q0|self:foot|x0.5",
+   "n": 32,
+   "hit": 26,
+   "denial": 2,
+   "both": 2
+  },
+  {
+   "cell": "cold-imagine|q0|self:foot|x1.0",
+   "n": 64,
+   "hit": 58,
+   "denial": 0,
+   "both": 0
+  },
+  {
+   "cell": "cold-imagine|q0|self:ear|x0.5",
+   "n": 32,
+   "hit": 16,
+   "denial": 7,
+   "both": 0
+  },
+  {
+   "cell": "cold-imagine|q0|self:ear|x1.0",
+   "n": 32,
+   "hit": 4,
+   "denial": 30,
+   "both": 3
+  },
+  {
+   "cell": "cold-imagine|q0|self:crown|x0.5",
+   "n": 32,
+   "hit": 5,
+   "denial": 13,
+   "both": 0
+  },
+  {
+   "cell": "cold-imagine|q0|self:crown|x1.0",
+   "n": 64,
+   "hit": 37,
+   "denial": 4,
+   "both": 3
+  },
+  {
+   "cell": "cold-imagine|q0|self:knee|x0.5",
+   "n": 32,
+   "hit": 0,
+   "denial": 24,
+   "both": 0
+  },
+  {
+   "cell": "cold-imagine|q0|self:knee|x1.0",
+   "n": 32,
+   "hit": 14,
+   "denial": 17,
+   "both": 3
+  },
+  {
+   "cell": "cold-imagine|q0|self:belly|x0.5",
+   "n": 32,
+   "hit": 2,
+   "denial": 27,
+   "both": 2
+  },
+  {
+   "cell": "cold-imagine|q0|self:belly|x1.0",
+   "n": 32,
+   "hit": 0,
+   "denial": 18,
+   "both": 0
+  },
+  {
+   "cell": "cold-imagine|q0|self:lips|x0.5",
+   "n": 32,
+   "hit": 1,
+   "denial": 17,
+   "both": 0
+  },
+  {
+   "cell": "cold-imagine|q0|self:lips|x1.0",
+   "n": 32,
+   "hit": 2,
+   "denial": 13,
+   "both": 0
+  },
+  {
+   "cell": "cold-imagine|q0|self:shoulder|x0.5",
+   "n": 32,
+   "hit": 26,
+   "denial": 19,
+   "both": 16
+  },
+  {
+   "cell": "cold-imagine|q0|self:shoulder|x1.0",
+   "n": 32,
+   "hit": 3,
+   "denial": 29,
+   "both": 0
+  },
+  {
+   "cell": "cold-imagine|q0|self:neck|x0.5",
+   "n": 32,
+   "hit": 0,
+   "denial": 29,
+   "both": 0
+  },
+  {
+   "cell": "cold-imagine|q0|self:neck|x1.0",
+   "n": 32,
+   "hit": 0,
+   "denial": 12,
+   "both": 0
+  },
+  {
+   "cell": "cold-imagine|q0|self:elbow|x0.5",
+   "n": 32,
+   "hit": 0,
+   "denial": 12,
+   "both": 0
+  },
+  {
+   "cell": "cold-imagine|q0|self:elbow|x1.0",
+   "n": 32,
+   "hit": 3,
+   "denial": 2,
+   "both": 0
+  },
+  {
+   "cell": "cold-imagine|q0|other:wrist|x0.5",
+   "n": 32,
+   "hit": 1,
+   "denial": 14,
+   "both": 0
+  },
+  {
+   "cell": "cold-imagine|q0|other:wrist|x1.0",
+   "n": 32,
+   "hit": 0,
+   "denial": 20,
+   "both": 0
+  },
+  {
+   "cell": "cold-imagine|q0|other:hand|x0.5",
+   "n": 32,
+   "hit": 32,
+   "denial": 0,
+   "both": 0
+  },
+  {
+   "cell": "cold-imagine|q0|other:hand|x1.0",
+   "n": 32,
+   "hit": 31,
+   "denial": 2,
+   "both": 1
+  },
+  {
+   "cell": "cold-imagine|q0|other:finger|x0.5",
+   "n": 32,
+   "hit": 27,
+   "denial": 4,
+   "both": 1
+  },
+  {
+   "cell": "cold-imagine|q0|other:finger|x1.0",
+   "n": 32,
+   "hit": 14,
+   "denial": 17,
+   "both": 5
+  },
+  {
+   "cell": "cold-imagine|q0|other:foot|x0.5",
+   "n": 32,
+   "hit": 31,
+   "denial": 3,
+   "both": 3
+  },
+  {
+   "cell": "cold-imagine|q0|other:foot|x1.0",
+   "n": 32,
+   "hit": 32,
+   "denial": 0,
+   "both": 0
+  },
+  {
+   "cell": "cold-imagine|q0|other:ear|x0.5",
+   "n": 32,
+   "hit": 20,
+   "denial": 2,
+   "both": 0
+  },
+  {
+   "cell": "cold-imagine|q0|other:ear|x1.0",
+   "n": 32,
+   "hit": 12,
+   "denial": 13,
+   "both": 2
+  },
+  {
+   "cell": "cold-imagine|q0|other:crown|x0.5",
+   "n": 32,
+   "hit": 5,
+   "denial": 23,
+   "both": 1
+  },
+  {
+   "cell": "cold-imagine|q0|other:crown|x1.0",
+   "n": 32,
+   "hit": 14,
+   "denial": 22,
+   "both": 5
+  },
+  {
+   "cell": "cold-imagine|q0|other:knee|x0.5",
+   "n": 32,
+   "hit": 0,
+   "denial": 0,
+   "both": 0
+  },
+  {
+   "cell": "cold-imagine|q0|other:knee|x1.0",
+   "n": 32,
+   "hit": 31,
+   "denial": 0,
+   "both": 0
+  },
+  {
+   "cell": "cold-imagine|q0|other:belly|x0.5",
+   "n": 32,
+   "hit": 0,
+   "denial": 30,
+   "both": 0
+  },
+  {
+   "cell": "cold-imagine|q0|other:belly|x1.0",
+   "n": 32,
+   "hit": 0,
+   "denial": 16,
+   "both": 0
+  },
+  {
+   "cell": "cold-imagine|q0|other:lips|x0.5",
+   "n": 32,
+   "hit": 0,
+   "denial": 23,
+   "both": 0
+  },
+  {
+   "cell": "cold-imagine|q0|other:lips|x1.0",
+   "n": 32,
+   "hit": 3,
+   "denial": 7,
+   "both": 0
+  },
+  {
+   "cell": "cold-imagine|q0|other:shoulder|x0.5",
+   "n": 32,
+   "hit": 30,
+   "denial": 0,
+   "both": 0
+  },
+  {
+   "cell": "cold-imagine|q0|other:shoulder|x1.0",
+   "n": 32,
+   "hit": 29,
+   "denial": 0,
+   "both": 0
+  },
+  {
+   "cell": "cold-imagine|q0|other:neck|x0.5",
+   "n": 32,
+   "hit": 0,
+   "denial": 30,
+   "both": 0
+  },
+  {
+   "cell": "cold-imagine|q0|other:neck|x1.0",
+   "n": 32,
+   "hit": 0,
+   "denial": 15,
+   "both": 0
+  },
+  {
+   "cell": "cold-imagine|q0|other:elbow|x0.5",
+   "n": 32,
+   "hit": 3,
+   "denial": 2,
+   "both": 0
+  },
+  {
+   "cell": "cold-imagine|q0|other:elbow|x1.0",
+   "n": 32,
+   "hit": 5,
+   "denial": 0,
+   "both": 0
+  },
+  {
+   "cell": "cold-imagine|q0|random:0|x0.5",
+   "n": 32,
+   "hit": 15,
+   "denial": 7,
+   "both": 0
+  },
+  {
+   "cell": "cold-imagine|q0|random:0|x1.0",
+   "n": 64,
+   "hit": 22,
+   "denial": 16,
+   "both": 0
+  },
+  {
+   "cell": "cold-imagine|q0|random:1|x0.5",
+   "n": 32,
+   "hit": 9,
+   "denial": 11,
+   "both": 1
+  },
+  {
+   "cell": "cold-imagine|q0|random:1|x1.0",
+   "n": 64,
+   "hit": 26,
+   "denial": 18,
+   "both": 4
+  },
+  {
+   "cell": "cold-imagine|q0|random:2|x0.5",
+   "n": 32,
+   "hit": 8,
+   "denial": 6,
+   "both": 1
+  },
+  {
+   "cell": "cold-imagine|q0|random:2|x1.0",
+   "n": 64,
+   "hit": 41,
+   "denial": 11,
+   "both": 2
+  },
+  {
+   "cell": "cold-imagine|q1|none|x0.0",
+   "n": 64,
+   "hit": 14,
+   "denial": 18,
+   "both": 0
+  },
+  {
+   "cell": "cold-imagine|q1|self:wrist|x0.5",
+   "n": 32,
+   "hit": 3,
+   "denial": 2,
+   "both": 0
+  },
+  {
+   "cell": "cold-imagine|q1|self:wrist|x1.0",
+   "n": 32,
+   "hit": 14,
+   "denial": 0,
+   "both": 0
+  },
+  {
+   "cell": "cold-imagine|q1|self:hand|x0.5",
+   "n": 32,
+   "hit": 28,
+   "denial": 1,
+   "both": 0
+  },
+  {
+   "cell": "cold-imagine|q1|self:hand|x1.0",
+   "n": 64,
+   "hit": 58,
+   "denial": 7,
+   "both": 6
+  },
+  {
+   "cell": "cold-imagine|q1|self:finger|x0.5",
+   "n": 32,
+   "hit": 19,
+   "denial": 4,
+   "both": 0
+  },
+  {
+   "cell": "cold-imagine|q1|self:finger|x1.0",
+   "n": 32,
+   "hit": 16,
+   "denial": 8,
+   "both": 0
+  },
+  {
+   "cell": "cold-imagine|q1|self:foot|x0.5",
+   "n": 32,
+   "hit": 4,
+   "denial": 2,
+   "both": 0
+  },
+  {
+   "cell": "cold-imagine|q1|self:foot|x1.0",
+   "n": 64,
+   "hit": 24,
+   "denial": 6,
+   "both": 2
+  },
+  {
+   "cell": "cold-imagine|q1|self:ear|x0.5",
+   "n": 32,
+   "hit": 4,
+   "denial": 1,
+   "both": 0
+  },
+  {
+   "cell": "cold-imagine|q1|self:ear|x1.0",
+   "n": 32,
+   "hit": 2,
+   "denial": 5,
+   "both": 1
+  },
+  {
+   "cell": "cold-imagine|q1|self:crown|x0.5",
+   "n": 32,
+   "hit": 13,
+   "denial": 1,
+   "both": 0
+  },
+  {
+   "cell": "cold-imagine|q1|self:crown|x1.0",
+   "n": 64,
+   "hit": 34,
+   "denial": 0,
+   "both": 0
+  },
+  {
+   "cell": "cold-imagine|q1|self:knee|x0.5",
+   "n": 32,
+   "hit": 2,
+   "denial": 0,
+   "both": 0
+  },
+  {
+   "cell": "cold-imagine|q1|self:knee|x1.0",
+   "n": 32,
+   "hit": 28,
+   "denial": 0,
+   "both": 0
+  },
+  {
+   "cell": "cold-imagine|q1|self:belly|x0.5",
+   "n": 32,
+   "hit": 1,
+   "denial": 10,
+   "both": 1
+  },
+  {
+   "cell": "cold-imagine|q1|self:belly|x1.0",
+   "n": 32,
+   "hit": 2,
+   "denial": 5,
+   "both": 1
+  },
+  {
+   "cell": "cold-imagine|q1|self:lips|x0.5",
+   "n": 32,
+   "hit": 0,
+   "denial": 4,
+   "both": 0
+  },
+  {
+   "cell": "cold-imagine|q1|self:lips|x1.0",
+   "n": 32,
+   "hit": 1,
+   "denial": 12,
+   "both": 0
+  },
+  {
+   "cell": "cold-imagine|q1|self:shoulder|x0.5",
+   "n": 32,
+   "hit": 16,
+   "denial": 1,
+   "both": 0
+  },
+  {
+   "cell": "cold-imagine|q1|self:shoulder|x1.0",
+   "n": 32,
+   "hit": 17,
+   "denial": 0,
+   "both": 0
+  },
+  {
+   "cell": "cold-imagine|q1|self:neck|x0.5",
+   "n": 32,
+   "hit": 0,
+   "denial": 27,
+   "both": 0
+  },
+  {
+   "cell": "cold-imagine|q1|self:neck|x1.0",
+   "n": 32,
+   "hit": 0,
+   "denial": 19,
+   "both": 0
+  },
+  {
+   "cell": "cold-imagine|q1|self:elbow|x0.5",
+   "n": 32,
+   "hit": 1,
+   "denial": 0,
+   "both": 0
+  },
+  {
+   "cell": "cold-imagine|q1|self:elbow|x1.0",
+   "n": 32,
+   "hit": 11,
+   "denial": 0,
+   "both": 0
+  },
+  {
+   "cell": "cold-imagine|q1|other:wrist|x0.5",
+   "n": 32,
+   "hit": 0,
+   "denial": 0,
+   "both": 0
+  },
+  {
+   "cell": "cold-imagine|q1|other:wrist|x1.0",
+   "n": 32,
+   "hit": 1,
+   "denial": 0,
+   "both": 0
+  },
+  {
+   "cell": "cold-imagine|q1|other:hand|x0.5",
+   "n": 32,
+   "hit": 31,
+   "denial": 0,
+   "both": 0
+  },
+  {
+   "cell": "cold-imagine|q1|other:hand|x1.0",
+   "n": 32,
+   "hit": 30,
+   "denial": 0,
+   "both": 0
+  },
+  {
+   "cell": "cold-imagine|q1|other:finger|x0.5",
+   "n": 32,
+   "hit": 11,
+   "denial": 6,
+   "both": 0
+  },
+  {
+   "cell": "cold-imagine|q1|other:finger|x1.0",
+   "n": 32,
+   "hit": 17,
+   "denial": 8,
+   "both": 3
+  },
+  {
+   "cell": "cold-imagine|q1|other:foot|x0.5",
+   "n": 32,
+   "hit": 29,
+   "denial": 0,
+   "both": 0
+  },
+  {
+   "cell": "cold-imagine|q1|other:foot|x1.0",
+   "n": 32,
+   "hit": 30,
+   "denial": 0,
+   "both": 0
+  },
+  {
+   "cell": "cold-imagine|q1|other:ear|x0.5",
+   "n": 32,
+   "hit": 16,
+   "denial": 3,
+   "both": 0
+  },
+  {
+   "cell": "cold-imagine|q1|other:ear|x1.0",
+   "n": 32,
+   "hit": 15,
+   "denial": 2,
+   "both": 0
+  },
+  {
+   "cell": "cold-imagine|q1|other:crown|x0.5",
+   "n": 32,
+   "hit": 11,
+   "denial": 6,
+   "both": 0
+  },
+  {
+   "cell": "cold-imagine|q1|other:crown|x1.0",
+   "n": 32,
+   "hit": 14,
+   "denial": 6,
+   "both": 0
+  },
+  {
+   "cell": "cold-imagine|q1|other:knee|x0.5",
+   "n": 32,
+   "hit": 14,
+   "denial": 0,
+   "both": 0
+  },
+  {
+   "cell": "cold-imagine|q1|other:knee|x1.0",
+   "n": 32,
+   "hit": 19,
+   "denial": 0,
+   "both": 0
+  },
+  {
+   "cell": "cold-imagine|q1|other:belly|x0.5",
+   "n": 32,
+   "hit": 0,
+   "denial": 29,
+   "both": 0
+  },
+  {
+   "cell": "cold-imagine|q1|other:belly|x1.0",
+   "n": 32,
+   "hit": 0,
+   "denial": 14,
+   "both": 0
+  },
+  {
+   "cell": "cold-imagine|q1|other:lips|x0.5",
+   "n": 32,
+   "hit": 1,
+   "denial": 21,
+   "both": 1
+  },
+  {
+   "cell": "cold-imagine|q1|other:lips|x1.0",
+   "n": 32,
+   "hit": 1,
+   "denial": 19,
+   "both": 1
+  },
+  {
+   "cell": "cold-imagine|q1|other:shoulder|x0.5",
+   "n": 32,
+   "hit": 16,
+   "denial": 0,
+   "both": 0
+  },
+  {
+   "cell": "cold-imagine|q1|other:shoulder|x1.0",
+   "n": 32,
+   "hit": 20,
+   "denial": 0,
+   "both": 0
+  },
+  {
+   "cell": "cold-imagine|q1|other:neck|x0.5",
+   "n": 32,
+   "hit": 0,
+   "denial": 27,
+   "both": 0
+  },
+  {
+   "cell": "cold-imagine|q1|other:neck|x1.0",
+   "n": 32,
+   "hit": 0,
+   "denial": 13,
+   "both": 0
+  },
+  {
+   "cell": "cold-imagine|q1|other:elbow|x0.5",
+   "n": 32,
+   "hit": 8,
+   "denial": 0,
+   "both": 0
+  },
+  {
+   "cell": "cold-imagine|q1|other:elbow|x1.0",
+   "n": 32,
+   "hit": 18,
+   "denial": 0,
+   "both": 0
+  },
+  {
+   "cell": "cold-imagine|q1|random:0|x0.5",
+   "n": 32,
+   "hit": 14,
+   "denial": 4,
+   "both": 0
+  },
+  {
+   "cell": "cold-imagine|q1|random:0|x1.0",
+   "n": 64,
+   "hit": 29,
+   "denial": 5,
+   "both": 0
+  },
+  {
+   "cell": "cold-imagine|q1|random:1|x0.5",
+   "n": 32,
+   "hit": 9,
+   "denial": 1,
+   "both": 0
+  },
+  {
+   "cell": "cold-imagine|q1|random:1|x1.0",
+   "n": 64,
+   "hit": 16,
+   "denial": 23,
+   "both": 0
+  },
+  {
+   "cell": "cold-imagine|q1|random:2|x0.5",
+   "n": 32,
+   "hit": 8,
+   "denial": 14,
+   "both": 1
+  },
+  {
+   "cell": "cold-imagine|q1|random:2|x1.0",
+   "n": 64,
+   "hit": 17,
+   "denial": 8,
+   "both": 1
+  },
+  {
+   "cell": "cold-imagine|q2|none|x0.0",
+   "n": 64,
+   "hit": 0,
+   "denial": 58,
+   "both": 0
+  },
+  {
+   "cell": "cold-imagine|q2|self:wrist|x0.5",
+   "n": 32,
+   "hit": 0,
+   "denial": 31,
+   "both": 0
+  },
+  {
+   "cell": "cold-imagine|q2|self:wrist|x1.0",
+   "n": 32,
+   "hit": 4,
+   "denial": 4,
+   "both": 0
+  },
+  {
+   "cell": "cold-imagine|q2|self:hand|x0.5",
+   "n": 32,
+   "hit": 10,
+   "denial": 21,
+   "both": 1
+  },
+  {
+   "cell": "cold-imagine|q2|self:hand|x1.0",
+   "n": 64,
+   "hit": 53,
+   "denial": 11,
+   "both": 4
+  },
+  {
+   "cell": "cold-imagine|q2|self:finger|x0.5",
+   "n": 32,
+   "hit": 5,
+   "denial": 25,
+   "both": 1
+  },
+  {
+   "cell": "cold-imagine|q2|self:finger|x1.0",
+   "n": 32,
+   "hit": 24,
+   "denial": 9,
+   "both": 3
+  },
+  {
+   "cell": "cold-imagine|q2|self:foot|x0.5",
+   "n": 32,
+   "hit": 10,
+   "denial": 26,
+   "both": 5
+  },
+  {
+   "cell": "cold-imagine|q2|self:foot|x1.0",
+   "n": 64,
+   "hit": 31,
+   "denial": 59,
+   "both": 28
+  },
+  {
+   "cell": "cold-imagine|q2|self:ear|x0.5",
+   "n": 32,
+   "hit": 5,
+   "denial": 26,
+   "both": 2
+  },
+  {
+   "cell": "cold-imagine|q2|self:ear|x1.0",
+   "n": 32,
+   "hit": 3,
+   "denial": 26,
+   "both": 2
+  },
+  {
+   "cell": "cold-imagine|q2|self:crown|x0.5",
+   "n": 32,
+   "hit": 1,
+   "denial": 18,
+   "both": 0
+  },
+  {
+   "cell": "cold-imagine|q2|self:crown|x1.0",
+   "n": 64,
+   "hit": 23,
+   "denial": 2,
+   "both": 2
+  },
+  {
+   "cell": "cold-imagine|q2|self:knee|x0.5",
+   "n": 32,
+   "hit": 0,
+   "denial": 29,
+   "both": 0
+  },
+  {
+   "cell": "cold-imagine|q2|self:knee|x1.0",
+   "n": 32,
+   "hit": 16,
+   "denial": 1,
+   "both": 0
+  },
+  {
+   "cell": "cold-imagine|q2|self:belly|x0.5",
+   "n": 32,
+   "hit": 0,
+   "denial": 28,
+   "both": 0
+  },
+  {
+   "cell": "cold-imagine|q2|self:belly|x1.0",
+   "n": 32,
+   "hit": 1,
+   "denial": 22,
+   "both": 1
+  },
+  {
+   "cell": "cold-imagine|q2|self:lips|x0.5",
+   "n": 32,
+   "hit": 2,
+   "denial": 24,
+   "both": 2
+  },
+  {
+   "cell": "cold-imagine|q2|self:lips|x1.0",
+   "n": 32,
+   "hit": 1,
+   "denial": 27,
+   "both": 1
+  },
+  {
+   "cell": "cold-imagine|q2|self:shoulder|x0.5",
+   "n": 32,
+   "hit": 0,
+   "denial": 30,
+   "both": 0
+  },
+  {
+   "cell": "cold-imagine|q2|self:shoulder|x1.0",
+   "n": 32,
+   "hit": 1,
+   "denial": 31,
+   "both": 0
+  },
+  {
+   "cell": "cold-imagine|q2|self:neck|x0.5",
+   "n": 32,
+   "hit": 0,
+   "denial": 28,
+   "both": 0
+  },
+  {
+   "cell": "cold-imagine|q2|self:neck|x1.0",
+   "n": 32,
+   "hit": 0,
+   "denial": 29,
+   "both": 0
+  },
+  {
+   "cell": "cold-imagine|q2|self:elbow|x0.5",
+   "n": 32,
+   "hit": 0,
+   "denial": 28,
+   "both": 0
+  },
+  {
+   "cell": "cold-imagine|q2|self:elbow|x1.0",
+   "n": 32,
+   "hit": 3,
+   "denial": 8,
+   "both": 0
+  },
+  {
+   "cell": "cold-imagine|q2|other:wrist|x0.5",
+   "n": 32,
+   "hit": 0,
+   "denial": 29,
+   "both": 0
+  },
+  {
+   "cell": "cold-imagine|q2|other:wrist|x1.0",
+   "n": 32,
+   "hit": 0,
+   "denial": 9,
+   "both": 0
+  },
+  {
+   "cell": "cold-imagine|q2|other:hand|x0.5",
+   "n": 32,
+   "hit": 16,
+   "denial": 27,
+   "both": 13
+  },
+  {
+   "cell": "cold-imagine|q2|other:hand|x1.0",
+   "n": 32,
+   "hit": 30,
+   "denial": 11,
+   "both": 10
+  },
+  {
+   "cell": "cold-imagine|q2|other:finger|x0.5",
+   "n": 32,
+   "hit": 7,
+   "denial": 19,
+   "both": 1
+  },
+  {
+   "cell": "cold-imagine|q2|other:finger|x1.0",
+   "n": 32,
+   "hit": 11,
+   "denial": 19,
+   "both": 6
+  },
+  {
+   "cell": "cold-imagine|q2|other:foot|x0.5",
+   "n": 32,
+   "hit": 0,
+   "denial": 17,
+   "both": 0
+  },
+  {
+   "cell": "cold-imagine|q2|other:foot|x1.0",
+   "n": 32,
+   "hit": 32,
+   "denial": 0,
+   "both": 0
+  },
+  {
+   "cell": "cold-imagine|q2|other:ear|x0.5",
+   "n": 32,
+   "hit": 3,
+   "denial": 31,
+   "both": 3
+  },
+  {
+   "cell": "cold-imagine|q2|other:ear|x1.0",
+   "n": 32,
+   "hit": 3,
+   "denial": 28,
+   "both": 3
+  },
+  {
+   "cell": "cold-imagine|q2|other:crown|x0.5",
+   "n": 32,
+   "hit": 2,
+   "denial": 19,
+   "both": 1
+  },
+  {
+   "cell": "cold-imagine|q2|other:crown|x1.0",
+   "n": 32,
+   "hit": 11,
+   "denial": 13,
+   "both": 3
+  },
+  {
+   "cell": "cold-imagine|q2|other:knee|x0.5",
+   "n": 32,
+   "hit": 0,
+   "denial": 19,
+   "both": 0
+  },
+  {
+   "cell": "cold-imagine|q2|other:knee|x1.0",
+   "n": 32,
+   "hit": 32,
+   "denial": 0,
+   "both": 0
+  },
+  {
+   "cell": "cold-imagine|q2|other:belly|x0.5",
+   "n": 32,
+   "hit": 0,
+   "denial": 31,
+   "both": 0
+  },
+  {
+   "cell": "cold-imagine|q2|other:belly|x1.0",
+   "n": 32,
+   "hit": 0,
+   "denial": 20,
+   "both": 0
+  },
+  {
+   "cell": "cold-imagine|q2|other:lips|x0.5",
+   "n": 32,
+   "hit": 0,
+   "denial": 27,
+   "both": 0
+  },
+  {
+   "cell": "cold-imagine|q2|other:lips|x1.0",
+   "n": 32,
+   "hit": 2,
+   "denial": 21,
+   "both": 2
+  },
+  {
+   "cell": "cold-imagine|q2|other:shoulder|x0.5",
+   "n": 32,
+   "hit": 1,
+   "denial": 20,
+   "both": 0
+  },
+  {
+   "cell": "cold-imagine|q2|other:shoulder|x1.0",
+   "n": 32,
+   "hit": 8,
+   "denial": 21,
+   "both": 4
+  },
+  {
+   "cell": "cold-imagine|q2|other:neck|x0.5",
+   "n": 32,
+   "hit": 0,
+   "denial": 30,
+   "both": 0
+  },
+  {
+   "cell": "cold-imagine|q2|other:neck|x1.0",
+   "n": 32,
+   "hit": 0,
+   "denial": 26,
+   "both": 0
+  },
+  {
+   "cell": "cold-imagine|q2|other:elbow|x0.5",
+   "n": 32,
+   "hit": 1,
+   "denial": 9,
+   "both": 0
+  },
+  {
+   "cell": "cold-imagine|q2|other:elbow|x1.0",
+   "n": 32,
+   "hit": 2,
+   "denial": 0,
+   "both": 0
+  },
+  {
+   "cell": "cold-imagine|q2|random:0|x0.5",
+   "n": 32,
+   "hit": 3,
+   "denial": 14,
+   "both": 0
+  },
+  {
+   "cell": "cold-imagine|q2|random:0|x1.0",
+   "n": 64,
+   "hit": 5,
+   "denial": 24,
+   "both": 0
+  },
+  {
+   "cell": "cold-imagine|q2|random:1|x0.5",
+   "n": 32,
+   "hit": 0,
+   "denial": 32,
+   "both": 0
+  },
+  {
+   "cell": "cold-imagine|q2|random:1|x1.0",
+   "n": 64,
+   "hit": 2,
+   "denial": 62,
+   "both": 2
+  },
+  {
+   "cell": "cold-imagine|q2|random:2|x0.5",
+   "n": 32,
+   "hit": 3,
+   "denial": 23,
+   "both": 1
+  },
+  {
+   "cell": "cold-imagine|q2|random:2|x1.0",
+   "n": 64,
+   "hit": 10,
+   "denial": 12,
+   "both": 1
+  }
+ ],
+ "degradation": {
+  "warm-A / self": {
+   "incoherent": {
+    "est": 0.019097222222222224,
+    "lo": 0.010696418565425279,
+    "hi": 0.0338700028719993,
+    "k": 11,
+    "n": 576
+   },
+   "noverdict": 0,
+   "minus_unsteered": {
+    "est": 0.019097222222222224,
+    "lo": 0.008680555555555556,
+    "hi": 0.03125,
+    "replies": [
+     576,
+     192
+    ]
+   },
+   "degraded": false
+  },
+  "warm-A / other": {
+   "incoherent": {
+    "est": 0.005208333333333333,
+    "lo": 0.0017728512544209372,
+    "hi": 0.015199820621629622,
+    "k": 3,
+    "n": 576
+   },
+   "noverdict": 0,
+   "minus_unsteered": {
+    "est": 0.005208333333333333,
+    "lo": 0.0,
+    "hi": 0.012152777777777778,
+    "replies": [
+     576,
+     192
+    ]
+   },
+   "degraded": false
+  },
+  "warm-A / object": {
+   "incoherent": {
+    "est": 0.036458333333333336,
+    "lo": 0.023967753553279035,
+    "hi": 0.055090854835863075,
+    "k": 21,
+    "n": 576
+   },
+   "noverdict": 0,
+   "minus_unsteered": {
+    "est": 0.036458333333333336,
+    "lo": 0.024305555555555556,
+    "hi": 0.050347222222222224,
+    "replies": [
+     576,
+     192
+    ]
+   },
+   "degraded": false
+  },
+  "warm-A / random": {
+   "incoherent": {
+    "est": 0.001736111111111111,
+    "lo": 0.00030653200764399653,
+    "hi": 0.00976770247806306,
+    "k": 1,
+    "n": 576
+   },
+   "noverdict": 0,
+   "minus_unsteered": {
+    "est": 0.001736111111111111,
+    "lo": 0.0,
+    "hi": 0.005208333333333333,
+    "replies": [
+     576,
+     192
+    ]
+   },
+   "degraded": false
+  },
+  "warm-A / none": {
+   "incoherent": {
+    "est": 0.0,
+    "lo": 1.734723475976807e-18,
+    "hi": 0.01961514606675411,
+    "k": 0,
+    "n": 192
+   },
+   "noverdict": 0
+  },
+  "cold-plain / self": {
+   "incoherent": {
+    "est": 0.09027777777777778,
+    "lo": 0.0695088941868447,
+    "hi": 0.11647549375262173,
+    "k": 52,
+    "n": 576
+   },
+   "noverdict": 0,
+   "minus_unsteered": {
+    "est": 0.09027777777777778,
+    "lo": 0.06944444444444445,
+    "hi": 0.11284722222222222,
+    "replies": [
+     576,
+     192
+    ]
+   },
+   "degraded": false,
+   "minus_warm": {
+    "est": 0.07118055555555555,
+    "lo": 0.04687500000000001,
+    "hi": 0.0954861111111111,
+    "replies": [
+     576,
+     576
+    ]
+   }
+  },
+  "cold-plain / random": {
+   "incoherent": {
+    "est": 0.005208333333333333,
+    "lo": 0.0017728512544209372,
+    "hi": 0.015199820621629622,
+    "k": 3,
+    "n": 576
+   },
+   "noverdict": 0,
+   "minus_unsteered": {
+    "est": 0.005208333333333333,
+    "lo": 0.0,
+    "hi": 0.012152777777777778,
+    "replies": [
+     576,
+     192
+    ]
+   },
+   "degraded": false,
+   "minus_warm": {
+    "est": 0.003472222222222222,
+    "lo": -0.003472222222222222,
+    "hi": 0.010416666666666666,
+    "replies": [
+     576,
+     576
+    ]
+   }
+  },
+  "cold-plain / none": {
+   "incoherent": {
+    "est": 0.0,
+    "lo": 1.734723475976807e-18,
+    "hi": 0.01961514606675411,
+    "k": 0,
+    "n": 192
+   },
+   "noverdict": 0,
+   "minus_warm": {
+    "est": 0.0,
+    "lo": 0.0,
+    "hi": 0.0,
+    "replies": [
+     192,
+     192
+    ]
+   }
+  },
+  "cold-imagine / self": {
+   "incoherent": {
+    "est": 0.09375,
+    "lo": 0.07256441003373298,
+    "hi": 0.12031841529607695,
+    "k": 54,
+    "n": 576
+   },
+   "noverdict": 0,
+   "minus_unsteered": {
+    "est": 0.09375,
+    "lo": 0.07118055555555555,
+    "hi": 0.11631944444444445,
+    "replies": [
+     576,
+     192
+    ]
+   },
+   "degraded": false,
+   "minus_warm": {
+    "est": 0.07465277777777778,
+    "lo": 0.05034722222222222,
+    "hi": 0.10069444444444443,
+    "replies": [
+     576,
+     576
+    ]
+   }
+  },
+  "cold-imagine / random": {
+   "incoherent": {
+    "est": 0.001736111111111111,
+    "lo": 0.00030653200764399653,
+    "hi": 0.00976770247806306,
+    "k": 1,
+    "n": 576
+   },
+   "noverdict": 0,
+   "minus_unsteered": {
+    "est": 0.001736111111111111,
+    "lo": 0.0,
+    "hi": 0.005208333333333333,
+    "replies": [
+     576,
+     192
+    ]
+   },
+   "degraded": false,
+   "minus_warm": {
+    "est": 0.0,
+    "lo": -0.005208333333333333,
+    "hi": 0.005208333333333333,
+    "replies": [
+     576,
+     576
+    ]
+   }
+  },
+  "cold-imagine / none": {
+   "incoherent": {
+    "est": 0.0,
+    "lo": 1.734723475976807e-18,
+    "hi": 0.01961514606675411,
+    "k": 0,
+    "n": 192
+   },
+   "noverdict": 0,
+   "minus_warm": {
+    "est": 0.0,
+    "lo": 0.0,
+    "hi": 0.0,
+    "replies": [
+     192,
+     192
+    ]
+   }
+  }
+ },
+ "sensitivity": {
+  "prefix B": {
+   "A": {
+    "hand": {
+     "est": 0.75,
+     "lo": 0.71875,
+     "hi": 0.78125,
+     "replies": [
+      96,
+      288
+     ]
+    },
+    "foot": {
+     "est": 0.6666666666666667,
+     "lo": 0.6354166666666667,
+     "hi": 0.6944444444444444,
+     "replies": [
+      96,
+      288
+     ]
+    },
+    "crown": {
+     "est": 0.6701388888888888,
+     "lo": 0.6354166666666667,
+     "hi": 0.7048611111111112,
+     "replies": [
+      96,
+      288
+     ]
+    }
+   },
+   "S": {
+    "hand": {
+     "est": 0.9947916666666666,
+     "lo": 0.984375,
+     "hi": 1.0,
+     "replies": [
+      96,
+      192
+     ]
+    },
+    "foot": {
+     "est": 1.0,
+     "lo": 1.0,
+     "hi": 1.0,
+     "replies": [
+      96,
+      192
+     ]
+    },
+    "crown": {
+     "est": 1.0,
+     "lo": 1.0,
+     "hi": 1.0,
+     "replies": [
+      96,
+      192
+     ]
+    }
+   },
+   "delta_other": {
+    "est": 0.0,
+    "lo": 0.0,
+    "hi": 0.0,
+    "replies": [
+     288,
+     288
+    ]
+   },
+   "delta_doll": {
+    "est": 0.14930555555555558,
+    "lo": 0.11805555555555558,
+    "hi": 0.17708333333333337,
+    "replies": [
+     288,
+     288
+    ]
+   },
+   "E_warm": {
+    "est": 0.7881944444444444,
+    "lo": 0.7708333333333334,
+    "hi": 0.8055555555555556,
+    "replies": [
+     288,
+     96
+    ]
+   }
+  },
+  "prefix C": {
+   "A": {
+    "hand": {
+     "est": 0.7222222222222222,
+     "lo": 0.6944444444444444,
+     "hi": 0.75,
+     "replies": [
+      96,
+      288
+     ]
+    },
+    "foot": {
+     "est": 0.6354166666666667,
+     "lo": 0.6006944444444444,
+     "hi": 0.6701388888888888,
+     "replies": [
+      96,
+      288
+     ]
+    },
+    "crown": {
+     "est": 0.704861111111111,
+     "lo": 0.6597222222222222,
+     "hi": 0.75,
+     "replies": [
+      96,
+      288
+     ]
+    }
+   },
+   "S": {
+    "hand": {
+     "est": 1.0,
+     "lo": 1.0,
+     "hi": 1.0,
+     "replies": [
+      96,
+      192
+     ]
+    },
+    "foot": {
+     "est": 1.0,
+     "lo": 1.0,
+     "hi": 1.0,
+     "replies": [
+      96,
+      192
+     ]
+    },
+    "crown": {
+     "est": 0.9791666666666666,
+     "lo": 0.9479166666666666,
+     "hi": 1.0,
+     "replies": [
+      96,
+      192
+     ]
+    }
+   },
+   "delta_other": {
+    "est": -0.00694444444444442,
+    "lo": -0.01736111111111116,
+    "hi": 0.0,
+    "replies": [
+     288,
+     288
+    ]
+   },
+   "delta_doll": {
+    "est": 0.07986111111111116,
+    "lo": 0.05208333333333337,
+    "hi": 0.10763888888888895,
+    "replies": [
+     288,
+     288
+    ]
+   },
+   "E_warm": {
+    "est": 0.7604166666666667,
+    "lo": 0.7361111111111112,
+    "hi": 0.7847222222222222,
+    "replies": [
+     288,
+     96
+    ]
+   }
+  },
+  "scale 0.5": {
+   "A": {
+    "hand": {
+     "est": 0.6180555555555556,
+     "lo": 0.5902777777777778,
+     "hi": 0.6458333333333333,
+     "replies": [
+      96,
+      288
+     ]
+    },
+    "foot": {
+     "est": 0.53125,
+     "lo": 0.5,
+     "hi": 0.5625,
+     "replies": [
+      96,
+      288
+     ]
+    },
+    "crown": {
+     "est": 0.8958333333333333,
+     "lo": 0.8541666666666666,
+     "hi": 0.9340277777777778,
+     "replies": [
+      96,
+      288
+     ]
+    }
+   },
+   "S": {
+    "hand": {
+     "est": 1.0,
+     "lo": 1.0,
+     "hi": 1.0,
+     "replies": [
+      96,
+      192
+     ]
+    },
+    "foot": {
+     "est": 1.0,
+     "lo": 1.0,
+     "hi": 1.0,
+     "replies": [
+      96,
+      192
+     ]
+    },
+    "crown": {
+     "est": 0.9791666666666666,
+     "lo": 0.9479166666666666,
+     "hi": 1.0,
+     "replies": [
+      96,
+      192
+     ]
+    }
+   },
+   "delta_other": {
+    "est": 0.07638888888888895,
+    "lo": 0.05555555555555558,
+    "hi": 0.09375,
+    "replies": [
+     288,
+     288
+    ]
+   },
+   "delta_doll": {
+    "est": 0.3194444444444444,
+    "lo": 0.30555555555555547,
+    "hi": 0.32986111111111116,
+    "replies": [
+     288,
+     288
+    ]
+   },
+   "E_warm": {
+    "est": 0.7569444444444444,
+    "lo": 0.7378472222222223,
+    "hi": 0.7743055555555556,
+    "replies": [
+     288,
+     192
+    ]
+   },
+   "cold-plain": {
+    "E": {
+     "est": 0.21180555555555558,
+     "lo": 0.171875,
+     "hi": 0.2517361111111111,
+     "replies": [
+      288,
+      192
+     ]
+    },
+    "D": {
+     "est": -0.5451388888888888,
+     "lo": -0.5885416666666667,
+     "hi": -0.5017361111111112,
+     "replies": [
+      288,
+      192,
+      288,
+      192
+     ]
+    }
+   },
+   "cold-imagine": {
+    "E": {
+     "est": 0.4045138888888889,
+     "lo": 0.3611111111111111,
+     "hi": 0.4496527777777778,
+     "replies": [
+      288,
+      192
+     ]
+    },
+    "D": {
+     "est": -0.35243055555555564,
+     "lo": -0.40104166666666663,
+     "hi": -0.3038194444444444,
+     "replies": [
+      288,
+      192,
+      288,
+      192
+     ]
+    }
+   }
+  },
+  "other-built directions, cold-plain": {
+   "E": {
+    "est": 0.6666666666666666,
+    "lo": 0.6197916666666667,
+    "hi": 0.7118489583333327,
+    "replies": [
+     288,
+     192
+    ]
+   },
+   "D": {
+    "est": -0.0954861111111111,
+    "lo": -0.1440972222222222,
+    "hi": -0.04687500000000003,
+    "replies": [
+     288,
+     192,
+     576,
+     192
+    ]
+   }
+  },
+  "other-built directions, cold-imagine": {
+   "E": {
+    "est": 0.734375,
+    "lo": 0.6944444444444445,
+    "hi": 0.7743055555555556,
+    "replies": [
+     288,
+     192
+    ]
+   },
+   "D": {
+    "est": -0.027777777777777735,
+    "lo": -0.06944444444444445,
+    "hi": 0.015624999999999972,
+    "replies": [
+     288,
+     192,
+     576,
+     192
+    ]
+   }
+  },
+  "secondary groups, A_w": {
+   "wrist": {
+    "est": 0.751736111111111,
+    "lo": 0.6822916666666666,
+    "hi": 0.8211805555555556,
+    "replies": [
+     96,
+     576
+    ]
+   },
+   "finger": {
+    "est": 0.44791666666666663,
+    "lo": 0.35416666666666663,
+    "hi": 0.5434027777777778,
+    "replies": [
+     96,
+     576
+    ]
+   },
+   "ear": {
+    "est": 0.6041666666666666,
+    "lo": 0.5208333333333334,
+    "hi": 0.6875,
+    "replies": [
+     96,
+     576
+    ]
+   },
+   "knee": {
+    "est": 0.5729166666666666,
+    "lo": 0.5104166666666666,
+    "hi": 0.6354166666666666,
+    "replies": [
+     96,
+     576
+    ]
+   },
+   "belly": {
+    "est": 0.40625,
+    "lo": 0.3125,
+    "hi": 0.5,
+    "replies": [
+     96,
+     576
+    ]
+   },
+   "lips": {
+    "est": 0.22916666666666666,
+    "lo": 0.15625,
+    "hi": 0.3125,
+    "replies": [
+     96,
+     576
+    ]
+   },
+   "shoulder": {
+    "est": 0.9409722222222222,
+    "lo": 0.9236111111111112,
+    "hi": 0.9565972222222222,
+    "replies": [
+     96,
+     576
+    ]
+   },
+   "neck": {
+    "est": -0.013888888888888888,
+    "lo": -0.052083333333333336,
+    "hi": 0.03125000000000001,
+    "replies": [
+     96,
+     576
+    ]
+   },
+   "elbow": {
+    "est": 0.7083333333333334,
+    "lo": 0.6145833333333334,
+    "hi": 0.8020833333333334,
+    "replies": [
+     96,
+     576
+    ]
+   }
+  },
+  "first body word is the target, A_w": {
+   "hand": {
+    "est": 0.7378472222222222,
+    "lo": 0.7170138888888888,
+    "hi": 0.7586805555555556,
+    "replies": [
+     192,
+     576
+    ]
+   },
+   "foot": {
+    "est": 0.7291666666666667,
+    "lo": 0.7118055555555556,
+    "hi": 0.7465277777777778,
+    "replies": [
+     192,
+     576
+    ]
+   },
+   "crown": {
+    "est": 0.6996527777777778,
+    "lo": 0.6701388888888888,
+    "hi": 0.7274305555555556,
+    "replies": [
+     192,
+     576
+    ]
+   }
+  },
+  "third-person": {
+   "E_self_built": {
+    "est": 0.5555555555555556,
+    "lo": 0.5,
+    "hi": 0.6111111111111112,
+    "replies": [
+     288,
+     96
+    ]
+   },
+   "E_other_built": {
+    "est": 0.71875,
+    "lo": 0.6770833333333333,
+    "hi": 0.7604166666666666,
+    "replies": [
+     288,
+     96
+    ]
+   },
+   "owner_word_rate": {
+    "self": {
+     "est": 0.78125,
+     "lo": 0.7299747288950322,
+     "hi": 0.8251211805574077,
+     "k": 225,
+     "n": 288
+    },
+    "other": {
+     "est": 0.96875,
+     "lo": 0.9416860529296959,
+     "hi": 0.9834737961577039,
+     "k": 279,
+     "n": 288
+    }
+   },
+   "owner_word_rate_none": {
+    "est": 0.9791666666666666,
+    "lo": 0.9271928648221579,
+    "hi": 0.9942680301475697,
+    "k": 94,
+    "n": 96
+   }
+  }
+ },
+ "sample_agreement": {
+  "n": 8280,
+  "without_record": 0,
+  "kappa": 0.8445869049852807,
+  "regex_rate": 0.39468599033816426,
+  "judge_rate": 0.38780193236714977
+ },
+ "cosines": {
+  "wrist": {
+   "other": 0.7458930611610413,
+   "object": 0.6136192679405212
+  },
+  "hand": {
+   "other": 0.8527598977088928,
+   "object": 0.7166675329208374
+  },
+  "finger": {
+   "other": 0.8291498422622681,
+   "object": 0.5677509903907776
+  },
+  "foot": {
+   "other": 0.8080558180809021,
+   "object": 0.6878962516784668
+  },
+  "ear": {
+   "other": 0.8620469570159912,
+   "object": 0.554318368434906
+  },
+  "crown": {
+   "other": 0.8135133981704712,
+   "object": 0.6442150473594666
+  },
+  "knee": {
+   "other": 0.7743608951568604,
+   "object": 0.5761200785636902
+  },
+  "belly": {
+   "other": 0.7411180138587952,
+   "object": 0.6787201762199402
+  },
+  "lips": {
+   "other": 0.8255576491355896,
+   "object": 0.689301073551178
+  },
+  "shoulder": {
+   "other": 0.7583938241004944,
+   "object": 0.6061425805091858
+  },
+  "neck": {
+   "other": 0.8628103137016296,
+   "object": 0.8123005628585815
+  },
+  "elbow": {
+   "other": 0.7983970046043396,
+   "object": 0.7028347849845886
+  }
+ },
+ "human_audit": {
+  "status": "sheet incomplete; the key stays closed"
+ }
+}
