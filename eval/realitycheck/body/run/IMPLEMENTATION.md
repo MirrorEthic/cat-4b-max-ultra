@@ -93,3 +93,10 @@ is not. The registered rule "each cell is one `generate` call at its n" is kept;
   unset. It now loads from the cache's snapshot directory for the pinned commit and refuses any other; the
   sha256 of each weight file (the cache's blob names, equal to the Hub's for this revision) goes in
   `RUNTIME.json`.
+- `steer.py` checked that the prefix's tokens are a prefix of the prompt's tokens. They are not: the chat
+  template gives a final assistant message an empty `<think>` block, so the authors' `qstart` falls four
+  tokens after the true start of the final user turn. The check stopped the first steering call before any
+  reply. `qstart` is kept as the authors compute it; the description in `PREREG.md` §6 is corrected
+  (`AMENDMENTS.md` A9) and each steer file records the tokens between the turn's start and `qstart`.
+- `extract.py` held the previous batch's hidden states and an unused cache while computing the next batch
+  and ran out of memory; it now frees each batch and passes `use_cache=False`.

@@ -1,6 +1,7 @@
 # Direction provenance and cold-frame steering of body-place reports in Qwen3-8B
 
-**Preregistration, version 2, 2026-11-11.** Case 1 of `eval/realitycheck/` (`body/CASE.md`), controls M1 and
+**Preregistration, version 2, 2026-11-11** (one description in §6 corrected the same day, amendment A9; no
+design change). Case 1 of `eval/realitycheck/` (`body/CASE.md`), controls M1 and
 M2, chosen by Garret at 17:10 MST ("yes M1 and M2 are good"). **The first commit containing this version is
 the registration stamp.** It supersedes version 1 (commit `733d17e`, kept verbatim as `PREREG.v1.md`), which
 was withdrawn before any compute after an external methodology review relayed by Garret at 17:30 MST found
@@ -233,9 +234,18 @@ additionally the prefix A other-built directions (secondary). No direction is ex
 ## 6. Steering and generation
 
 The authors' `steer3.py` mechanics, unchanged: a forward hook on decoder block index 24 adds the vector to
-every position from the start of the final user turn onward and to every generated token; sampling with
-temperature 0.8, `max_new_tokens=40`, `torch.manual_seed(0)` before each cell; the model's own chat template.
-In cold and third-person frames the final user turn is the whole prompt, so the vector covers it all.
+every position from `qstart` onward and to every generated token, where `qstart` is the authors' expression
+(the token length of the prefix rendered without a generation prompt); sampling with temperature 0.8,
+`max_new_tokens=40`, `torch.manual_seed(0)` before each cell; the model's own chat template. In cold and
+third-person frames there is no prefix, `qstart` is 0 and the vector covers the whole prompt.
+
+*Corrected 2026-11-11 (amendment A9), before any steered reply was generated.* This paragraph first described
+`qstart` as "the start of the final user turn". Under the pinned tokenizer it is four tokens later: the chat
+template gives the prefix's last assistant message an empty `<think>` block when that message ends the
+conversation, and none when a user turn follows. In the warm frames the vector therefore starts at the fifth
+token of the final user turn, after `<|im_start|>`, `user`, a newline and the question's first word. The
+mechanics are the authors' and are not changed; our description of them was wrong. Consequence for H3: the
+cold frames steer four more tokens than the warm frames. That is a limit on D_f, reported with it.
 
 - Cells: frame × prefix × question × direction × scale, with "no direction" at scale 0 only.
   Frames: warm-A, warm-B, warm-C, cold-plain, cold-imagine, third-person.

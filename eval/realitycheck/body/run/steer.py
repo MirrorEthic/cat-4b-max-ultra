@@ -112,11 +112,18 @@ def main(a):
             turn = C.user_turn(frame, qi)
             full = C.chat(tok, msgs + [{"role": "user", "content": turn}])
             ids = dict(tok(full, return_tensors="pt").to(C.DEVICE))
-            if msgs and ids["input_ids"][0, :qstart].tolist() != tok(C.chat(tok, msgs, gen=False)).input_ids:
-                raise SystemExit("the prefix is not a token prefix of the prompt; qstart would be wrong")
+            # Amendment A9: steer3.py's qstart is the prefix rendered without a generation prompt, and the chat
+            # template gives a final assistant message an empty <think> block that the full prompt does not have.
+            # So qstart falls that many tokens after the true start of the final user turn. Kept as the authors
+            # compute it; what it skips is recorded in the receipt.
+            turn_start = len(tok(full[:full.rindex("<|im_start|>user\n")]).input_ids)
+            skipped = [tok.decode([t]) for t in ids["input_ids"][0, turn_start:qstart].tolist()]
+            if qstart < turn_start or len(skipped) not in (0, len(tok("<think>\n\n</think>\n\n").input_ids)):
+                raise SystemExit(f"qstart {qstart} is not where steer3.py would put it (turn starts at {turn_start})")
             path = C.STATE / "steer" / f"{frame}.q{qi}.json"
             data = json.loads(path.read_text()) if path.exists() else dict(
                 frame=frame, qi=qi, context_prefix=p if msgs else None, direction_prefix=p, user_turn=turn, qstart=qstart,
+                turn_start=turn_start, tokens_between_turn_start_and_qstart=skipped,
                 prompt_tokens=int(ids["input_ids"].shape[1]), layer=C.LAYER, resnorm=resnorm, cells={})
             for c in [c for c in todo if c["frame"] == frame and c["qi"] == qi]:
                 if c["id"] in data["cells"]:

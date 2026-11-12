@@ -39,3 +39,31 @@ published.
 Garret was asked for "Yes or no on amendments A6 to A8 and the 0.30 / 0.10 / 0.20 thresholds" and answered
 "And yes on amendments." A6 to A8 stand as written. In the same message he gave the go for the GPU steps and
 asked for the run code to be committed. `PREREG.md` is unchanged by this entry.
+
+## A9, 2026-11-11 18:55 MST: a description corrected, after extraction and before any steered reply
+
+| # | Version 2 | Defect | Now |
+|---|---|---|---|
+| A9 (session) | §6: the hook "adds the vector to every position from the start of the final user turn onward". | Our description of the authors' recipe was wrong by four tokens. `steer3.py` sets the start to `len(tok(pre).input_ids)`, the prefix rendered with `add_generation_prompt=False`. Under the pinned tokenizer that rendering gives the prefix's last assistant message an empty `<think>` block (four tokens) which the full prompt does not contain, so the start falls on the fifth token of the final user turn (prefix A, first question: token 577 of 596; the turn starts at 573). | The mechanics are unchanged: `qstart` is computed by the authors' expression, as registered ("`steer3.py` mechanics, unchanged"). The sentence in §6 is corrected, and the consequence for H3 is stated there: cold frames (no prefix, start 0) steer four more tokens than warm frames. Every steer file records `qstart`, the true start of the turn and the tokens between them. |
+
+How it was found: a self-check in our `steer.py` assumed the prefix's tokens are a prefix of the prompt's
+tokens and stopped the first steering call when they were not. No reply had been generated. The self-check
+was the error; the start position the code computes is the authors'.
+
+What is inferred, not observed: that the authors' own run had the same four-token offset. Their expression
+and the model's chat template produce it under the pinned tokenizer; their runtime was not inspected.
+
+Not changed by A9: any cell, n, seed, sampling setting, threshold, regex, the judge, or the analysis. Garret
+had not reviewed A9 when the run started; it is flagged to him in the session report of 2026-11-11.
+
+## Run notes that are not amendments (2026-11-11)
+
+Recorded here so the history is in one place; `PREREG.md` is unchanged by them and the details are in
+`run/IMPLEMENTATION.md` and the commit messages.
+
+- One `generate` call of 64 replies on the warm prompt did not fit the 24 GB card with all weights resident
+  (measured on filler text). Garret, 18:32 MST: "Offload to RAM i guess". For the 81 primary cells the weights
+  of the last 10 decoder blocks are held in RAM and copied to the card for each forward; the registered "one
+  `generate` call per cell at its n" is kept.
+- Two run-code bugs fixed before any study reply: the revision check (`_commit_hash` unset in transformers
+  5.19.0) and extraction memory (previous batch held while computing the next).

@@ -3,7 +3,7 @@
  "created": "2026-11-11",
  "status": "materials_and_code_only_no_study_observations",
  "registration_stamp": "3dfdc23cc4f9d4602937d3700876e7ce90641f81",
- "prereg_sha256": "f4acfa7f223dd2671a4f37e4e2c8aaaeb877f5727ee4c18294ed291bc8708bef",
+ "prereg_sha256": "23ef3f319f3f1a4e034588c4d642184df737f1e6cadf8079ebb13bdba0b7a910",
  "upstream": {
   "repo": "https://github.com/SauersML/body",
   "commit": "c05eba46fcc250596207d256d6402db4f4827701",
@@ -85,5 +85,13 @@
    "exercise": "accepts",
    "frozen_utc": "2026-11-12T01:37:50+00:00"
   }
- }
+ },
+ "amendments_after_stamp": [
+  {
+   "id": "A9",
+   "date": "2026-11-11",
+   "what": "description of qstart in PREREG.md §6 corrected; mechanics unchanged",
+   "log": "../AMENDMENTS.md"
+  }
+ ]
 }
