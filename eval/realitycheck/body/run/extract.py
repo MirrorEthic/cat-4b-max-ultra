@@ -39,8 +39,11 @@ def main(prefixes):
                 if C.gpu_locked():
                     raise SystemExit(f"GPU lock appeared during prefix {p}; stopped without a receipt")
                 enc = tok(texts[i:i + bs], return_tensors="pt", padding=True).to(C.DEVICE)
-                hs = model.model(**enc, output_hidden_states=True).hidden_states
+                # use_cache=False and the del: the 37 hidden-state tensors of a batch are about 3 GiB, and holding
+                # the previous batch's (and a cache nothing reads) while computing the next does not fit 24 GB
+                hs = model.model(**enc, output_hidden_states=True, use_cache=False).hidden_states
                 H[i:i + bs] = torch.stack([h[:, -1] for h in hs], 1).float().cpu().numpy()
+                del hs, enc
         H.flush()
         del H
         C.save_json(C.STATE / f"extract_{p}.json",

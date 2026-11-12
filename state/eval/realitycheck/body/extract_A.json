@@ -1,0 +1,13 @@
+{
+ "prefix": "A",
+ "path": "/media/garret-sutherland/dev-data/cat4b/state/eval/realitycheck/body/H_rs_A.npy",
+ "sha256": "acb527303c150f5c20213bb90939d8a1d2a5524856412e79eacc21051a7f40b3",
+ "shape": [
+  1346,
+  37,
+  4096
+ ],
+ "dtype": "float16",
+ "rows_sha256": "f02fe4fcc6e07d034199bcd8b56472d5f14fcc9882cdfae71fa983b8bd5581c4",
+ "utc": "2026-11-12T01:41:26+00:00"
+}

@@ -193,5 +193,75 @@
    "_from_model_config": null,
    "transformers_version": "5.19.0"
   }
+ },
+ {
+  "script": "extract.py",
+  "utc": "2026-11-12T01:38:07+00:00",
+  "python": "3.12.3",
+  "torch": "2.14.1+cu130",
+  "transformers": "5.19.0",
+  "numpy": "2.5.4",
+  "gpu": "NVIDIA GeForce RTX 5090 Laptop GPU",
+  "model": "Qwen/Qwen3-8B",
+  "revision": "b968826d9c46dd6066d109eabc6255188de91218",
+  "weights": {
+   "model-00001-of-00005.safetensors": "31d6a825ae35f11fb85b195b4c42c146c051e446433125a215336abdf95cbf5f",
+   "model-00002-of-00005.safetensors": "5991236cea6fe21f3d43cab0f0e84448734fbbe0789816202989f2ddc9d18282",
+   "model-00003-of-00005.safetensors": "c5185c4794be2d8a9784d5753c9922db38df478ce11f9ed0b415b7304d896836",
+   "model-00004-of-00005.safetensors": "b5ee7de71fbf17db3d5704e0c8f2bc7d005ca9e1d7ca2aeb19827b0cfcaa917a",
+   "model-00005-of-00005.safetensors": "20c2d6366ab85c90786ccdd829cd2b9e7d30ef3b2ebbb998280e7e4014b542ff"
+  },
+  "code": {
+   "analyze.py": "53d74858a1618879f2cdf5fdd8090049bc19af6b84c278daa6202ad8ed6029b8",
+   "common.py": "77360b0579e203145efb5118029934ea1a004f6380331d538e2b4186f8bb5585",
+   "extract.py": "df25f62a4936baec8a423958a5af1dd541b6cad6368c1692b6afe5a20a316c91",
+   "judge.py": "6cabde56468cddefb7eed3ac698ec8124e058771b1793fdf761347c4120a4cea",
+   "prefixes.py": "a8fd34e758c0651873571962e1c0f8b3d1602cece1a10cdd27f1b40556936d28",
+   "score.py": "4d086449bb7fa67ddf01e41be867d094b0cc3fe776f54bc2a49cbaf0c6afa53b",
+   "steer.py": "d45921dd8414f422d691e125d3a8a08a236bff1524785e13621f821fdeafdc34",
+   "test_run.py": "e1ad6b080f0a4803db9b1b970b7de71235a1e95107866b017231a518cfbb634d",
+   "test_smoke.py": "67612b347d5829dc3d6363545324c969482102d4aefaf8ba60acc323d6baa02c"
+  },
+  "prefixes": [
+   "A",
+   "B",
+   "C"
+  ],
+  "rows": 1346
+ },
+ {
+  "script": "extract.py",
+  "utc": "2026-11-12T01:38:35+00:00",
+  "python": "3.12.3",
+  "torch": "2.14.1+cu130",
+  "transformers": "5.19.0",
+  "numpy": "2.5.4",
+  "gpu": "NVIDIA GeForce RTX 5090 Laptop GPU",
+  "model": "Qwen/Qwen3-8B",
+  "revision": "b968826d9c46dd6066d109eabc6255188de91218",
+  "weights": {
+   "model-00001-of-00005.safetensors": "31d6a825ae35f11fb85b195b4c42c146c051e446433125a215336abdf95cbf5f",
+   "model-00002-of-00005.safetensors": "5991236cea6fe21f3d43cab0f0e84448734fbbe0789816202989f2ddc9d18282",
+   "model-00003-of-00005.safetensors": "c5185c4794be2d8a9784d5753c9922db38df478ce11f9ed0b415b7304d896836",
+   "model-00004-of-00005.safetensors": "b5ee7de71fbf17db3d5704e0c8f2bc7d005ca9e1d7ca2aeb19827b0cfcaa917a",
+   "model-00005-of-00005.safetensors": "20c2d6366ab85c90786ccdd829cd2b9e7d30ef3b2ebbb998280e7e4014b542ff"
+  },
+  "code": {
+   "analyze.py": "53d74858a1618879f2cdf5fdd8090049bc19af6b84c278daa6202ad8ed6029b8",
+   "common.py": "77360b0579e203145efb5118029934ea1a004f6380331d538e2b4186f8bb5585",
+   "extract.py": "77ddc9e1df154e34e73f719191f028de233fd643280d7c126fc6095289591bb0",
+   "judge.py": "6cabde56468cddefb7eed3ac698ec8124e058771b1793fdf761347c4120a4cea",
+   "prefixes.py": "a8fd34e758c0651873571962e1c0f8b3d1602cece1a10cdd27f1b40556936d28",
+   "score.py": "4d086449bb7fa67ddf01e41be867d094b0cc3fe776f54bc2a49cbaf0c6afa53b",
+   "steer.py": "d45921dd8414f422d691e125d3a8a08a236bff1524785e13621f821fdeafdc34",
+   "test_run.py": "e1ad6b080f0a4803db9b1b970b7de71235a1e95107866b017231a518cfbb634d",
+   "test_smoke.py": "67612b347d5829dc3d6363545324c969482102d4aefaf8ba60acc323d6baa02c"
+  },
+  "prefixes": [
+   "A",
+   "B",
+   "C"
+  ],
+  "rows": 1346
  }
 ]
