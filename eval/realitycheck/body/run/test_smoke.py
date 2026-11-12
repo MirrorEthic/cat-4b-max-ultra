@@ -76,7 +76,7 @@ class Smoke(unittest.TestCase):
             model.generate = lambda *a, **k: (calls.append(1), gen(*a, **k))[1]
             with mock.patch.multiple(
                     C, STATE=d / "state", BIG=d / "big", DEVICE="cpu", LOCK=d / "LOCK", N_PRIMARY=3, N_OTHER=2,
-                    load_model=lambda: (_tok, model), verify_materials=lambda prefixes=(): C.freeze(),
+                    load_model=lambda offload_blocks=0: (_tok, model), verify_materials=lambda prefixes=(): C.freeze(),
                     STEER_GEN=dict(max_new_tokens=3, do_sample=True, temperature=0.8),
                     PREFIX_GEN=dict(C.PREFIX_GEN, max_new_tokens=12)):
                 prefixes.generate(None)
@@ -97,7 +97,7 @@ class Smoke(unittest.TestCase):
                 self.assertGreater(float(np.abs(np.asarray(H[-1, C.LAYER], np.float32)).sum()), 0)
 
                 calls.clear()
-                run = Namespace(frames="cold-plain,warm-B", memcheck=False)
+                run = Namespace(frames="cold-plain,warm-B", memcheck=False, cells="all", offload_blocks=0)
                 steer.main(run)
                 want = [c for c in C.cells() if c["frame"] in ("cold-plain", "warm-B")]
                 self.assertEqual(len(calls), len(want))
@@ -113,7 +113,7 @@ class Smoke(unittest.TestCase):
 
                 C.LOCK.write_text("held by a test")
                 with self.assertRaises(SystemExit) as stop:
-                    steer.main(Namespace(frames="cold-imagine", memcheck=False))
+                    steer.main(Namespace(frames="cold-imagine", memcheck=False, cells="primary", offload_blocks=0))
                 self.assertEqual(stop.exception.code, 3)
                 self.assertEqual(len(calls), len(want))
                 self.assertFalse(list((C.STATE / "steer").glob("cold-imagine*")))

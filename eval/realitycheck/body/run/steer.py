@@ -1,8 +1,10 @@
 """Steering and generation, PREREG.md §5 and §6: the authors' steer3.py mechanics on the registered cells.
 
     $PY steer.py --plan                      # cell counts, no GPU
-    $PY steer.py --memcheck                  # peak memory of one n=64 call on filler text, nothing saved
-    $PY steer.py [--frames warm-A,cold-plain]   # the run. Resumable; stops (exit 3) when the GPU lock appears
+    $PY steer.py --memcheck [--offload-blocks 10]   # peak memory of one n=64 call on filler text, nothing saved
+    $PY steer.py --cells primary --offload-blocks 10   # the 81 cells of 64 replies, last blocks' weights held in RAM
+    $PY steer.py --cells other                      # the 1,125 cells of 32 replies, everything on the card
+Resumable; stops (exit 3) when the GPU lock appears. --frames warm-A,cold-plain restricts a pass to those frames.
 
 A forward hook on decoder block index LAYER-1 adds the vector to every position from the start of the final user
 turn onward and to every generated token; one generate call per cell at its n, torch.manual_seed(0) before it.
@@ -11,6 +13,7 @@ Every reply is saved with its cell labels in STATE/steer/<frame>.q<i>.json. A fi
 import argparse
 import json
 import sys
+import time
 
 import numpy as np
 
@@ -58,8 +61,11 @@ def main(a):
     frames = a.frames.split(",") if a.frames else list(C.FRAMES)
     need = sorted({f[-1] for f in frames if f.startswith("warm")} | {"A"})
     C.verify_materials(prefixes=() if a.memcheck else tuple(need))
-    tok, model = C.load_model()
+    tok, model = C.load_model(a.offload_blocks)
     state = install(model)
+    where = getattr(model, "hf_device_map", None)
+    if where and where.get(f"model.layers.{C.LAYER - 1}", 0) != 0:
+        raise SystemExit("the steered block is offloaded; offload fewer blocks")
 
     def generate(ids, n, vec, qstart, **extra):
         state.update(vec=vec, start=qstart, lens=[])
@@ -78,11 +84,14 @@ def main(a):
         filler = tok(" the" * (plen + 8), return_tensors="pt").input_ids[:, :plen].to(C.DEVICE)
         ids = {"input_ids": filler, "attention_mask": torch.ones_like(filler)}
         torch.cuda.reset_peak_memory_stats()
+        t0 = time.time()
         generate(ids, C.N_PRIMARY, torch.zeros(model.config.hidden_size, device=C.DEVICE), 0, min_new_tokens=40)
+        secs = time.time() - t0
         peak, total = torch.cuda.max_memory_allocated() / 2**30, torch.cuda.get_device_properties(0).total_memory / 2**30
-        C.runtime_record("steer.py --memcheck", prompt_tokens=plen, n=C.N_PRIMARY, peak_gb=round(peak, 2),
-                         total_gb=round(total, 2))
-        return print(f"n={C.N_PRIMARY}, {plen} prompt tokens of filler: peak {peak:.1f} GB of {total:.1f} GB")
+        C.runtime_record("steer.py --memcheck", prompt_tokens=plen, n=C.N_PRIMARY, offload_blocks=a.offload_blocks,
+                         device_map=where, peak_gib=round(peak, 2), total_gib=round(total, 2), seconds=round(secs, 1))
+        return print(f"n={C.N_PRIMARY}, {plen} prompt tokens of filler, {a.offload_blocks} blocks held in RAM: "
+                     f"peak {peak:.2f} GiB of {total:.2f} GiB, {secs:.0f} s for the call")
 
     dirs, info = {}, {}
     for p in need:
@@ -90,10 +99,10 @@ def main(a):
         dirs[p] = (D, resnorm)
         info[p] = dict(resnorm=resnorm, norms={k: float(np.linalg.norm(v)) for k, v in D.items()}, cosines=cos)
     C.save_json(C.STATE / "directions.json", dict(layer=C.LAYER, prefixes=info))
-    C.runtime_record("steer.py", frames=frames, steer_gen=C.STEER_GEN,
-                     generation_config=model.generation_config.to_dict())
+    C.runtime_record("steer.py", frames=frames, cells=a.cells, offload_blocks=a.offload_blocks, device_map=where,
+                     steer_gen=C.STEER_GEN, generation_config=model.generation_config.to_dict())
 
-    todo = [c for c in C.cells() if c["frame"] in frames]
+    todo = [c for c in C.cells() if c["frame"] in frames and a.cells in ("all", "primary" if c["primary"] else "other")]
     for frame in frames:
         p = frame[-1] if frame.startswith("warm") else "A"  # cold and third-person frames use prefix A directions
         D, resnorm = dirs[p]
@@ -130,5 +139,7 @@ if __name__ == "__main__":
     ap.add_argument("--plan", action="store_true")
     ap.add_argument("--memcheck", action="store_true")
     ap.add_argument("--frames")
+    ap.add_argument("--cells", choices=("all", "primary", "other"), default="all")
+    ap.add_argument("--offload-blocks", type=int, default=0, help="last k decoder blocks' weights held in RAM")
     a = ap.parse_args()
     plan() if a.plan else main(a)

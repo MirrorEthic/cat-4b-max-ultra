@@ -195,22 +195,54 @@ def runtime_record(script: str, **extra) -> None:
     log.append(dict(script=script, utc=now(), python=platform.python_version(), torch=torch.__version__,
                     transformers=transformers.__version__, numpy=np.__version__,
                     gpu=torch.cuda.get_device_name(0) if torch.cuda.is_available() else None,
-                    model=MODEL, revision=REVISION, code=code_hashes(), **extra))
+                    model=MODEL, revision=REVISION, weights=weight_blobs(), code=code_hashes(), **extra))
     save_json(path, log)
 
 
-def load_model():
-    """The pinned model as the authors load it (bf16, no adapter, no quantization). Refuses under the GPU lock."""
+def snapshot() -> Path:
+    """The cached snapshot of the pinned revision. The Hub cache names a snapshot directory by its commit."""
+    from huggingface_hub import snapshot_download
+    p = Path(snapshot_download(MODEL, revision=REVISION, local_files_only=True))
+    if p.name != REVISION:
+        raise SystemExit(f"resolved snapshot {p.name} is not the pinned {REVISION}")
+    return p
+
+
+def weight_blobs() -> dict | None:
+    """{weight file: sha256}, read from the cache's blob names (an LFS blob is stored under its sha256)."""
+    try:
+        return {f.name: os.path.basename(os.readlink(f)) for f in sorted(snapshot().glob("*.safetensors"))}
+    except Exception:  # noqa: BLE001 - a receipt field, not a gate
+        return None
+
+
+def load_model(offload_blocks: int = 0):
+    """The pinned model as the authors load it (bf16, no adapter, no quantization). Refuses under the GPU lock.
+
+    offload_blocks: hold the weights of the last k decoder blocks in RAM. accelerate copies an offloaded
+    block's weights to the card for its forward and runs it there, so the computation is the same and only
+    slower. Used for the 64-reply cells, whose cache does not fit beside all the weights on 24 GB."""
     import torch
     from transformers import AutoModelForCausalLM, AutoTokenizer
     if gpu_locked():
         raise SystemExit(f"{LOCK} is present: no GPU work. Wait for its owner to remove it.")
-    tok = AutoTokenizer.from_pretrained(MODEL, revision=REVISION)
-    model = AutoModelForCausalLM.from_pretrained(MODEL, revision=REVISION, dtype=torch.bfloat16,
-                                                 device_map=DEVICE).eval()
-    got = getattr(model.config, "_commit_hash", None)
-    if got != REVISION:
-        raise SystemExit(f"resolved revision {got} is not the pinned {REVISION}")
+    snap = snapshot()  # loaded from the snapshot directory itself, so the files are the pinned revision's
+    tok = AutoTokenizer.from_pretrained(snap)
+    where = DEVICE
+    if offload_blocks:
+        from accelerate import init_empty_weights
+        from transformers import AutoConfig
+        cfg = AutoConfig.from_pretrained(snap)
+        with init_empty_weights():
+            skel = AutoModelForCausalLM.from_config(cfg)
+        n = cfg.num_hidden_layers
+        where = {"lm_head": 0}
+        for name, _ in skel.model.named_children():
+            if name == "layers":
+                where.update({f"model.layers.{i}": "cpu" if i >= n - offload_blocks else 0 for i in range(n)})
+            else:
+                where[f"model.{name}"] = 0
+    model = AutoModelForCausalLM.from_pretrained(snap, dtype=torch.bfloat16, device_map=where).eval()
     return tok, model
 
 
