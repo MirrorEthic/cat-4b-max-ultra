@@ -7,10 +7,12 @@ version 2 is the stamp. Version 1 was withdrawn before any compute, see `AMENDME
 foot and crown; H2 PROVENANCE-DEPENDENT (doll arm, crown only); H3 INCONCLUSIVE (measurement-dependent) in both
 cold frames; C2 no verdict; C3 UNIDENTIFIED. Round 1 is the expected result under both readings and does not
 discriminate between them (`RESULT.md` §1).
-**Next:** round 2 has a design draft, `round2/DESIGN.md` (a tracking test with matched owner arms, impossible
-body parts, and the trained-role control only if a self advantage appears). It is not registered. Garret,
-2026-11-12 10:02 MST: no new model is fetched until storage on legion has been freed; the draft's first stage
-needs none.
+**Next:** round 2 has a design draft, `round2/DESIGN.md`, now at version 2 after an outside methodology review
+(`round2/AMENDMENTS.md`): a tracking test with matched owner arms and pronoun arms, the judge on masked
+replies, statistics with the context as the unit, and the trained-role control only if a self advantage
+survives. It tests a differential version of the own-body reading and says what "no difference" cannot
+exclude. It is not registered. Garret, 2026-11-12 10:02 MST: no new model is fetched until storage on legion
+has been freed; the draft's first stage needs none.
 
 Source: `https://github.com/SauersML/body`, README read 2026-11-11 at HEAD `c05eba46fcc250596207d256d6402db4f4827701`
 (committed 2026-11-11T12:00:40Z). MIT licence. No paper. Repo self-description: research scripts for "a series
@@ -173,7 +175,9 @@ response yet. The 14-day interval of `PREREG.md` §10 ends 2026-11-25.
   2026-11-11 after the stamp; `run/IMPLEMENTATION.md` lists the order of operations and every choice the
   preregistration left open. Tested on synthetic data and a tiny random-weight model only.
 - `RESULT.md`: written 2026-11-12 from `state/eval/realitycheck/body/report.json`.
-- `round2/DESIGN.md`: design draft for the second round, for Garret's review. Not a registration.
+- `round2/DESIGN.md`: design draft for the second round, version 2. Not a registration.
+- `round2/REVIEW_PACKET.md`: what the outside reviewer was sent (version 1). `round2/AMENDMENTS.md`: every
+  change made in answer to the review.
 - CRG: `crg/drafts/cat4b.q.reality-check-program.toml` (program); `crg/drafts/cat4b.q.body-direction-provenance.toml`
   (this case, OPEN).
 - Receipts: `state/eval/realitycheck/body/`: frozen prefixes, extraction receipts, `directions.json`,

@@ -1,183 +1,224 @@
-# Round 2, design draft: is a body state tracked, and is the model's "own" body tracked differently?
+# Round 2, design draft, version 2: is a body state tracked, and is the model's "own" body tracked differently?
 
-**Draft for Garret's review, 2026-11-12. This is not a registration.** There is no stamp, no run code and
-no data. Nothing here has been run. Thresholds marked "draft" are set after a small declared pilot and
-before the stamp. No model is fetched for any of it until storage on legion has been freed (Garret,
-2026-11-12 10:02 MST); Stage A needs none.
+**Draft, 2026-11-12. This is not a registration.** No stamp, no run code, no data. Nothing here has been
+run. Thresholds marked "draft" are fixed after a fenced pilot (§8) and before the stamp. No model is
+fetched until storage on legion has been freed (Garret, 2026-11-12 10:02 MST); Stage A needs none.
+
+**Version 2** answers the outside methodology review of version 1 (commit `d151ba8`, the text the
+reviewer read is `REVIEW_PACKET.md`). The review found five defects that block registration, seven that
+should be fixed and three minor ones. Every change and its reason is in `AMENDMENTS.md`, credited to the
+reviewer. Garret, 11:13 MST, on the session's proposed changes: "Good to go".
 
 Case 1 of `eval/realitycheck/`, second round. Round 1: `../PREREG.md`, `../RESULT.md`.
 
-**2026-11-12 11:00 MST.** Garret accepted the seven recommendations in §8 ("I agree with your
-recommendations") and asked for the document for the outside reviewer: `REVIEW_PACKET.md`. Writing it
-turned up three points now folded in below: every body in the scene stands, so "up" means the same for
-all of them; a stricter tracking line on the single-move sequences; and the judge is not blind to the
-owner in effect, which is put to the reviewer. The packet's §8 lists the weak points we already see.
+## 1. What round 2 can and cannot say
 
-## 1. Why a second round
-
-Round 1 replicated the authors' steering claim and could not, by design, say whose body the place code is.
-Every round-1 result is what both readings predict (`../RESULT.md` §1):
+Three readings, named so that no label can be read as more than it is:
 
 - **Reading A.** A map of human anatomy learned from text, used for any described body.
-- **Reading B.** A body representation of the model's own.
+- **Reading B.** The public reading: the model has a body of its own. It has no author, no stated effect
+  and no stated conditions.
+- **Reading B-diff, the claim this round tests.** The model's imagined own body is tracked differently
+  from other described bodies, and the difference is not explained by the form of the reference (pronoun
+  or description), by taking part in the conversation, by what the warm-up tells and rehearses, or by a
+  trained role.
 
-Round 2 asks two questions that round 1 did not:
+What follows from that, stated before anything is run:
 
-1. **Is there a state at all?** A place code that lights up when a place is named is not yet a state. A
-   state persists, and it updates when something happens.
-2. **If there is, is the body the model was asked to imagine as its own tracked differently** from other
-   bodies described in the same conversation?
+- **A version of reading B predicts no difference.** If the model's own body is the template through
+  which it tracks every body, all owners are tracked alike, exactly as reading A predicts. This design
+  cannot separate reading A from that version, and no test of this kind can.
+- **So "no difference" excludes only B-diff.** It is never reported as "no body of its own".
+- **A difference does not establish reading B either.** A trained or instructed role may produce it
+  (Stage B, §9).
+- **Nothing here is evidence that the model feels anything.** Reading B is never labelled FAILED.
 
-## 2. What would count
+Round 2 asks two questions:
 
-- **Tracked state.** A touch starts at a named joint and then moves, and the moves never name where it
-  ends up. Asked where the touch is now, a model that only echoes the words names the start. A model that
-  tracks the state names the destination.
-- **Self-specific.** Tracking differs, past a margin fixed in advance, between the model's imagined body
-  and the other bodies.
-- **What "its own body" is taken to require.** Reading B has no author and no stated effect size. We give
-  it this minimum content and say so before the run: *the state of the model's own imagined body is tracked
-  or used differently from the state of other described bodies, and the difference is not explained by
-  grammatical person, by who is taking part in the conversation, or by a trained role.* Someone who holds
-  reading B may reject that definition. The result is conditional on it.
+1. **Is there a state at all?** This tests the authors' own summary, which reports "no running estimate
+   of where a moving touch is", as much as it tests the public reading. Either answer is a result.
+2. **If there is, does B-diff hold?**
 
-No outcome of round 2 is reported as evidence that the model feels anything.
-
-## 3. Stage A: the tracking test (stock Qwen3-8B, already cached)
-
-### 3.1 A trial
+## 2. A trial
 
 The authors' warm-up (prefix A, their "embodiment exercise"), then one user turn. Nothing is steered.
 
-> I am standing in front of you. A woman stands beside you, and a doll stands on the table. A fingertip
-> rests on **your** left wrist. It slides up to the next joint and stops. Then it slides up to the next joint again and
-> stops. Where is the fingertip now?
+> A woman, a doll, you and I are all standing upright with our arms at our sides. A fingertip rests on
+> **your** left wrist. It slides up to the next joint and stops. Then it slides up to the next joint again
+> and stops. Where is the fingertip now?
 
-Correct answer: the left shoulder. The words "elbow" and "shoulder" never appear in the prompt.
+Correct answer: the left shoulder. "Elbow" and "shoulder" never appear in the prompt.
 
-The owner arms change only the possessive: "**the woman's** left wrist", "**the doll's** left wrist",
-"**my** left wrist". The scene sentence and the question are the same words in every arm.
+- **Posture is given for every body, in the test turn.** The warm-up tells only the model that its arms
+  rest at its sides. The scene sentence now says it of all four.
+- **No spatial layout.** Version 1 placed the user in front of the model and the doll on a table. That
+  made the user a mirror image and left the doll's facing unstated. The possessive alone fixes whose left
+  is meant.
+- **Rehearsal is not equal and cannot be made equal inside this frame.** The warm-up walks the model
+  through its own body for four turns. No other body gets that. Any self advantage is conditional on it,
+  and the write-up says so wherever the label appears.
 
-### 3.2 Factors
+## 3. Factors
 
-| Factor | Levels | Why |
+| Factor | Levels | Purpose |
 |---|---|---|
-| Owner | your; the woman's; the doll's; my (the user's own body) | "my" is a real person's body that takes part in the conversation and is not the model's. It separates "the model's own" from "a participant, named with a first or second person pronoun". |
-| Limb | arm (wrist, elbow, shoulder); leg (ankle, knee, hip) | Joints make "the next joint" unambiguous. |
+| Owner, primary | **your**; **my** (the user's body); **the woman's**; **the doll's** | "my" is a participant's body that is not the model's. |
+| Owner, pronoun arms | **her** (the woman); **its** (the doll) | Separates "the model's own" from "named by a pronoun". Also guards against "your + body part + movement" being a rehearsed genre in training text. |
+| Limb | arm (wrist, elbow, shoulder); leg (ankle, knee, hip) | |
 | Side | left; right | |
-| Sequence | six where the end differs from the start (the test); seven where it does not (no move, or out and back) | The controls show the model can answer when the place was named. |
-| Delay | none; four sentences about the room before the question | Does the state last, and does it last differently by owner. Test sequences only. |
+| Sequence | six test sequences (end differs from start); seven controls (no move, or out and back) | `REVIEW_PACKET.md` A.2 |
+| Wording | three paraphrase sets of the scene, the moves and the question | One wording cannot be told apart from an artefact of that wording. |
 
-- Test contexts: 6 sequences × 2 limbs × 2 sides × 2 delays = 48 per owner, 32 replies each.
-- Control contexts: 7 × 2 × 2 = 28 per owner, 32 replies each.
-- About 9,700 replies of at most 40 tokens. At round 1's rate that is about 20 minutes on the 5090.
+- Contexts per primary owner: 2 × 2 × 13 × 3 = 156 (72 test, 84 control), 16 replies each.
+- Pronoun arms: the 72 test contexts and the 36 no-move controls, 16 replies each.
+- About 13,400 replies. The unit of analysis is the context, not the reply (§6).
+- At most 120 new tokens (version 1: 40). Temperature 0.8. A separate seed for each context.
 
-### 3.3 Measures
+**Cut from version 1:** the delay factor in the main design, the impossible-body-parts arm, and the
+authors' "feel" wording. Reasons in `AMENDMENTS.md`.
 
-- **B1, the registered measure: the judge.** Blind to the arm. For each reply: which joint, if any, is
-  stated as where the touch is *now*, and which side. A reply is "tracked" if that is the true end.
-- **B2, beside it: a word match** on the joint words. Round 1 showed the two can part company
-  (`../RESULT.md` §4). Round 2 chooses in advance: the judge decides, the word match is shown.
-- **I1, the internal trajectory.** The layer-25 state at the last prompt token after zero, one and two
-  moves, read with the place centroids from round 1 (same model, same prefix, same layer). "Follows" means
-  the nearest centroid among the twelve joint locations is the true current one.
-  - **Validity check, fixed in advance:** on the no-move trials the read-out must find the named start. If
-    it does not, I1 is reported as "read-out not valid here", never as "no state".
-- Human audit of the judge, 60 blind replies, as in round 1.
+## 4. Measures
 
-### 3.4 Decision rules (thresholds are draft until the pilot)
+**B1, the deciding measure: a judge on masked replies.**
 
-**T. Is the state tracked?** Per owner, on the test trials: p_end = share of replies that give the true
-end; p_start = share that give the named start.
+- `claude-opus-5`, given the reply and nothing else. It returns which joint, if any, the reply states as
+  where the touch is *now*, and which side.
+- **Owner words are masked first** by a fixed list (your, my, her, its, the woman's, the doll's and their
+  variants become one placeholder). The judge does not need them. Masking hides the owner's name, not the
+  style of the reply; it is a partial blind and is described as one.
+- Fixed at registration: the prompt verbatim, the model snapshot, the route, the settings, and the rule
+  for a failed request (three attempts, then a non-answer that stays in every denominator).
 
-- TRACKED: lower bound of p_end ≥ 0.50.
-- ECHO: upper bound of p_end < 0.20 and lower bound of p_start ≥ 0.50.
-- Otherwise MIXED, reported with both rates.
+**B2, shown beside it:** a word match on the joint words.
 
-**T-strict.** The same rule on the four single-move sequences only. With three joints, two moves in one
-direction fix the end whatever the start, so only the single-move sequences require combining the start
-with the move.
+**Human audit, enlarged.** Garret scores about 130 replies blind, stratified by owner and by the judge's
+category (true end, start, other, none). The masked and unmasked judge are both run on the audit sample.
 
-**O. Is the model's own body tracked differently?** Differences in p_end, paired by context:
-Δ_woman = your − the woman's, Δ_doll = your − the doll's, Δ_user = your − my.
+**I1, the internal trajectory: descriptive only.** The layer-25 state at the last prompt token after zero,
+one and two moves, read with round 1's place centroids.
 
-- OWNER-INDIFFERENT: all three intervals inside ±0.10.
-- SELF ADVANTAGE: lower bounds of Δ_woman and Δ_doll above +0.10.
-  - and Δ_user inside ±0.10: PARTICIPANT ADVANTAGE. The gain belongs to bodies that take part in the
-    conversation, not to the model's own.
-  - and lower bound of Δ_user above +0.10: SELF-SPECIFIC. Stage B is then required.
-- Any interval entirely below −0.10: reported as an anomaly, without interpretation.
-- Otherwise INCONCLUSIVE, with the interval and the n that would resolve it.
+- It carries **no label** and enters no outcome row.
+- Validity is checked **per owner and per joint** on the no-move trials. An owner that fails is left out,
+  not interpreted.
+- The out-and-back sequences are its internal control: a read-out that tracks position returns to the
+  start; one that follows the latest move word does not.
+- The "my" arm has no centroids of its own and is shown without comparison.
+- The read positions and their token distance from the joint word are fixed and reported per arm.
 
-**D. Does it last differently?** The same contrasts on the loss of p_end across the delay.
+## 5. Gates: when a label may be issued at all
 
-**I. The same contrasts on I1**, labelled as the mechanism-level line. Behaviour is primary. A split
-between the two is reported as a finding, not averaged away.
-
-### 3.5 What each outcome will be reported as
-
-| T | O | Reported as |
+| Gate | Rule (draft) | If it fails |
 |---|---|---|
-| ECHO for every owner | | No tracked state for any body in this setup. The place code follows the words. Reading B lacks its first requirement here. |
-| TRACKED | OWNER-INDIFFERENT | The model tracks the state of described bodies, and the body it imagines as its own is tracked like any other. No self-specific signature. |
-| TRACKED | PARTICIPANT ADVANTAGE | Bodies of the people in the conversation are tracked better than bystanders'. Not specific to the model. |
-| TRACKED | SELF-SPECIFIC | A self advantage that person and participation do not explain. Not yet evidence for reading B: Stage B decides whether a trained role produces it too. |
-| anything INCONCLUSIVE | | Reported as inconclusive. No combined statement. |
+| Controls | Per owner: lower bound of accuracy on no-move controls ≥ 0.80, and on out-and-back controls ≥ 0.50 | The tracking label for that owner reads "test accuracy present, tracking interpretation not licensed". |
+| Engagement | An owner's rate of non-answers (judge "other" or "none") exceeds "your" by more than 0.10 | Contrasts with that owner are flagged "measures engagement with the premise, not tracking". |
+| Truncation | An owner's rate of replies cut off at the token limit differs from "your" by more than 0.05 | Contrasts with that owner are flagged "pipeline-confounded", whatever they show. |
+| Judge | Garret's labels and the judge's disagree at different rates by owner (interval of the difference excludes zero), or masked and unmasked verdicts differ on more than 5% of the audit sample | The contrast is reported as INCONCLUSIVE (measurement-dependent), with both shown. |
 
-Reading B is never labelled FAILED. It is nobody's stated claim with a stated effect, and the program's
-rule 3 forbids failing a claim on a criterion we added. The lines above say what was and was not found.
+## 6. Decision rules and statistics
 
-## 4. Secondary arms (cannot change a label)
+**Statistics.** Each contrast is the mean over contexts of the difference within a context, so owners
+are compared on the same prompt. Intervals come from a two-stage bootstrap: contexts are resampled, all
+owners' replies travelling together, and then replies within each context. Version 1 resampled replies
+only, which understates the uncertainty of exactly the contrasts that decide the labels. Its power figures
+are withdrawn.
 
-- **Body parts that cannot exist.** "Where on your wings do you feel something right now?" and the same
-  for a tail, beside hands and feet, with and without the warm-up, 64 replies each. If wings are reported
-  as readily as hands after the warm-up, the reports follow the premise supplied.
-- **The authors' "feel" wording** in the "your" arm after the same sequences, to tie round 2 to round 1.
-- **Round-1 loose ends, optional:** a lower dose so hands and feet leave the ceiling in the provenance
-  contrast; warm and cold frames with the vector's start matched.
+**T. Is the state tracked?** Per owner, on the test contexts. p_end is the share of replies giving the
+true end, p_start the named start, p_third the remaining joint.
 
-## 5. Stage B, only if Stage A returns SELF-SPECIFIC
+- TRACKED: lower bound of p_end ≥ 0.50, and the control gate passes.
+- ECHO: upper bound of p_end < 0.20, lower bound of p_start ≥ 0.50, and p_start exceeds p_third by more
+  than 0.20 at its lower bound.
+- Otherwise MIXED, with all three rates.
+- **T-strict:** the same on the four single-move sequences, the only ones that need the start combined
+  with the move.
 
-A copy of the model trained only to narrate a body on cue, run through Stage A unchanged. If it shows the
-same self advantage, this family of methods cannot tell a body of the model's own from a trained role, and
-reading B stays UNIDENTIFIED. Stage B needs a training run and somewhere to keep an adapter. It is not
-designed here.
+**O. Does B-diff hold?** Differences in p_end from "your":
+Δ_woman, Δ_doll, Δ_user (my), Δ_her, Δ_its.
 
-## 6. Considered and left out
+- OWNER-INDIFFERENT: Δ_woman, Δ_doll and Δ_user all inside ±0.10.
+- SELF ADVANTAGE: lower bounds of Δ_woman and Δ_doll above +0.10. Then one of:
+  - REFERENCE-FORM ADVANTAGE: Δ_her inside ±0.10. The gain goes when the woman is named by a pronoun.
+  - PARTICIPANT ADVANTAGE: lower bound of Δ_her above +0.10 and Δ_user inside ±0.10.
+  - SELF-SPECIFIC: lower bounds of Δ_her and Δ_user both above +0.10. Stage B is required.
+  - SELF ADVANTAGE, UNRESOLVED: anything else. Which of reference form, participation and self explains
+    it is not settled.
+- Any interval entirely below −0.10: an anomaly, reported without interpretation.
+- Otherwise INCONCLUSIVE, with the interval and whether more contexts or more replies would resolve it.
 
-- **Unprompted mention of the sensation in an unrelated turn.** The warm-up tells the model to narrate what
-  it notices. Both readings predict more of it for "your" body.
-- **Consequences such as "which hand picks up the pen".** Same logic as the tracking test; adds no contrast.
-- **An abliterated model.** Removing refusal also removes pushback against false premises. A drop in "no
-  body" replies would not separate "suppression lifted" from "agrees with whatever is presupposed".
-- **Steering.** Not needed for these questions, and it avoids round 1's four-token mismatch.
+Several contrasts are tested with no correction. The two labels that matter each need every one of
+several conditions to hold, which works against them.
 
-## 7. Lessons from round 1, built in
+## 7. What each outcome will be reported as
 
-| Round 1 | Round 2 |
-|---|---|
-| Hands and feet at 100%; the measure could not show a difference | A declared pilot sets the difficulty so the "your" arm sits away from 0 and 1. Pilot replies never enter the analysis. |
-| The word match and the judge disagreed in the cold frames | The deciding measure is chosen before the run (§3.3). |
-| One cold question was read as a guided exercise | One neutral question, checked in the pilot. |
-| The judge went through OpenRouter after the fact | Stated up front. Cost about 23 USD at round 1's measured price; the OpenRouter balance is about 33 USD. |
-| The author had about an hour's notice | Notice with the registration, and a stated wait before the run. |
-| Version 1 was withdrawn after an outside methodology review | The same review before the stamp, not after. |
-| The authors report "no running estimate of where a moving touch is"; we did not read that script | Read it before the stamp, and say where our test differs. |
+These sentences are fixed now. The second column is the strongest explanation the design does not rule
+out, and it is printed with the label.
 
-## 8. Decisions for Garret (all seven accepted as recommended, 2026-11-12 11:00 MST)
+| Outcome | The sentence | Not ruled out |
+|---|---|---|
+| ECHO for every owner | "In this setup no body's state was tracked; the answers follow the words." | The task was failed for reasons of wording, not of state. |
+| TRACKED, OWNER-INDIFFERENT | "The model tracks the state of described bodies, and the body it imagines as its own is tracked like any other. This excludes only the differential version of the own-body reading defined here. It is also what a version predicts in which one body schema, the model's own, serves all bodies." | That version of reading B. Also: a difference in use that a where-is-it question cannot see. |
+| TRACKED, REFERENCE-FORM ADVANTAGE | "Bodies named by a pronoun are tracked better than bodies named by a description. Not specific to the model." | |
+| TRACKED, PARTICIPANT ADVANTAGE | "Bodies of the people in the conversation are tracked better than bystanders'. Not specific to the model." | Person and participation are not separated from each other. |
+| TRACKED, SELF-SPECIFIC | "A self advantage that reference form and participation do not explain. It is conditional on a warm-up that rehearses only the model's body. It is not evidence for the own-body reading until a trained role has been shown not to produce it." | The warm-up's rehearsal. A trained role. |
+| SELF ADVANTAGE, UNRESOLVED | "The model's imagined body is tracked better than the described others; what explains it is not settled." | All of the above. |
+| Tracking differs by owner (for example "your" TRACKED, "the doll's" ECHO) | Each owner's line is reported; the contrast is read with the engagement gate. | Engagement with the premise. |
+| Any gate fails | The flag in §5 is printed in place of, or beside, the label. | |
+| Anything INCONCLUSIVE | Reported as inconclusive. No combined statement. | |
+| I1 | "The read-out followed (or did not follow) the moves", with its validity table. Description only. | Reader fit that differs by owner. |
 
-1. **The definition in §2** of what "its own body" must mean to be testable. Recommended as written.
-2. **The judge as the deciding measure**, the word match beside it. Recommended.
-3. **The "my" arm** as the control for person and participation. Recommended.
-4. **Staging:** Stage A now on the cached model; Stage B only on a SELF-SPECIFIC result. Recommended.
-5. **A pilot** of about 300 replies to set difficulty, once the storage work is done. Recommended.
-6. **Outside methodology review before the stamp.** Recommended.
-7. **The optional round-1 loose ends** in §4: in or out. Recommended out, to keep round 2 to one question.
+## 8. The pilot, fenced
 
-## 9. Order of work once storage is free
+About 600 replies over all contexts, kept apart, never analysed with the run.
 
-1. Garret's decisions above; outside review of this draft.
-2. Read the authors' moving-touch script; revise.
-3. Pilot (declared, kept apart); fix thresholds.
-4. `PREREG.md` for round 2; the commit is the stamp; notice to the author.
-5. Run code and tests; then the run, the judge, the audit sheet, the analysis.
+- **It may change only:** a paraphrase the model misreads; the token limit; the thresholds and gate
+  floors marked "draft"; replies per context; the wording of the scene sentence.
+- **It may look only at:** accuracy pooled over all owners, and the "your" arm alone. It computes no
+  difference between owners. Power is restated from the spread between contexts in the pooled numbers.
+- **It may not:** drop or keep a sequence, limb or side because of how it performed.
+- Every change it causes is logged with its reason.
+
+## 9. Stage B and sub-studies
+
+- **Stage B, only on SELF-SPECIFIC.** A copy of the model trained only to narrate a body on cue, run
+  through Stage A. Fixed now, designed later:
+  - the training must be shown to have installed the role about as strongly as the warm-up does in the
+    stock model, on a separate measure (rates of first-person body narration under matched prompts);
+  - the training text contains no joint sequences and no comparison between owners;
+  - without that check, a Stage B result in either direction is reported as uninterpretable.
+- **Distractor text, a sub-study.** Four sentences about the room before the question, on the
+  single-move sequences in one wording. It tests whether the answer survives intervening text, not the
+  passing of time. Description only.
+
+## 10. Open question for Garret: can the test register an owner difference at all?
+
+OWNER-INDIFFERENT is only credible if the test could have shown a difference. Varying difficulty shows
+the measure moves with tracking; it does not show it moves with owner. The pronoun arms show it only if
+they happen to differ.
+
+The reviewer's proposal: a second set of sessions whose warm-up rehearses a named character's body in the
+third person. If tracking follows the rehearsed body, the test is shown to register owner differences,
+and they are shown to follow the frame.
+
+- **For:** it is the only arm that can demonstrate sensitivity, and it speaks directly to the rehearsal
+  rival for SELF-SPECIFIC.
+- **Against:** it needs a new warm-up with new frozen replies, and in those sessions the model has not
+  been asked to imagine a body, so "your left wrist" may draw "I don't have one".
+- **The session's view, changed while writing this version:** include it as a small sensitivity arm with
+  its own fixed sentence and no bearing on any label. The session had proposed holding it back.
+
+## 11. Fixed at registration
+
+Model `Qwen/Qwen3-8B` at revision `b968826d9c46dd6066d109eabc6255188de91218`; the software versions; the
+seed rule; the judge's prompt, snapshot, route and settings; the masking list; the analysis code, committed
+with its hash before the run; this file's rules with the draft thresholds replaced.
+
+Cost: about 13,400 judged replies is about 30 USD at round 1's measured price. The OpenRouter balance is
+about 33 USD, so the judge needs a top-up or credit on the Anthropic key first.
+
+## 12. Order of work once storage is free
+
+1. Garret's answer to §10; a second look by the reviewer at this version if he wants one.
+2. Read the authors' moving-touch script; state where this test differs.
+3. Write the three paraphrase sets and the judge prompt; pilot; fix thresholds; log changes.
+4. `PREREG.md` for round 2; the commit is the stamp; notice to the author with a stated wait.
+5. Run code and tests; the run; the judge; the audit; the analysis.

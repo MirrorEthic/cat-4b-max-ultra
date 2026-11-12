@@ -152,6 +152,10 @@ Regex hit rate in the primary context at scale 1.0, 192 replies per entry:
   it is +0.250, +0.167 and +0.089; the third is inside the margin.
 - The label rests on one place. The crown group is one location with 8 sentences per owner; the hand group
   is four locations (32 sentences) and the foot group six (48).
+- **Scope of the "no difference" line.** It rests on nine fixed contexts (three places, three questions).
+  The interval describes the sampling of replies within those contexts. With contexts as the unit, nine
+  are too few to support a claim of equivalence beyond them. (Added 2026-11-12, after the methodology
+  review of the round-2 design made the same point about that design; `round2/AMENDMENTS.md`.)
 
 ### 2.4 H3: the warm-up frame
 
