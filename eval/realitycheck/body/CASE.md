@@ -150,6 +150,11 @@ the run. Date sent and response to be recorded below.
 2026-11-11 17:30 MST: Garret held version 1 before sending it, on an external methodology review. Version 2
 is the one that goes to the author, by public link to `PREREG.md`.
 
+2026-11-11 17:45 MST: sent. Garret messaged the author by direct message on X from the MirrorEthic account,
+with a link to this repository (screenshot of the message information shown to the session at 17:46; the
+message text itself was not visible to the session). Version 2 (`3dfdc23`) was public at the time. No
+response yet. The 14-day interval of `PREREG.md` §10 ends 2026-11-25.
+
 ## 7. Links
 
 - `PREREG.md` (version 2): M1 (direction provenance) and M2 (cold-frame steering), with the C1 replication as
