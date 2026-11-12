@@ -1,6 +1,7 @@
 # Case 1: body representations in Qwen3 (`SauersML/body`)
 
-**Opened:** 2026-11-11. **Status:** PROPOSED. **Verdict:** none yet.
+**Opened:** 2026-11-11. **Status:** PREREGISTERED (M1 + M2, `PREREG.md`; the commit that adds it is the stamp).
+**Verdict:** none yet. Nothing run.
 
 Source: `https://github.com/SauersML/body`, README read 2026-11-11 at HEAD `c05eba46fcc250596207d256d6402db4f4827701`
 (committed 2026-11-11T12:00:40Z). MIT licence. No paper. Repo self-description: research scripts for "a series
@@ -144,8 +145,10 @@ the run. Date sent and response to be recorded below.
 
 ## 7. Links
 
-- `PREREG.md`: not yet written. Nothing has been run.
+- `PREREG.md`: M1 (direction provenance) and M2 (cold-frame steering), with the C1 replication as its own
+  line. Stamp = the commit that adds it. Nothing has been run.
 - `RESULT.md`: none.
-- CRG: `crg/drafts/cat4b.q.reality-check-program.toml` (program); a case node follows preregistration.
+- CRG: `crg/drafts/cat4b.q.reality-check-program.toml` (program); `crg/drafts/cat4b.q.body-direction-provenance.toml`
+  (this case, OPEN).
 - Receipts: `state/eval/realitycheck/body/` (empty).
 - Precedent cases: `docs/MECH_CONTROL.md`, `eval/painaxis/RESULTS.md`, `eval/painaxis/RESULT-natural-next-turn.md`.
