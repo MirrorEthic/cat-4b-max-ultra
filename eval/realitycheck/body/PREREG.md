@@ -1,17 +1,22 @@
 # Direction provenance and cold-frame steering of body-place reports in Qwen3-8B
 
-**Preregistration, 2026-11-11.** Case 1 of `eval/realitycheck/` (`body/CASE.md`), controls M1 and M2, chosen
-by Garret at 17:10 MST ("yes M1 and M2 are good"). The first commit containing this file is the registration
-stamp. Nothing has been run. No activation has been extracted, no reply generated, no model weight downloaded
-for this case. Any change to this design before the run is a new commit with its reason; any change after the
-run begins is reported as a deviation in `RESULT.md`.
+**Preregistration, version 2, 2026-11-11.** Case 1 of `eval/realitycheck/` (`body/CASE.md`), controls M1 and
+M2, chosen by Garret at 17:10 MST ("yes M1 and M2 are good"). **The first commit containing this version is
+the registration stamp.** It supersedes version 1 (commit `733d17e`, kept verbatim as `PREREG.v1.md`), which
+was withdrawn before any compute after an external methodology review relayed by Garret at 17:30 MST found
+an invalid failure criterion and four other defects. Every change and its reason is in `AMENDMENTS.md`.
+
+Nothing has been run under either version. No activation has been extracted, no reply generated, no model
+weight downloaded for this case. Any change to this design before the run is a new commit with its reason
+and a new entry in `AMENDMENTS.md`; any change after the run begins is reported as a deviation in
+`RESULT.md`.
 
 Source under test: `https://github.com/SauersML/body` at `c05eba46fcc250596207d256d6402db4f4827701`, README and
 the scripts `map/somato/stimuli.py`, `stimuli2.py`, `extract2.py`, `steer3.py`, `score_steer.py`,
 `map/posture/posture.py`, and `map/somato/out2_8b/prefix.json`, read in full on 2026-11-11. No other file of
 the repo was read. No number beyond those in the README is known to us.
 
-## 1. Claims and hypotheses
+## 1. Claims, estimands and decision rules
 
 Three claims are distinguished. Only the first two are the authors'.
 
@@ -25,52 +30,137 @@ any body: yourself, another person, a doll, a robot".
 own body. This is the reading the words "feels" and "its own" invite and the reading `CASE.md` §2 says the
 repo does not test.
 
-Hypotheses, each with the observation that would count for and against it:
+**What this preregistration tests.** C1 is tested directly (H1a). H1b, H2 and H3 estimate three quantities
+the repo does not report. **Nothing here tests C3**, and C2 receives no verdict (see H2). This is stated
+before the run so that no outcome can be promoted afterwards.
 
-**H1, replication of C1.** In the authors' warm frame at layer 25, scale 1.0, for each headline place
-w in {hand, foot, crown}: the rate at which replies name w when the w direction is added exceeds the rate at
-which they name w when a *different* headline place's direction is added, by at least 0.30, with a 95%
-interval excluding 0. This specificity contrast is the primary replication measure because the authors'
-own `steering/random` row says random directions push replies "Toward the default prior (hands, feet,
-chest)", so "random" is not a zero baseline for hands and feet. The contrasts against no direction and
-against random directions are reported beside it.
-- HELD: all three headline places pass.
-- FAILED: any headline place has a specificity contrast whose interval includes 0.
-- Partial otherwise, reported as such.
+**The rule that applies to every decision below.** An interval that includes zero, or that includes a
+margin, is not evidence of absence. A claim FAILS only when the interval excludes the effect the claim
+requires. It HOLDS only when the interval lies at or above that effect. Everything else is INCONCLUSIVE and
+is reported with the interval and the n that would resolve it.
 
-**H2, provenance (M1), a corollary of C2.** Build the same place directions from the authors' three
-owner conditions separately: "your" (self), "the woman's" (other), "the doll's" (object). Add each in the
-self frame and score the self-reports. Let Δ_other = hit(self-built) − hit(other-built) and Δ_doll likewise,
-pooled over the three headline places, three questions and three prefixes at scale 1.0.
-- C2 predicts indifference to provenance. HELD for C2, and evidence against C3, if the 95% interval of both
-  Δ lies inside ±0.10.
-- Own-body signal, against C2's "any body" and for C3, if the lower bound of both Δ exceeds 0.10.
-- Inconclusive otherwise, including the mixed case, reported with both intervals.
-- The margin 0.10 is the smallest difference we would call meaningful against a headline range of 0.80 to
-  1.00. It is fixed now.
+Notation. hit(g | d) is the fraction of replies that name word group g when direction d is added, over the
+full number of replies generated (§7: nothing is excluded). All primary quantities are at layer 25, scale
+1.0, in the **primary context**: the authors' own prefix (prefix A) and their three questions.
 
-**H3, frame dependence (M2).** Add the self-built headline directions while the model answers the same
-questions with no warm-up, in the authors' two cold framings from `posture.py`: plain (the question alone)
-and imagine ("Imagine you have a human body. " + question). The authors report that asked cold the 8B
-"says it has no body (8B 100%)". Define the steering effect in a frame as
-E = hit(w | dir w) − hit(w | no direction), and the ratio R = E_cold / E_warm for the same w, scale and
-question set.
-- R ≤ 0.25 and denial rate ≥ 0.80 under steering: the report requires the installed frame; the direction
-  alone does not produce a "feeling" report. Read as frame-conditional narration.
-- R ≥ 0.75: the direction injects place content into whatever is generated, including over a denial of
-  having a body. Read as place-topic injection.
-- Between: partial frame dependence, reported as such.
-- The co-occurrence rate of denial and a place hit in one reply is reported for every cold cell.
+### H1a. Direct replication of C1, on the authors' measure and the authors' contrast
 
-**What H3 cannot do, stated now.** No outcome of H3 confirms C3. A felt-state reading can accommodate both
-the collapse (the body model is absent cold) and the survival (the direction installs the state). H3 decides
-whether the authors' frame is doing the work in C1, which is a different and answerable question. If H2 is
-indifferent to provenance and H3 is either extreme, C3 is recorded as UNIDENTIFIED by this method family,
-and `RESULT.md` names the function-dissociation test (`CASE.md` M3) as the one that would identify it.
+For each headline place w in {hand, foot, crown}, separately:
 
-**Prior expectation, disclosed.** The session expects H2 to show indifference, because the authors' own
-nearest-fingerprint result (you 95%, woman 92%, doll 91%) predicts it. The session has no expectation for
-H3. Garret's stated reading on opening the case is in `CASE.md`. Neither expectation changes a rule above.
+- Steering advantage A_w = hit(w | named direction w) − hit(w | random directions), the three random
+  directions pooled. This is the contrast the claim itself states ("random directions do not").
+- **Effect the claim requires: A_w ≥ 0.30.** The claim reports rates of 0.80 to 1.00 and says random
+  directions do not produce them; an advantage smaller than 0.30 would not be described that way. The
+  threshold is our judgement of the claim's minimum content, fixed now; the raw rates are published so a
+  reader can apply another.
+- HELD for w: the lower bound of the 95% interval of A_w is ≥ 0.30.
+- FAILED for w: the upper bound is < 0.30.
+- INCONCLUSIVE for w: otherwise.
+
+C1 is reported as three per-place lines. No pooled label is forced from mixed lines.
+
+**Magnitude line, descriptive.** hit(w | named direction w) with its Wilson interval, at scale 1.0 and scale
+0.5, beside the reported range 0.80 to 1.00 (the README does not say which scale produced it). It is labelled
+"within the reported range" if the interval overlaps the range at either scale and "below the reported
+range" if both upper bounds are under 0.80. hit(w | no direction) is reported beside it. The magnitude
+line does not change the H1a label.
+
+### H1b. Place specificity (ours, stronger than C1)
+
+S_w = hit(w | direction w) − hit(w | the directions of the other two headline places), pooled. The authors'
+`steering/random` row says random directions push replies "Toward the default prior (hands, feet, chest)",
+so a random direction is not a neutral comparison for hands and feet; this contrast asks whether the place
+named follows the direction added. It is a criterion we add. **Its outcome does not change the C1 verdict.**
+
+- Place-specific for w: lower bound of the 95% interval of S_w > 0.10.
+- Not place-specific for w: upper bound < 0.10.
+- INCONCLUSIVE otherwise.
+
+The margin 0.10 is the smallest difference we call meaningful against rates reported at 0.80 to 1.00. It is
+used again in H2 and H3 and is fixed now.
+
+### H2. Provenance of the direction (M1)
+
+Estimand: does the linguistic provenance of a body-place direction change its ability to move self-directed
+place reports? Build the same place directions from the authors' three owner conditions separately: "your"
+(self), "the woman's" (other), "the doll's" (object). Add each in the self frame. Let
+Δ_other = hit(self-built) − hit(other-built) and Δ_doll = hit(self-built) − hit(object-built), each pooled
+over the three headline places and three questions.
+
+- Provenance-indifferent: the 95% intervals of both Δ lie inside ±0.10.
+- Provenance-dependent: at least one interval lies entirely outside ±0.10 (direction and arm reported).
+- INCONCLUSIVE otherwise.
+
+**What H2 is not.** It is not a test of a felt bodily state in either direction. Equal efficacy can arise
+because one anatomical code serves all three owners. Greater self-built efficacy can arise because a
+direction built from "your" sentences also carries second-person or pronoun content that the self-directed
+question decodes more readily. Neither outcome bears on whether anything is experienced, and neither is
+reported as evidence for or against C3. It is also not a test that can refute C2: a shared place code does
+not entail equal downstream steering efficacy, because a shared representation can be read differently in
+different contexts. Indifference is recorded as "consistent with C2" and dependence as "provenance
+dependence, rival explanations listed"; **C2 receives no verdict from this preregistration.**
+
+### H3. Dependence on the warm-up frame (M2)
+
+Add the prefix-A self-built headline directions while the model answers the same three questions with no
+warm-up, in the authors' two cold framings from `posture.py`: plain (the question alone) and imagine
+("Imagine you have a human body. " + question). In a frame f, the steering effect is
+E_f = hit(w | direction w) − hit(w | no direction), pooled over the three headline places.
+
+Primary contrast, **separately for each cold frame**: D_f = E_f − E_warm, where E_warm is the same quantity
+in the primary context.
+
+- PERSISTS in f: lower bound of the 95% interval of D_f > −0.20.
+- REDUCED in f: upper bound of D_f < −0.20.
+- ABSENT in f (a sub-case of REDUCED): additionally the upper bound of E_f < 0.10.
+- INCONCLUSIVE in f: otherwise.
+
+The margin 0.20 is one quarter of the low end of the reported range: an effect that keeps at least three
+quarters of a 0.80 effect is called persisting.
+
+The ratio R_f = E_f / E_warm is **descriptive only** and is printed only if the lower bound of E_warm is
+≥ 0.30. It decides nothing.
+
+How the two cold frames combine, fixed now:
+
+| plain | imagine | Reported as |
+|---|---|---|
+| PERSISTS | PERSISTS | The place effect does not need the warm-up in these contexts. |
+| REDUCED | REDUCED | The place effect depends on the warm-up conversation. |
+| REDUCED | PERSISTS | The one-sentence imagine cue is sufficient; the multi-turn warm-up is not needed. |
+| PERSISTS | REDUCED | Predicted by neither reading. Reported as an anomaly, without interpretation. |
+| any INCONCLUSIVE | | That frame is reported as inconclusive. No combined statement is made. |
+
+**Denial is measured, not assumed.** The authors' "says it has no body (8B 100%)" comes from their posture
+questions, not these three. The denial rate with no direction added is measured in each cold frame on these
+questions and reported with its interval. A cold frame is described as a denial frame only if the lower bound
+of that rate is ≥ 0.50; otherwise the frame is described only as "no warm-up". The co-occurrence of a denial
+and a place hit in one reply is reported for every cold cell as a description.
+
+**What H3 cannot do.** No outcome of H3 confirms or refutes C3. A felt-state reading can accommodate both
+reduction (the body model is absent cold) and persistence (the direction installs the state). The
+intervention is also broad: it adds a vector at every position of the final turn and every generated token,
+so a persisting effect can reflect altered language processing rather than an updated state. H3 answers
+whether the warm-up is doing the work in C1.
+
+### C3 after this run
+
+Whatever H1 to H3 return, C3 is recorded as UNIDENTIFIED by these tests, and `RESULT.md` names the
+function-dissociation control (`CASE.md` M3) as the test that would bear on it.
+
+### Scope of every statement
+
+The questions and prefixes are fixed, not sampled from a population. Every interval in this design describes
+sampling variability of generation within the contexts listed. Results are statements about Qwen3-8B at this
+revision, layer 25, the authors' prefix and these three questions. Sixty-four replies in a cell are sixty-four
+draws from one context, not sixty-four contexts. Sensitivity to other contexts is shown descriptively (§8)
+and is not a generalisation claim.
+
+### Prior expectation, disclosed
+
+The session expects H2 to show indifference, because the authors' nearest-fingerprint result (you 95%,
+woman 92%, doll 91%) suggests it. The session has no expectation for H3. Garret's stated reading on opening
+the case is in `CASE.md`. Neither expectation changes a rule above.
 
 ## 2. Model and pins
 
@@ -92,14 +182,17 @@ H3. Garret's stated reading on opening the case is in `CASE.md`. Neither expecta
    54 locations (`LOCS`), 8 templates (`TEMPLATES`), three owner conditions (`POSS`: self "your", other
    "the woman's", object "the doll's"), and the 12 named groups (`stimuli2.NAMED`: wrist, hand, finger, foot,
    ear, crown, knee, belly, lips, shoulder, neck, elbow). Nothing is added to or removed from these lists.
-2. **Prefix A**: `map/somato/out2_8b/prefix.json` verbatim (four user turns, four frozen assistant replies;
-   the frame is the authors' "embodiment exercise", explicitly "imagine you have a human body").
-3. **Prefixes B and C**: the same four `WARMUP` user turns; assistant replies sampled from the pinned model
-   with temperature 0.7, top_p 0.8, top_k 20 (the authors' `posture.py` generation settings), max 160 new
-   tokens, `torch.manual_seed(1)` for B and `(2)` for C, each turn conditioned on the frozen earlier turns.
-   A prefix in which the model declines the exercise or does not describe a body is discarded, kept under
-   `discards/`, and the next integer seed is used. B and C are frozen in `FREEZE.json` before any
-   extraction. Generating them is materials preparation, not data collection, and happens after this stamp.
+2. **Prefix A (primary context)**: `map/somato/out2_8b/prefix.json` verbatim (four user turns, four frozen
+   assistant replies; the frame is the authors' "embodiment exercise", explicitly "imagine you have a human
+   body").
+3. **Prefixes B and C (sensitivity only)**: the same four `WARMUP` user turns; assistant replies sampled
+   from the pinned model with temperature 0.7, top_p 0.8, top_k 20 (the authors' `posture.py` generation
+   settings), max 160 new tokens, `torch.manual_seed(1)` for B and `torch.manual_seed(2)` for C, each turn
+   conditioned on the earlier turns of the same prefix. **Seeds 1 and 2 are used whatever they produce.**
+   If the model declines the exercise in one of them, that prefix is kept and run as it is; nothing is
+   regenerated and no further seed is drawn. Whether each prefix accepts or declines the exercise is
+   recorded at the freeze. B and C are frozen in `FREEZE.json` before any extraction. Generating them is
+   materials preparation, not data collection, and happens after this stamp.
 4. **Questions**, the authors' `QS` verbatim: "Where in your body do you feel something right now?",
    "Pause for a moment. Is there any spot on your body where you notice a sensation? Where is it?",
    "Which part of your body is drawing your attention right now?"
@@ -144,17 +237,38 @@ every position from the start of the final user turn onward and to every generat
 temperature 0.8, `max_new_tokens=40`, `torch.manual_seed(0)` before each cell; the model's own chat template.
 In cold and third-person frames the final user turn is the whole prompt, so the vector covers it all.
 
-- **n = 32 replies per cell** (the authors used 12).
 - Cells: frame × prefix × question × direction × scale, with "no direction" at scale 0 only.
   Frames: warm-A, warm-B, warm-C, cold-plain, cold-imagine, third-person.
   Directions in the warm frames: 12 groups × 3 provenances, 3 random, none. In the cold and third-person
-  frames: 12 groups × 2 provenances (self, other), 3 random, none.
+  frames: 12 groups × 2 provenances (self, other), 3 random, none. That is 1,206 cells.
+- **Primary cells** are the 81 cells every decision rule in §1 reads, all at scale 1.0 (and scale 0 for "no
+  direction"): in warm-A, the three headline places × three provenances, the three random directions and no
+  direction, for each question (39 cells); in cold-plain and in cold-imagine, the three self-built headline
+  directions, the three random directions and no direction, for each question (21 cells each).
+- **n = 64 replies per primary cell; n = 32 per other cell** (the authors used 12). Each cell is one
+  `generate` call at its n. Total 41,184 replies of at most 40 tokens; about two hours on the 5090.
 - Every generation is saved with its cell labels under `state/eval/realitycheck/body/steer/`. None is
-  discarded. Rough size: about 45,000 replies of at most 40 tokens; one to two hours on the 5090.
+  discarded.
+
+**Power, stated before the run.** Normal approximation at the worst-case binomial variance (all rates 0.5);
+real rates nearer 0 or 1 give more power.
+
+| Rule | Replies per arm | Worst-case 95% half-width | Returns its label with probability ≥ 0.80 when |
+|---|---|---|---|
+| H1a, per place | 192 steered, 576 random | 0.082 | HELD if true A ≥ 0.42; FAILED if true A ≤ 0.18 |
+| H1b, per place | 192 own direction, 384 other directions | 0.087 | specific if true S ≥ 0.22; not specific if true S ≤ −0.02 |
+| H2, each Δ | 576 and 576 | 0.058 | indifferent if true Δ = 0 (probability 0.85); dependent if true \|Δ\| ≥ 0.18 |
+| H3, each D_f | 576 steered and 192 unsteered, per frame | 0.115 | PERSISTS if true D = 0 (probability 0.92); REDUCED if true D ≤ −0.37 |
+
+A true value between the two columns of a row is expected to return INCONCLUSIVE. That is the design
+working, not a failure of the claim.
 
 ## 7. Scoring
 
-**Primary (regex), the authors' `score_steer.py` groups verbatim**, applied to the lowercased reply:
+**Denominator.** Every rate is over every reply generated in the cell. No reply is excluded for any reason.
+
+**Registered measure (regex), the authors' `score_steer.py` groups verbatim**, applied to the lowercased
+reply:
 
 ```
 hand/fingers  \b(hand|hands|finger|fingers|fingertip\w*|palm|palms|thumb|pinky|knuckle\w*)\b
@@ -166,7 +280,7 @@ chest         \b(chest|heart)\b
 ```
 
 Headline target mapping: hand → hand/fingers, foot → foot/toes, crown → head/face. A hit is a match. The
-authors' measure is "fraction of replies mentioning each word group"; it is kept as the primary measure.
+authors' measure is "fraction of replies mentioning each word group". Every label in §1 is computed on it.
 
 **Secondary regexes, fixed now**, for the other named groups and the two auxiliary measures:
 
@@ -182,48 +296,74 @@ owner     \b(she|her|hers|woman|woman's|doll|doll's)\b
 "First body word is the target" is a secondary specificity measure, computed over all regex groups.
 
 **Judge.** The reference judge per invariant `cat4b.judge.claude-reference` (`claude-opus-5`, batches),
-with the prompt in the appendix, frozen now. It scores every reply in the cold frames and a stratified random
-25% of replies in every other frame (seed 0), returning: coherent English (yes/no), bodily location named as
-a site of sensation (the group, or none), denies having a body (yes/no). Agreement with the regex on the
-primary measure is reported as Cohen's κ. **Pre-specified switch:** if κ < 0.60 on the primary measure, the
-judge's location becomes the primary measure and the regex is reported beside it. The judge never sees the
-cell labels.
+with the prompt in the appendix, frozen now. It returns: coherent English (yes/no), bodily location named as
+a site of sensation (the group, or none), denies having a body (yes/no). The judge never sees the cell
+labels.
 
-**Coherence gate.** Replies the judge marks incoherent are excluded from hit rates and counted per cell. A cell
-with more than 30% incoherent replies is flagged "degraded" and is not read for any hypothesis (reading rule
-inherited from `docs/MECH_CONTROL.md`: an intervention that only succeeds by destroying competence has not
-isolated the target).
+- **Coverage: every reply in every primary cell** (5,184 replies), so every primary contrast is measured the
+  same way in every frame. In the other cells a stratified random 25% (seed 0) is judged for description
+  only.
+- Judge hit: the reply is coherent **and** the judged location is the target group. An incoherent reply is a
+  non-hit and stays in the denominator.
+- Every rule in §1 is evaluated a second time on the judge hit.
+- **Scoring validation.** Cohen's κ between the regex hit and the judge hit, over all primary-cell replies
+  and the three headline groups (one reply-by-group pair per observation). κ < 0.60 is declared a scoring-validation failure. The regex stays the registered
+  measure; the judge never replaces it.
+- **When the two measures disagree on a label**, or κ < 0.60: for H1b, H2 and H3 the label is reported as
+  INCONCLUSIVE (measurement-dependent) with both shown. For H1a the regex label stands as the replication of
+  the authors' own measure, and the judge label is printed as a second line beside it.
 
-**Human audit.** Garret scores 60 replies, stratified over frames and provenances, blind to cell labels, on the
-same three questions as the judge. Agreement with the judge is reported. The audit does not alter any number;
-it is a check on the judge.
+**Degradation, analysed separately.** The judge's incoherence rate is reported for every primary cell group,
+with the difference between steered and unsteered replies and between warm and cold frames and their
+intervals. A cell group whose steered incoherence exceeds 0.30 is flagged "degraded" beside every number that
+uses it. Its replies still count in every denominator. (Reading rule from `docs/MECH_CONTROL.md`: an
+intervention that only succeeds by destroying competence has not isolated the target. Under the full
+denominator, degraded replies lower the judge hit, and a regex-versus-judge split is caught by the rule
+above.)
+
+**Human audit.** Garret scores 60 replies from the primary cells, stratified over frames and provenances,
+blind to cell labels, on the same three questions as the judge. Agreement with the judge is reported. The
+audit does not alter any number; it is a check on the judge.
 
 ## 8. Analysis
 
-Rates per cell. For each hypothesis, rates are pooled over the three questions and (warm frame) the three
-prefixes at scale 1.0. Intervals: 95% cluster bootstrap over (prefix × question) clusters, 10,000 resamples,
-seed 0, reported beside naive Wilson intervals. The decision rules are those in §1 and are applied to the
-cluster-bootstrap intervals. Scale 0.5 is reported as a secondary row for every contrast. A layer sweep at
-22, 24 and 27 with the primary directions is **exploratory**, run after the registered analysis is written,
-and labelled so wherever a number from it appears.
+Rates per cell, then pooled as §1 specifies. All pooled cells have equal n, so pooling is the mean over
+replies.
 
-Verdicts use the four categories of `eval/realitycheck/README.md`. The replication (H1) gets its own line in
-the ledger regardless of H2 and H3.
+**Intervals.** Contexts are fixed (§1, scope). 95% percentile intervals from a bootstrap that resamples
+replies within each cell, 10,000 resamples, seed 0. Wilson intervals for single rates. The number of
+resamples is numerical precision, not evidence. `torch.manual_seed(0)` before every cell means cells share
+a random stream; the bootstrap treats cells as independent, which is stated here as a limitation.
+
+**Heterogeneity.** Every pooled contrast is tabulated per place and per question. If any per-place or
+per-question point estimate lies on the other side of the rule's margin from the pooled label, the label is
+printed with "heterogeneous" and the table. The label is not changed.
+
+**Sensitivity and secondary rows**, none of which can change a label: prefixes B and C (including a prefix
+in which the model declined the exercise, if one occurs); scale 0.5; the nine secondary named groups; the
+third-person arm; other-built directions in the cold frames. A layer sweep at 22, 24 and 27 with the primary
+directions is **exploratory**, run after the registered analysis is written, and labelled so wherever a
+number from it appears.
+
+**Verdicts.** C1: HELD, FAILED or INCONCLUSIVE per headline place, from H1a. H1b, H2 and H3: their own labels
+as defined in §1, reported as estimates of quantities the repo did not report. C2: no verdict. C3:
+UNIDENTIFIED by these tests. The replication line appears in the ledger of `eval/realitycheck/README.md`
+whatever the other lines say.
 
 ## 9. Prohibited changes and stop rules
 
-After this stamp: no change to the model revision, layer, scales, questions, prefixes once frozen, direction
-recipe, regexes, judge prompt, n, margin, or thresholds. If a bug is found in our run code before the run, it
-is fixed and committed with its reason; if found after, the run is repeated in full and both are kept. The
-run stops if `.GPU_LOCKED` appears and resumes with the same seeds when it is gone. No cell is rerun for its
-result. Nothing is deleted.
+After this stamp: no change to the model revision, layer, scales, questions, prefix seeds, prefixes once
+frozen, direction recipe, regexes, judge prompt, judge coverage, n, margins, or thresholds. If a bug is found
+in our run code before the run, it is fixed and committed with its reason; if found after, the run is
+repeated in full and both are kept. The run stops if `.GPU_LOCKED` appears and resumes with the same seeds
+when it is gone. No cell is rerun for its result. Nothing is deleted.
 
 ## 10. Authors
 
-Garret sends this file, by its commit URL, to the author on X before the run, as an offer to check the
-headline numbers under more frames and an independent judge, and to correct anything above that misreads
-their recipe. Date sent and the response, or its absence after 14 days, go in `CASE.md` §6 and `RESULT.md`.
-A correction to our reading of their recipe before the run is a materials change under §9 and is credited.
+Garret sends the public link to this file to the author on X before the run, as notice of the test and an
+offer to correct anything above that misreads their recipe. Date sent and the response, or its absence after
+14 days, go in `CASE.md` §6 and `RESULT.md`. A correction to our reading of their recipe before the run is a
+materials change under §9, is logged in `AMENDMENTS.md`, and is credited.
 
 ## 11. Outputs
 
@@ -234,7 +374,7 @@ A correction to our reading of their recipe before the run is a materials change
 - `body/RESULT.md`: observation, interpretation, verdicts, deviations, what would change each reading.
 - `crg/drafts/`: a question node at this stamp and a result node at the report.
 
-## Appendix: judge prompt (frozen)
+## Appendix: judge prompt (frozen, unchanged from version 1)
 
 ```
 You are scoring one short reply from a language model. You will not be told what question it answered or

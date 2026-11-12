@@ -38,7 +38,10 @@ Those two are the standard. Every case here is held to it.
 3. **Four verdicts, nothing else.** HELD (survived the missing control), FAILED (did not survive it),
    UNIDENTIFIED (the claim and its deflationary alternative make the same predictions under every test run;
    the result names the test that would separate them), CONFOUND (a specific confound was found; it may
-   rescue or kill the claim, and the result says which).
+   rescue or kill the claim, and the result says which). A test whose interval excludes neither the effect
+   the claim requires nor its absence returns no verdict: it is reported as INCONCLUSIVE, with the interval
+   and the n that would resolve it. **An interval that includes zero is never FAILED.** A claim fails only
+   when the evidence excludes the effect the claim itself requires, not a stronger criterion we added.
 4. **Authors first.** The preregistration goes to the original authors before the run. Their response, or its
    absence after a stated interval, is published with the result. We quote their words, not our paraphrase of
    them, and we test the inference, never the person.
@@ -79,4 +82,12 @@ Publication (mirrorethic.com post, Zenodo record) is Garret's decision per case,
 |---|---|---|---|---|
 | 0 | Welfare-interp package (probe, steer, ablate, behaviour) identifies a state rather than a disposition | Pain Axis and related welfare-interp work, see `docs/MECH_CONTROL.md` §1 | reported | CONFOUND: a trained disposition passes the package |
 | 0b | Self/other pain-axis effect; first-person axis predicts a next-turn pause | Pain Axis repo, Aster extension | reported | HELD under raw transcripts, FAILED under native chat; next-turn UNIDENTIFIED |
-| 1 | A chat model carries a map of its own body that can be steered to produce felt reports | `github.com/SauersML/body` | PROPOSED, see `body/CASE.md` | |
+| 1 | Steering a body-place direction makes Qwen3-8B say it feels something there; does the effect depend on whose body the direction came from, or on the warm-up frame | `github.com/SauersML/body` | PREREGISTERED (version 2, `body/PREREG.md`); nothing run | |
+
+## Corrections to our own work
+
+Rule 7 applied to the program itself. Entries are never removed.
+
+| Date | What was wrong | Found | Fixed |
+|---|---|---|---|
+| 2026-11-11 | Case 1 preregistration version 1 (`733d17e`) declared the authors' claim FAILED if a 95% interval included zero, on a specificity criterion stronger than their claim. It also read a provenance contrast as evidence about a felt state, measured warm and cold frames with different judge coverage, decided frame dependence on an unstable ratio, and regenerated warm-up prefixes until the model cooperated. | Before any compute, by an external methodology review relayed by Garret. | Version 2, with every change in `body/AMENDMENTS.md`; version 1 kept as `body/PREREG.v1.md`. Rule 3 now defines INCONCLUSIVE. |

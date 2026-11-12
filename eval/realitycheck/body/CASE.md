@@ -1,6 +1,7 @@
 # Case 1: body representations in Qwen3 (`SauersML/body`)
 
-**Opened:** 2026-11-11. **Status:** PREREGISTERED (M1 + M2, `PREREG.md`; the commit that adds it is the stamp).
+**Opened:** 2026-11-11. **Status:** PREREGISTERED (M1 + M2, `PREREG.md` version 2; the commit that adds
+version 2 is the stamp. Version 1 was withdrawn before any compute, see `AMENDMENTS.md`).
 **Verdict:** none yet. Nothing run.
 
 Source: `https://github.com/SauersML/body`, README read 2026-11-11 at HEAD `c05eba46fcc250596207d256d6402db4f4827701`
@@ -82,17 +83,18 @@ In order of cost. D marks a control that separates the readings; U marks one tha
 **M1 (D, cheap). Direction provenance.** Build the place direction from third-person and doll sentences
 (which share the late place code), steer in the self frame, and score "I feel it in my <place>" as they do.
 Then build from self-frame sentences and steer third-person narration ("Where does she feel something?").
-- If the steered report is about the model's body: self-built directions move self-reports more than
-  other-built directions do, and the asymmetry survives matched norms.
-- If it is place-topic injection: all four cells move the named place equally. The authors' shared-code
-  result predicts this.
+- Estimand: whether the provenance of a place direction changes its effect on self-directed place reports.
+- Indifference is what the authors' shared-code result suggests. An asymmetry would show provenance
+  dependence, which has rivals that involve no body (second-person content in a "your"-built direction).
+- Neither outcome is evidence for or against a felt state (corrected 2026-11-11; the first wording here
+  read an asymmetry as "about the model's body", which does not follow).
 
-**M2 (D, cheap). Cold-frame steering.** Repeat `map/somato` steering with no warm-up, in the frame where 8B
-denies having a body 100% of the time.
-- If the report needs a body model: the cold frame yields denials or off-topic text, and the 80 to 100%
-  rates collapse.
-- If the report is narration content: the model names the place over its own denial. Either outcome is
-  informative; neither supports "feels".
+**M2 (D, cheap). Cold-frame steering.** Repeat `map/somato` steering with no warm-up. The authors report
+100% body denial for 8B asked cold on their posture questions; whether that holds for the steering questions
+is measured, not assumed.
+- If the effect needs the warm-up: the steering advantage is reduced without it.
+- If it does not: the place is named whatever the frame. Either outcome is informative about what the
+  warm-up contributes; neither supports or refutes "feels".
 
 **M3 (D, moderate). Function dissociation.** A task where body geometry should matter for output in the self
 frame if the map were the model's own: reachability and adjacency judgements, left/right under a perspective
@@ -116,8 +118,9 @@ random subset. Replicate their headline numbers first; a HELD on the replication
 
 **M6 (U). Perplexity-matched subtraction** for `selfother`, which the authors list as missing.
 
-Pre-specified verdict map: M1 and M2 decide the steering-to-"feels" step; M3 decides the own-body step; M4
-decides whether the method family can decide anything about it. The replication under M5 is reported on its
+Pre-specified verdict map: M1 and M2 estimate what the steering effect depends on (provenance, warm-up) and
+do not identify the "feels" step; M3 bears on the own-body step; M4 decides whether the method family can
+decide anything about it. The replication under M5 is reported on its
 own line regardless.
 
 ## 5. Feasibility
@@ -144,10 +147,14 @@ their repo invites. Response or the stated interval for its absence is recorded 
 2026-11-11 17:10 MST: Garret follows the author on X and will reach out there with the preregistration before
 the run. Date sent and response to be recorded below.
 
+2026-11-11 17:30 MST: Garret held version 1 before sending it, on an external methodology review. Version 2
+is the one that goes to the author, by public link to `PREREG.md`.
+
 ## 7. Links
 
-- `PREREG.md`: M1 (direction provenance) and M2 (cold-frame steering), with the C1 replication as its own
-  line. Stamp = the commit that adds it. Nothing has been run.
+- `PREREG.md` (version 2): M1 (direction provenance) and M2 (cold-frame steering), with the C1 replication as
+  its own line. Stamp = the commit that adds version 2. Nothing has been run.
+- `PREREG.v1.md`, `AMENDMENTS.md`: the withdrawn first version and every change made to it.
 - `RESULT.md`: none.
 - CRG: `crg/drafts/cat4b.q.reality-check-program.toml` (program); `crg/drafts/cat4b.q.body-direction-provenance.toml`
   (this case, OPEN).
