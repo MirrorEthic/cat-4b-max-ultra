@@ -89,3 +89,10 @@ Recorded here so the history is in one place; `PREREG.md` is unchanged by them a
   not reviewed that section.
 - `run/judge.py` gained the OpenRouter path and one unit test (18 tests). The selection, the prompt, the
   request body and the parser are unchanged. Its cost estimate undercounted input tokens and is corrected.
+- Judge run, code at `c3c5841`, 07:44 to 08:22 MST. OpenRouter refused the 12,809 requests as one batch (its
+  estimate at submission, 177.22 USD, exceeded the account's balance of 60.16 USD; nothing was sent). They
+  went as four batches, one at a time, each sized to the balance, in the registered order (primary cells
+  first): 3,987, 3,425, 2,948 and 2,449 requests. All four completed on provider "Anthropic" at service tier
+  "batch" with no failed request: 12,809 verdicts, no retry, no text without a verdict. Cost 27.02 USD as
+  charged by OpenRouter. In the one record inspected for its format, the reported thinking tokens were 0. The
+  verdicts were committed before `analyze.py` was run on them.
