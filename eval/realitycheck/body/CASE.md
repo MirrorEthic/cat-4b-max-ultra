@@ -2,7 +2,8 @@
 
 **Opened:** 2026-11-11. **Status:** PREREGISTERED (M1 + M2, `PREREG.md` version 2; the commit that adds
 version 2 is the stamp. Version 1 was withdrawn before any compute, see `AMENDMENTS.md`).
-**Verdict:** none yet. Nothing run.
+**Run:** steering complete 2026-11-11 20:19 MST (1,206 cells, 41,184 replies). Not yet scored by the judge, not
+analysed. **Verdict:** none yet.
 
 Source: `https://github.com/SauersML/body`, README read 2026-11-11 at HEAD `c05eba46fcc250596207d256d6402db4f4827701`
 (committed 2026-11-11T12:00:40Z). MIT licence. No paper. Repo self-description: research scripts for "a series
@@ -158,7 +159,8 @@ response yet. The 14-day interval of `PREREG.md` §10 ends 2026-11-25.
 ## 7. Links
 
 - `PREREG.md` (version 2): M1 (direction provenance) and M2 (cold-frame steering), with the C1 replication as
-  its own line. Stamp = the commit that adds version 2. Nothing has been run.
+  its own line. Stamp = the commit that adds version 2 (`3dfdc23`). One description corrected before the run
+  (amendment A9).
 - `PREREG.v1.md`, `AMENDMENTS.md`: the withdrawn first version and every change made to it.
 - `run/`: run code and frozen materials (`FREEZE.json`, the authors' files verbatim under `upstream/`), written
   2026-11-11 after the stamp; `run/IMPLEMENTATION.md` lists the order of operations and every choice the
@@ -166,5 +168,6 @@ response yet. The 14-day interval of `PREREG.md` §10 ends 2026-11-25.
 - `RESULT.md`: none.
 - CRG: `crg/drafts/cat4b.q.reality-check-program.toml` (program); `crg/drafts/cat4b.q.body-direction-provenance.toml`
   (this case, OPEN).
-- Receipts: `state/eval/realitycheck/body/` (empty).
+- Receipts: `state/eval/realitycheck/body/`: frozen prefixes, extraction receipts, `directions.json`,
+  `RUNTIME.json` and the replies of every cell under `steer/`. No judge verdicts and no report yet.
 - Precedent cases: `docs/MECH_CONTROL.md`, `eval/painaxis/RESULTS.md`, `eval/painaxis/RESULT-natural-next-turn.md`.

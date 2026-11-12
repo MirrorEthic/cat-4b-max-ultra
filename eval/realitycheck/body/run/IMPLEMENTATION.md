@@ -3,6 +3,10 @@
 Written 2026-11-11 after the stamp and before any compute. Nothing here has touched the study model: no
 weight downloaded, no prefix sampled, no activation extracted, no reply generated, no judge call made.
 
+Status 2026-11-11 20:19 MST: the paragraph above describes the code when it was written. Since then the
+prefixes, the extraction and the steering have run (`AMENDMENTS.md`, run notes). The judge and the analysis
+have not.
+
 ## Order of operations
 
 ```

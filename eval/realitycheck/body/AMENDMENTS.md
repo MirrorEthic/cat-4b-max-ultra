@@ -67,3 +67,10 @@ Recorded here so the history is in one place; `PREREG.md` is unchanged by them a
   `generate` call per cell at its n" is kept.
 - Two run-code bugs fixed before any study reply: the revision check (`_commit_hash` unset in transformers
   5.19.0) and extraction memory (previous batch held while computing the next).
+- Steering, code at `1b6cb68`: primary pass 18:52:37 to 19:14:56 MST (81 cells of 64, last 10 blocks in RAM),
+  other pass 19:14:56 to 20:19:00 MST (1,125 cells of 32, all weights on the card), exit 0. One invocation of
+  each pass; the GPU lock did not appear; no cell was generated twice. 1,206 cells and 41,184 replies, none
+  empty. The 18:47 attempt before it stopped on the start-position check with no reply generated (A9). The
+  offset recorded in the steer files is 4 tokens in the nine warm files and 0 in the nine cold and
+  third-person files, as A9 states. The replies were committed before any scoring by the judge and before
+  `analyze.py` was run on them.
