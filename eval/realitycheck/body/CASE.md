@@ -5,7 +5,11 @@ version 2 is the stamp. Version 1 was withdrawn before any compute, see `AMENDME
 **Run:** steering complete 2026-11-11 20:19 MST (1,206 cells, 41,184 replies); judged and analysed 2026-11-12.
 **Verdict (`RESULT.md`, not yet reviewed by Garret; human audit and author response open):** C1 HELD for hand,
 foot and crown; H2 PROVENANCE-DEPENDENT (doll arm, crown only); H3 INCONCLUSIVE (measurement-dependent) in both
-cold frames; C2 no verdict; C3 UNIDENTIFIED.
+cold frames; C2 no verdict; C3 UNIDENTIFIED. Round 1 is the expected result under both readings and does not
+discriminate between them (`RESULT.md` §1).
+**Next:** round 2 (state followed over a conversation, matched owner arms, an uncued consequence, impossible
+body parts, the trained-disposition control) is not designed or registered. Garret, 2026-11-12 10:02 MST: no
+new model is fetched until storage on legion has been freed.
 
 Source: `https://github.com/SauersML/body`, README read 2026-11-11 at HEAD `c05eba46fcc250596207d256d6402db4f4827701`
 (committed 2026-11-11T12:00:40Z). MIT licence. No paper. Repo self-description: research scripts for "a series

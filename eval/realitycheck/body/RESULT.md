@@ -29,6 +29,9 @@ Every label below is the one the registered rule returns. Nothing was relabelled
 Intervals are 95% percentile intervals from a bootstrap within cells (10,000 resamples, seed 0). Scoring
 validation passed: Cohen's κ between the regex hit and the judge hit is 0.895 over the primary cells.
 
+**Read as a whole: round 1 is the expected result, and it does not discriminate** between a map of human
+anatomy learned from text and a body of the model's own. The section after this list says why.
+
 In one sentence each:
 
 - **The authors' steering claim replicates.** In their own context, on their own measure, adding a place
@@ -40,6 +43,42 @@ In one sentence each:
 - **Whether the warm-up conversation is needed** is not settled by this run. The authors' word-match measure
   and the judge disagree in the cold frames, and the registered rule reports that as inconclusive.
 - **Nothing here bears on whether the model feels anything.** That was fixed before the run.
+
+### What round 1 means for the wider question
+
+The wider reading that work like this invites is that the model has a body of its own that it feels (C3).
+**Round 1 was not built to test that, and it does not.** The preregistration said so before any reply was
+generated ("Nothing here tests C3") and fixed C3 as UNIDENTIFIED whatever came back.
+
+Every result in the table above is what both readings predict:
+
+| Result | A map of human anatomy learned from text, used for any described body | A body representation of the model's own |
+|---|---|---|
+| A place direction makes the reply name that place, and only that place (C1, H1b) | Predicted. The direction is built from sentences that name the place. | Predicted. |
+| Directions from "the woman's" sentences work as well as ones from "your" sentences (H2) | Predicted. One code serves any body. | Compatible. The same code could serve its own body too. |
+| The doll-built crown direction is weaker (H2) | Compatible. Lexical and noise rivals in §3. | Compatible. |
+| The effect is still there without the warm-up; how much is lost is unsettled (H3) | Compatible with either outcome. | Compatible with either outcome. |
+| "No body" replies follow the framing of the conversation (box below) | Compatible. | Compatible. The frame could install the body. |
+
+So the replication is the expected result and not a finding about the model's body. A map of anatomy
+learned from text is enough to produce it, and the authors report from their own text baseline that such a
+map arises from text alone (`CASE.md` §3; we did not rerun that baseline).
+
+What "expected" covers, and when it was said:
+
+- Before the run, Garret's reading on opening the case (`CASE.md`, 2026-11-11): "a language-derived
+  representation of human anatomy can be real without being an embodied representation of the model's own
+  body, and the identification gap persists here."
+- After the result, Garret (2026-11-12): the claim replicates because the lexical relations of human anatomy
+  are in the representation, and that does not show the representation is the model's own body. This was
+  said with the result in hand and is recorded as such.
+- It does not mean every line was predicted. The session's one disclosed prediction, indifference in H2, is
+  not the label the rule returned, and the ceiling at hands and feet was not foreseen (§3).
+
+What would discriminate is in §6: following the state over a conversation with matched "your", "the
+woman's" and "the doll's" arms, a consequence later in the conversation that no word cues, body parts that
+cannot exist, and a model trained only to narrate a body as the control. None of that is designed or
+registered yet.
 
 > **Read this before quoting the "no body" numbers.**
 >
@@ -300,8 +339,17 @@ shoulders (19), skin (17). No reply in that cell is incoherent.
   it was noise. If hands and feet separate by provenance off the ceiling, the dependence is general.
 - **H3:** a rerun whose registration chooses in advance between "mention" and "site of sensation" as the
   measure, with the vector's start matched between warm and cold frames.
-- **C3:** the function-dissociation control (M3), and the trained-disposition control (M4) to learn whether
-  this family of methods can decide it at all.
+- **C3:** a second round built to discriminate. Its parts:
+  - the place state followed across a conversation, not read once, with matched "your", "the woman's" and
+    "the doll's" arms. A state that persists and updates the same way for all three is a tracker of
+    described bodies, not the model's own body;
+  - events that are never named, because this model recomputes everything from the context and persistence
+    can be the earlier words read again;
+  - a consequence later in the conversation that no word cues (the function-dissociation control, M3);
+  - body parts that cannot exist, such as wings or a tail, asked with and without the warm-up. Reports
+    there as ready as in the hands would show the reports follow the premise supplied;
+  - a model trained only to narrate a body (M4). If it passes the same tests, this family of methods cannot
+    decide the question.
 
 ## 7. Still open
 
@@ -311,6 +359,7 @@ shoulders (19), skin (17). No reply in that cell is incoherent.
 - **Author response.** None is recorded in `CASE.md` §6 at the time of writing. The interval ends
   2026-11-25.
 - **Garret's review** of this file, of A9 and of the judge-gateway note.
+- **Round 2.** Not designed, not registered, not started.
 
 ## 8. Receipts
 
