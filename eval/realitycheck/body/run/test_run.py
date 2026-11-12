@@ -94,6 +94,26 @@ class Registration(unittest.TestCase):
         self.assertTrue(req["params"]["messages"][0]["content"].endswith("Reply:\nmy left hand tingles"))
         self.assertNotIn("warm", json.dumps(req))  # no cell label reaches the judge
 
+    def test_openrouter_result_entries(self):
+        verdict = {"coherent": True, "location": J.JUDGE_LOCATIONS[0], "denies_body": False}
+        body = {"type": "message", "model": J.OR_MODEL, "provider": "Anthropic", "stop_reason": "end_turn",
+                "usage": {"input_tokens": 400, "output_tokens": 30},
+                "content": [{"type": "thinking", "thinking": "..."}, {"type": "text", "text": json.dumps(verdict)}]}
+        ok = {"custom_id": "rc1-x", "error": None, "response": {"status_code": 200, "body": body}}
+        got = J.or_verdict(ok)
+        self.assertEqual((got["ok"], got["verdict"], got["served"]["model"]), (True, verdict, J.OR_MODEL))
+        bad = [dict(ok, response=None, error={"type": "api_error"}),
+               dict(ok, response={"status_code": 500, "body": {"type": "error", "error": {"type": "api_error"}}}),
+               dict(ok, response={"status_code": 200, "body": dict(body, stop_reason="refusal")}),
+               dict(ok, response={"status_code": 200, "body": dict(body, stop_reason="max_tokens")}),
+               dict(ok, response={"status_code": 200, "body": dict(body, content=[{"type": "text", "text": "hand"}])}),
+               dict(ok, response={"status_code": 200, "body": dict(body, content=[
+                   {"type": "text", "text": json.dumps(dict(verdict, location="left hand"))}])})]
+        for e in bad:  # each of these is a failed attempt, as on the Message Batches path
+            with self.assertRaises(Exception):
+                J.or_verdict(e)
+        self.assertEqual(J.OR_PROVIDER, {"only": ["anthropic"], "allow_fallbacks": False})
+
 
 class Scoring(unittest.TestCase):
     def test_groups(self):

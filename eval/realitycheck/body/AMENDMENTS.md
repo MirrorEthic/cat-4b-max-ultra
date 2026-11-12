@@ -74,3 +74,18 @@ Recorded here so the history is in one place; `PREREG.md` is unchanged by them a
   offset recorded in the steer files is 4 tokens in the nine warm files and 0 in the nine cold and
   third-person files, as A9 states. The replies were committed before any scoring by the judge and before
   `analyze.py` was run on them.
+
+## Run notes that are not amendments (2026-11-12)
+
+- 07:32 MST, Garret: "Yes push and good to go on judge". The seven commits after the stamp were pushed
+  (`3dfdc23..02ca799`), so the replies are public before any verdict exists. That message did not address A9;
+  A9 is still not reviewed by him.
+- Judge gateway. A test call on the project's Anthropic key (two made-up sentences, no study reply) was
+  refused for lack of credit. Asked which account should pay, Garret answered: "Open router key". The judge
+  requests go as batches through OpenRouter to Anthropic (the only provider allowed, no fallback): the same
+  model, request body, batch mode, coverage and failure rule. `PREREG.md` is unchanged ("`claude-opus-5`,
+  batches"). This changes choice 4 of `run/IMPLEMENTATION.md` after the replies existed and before any
+  verdict; what was checked first and what cannot be checked is in its section "Judge gateway". Garret has
+  not reviewed that section.
+- `run/judge.py` gained the OpenRouter path and one unit test (18 tests). The selection, the prompt, the
+  request body and the parser are unchanged. Its cost estimate undercounted input tokens and is corrected.

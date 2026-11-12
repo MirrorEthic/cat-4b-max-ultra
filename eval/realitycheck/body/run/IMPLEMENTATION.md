@@ -23,11 +23,12 @@ $PY steer.py --cells other                          # the 1,125 cells of 32 repl
                                                     # both passes are resumable and exit 3 if the lock appears
 
 .venv/bin/python judge.py plan | submit | collect       # CPU, repo .venv; repeat submit/collect until nothing is open
+                                                        # as run: submit --via openrouter [--limit N] ("Judge gateway")
 .venv/bin/python judge.py audit-sheet                   # 60 blind replies for Garret; key.json stays closed
 .venv/bin/python analyze.py                             # → state/eval/realitycheck/body/report.json
 ```
 
-Tests: `.venv/bin/python -m unittest test_run.py` (17 tests, synthetic data, no torch) and, in the GPU venv with
+Tests: `.venv/bin/python -m unittest test_run.py` (18 tests, synthetic data, no torch) and, in the GPU venv with
 `HF_HUB_OFFLINE=1` and `CUDA_VISIBLE_DEVICES=""`, `-m unittest test_smoke.py` (the GPU scripts end to end on a
 tiny random-weight model on CPU).
 
@@ -57,7 +58,8 @@ None of these changes a registered quantity. Each is the reading the code implem
    (project storage rule); their sha256 and every other receipt are in the repo's `state/eval/realitycheck/body/`.
 4. **Judge transport.** Message Batches, `claude-opus-5`, adaptive thinking at low effort, JSON schema output,
    the request shape of `data/catforge/judge.py`. The request holds the frozen prompt and the reply, nothing
-   else. Identical reply texts share one request. Not yet exercised against the live API.
+   else. Identical reply texts share one request. Not yet exercised against the live API. (Changed 2026-11-12,
+   before any verdict: the same batch requests go through OpenRouter. See "Judge gateway".)
 5. **No verdict.** A reply whose request fails three times is a judge non-hit in every denominator and is
    counted separately in `report.json`.
 6. **The 25% sample.** 8 of the 32 replies of every non-primary cell, `random.Random(0)`, cells in registered
@@ -90,6 +92,31 @@ GPU main device gets `execution_device` = the GPU and `offload=True`). The arith
 the same device; only the wall time changes. Measured on filler text: peak 20.91 GiB of 23.42 GiB, 21 s for
 the call (`RUNTIME.json`). The steered block (index 24) stays on the card, and `steer.py` refuses to run if it
 is not. The registered rule "each cell is one `generate` call at its n" is kept; `PREREG.md` is unchanged.
+
+## Judge gateway (changed 2026-11-12, after the replies existed and before any verdict)
+
+Choice 4 named Anthropic's Message Batches API on the project's own key. On 2026-11-12 a test call on that key
+(two made-up sentences, no study reply) was refused: the account had no credit. Garret's call, the same
+morning: "Open router key". The judge requests go through OpenRouter's batch API (`POST /api/v1/batches`,
+endpoint `/v1/messages`), which takes the Anthropic request format.
+
+- The same: the model (`anthropic/claude-opus-5` is OpenRouter's name for `claude-opus-5`; each batch is
+  pinned to Anthropic as the only provider, with no fallback), the request body (the frozen prompt and the
+  reply, adaptive thinking, low effort, the JSON schema, `max_tokens` 1024), batch processing and its price,
+  the coverage, the parser, and the rule for a failed request. `PREREG.md` §7 says "(`claude-opus-5`,
+  batches)" and is unchanged.
+- Different: the account that pays, and one more party between the request and Anthropic.
+- Checked before any study reply was sent: the two made-up sentences, sent directly and then as a
+  two-request batch (07:40 MST, finished in 90 s). Both came back from provider "Anthropic", the batch at
+  service tier "batch" and the batch price (0.004095 USD for the two; 688 and 690 input tokens, 29 and 23
+  output tokens), with verdicts that parse. The batch named its model `anthropic/claude-opus-5-20260723`.
+- Not checkable from here: that OpenRouter forwards the body to Anthropic unchanged. That rests on its
+  documentation and on the response metadata, and is a stated limit of the judge measure.
+- Kept: each batch's answer as returned, on the data drive under `judge_raw/` (sha256 in `batches.json`);
+  each verdict record carries the model name it was served under. OpenRouter keeps batch data for 30 days.
+- `judge.py plan` had estimated 400 input tokens per request; the measured figure is about 690 (the JSON
+  schema is part of the input). The estimate is corrected. At the measured sizes the 12,809 requests cost
+  about 26 USD; the bound with every verdict at `max_tokens` is about 186 USD, not the 176.75 first printed.
 
 ## Fixed before the run
 

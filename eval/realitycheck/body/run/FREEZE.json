@@ -58,7 +58,8 @@
    "model": "claude-opus-5",
    "transport": "Message Batches API",
    "sample_per_other_cell": 8,
-   "sample_seed": 0
+   "sample_seed": 0,
+   "gateway": "OpenRouter batch API, endpoint /v1/messages, model anthropic/claude-opus-5, provider Anthropic only, no fallback (changed 2026-11-12 before any verdict; IMPLEMENTATION.md, Judge gateway)"
   }
  },
  "files": {
